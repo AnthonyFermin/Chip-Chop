@@ -1,10 +1,14 @@
 # Access Code 2.1 Final Project Proposal
 
-#### Please submit the final project proposal by 10:00pm on Sunday 8/9/2015. You will receive feedback on the proposal on Tuesday 8/11 and be asked to review and incorporate this feedback, and resubmit a revised proposal by 10:00pm on Tuesday 8/11.
 ---
 **Project Name**  
+FeedMeet
+
 **Team Name**  
+AAM
+
 **Team Members**  
+Madelyn, Anthony and Alvin
 
 ## The Problem 
 Describe the problem that your app will address. This does not need to be a novel idea or product, but your app should not directly recreate an existing product. If you are basing the app on an existing product, there should be some edge to your design or feature that solves a problem with that existing product.   
@@ -47,11 +51,12 @@ Please provide a detailed description of the app here. Map out how the app solve
  -DELIVERY: chefs can decide whether they want to deliver and/or allow pick-upusers can filter through one, other, no preference
 
 ##### Bonus Features
- -integrate FB login upon account creation to verify users are real and also traceable to a certain extent
+-integrate FB login upon account creation to verify users are real and also traceable to a certain extent
 - Credit Card Payments
 - Bluetooth connection when order is close by
 - Shake phone for random suggestion
 - Responsive UI (For time of day, Hunger Level, etc)
+- Create a website
 
 ## Execution
 Please describe how you will build this app. Include: 

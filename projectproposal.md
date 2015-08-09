@@ -19,7 +19,7 @@ In this section, please frame the issue with supporting statistics about the nee
 
 #### Competitors:
 ##### Websites: 
-Josephine.com
+Josephine.com<br>
 Homemadegoods.com
 
 ##### Apps: 

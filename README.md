@@ -1,6 +1,15 @@
 # Final-Project
 # Final Project Proposal Submission  
 
+Project Name
+ChipChop
+
+Team Name
+ChipChoppers
+
+Team Members
+Madelyn, Anthony and Alvin
+
 ### The following is due Sun, Aug 9 at 10pm:  
 *note: this deadline has been revised...An earlier version of this said it was due at 6pm.
   

@@ -18,11 +18,11 @@ In this section, please frame the issue with supporting statistics about the nee
 ##### Problem: People want home cooked meals but don't have time to make them and nowadays people aren't very involved in their local communities. This app will foster a bigger sense of community by allowing people to share and interact with their neighbors. 
 
 ##### Competitors:
-Alt-H2 Websites: 
+### Websites: 
 Josephine.com
 Homemadegoods.com
 
-Alt-H2 Apps: 
+### Apps: 
 Foodie Shares(Local to California)
 
 

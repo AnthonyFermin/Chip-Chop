@@ -2,10 +2,10 @@
 
 ---
 **Project Name**  
-FeedMeet
+ChipChop
 
 **Team Name**  
-AAM
+ChipChoppers
 
 **Team Members**  
 Madelyn, Anthony and Alvin

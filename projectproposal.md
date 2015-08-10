@@ -81,7 +81,9 @@ Please describe how you will build this app. Include:
   Week 6 | 9/7 - 9/13 | FINAL DEMO!
 
 
- ##### Roles and Responsibilities for Week 1:
+
+
+ #### Roles and Responsibilities for Week 1:
  - Alvin: Front End Design and Layout 
  - Madelyn: Setting up and entering information to Cloud Database
  - Anthony: Getting information from Database and implementing maps

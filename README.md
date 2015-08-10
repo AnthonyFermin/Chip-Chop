@@ -1,5 +1,4 @@
 # Final-Project
-# Final Project Proposal Submission  
 
 Project Name
 ChipChop

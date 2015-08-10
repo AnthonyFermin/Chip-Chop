@@ -82,7 +82,7 @@ home to take care of their children.
 
 
 
- #### Roles and Responsibilities for Week 1:
+ #### Roles and Responsibilities for **WEEK 1**:
  -  **Alvin**: Front End Design and Layout 
  -  **Madelyn**: Setting up and entering information to Cloud Database
  -  **Anthony**: Getting information from Database and implementing maps

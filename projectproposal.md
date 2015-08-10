@@ -59,11 +59,9 @@ home to take care of their children)
 
 
 ## Execution
- **Breakdown:** 
-  
-   
-  
-  
+Breakdown: 
+  *  
+  * 
   | Week | Date | Deliverables | 
   |---|---|---|
   Week 1 | 8/3 - 8/9 | Ideation & Brainstorming Project Structure

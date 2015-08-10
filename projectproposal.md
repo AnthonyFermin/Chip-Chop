@@ -31,8 +31,8 @@ Our mobile app aims to create a platform that connects the 'users' with 'chefs' 
 
 
 ### Market-
-**Consumers**: Targeting young professionals and everyone who is hungry for homemade food<br>
-**Providers**: People who love to cook and would like to make some extra money on the side by sharing their cultural delicacies with locals in and around their neighborhood.
+**Consumers =** Targeting young professionals and everyone who is hungry for homemade food<br>
+**Providers =** People who love to cook and would like to make some extra money on the side by sharing their cultural delicacies with locals in and around their neighborhood.
 
 
 

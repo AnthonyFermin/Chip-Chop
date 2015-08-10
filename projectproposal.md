@@ -27,11 +27,11 @@ Homemadegoods.com
 Foodie Shares(Local to California)
 
 
-##### Market-
+### Market-
 Consumers: Targeting young professionals and everyone who is hungry for homemade food
 Providers: People who love to cook and would like to make some extra money on the side by sharing their cultural delicacies with locals in and around their neighborhood.
 
-##### Use Cases:
+### Use Cases:
 -Primarily working professinals (20's and 30's) who are too busy to cook, but wish to enjoy a convenient, authentic, freshly prepared home-cooked meal.
 -A stay at home mom who loves to cook and would love to contribute to the household income while staying at
 home to take care of their children.
@@ -44,7 +44,7 @@ home to take care of their children.
  - Utilizing geolocation to locate local chefs and populate onto map (FOR FRESH FOOD!) also allow entry for zip code when searching as a backup for geolocation fail
  -DELIVERY: chefs can decide whether they want to deliver and/or allow pick-upusers can filter through one, other, no preference
 
-##### Bonus Features
+### Bonus Features
 -integrate FB login upon account creation to verify users are real and also traceable to a certain extent (Using the Facebook option provided by the Firebase API that will allow us to verify legitamacy of user/chef, and also provide a social platform for our app to be shared and marketed via media).
 - Credit Card Payments (To allow contracted chefs to conveniently receive payments and for users to conveniently pay for food)
 - Bluetooth connection when order is close by (Using Bluetooth LE to create a connection within 30 ft when the deliverer is outside the door of the recipient to provide a location-based alert notification)

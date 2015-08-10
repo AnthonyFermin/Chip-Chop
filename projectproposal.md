@@ -23,22 +23,22 @@ Our mobile app aims to create a platform that connects the 'users' with 'chefs' 
 
 ### Competitors:
 **Web**:<br> 
-Josephine.com<br>
-Homemadegoods.com
+- Josephine.com<br>
+- Homemadegoods.com
 
-**Mobile**: 
-Foodie Shares(Local to California)
+**Mobile**:<br> 
+- Foodie Shares (Local to California)
 
 
 ### Market-
-Consumers: Targeting young professionals and everyone who is hungry for homemade food
-Providers: People who love to cook and would like to make some extra money on the side by sharing their cultural delicacies with locals in and around their neighborhood.
+**Consumers**: Targeting young professionals and everyone who is hungry for homemade food
+**Providers**: People who love to cook and would like to make some extra money on the side by sharing their cultural delicacies with locals in and around their neighborhood.
 
 
 
 ### Use Cases:
--Primarily working professinals (20's and 30's) who are too busy to cook, but wish to enjoy a convenient, authentic, freshly prepared home-cooked meal.
--A stay at home mom who loves to cook and would love to contribute to the household income while staying at
+- Primarily working professinals (20's and 30's) who are too busy to cook, but wish to enjoy a convenient, authentic, freshly prepared home-cooked meal.
+- A stay at home mom who loves to cook and would love to contribute to the household income while staying at
 home to take care of their children.
 
 
@@ -64,10 +64,6 @@ home to take care of their children.
 
 
 ## Execution
-Please describe how you will build this app. Include: 
-  *  A detailed timeline for building the product, broken out by weekly sprints. Implement the training from the [Project Management workshop](https://github.com/accesscode-2-1/unit-3/blob/master/lessons/16_ProjectManagement.md) to plan your sprints and outline which features you want to build out over the next 4 weeks. Think about the user stories you would frame your sprints around. *Projects should be planned to complete the build by Demo 1 on September 1, 2015.*  
-
-
 
   ##### Breakdown
   

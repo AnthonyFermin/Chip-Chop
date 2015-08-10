@@ -30,16 +30,11 @@ Our mobile app aims to create a platform that connects the 'users' with 'chefs' 
 - Foodie Shares (Local to California)
 
 
-### Market-
-**Consumers =** Targeting young professionals and everyone who is hungry for homemade food<br>
-**Providers =** People who love to cook and would like to make some extra money on the side by sharing their cultural delicacies with locals in and around their neighborhood.
-
-
-
 ### Use Cases:
-- Primarily working professinals (20's and 30's) who are too busy to cook, but wish to enjoy a convenient, authentic, freshly prepared home-cooked meal.
-- A stay at home mom who loves to cook and would love to contribute to the household income while staying at
-home to take care of their children.
+**Consumers =** Primarily working professionals (20's and 30's) who are too busy to cook, but wish to enjoy a convenient, authentic, freshly prepared home-cooked meal.
+**Providers =** People who love to cook and would like to make some extra money on the side by sharing their cultural delicacies with locals in and around their neighborhood.
+ (e.g. A stay at home mom who loves to cook and would love to contribute to the household income while staying at
+home to take care of their children)
 
 
 

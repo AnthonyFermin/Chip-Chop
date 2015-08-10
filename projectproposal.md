@@ -11,9 +11,11 @@ ChipChoppers
 Madelyn Tavarez, Anthony Fermin, Alvin Kuang
 
 
-### THE PROBLEM: <br> The problem that our app is aiming to tackle is the unfilled desire of users (especially of those in cities who are young working professionals or students in their 20-30's who do not live with family) who are looking for a convenient way to enjoy an authentically prepared and home-cooked meal. It would also provide a money-making opportunity for those who are stay-at-home parents with kids, or immigrants who don't have the necessary skills to obtain regular jobs, but have a love for cooking food of their culture or any culture for matter! 
+### THE PROBLEM: 
+<br> The problem that our app is aiming to tackle is the unfilled desire of users (especially of those in cities who are young working professionals or students in their 20-30's who do not live with family) who are looking for a convenient way to enjoy an authentically prepared and home-cooked meal. It would also provide a money-making opportunity for those who are stay-at-home parents with kids, or immigrants who don't have the necessary skills to obtain regular jobs, but have a love for cooking food of their culture or any culture for matter! 
 
-##### THE SOLUTION: <br> Our mobile app aims to create a platform that connects the 'users' with 'chefs' in their local community/neighborhood to deliver or pick-up authentic home-cooked meals! By doing so, this would also allow people to create real social connections with members of their local community, and familiarize/befriend those who live in their local area whom they might not have the chance of ever meeting in a vast city, such as NYC. 
+##### THE SOLUTION: 
+<br> Our mobile app aims to create a platform that connects the 'users' with 'chefs' in their local community/neighborhood to deliver or pick-up authentic home-cooked meals! By doing so, this would also allow people to create real social connections with members of their local community, and familiarize/befriend those who live in their local area whom they might not have the chance of ever meeting in a vast city, such as NYC. 
 
 
 ### Competitors:

@@ -78,7 +78,7 @@ Please describe how you will build this app. Include:
   Week 3 | 8/17 - 8/23 | Finalize functioning MVP, User Testing ,and begin bonus features (begin working on implementing bonus features as enhancements)
   Week 4 | 8/24 - 8/30 | Finalize bonus features and UI/design and debugging/testing
   Week 5 | 8/31 - 9/6 | First Demo and Implementing changes from feedback
-  Week 6 | 9/7 - 9/13 | Continue debugging / user testing and implementing changes from results
+  Week 6 | 9/7 - 9/14 | Continue debugging / user testing and implementing changes from results
   week 7 | 9/15 | FINAL DEMO
 
 

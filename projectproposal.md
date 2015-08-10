@@ -68,7 +68,7 @@ home to take care of their children.
   ##### Breakdown
   
   | Week | Date | Deliverables | 
-|---|---|---|
+  |---|---|---|
   Week 1 | 8/3 - 8/9 | Ideation & Brainstorming Project Structure
   Week 2 | 8/10 - 8/16 | Basic Functioning MVP (includes working profile accounts storing into cloud database, general UI layout skeleton)
   Week 3 | 8/17 - 8/23 | Finalize functioning MVP, User Testing ,and begin bonus features (begin working on implementing bonus features as enhancements)

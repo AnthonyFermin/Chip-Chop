@@ -85,7 +85,7 @@ Please describe how you will build this app. Include:
 
 
  #### Roles and Responsibilities for Week 1:
- - Alvin: Front End Design and Layout 
- - Madelyn: Setting up and entering information to Cloud Database
- - Anthony: Getting information from Database and implementing maps
+ - ##### Alvin: Front End Design and Layout 
+ - ##### Madelyn: Setting up and entering information to Cloud Database
+ - ##### Anthony: Getting information from Database and implementing maps
  

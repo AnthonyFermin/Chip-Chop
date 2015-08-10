@@ -70,11 +70,15 @@ Please describe how you will build this app. Include:
 
 
   ##### Breakdown
-  Week 1: Ideation & Brainstorming Project Structure
-  Week 2: Basic Functioning MVP (includes working profile accounts storing into cloud database, general UI layout skeleton)
-  Week 3: Finalize functioning MVP, User Testing ,and begin bonus features (begin working on implementing bonus features as enhancements)
-  Week 4: Finalize bonus features and UI/design and debugging/testing
-
+  
+  | Week | Date | Deliverables | 
+|---|---|---|
+  Week 1 | 8/3 - 8/9 | Ideation & Brainstorming Project Structure
+  Week 2 | 8/10 - 8/16 | Basic Functioning MVP (includes working profile accounts storing into cloud database, general UI layout skeleton)
+  Week 3 | 8/17 - 8/23 | Finalize functioning MVP, User Testing ,and begin bonus features (begin working on implementing bonus features as enhancements)
+  Week 4 | 8/24 - 8/30 | Finalize bonus features and UI/design and debugging/testing
+  Week 5 | 8/31 - 9/6 | First Demo and Implementing changes from feedback
+  Week 6 | 9/7 - 9/13 | FINAL DEMO!
 
 
  ##### Roles and Responsibilities for Week 1:

@@ -15,7 +15,7 @@ Describe the problem that your app will address. This does not need to be a nove
 
 In this section, please frame the issue with supporting statistics about the need (market size, competitors, use cases). You should fully think through your user - who is your user? Why do they need this app? How are they using it?   
 
-##### Problem: The problem that our app is aiming to tackle is the unfilled desire of users (especially of those in cities who are young working professionals or students in their 20-30's who do not live with family) who are looking for a convenient way to enjoy an authentically prepared and home-cooked meal. It would also provide a money-making opportunity for those who are stay-at-home parents with kids, or immigrants who don't have the necessary skills to obtain regular jobs, but have a love for cooking food of their culture or any culture for matter! 
+##### PROBLEM: The problem that our app is aiming to tackle is the unfilled desire of users (especially of those in cities who are young working professionals or students in their 20-30's who do not live with family) who are looking for a convenient way to enjoy an authentically prepared and home-cooked meal. It would also provide a money-making opportunity for those who are stay-at-home parents with kids, or immigrants who don't have the necessary skills to obtain regular jobs, but have a love for cooking food of their culture or any culture for matter! 
 
 ### Competitors:
 #### Websites: 
@@ -43,7 +43,7 @@ Please provide a detailed description of the app here. Map out how the app solve
   *  A wireframe of the app. 
   *  
   
- ##### Solution:Our mobile app aims to create a platform that connects the 'users' with 'chefs' in their local community/neighborhood to deliver or pick-up authentic home-cooked meals! By doing so, this would also allow people to create real social connections with members of their local community, and familiarize/befriend those who live in their local area whom they might not have the chance of ever meeting in a vast city, such as NYC. 
+ ##### SOLUTION: Our mobile app aims to create a platform that connects the 'users' with 'chefs' in their local community/neighborhood to deliver or pick-up authentic home-cooked meals! By doing so, this would also allow people to create real social connections with members of their local community, and familiarize/befriend those who live in their local area whom they might not have the chance of ever meeting in a vast city, such as NYC. 
 
 ### Baseline:
  - Individual User accounts (Allow the users to create their own profile and store it within the Firebase cloud database with all relevant information to the user to allow easier future access to using the product with saved searches, etc.)

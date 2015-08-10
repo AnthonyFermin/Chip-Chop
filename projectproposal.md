@@ -61,8 +61,8 @@ home to take care of their children)
 ## Execution
  **Breakdown:** 
   
-   
-  
+  *
+  *
   
   | Week | Date | Deliverables | 
   |---|---|---|

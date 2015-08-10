@@ -22,11 +22,11 @@ Our mobile app aims to create a platform that connects the 'users' with 'chefs' 
 
 
 ### Competitors:
-#### Websites: 
+*Web*: 
 Josephine.com<br>
 Homemadegoods.com
 
-#### Apps: 
+*Mobile*: 
 Foodie Shares(Local to California)
 
 
@@ -85,7 +85,7 @@ Please describe how you will build this app. Include:
 
 
  #### Roles and Responsibilities for Week 1:
- - ##### Alvin: Front End Design and Layout 
- - ##### Madelyn: Setting up and entering information to Cloud Database
- - ##### Anthony: Getting information from Database and implementing maps
+ -  *Alvin*: Front End Design and Layout 
+ -  *Madelyn*: Setting up and entering information to Cloud Database
+ -  *Anthony*: Getting information from Database and implementing maps
  

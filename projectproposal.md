@@ -44,19 +44,19 @@ Please provide a detailed description of the app here. Map out how the app solve
   *  
   
  ##### Baseline: 
- - Individual User accounts
- - Profiles with user/chef information, photos and meals available (including any allergens)
- - Review system for all sellers
+ - Individual User accounts (Allow the users to create their own profile and store it within the Firebase cloud database with all relevant information to the user to allow easier future access to using the product with saved searches, etc.)
+ - Profiles with user/chef information, location, photos and a live update of dishes currently available at the time (including any allergens)
+ - Review system for all sellers (Similar to yelp's star ratings that would allow users to rate the chef in general)
  - Utilizing geolocation to locate local chefs and populate onto map (FOR FRESH FOOD!) also allow entry for zip code when searching as a backup for geolocation fail
  -DELIVERY: chefs can decide whether they want to deliver and/or allow pick-upusers can filter through one, other, no preference
 
 ##### Bonus Features
--integrate FB login upon account creation to verify users are real and also traceable to a certain extent
-- Credit Card Payments
-- Bluetooth connection when order is close by
-- Shake phone for random suggestion
-- Responsive UI (For time of day, Hunger Level, etc)
-- Create a website
+-integrate FB login upon account creation to verify users are real and also traceable to a certain extent (Using the Facebook option provided by the Firebase API that will allow us to verify legitamacy of user/chef, and also provide a social platform for our app to be shared and marketed via media).
+- Credit Card Payments (To allow contracted chefs to conveniently receive payments and for users to conveniently pay for food)
+- Bluetooth connection when order is close by (Using Bluetooth LE to create a connection within 30 ft when the deliverer is outside the door of the recipient to provide a location-based alert notification)
+- Shake phone for random suggestion (Fun feature that would utilize sensors of the phone to sense when it is being shaken to randomly select a location and cuisine for the user when the user feels too indecisive to search for something specific but would like to enjoy a homecooked meal)
+- Responsive UI (That has the ability to change according to the time of day, Hunger Level, other parameters; simply to delight the user)
+- Create a website (Allow for multiple forms of access to our product on different device types to increase accessibility overall and convenience of use)
 
 ## Execution
 Please describe how you will build this app. Include: 

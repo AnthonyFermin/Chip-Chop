@@ -17,12 +17,12 @@ In this section, please frame the issue with supporting statistics about the nee
 
 ##### Problem: The problem that our app is aiming to tackle is the unfilled desire of users (especially of those in cities who are young working professionals or students in their 20-30's who do not live with family) who are looking for a convenient way to enjoy an authentically prepared and home-cooked meal. It would also provide a money-making opportunity for those who are stay-at-home parents with kids, or immigrants who don't have the necessary skills to obtain regular jobs, but have a love for cooking food of their culture or any culture for matter! 
 
-#### Competitors:
-### Websites: 
+### Competitors:
+#### Websites: 
 Josephine.com<br>
 Homemadegoods.com
 
-## Apps: 
+#### Apps: 
 Foodie Shares(Local to California)
 
 

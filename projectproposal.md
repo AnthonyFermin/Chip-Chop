@@ -38,7 +38,7 @@ home to take care of their children)
 
 
 
-### Baseline:
+### Baseline Features:
  - Individual User accounts (Allow the users to create their own profile and store it within the Firebase cloud database with all relevant information to the user to allow easier future access to using the product with saved searches, etc.)
  - Profiles with user/chef information, location, photos and a live update of dishes currently available at the time (including any allergens)
  - Review system for all sellers (Similar to yelp's star ratings that would allow users to rate the chef in general)

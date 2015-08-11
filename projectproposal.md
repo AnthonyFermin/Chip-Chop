@@ -86,6 +86,8 @@ Breakdown:
 
 
 
+![alt tag](http://www.imageno.com/3hf92wlpk4m7pic.html)
+
 
  ### Roles and Responsibilities
   **WEEK 1**:<Br>

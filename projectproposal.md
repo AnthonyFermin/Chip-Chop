@@ -55,6 +55,7 @@ home to take care of their children)
 - Shake phone for random suggestion (Fun feature that would utilize sensors of the phone to sense when it is being shaken to randomly select a location and cuisine for the user when the user feels too indecisive to search for something specific but would like to enjoy a homecooked meal)
 - Responsive UI (That has the ability to change according to the time of day, Hunger Level, other parameters; simply to delight the user)
 - Create a website (Allow for multiple forms of access to our product on different device types to increase accessibility overall and convenience of use)
+- Using SendGrid API to send confirmation/forgotten password e-mails 
 
 
 

@@ -60,7 +60,10 @@ home to take care of their children)
 
 
 ## Execution
-WireFrame
+WireFrame:
+![alt tag]()
+![alt tag]()
+![alt tag]()
 
 
 Breakdown: 

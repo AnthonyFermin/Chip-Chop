@@ -61,9 +61,7 @@ home to take care of their children)
 
 ## Execution
 WireFrame
- 
-![alt tag](https://photos-1.dropbox.com/t/2/AACEfGR6YdfDdReS-lEw-Ix_EX9J2XByEtDdLk2_8vMEZg/12/432923312/jpeg/32x32/1/_/1/2/slack_for_ios_upload%20(1).jpg)
-![alt tag]("https://farm4.staticflickr.com/3807/20472969495_6d0ad53af8_h.jpg")
+
 
 Breakdown: 
   *  

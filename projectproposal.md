@@ -61,9 +61,9 @@ home to take care of their children)
 
 ## Execution
 WireFrame
-![alt tag](https://flic.kr/p/wffRzc)
-![alt tag](https://flic.kr/p/x9NR4Q)
-![alt tag](https://flic.kr/p/xc8jyF)
+![alt tag]("https://farm1.staticflickr.com/508/19852032313_95dd92731d_h.jpg")
+![alt tag]("https://farm4.staticflickr.com/3742/20446731986_b0fccafed8_h.jpg")
+![alt tag]("https://farm4.staticflickr.com/3807/20472969495_6d0ad53af8_h.jpg")
 
 Breakdown: 
   *  

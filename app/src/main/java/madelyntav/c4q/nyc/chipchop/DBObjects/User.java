@@ -30,8 +30,6 @@ public class User {
         this.address=address;
         this.encodedPhotoString=encodedPhotoString;
         this.phoneNumber=phoneNumber;
-
-       // addNewUserToDB();
     }
 
     public String getUserId() {
@@ -82,15 +80,4 @@ public class User {
         this.address = address;
     }
 
-    private void addNewUserToDB(){
-        firebaseRef= new Firebase(URL+"Users");
-
-        firebaseRef.child(UID);
-        firebaseRef.child(UID).child(sName).setValue(name);
-        firebaseRef.child(UID).child(sEmailAddress).setValue(emailAddress);
-        firebaseRef.child(UID).child(sPhoneNumber).setValue(phoneNumber);
-        firebaseRef.child(UID).child(sPhotoLink).setValue(encodedPhotoString);
-        firebaseRef.child(UID).child(sAddress).setValue(address.toString());
-
-    }
 }

@@ -89,17 +89,17 @@ Breakdown:
 
 
  ### Roles and Responsibilities
-  **WEEK 1**:<Br>
+  ####**WEEK 1**:<Br>
  -  **Alvin**: Front End Design and Layout Skeletons and Basic functionality linked to Methods plus listView Adapter and xml layouts for it
  -  **Madelyn**: Setting up and entering information to Cloud Database and User Login plus Database Helper Class and Objects classes for Addresses, Items, Orders, Reviews and Users
  -  **Anthony**: Getting information from Database and implementing maps including getting users Location and functionality of reviews
  
-   **WEEK 2**:<Br>
+  ####**WEEK 2**:<Br>
  -  **Alvin**: - Shake phone for random suggestion
  -  **Madelyn**: Credit Card Payments (To allow contracted chefs to conveniently receive payments and for users to conveniently pay for food), Facebook or Text Verification
  -  **Anthony**: Using SendGrid API to send confirmation/forgotten password e-mails and track order via map or bluetooth
  
-    **WEEK 3**:<Br>
+  ####**WEEK 3**:<Br>
  -  **Alvin**: UI Beautify and Responsive UI (That has the ability to change according to the time of day, Hunger Level, other parameters; simply to delight the user)
  -  **Madelyn**: Finishing Up Bonus/Testing/Debugging
  -  **Anthony**: Finishing Up Bonus/Testing/Debugging

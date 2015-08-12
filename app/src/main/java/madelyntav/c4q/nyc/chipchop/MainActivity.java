@@ -2,21 +2,27 @@ package madelyntav.c4q.nyc.chipchop;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
+import android.view.View;
 
 import com.firebase.client.Firebase;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+
+import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
 
 public class MainActivity extends AppCompatActivity {
 
     Firebase firebaseRef;
-    String userID;
-    String eMail;
-    String passWord;
-    String userName;
-    String streetAddress;
-    String apartment;
-    String city;
-    String state;
-    double zipCode;
+    String userID="";
+    DBHelper dbHelper;
     String URL="https://chipchop.firebaseio.com/";
 
 
@@ -24,92 +30,51 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         Firebase.setAndroidContext(this);
         firebaseRef = new Firebase(URL);
-
-
-
-
-    }
-    //Ignore code below just playing with Firebase
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public void createUser() {
-
-        firebaseRef.child("blah").setValue("I want donuts and milk");
-
-        //firebaseRef.child("messages").setValue("I want donuts and milk");
-        firebaseRef.child("blah").push().setValue("ljhn hu");
-
-        String name = "NAME";
-        String Password = "PASSWORD";
-        String city = "CITY";
-        String zipCode = "Zipcode";
-
-        String name1 = "Susie";
-        String pw1 = "password";
-        String city1 = "New York";
-        double zip = 10040;
-        String name2 = "french";
-        String pw2 = "plz";
-        String city2 = "San Fran";
-        double zip2 = 45667;
-
-        for (int i = 0; i <= 2; i++) {
-            String userNum = "user " + i;
-
-            firebaseRef.child(userNum);
-            firebaseRef.child(userNum).child(name).setValue(name1);
-            firebaseRef.child(userNum).child(name).setValue(name1);
-            firebaseRef.child(userNum).child(Password).setValue(pw1);
-            firebaseRef.child(userNum).child(city).setValue(city1);
-            firebaseRef.child(userNum).child(zipCode).setValue(zip);
-
-        }
-
-//    public void createUser(View view){
-//        final String userName="majjjdakjjknnffggv@chipchop.com";
-//        final String passWord="1234";
-//
-//        firebaseRef.createUser(userName,passWord , new Firebase.ValueResultHandler<Map<String, Object>>() {
-//            @Override
-//            public void onSuccess(Map<String, Object> stringObjectMap) {
-//                Toast.makeText(MainActivity.this, "Account Created", Toast.LENGTH_SHORT).show();
-//                userID = stringObjectMap.get("uid").toString();
-//                Log.i("USER ID", userID);
-//                firebaseRef.child("UserName").setValue(userName);
-//                firebaseRef.child("UserName").child("passWord").setValue("Tomorrow");
-//
-//
-//
-//            }
-//
-//            @Override
-//            public void onError(FirebaseError firebaseError) {
-//                Toast.makeText(MainActivity.this,"Email already in use",Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//    }
-
+        dbHelper=new DBHelper(this);
     }
 
-    public void addImageAndDescription(){
 
+    public void createUserLets(View view){
+        Item item=new Item("5","Beans","5","yellow","The fin");
+        item.setItemID("hgg");
+        Item item1= new Item("5","Rice","2","Black","IGHGH");
+        item1.setItemID("gff");
+        Item item2= new Item("5","Chicken","6","Brown","jfjfd");
+        item2.setItemID("Iggj");
+
+        ArrayList<Item> items=new ArrayList<>();
+        items.add(item);
+        items.add(item1);
+        items.add(item2);
+        Order order=new Order(item.getUserID(),items);
+
+        dbHelper.addOrderToDB(order);
     }
+
+
+
+   public void saveImageToEncodedString(String fileName){
+       InputStream inputStream = null;
+       try {
+           inputStream = new FileInputStream(fileName);
+       } catch (FileNotFoundException e) {
+           e.printStackTrace();
+       }
+       byte[] bytes;
+       byte[] buffer = new byte[8192];
+       int bytesRead;
+       ByteArrayOutputStream output = new ByteArrayOutputStream();
+       try {
+           while ((bytesRead = inputStream.read(buffer)) != -1) {
+               output.write(buffer, 0, bytesRead);
+           }
+       } catch (IOException e) {
+           e.printStackTrace();
+       }
+       bytes = output.toByteArray();
+       String encodedString = Base64.encodeToString(bytes, Base64.DEFAULT);
+   }
 
 }

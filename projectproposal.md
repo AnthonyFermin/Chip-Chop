@@ -98,7 +98,7 @@ Breakdown:
  -  **Alvin**: - Shake phone for random suggestion
  -  **Madelyn**: Credit Card Payments (To allow contracted chefs to conveniently receive payments and for users to conveniently pay for food), Facebook or Text Verification
  -  **Anthony**: Using SendGrid API to send confirmation/forgotten password e-mails and track order via map or bluetooth
- -  
+ 
     **WEEK 3**:<Br>
  -  **Alvin**: UI Beautify and Responsive UI (That has the ability to change according to the time of day, Hunger Level, other parameters; simply to delight the user)
  -  **Madelyn**: Finishing Up Bonus/Testing/Debugging

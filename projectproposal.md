@@ -13,11 +13,11 @@ Madelyn Tavarez, Anthony Fermin, Alvin Kuang
 
 ### Problem: 
 ---
-The problem that our app is aiming to tackle is the unfilled desire of users (especially of those in cities who are young working professionals or students in their 20-30's who do not live with family) who are looking for a convenient way to enjoy an authentically prepared and home-cooked meal. It would also provide a money-making opportunity for those who are stay-at-home parents with kids, or immigrants who don't have the necessary skills to obtain regular jobs, but have a love for cooking food of their culture or any culture for matter! 
+The problem that our app is aiming to tackle is the unfilled desire of users(Millennials) who are looking for a convenient way to enjoy an authentically prepared and home-cooked meal. This app will also serve as a MarketPlace startup for independent contractors that would like to sell their home-cooked goods to people in their communities. 
 
 ### Solution: 
 ---
-Our mobile app aims to create a platform that connects the 'users' with 'chefs' in their local community/neighborhood to deliver or pick-up authentic home-cooked meals! By doing so, this would also allow people to create real social connections with members of their local community, and familiarize/befriend those who live in their local area whom they might not have the chance of ever meeting in a vast city, such as NYC. 
+Our mobile app aims to create a platform that connects the 'users' with 'chefs' in their local community/neighborhood to deliver or pick-up authentic home-cooked meals! By doing so, this would also allow people to create real social connections with members of their local community, and familiarize/befriend those who live in their local area whom they might not have the chance of ever meeting in a vast city, such as NYC. People would have the ability to buy from and cook for people in their community and be given the opportunity to bond over that experience and/or the dishes they love. Repeat customers could form real connections with their cooks.  
 
 
 
@@ -43,7 +43,7 @@ home to take care of their children)
  - Profiles with user/chef information, location, photos and a live update of dishes currently available at the time (including any allergens)
  - Review system for all sellers (Similar to yelp's star ratings that would allow users to rate the chef in general)
  - Utilizing geolocation to locate local chefs and populate onto map (FOR FRESH FOOD!) also allow entry for zip code when searching as a backup for geolocation fail
- -DELIVERY: chefs can decide whether they want to deliver and/or allow pick-upusers can filter through one, other, no preference
+ -DELIVERY: chefs can decide whether they want to deliver and/or allow pick-up users can filter through one, other, no preference
 
 
 
@@ -90,7 +90,17 @@ Breakdown:
 
  ### Roles and Responsibilities
   **WEEK 1**:<Br>
- -  **Alvin**: Front End Design and Layout 
- -  **Madelyn**: Setting up and entering information to Cloud Database
- -  **Anthony**: Getting information from Database and implementing maps
+ -  **Alvin**: Front End Design and Layout Skeletons and Basic functionality linked to Methods plus listView Adapter and xml layouts for it
+ -  **Madelyn**: Setting up and entering information to Cloud Database and User Login plus Database Helper Class and Objects classes for Addresses, Items, Orders, Reviews and Users
+ -  **Anthony**: Getting information from Database and implementing maps including getting users Location and functionality of reviews
+ 
+   **WEEK 2**:<Br>
+ -  **Alvin**: - Shake phone for random suggestion
+ -  **Madelyn**: Credit Card Payments (To allow contracted chefs to conveniently receive payments and for users to conveniently pay for food), Facebook or Text Verification
+ -  **Anthony**: Using SendGrid API to send confirmation/forgotten password e-mails and track order via map or bluetooth
+ -  
+    **WEEK 3**:<Br>
+ -  **Alvin**: UI Beautify and Responsive UI (That has the ability to change according to the time of day, Hunger Level, other parameters; simply to delight the user)
+ -  **Madelyn**: Finishing Up Bonus/Testing/Debugging
+ -  **Anthony**: Finishing Up Bonus/Testing/Debugging
  

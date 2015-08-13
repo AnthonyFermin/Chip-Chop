@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Firebase.setAndroidContext(this);
 
+        dbHelper=DBHelper.getDbHelper();
         if(dbHelper == null) {
             dbHelper = new DBHelper(getApplicationContext());
         }

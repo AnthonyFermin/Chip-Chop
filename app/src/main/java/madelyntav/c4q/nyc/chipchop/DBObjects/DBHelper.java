@@ -19,6 +19,7 @@ public class DBHelper {
     private static final String URL="https://chipchop.firebaseio.com/";
     Context context;
     String UID;
+    private static final DBHelper dbHelper = null;
     private static final String sName="NAME";
     private static final String sEmailAddress="Email";
     private static final String sPhoneNumber="Phone Number";
@@ -39,6 +40,9 @@ public class DBHelper {
 
     public Firebase getFirebaseRef() {
         return firebaseRef;
+    }
+    public static DBHelper getDbHelper() {
+        return dbHelper;
     }
 
     public void createUser(final String email, String password){

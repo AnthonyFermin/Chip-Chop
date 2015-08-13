@@ -90,6 +90,11 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+
+        if (savedInstanceState == null) {
+            selectItem(0);
+        }
     }
 
     // TODO: PUT CODE FOR INTERACTION WITH LIST HERE !!

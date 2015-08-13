@@ -44,16 +44,12 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         sellButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new Handler().post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent sellIntent = new Intent(BuyActivity.this, SellActivity.class);
-                        startActivity(sellIntent);
-                    }
-                });
-
+                Intent sellIntent = new Intent(getApplicationContext(), SellActivity.class);
+                startActivity(sellIntent);
             }
         });
+
+
         DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);

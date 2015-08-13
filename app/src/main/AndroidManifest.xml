@@ -10,16 +10,27 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
-
         </activity>
         <activity
-            android:name=".SecondActivity"
-            android:label="@string/title_activity_second" >
+            android:name=".BuyActivity"
+            android:label="@string/title_activity_buy" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".SignupActivity1"
+            android:label="@string/title_activity_signup1" >
+        </activity>
+        <activity
+            android:name=".SignupActivity2"
+            android:label="@string/title_activity_signup2" >
+        </activity>
+        <activity
+            android:name=".SellActivity"
+            android:label="@string/title_activity_sell" >
         </activity>
     </application>
 

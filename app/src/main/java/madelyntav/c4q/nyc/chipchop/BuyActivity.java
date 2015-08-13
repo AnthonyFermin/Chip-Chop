@@ -4,23 +4,29 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Orders;
-import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Orders;
 
-public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Orders.OnHeadlineSelectedListener {
+public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Orders.OnBuyerOrderSelectedListener, Fragment_Buyer_Map.OnBuyerMapFragmentInteractionListener {
 
+    LinearLayout DrawerLinear;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private String[] mListTitles;
@@ -34,6 +40,21 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         setContentView(R.layout.activity_buy);
 
 
+        Button sellButton = (Button) findViewById(R.id.sellButton);
+        sellButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent sellIntent = new Intent(BuyActivity.this, SellActivity.class);
+                        startActivity(sellIntent);
+                    }
+                });
+
+            }
+        });
+        DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mListTitles = getResources().getStringArray(R.array.BUYER_nav_drawer_titles);
@@ -77,6 +98,11 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
     }
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
     /* The click listener for ListView in the navigation drawer */
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
@@ -90,14 +116,11 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         // update the main content by replacing fragments
 
         if (position == 0) {
-            fragment = new Fragment_Homescreen(); // FOR TESTING ATM
+            fragment = new Fragment_Buyer_Map();
         } else if (position == 1) {
-
+            fragment = new Fragment_Buyer_Orders();
         } else if (position == 2) {
             // TODO: PROFILE SETTINGS
-        } else if (position == 3) {
-            Intent sellIntent = new Intent(BuyActivity.this, BuyActivity.class);
-            startActivity(sellIntent);
         }
 
             // Create fragment manager to begin interacting with the fragments and the container
@@ -107,7 +130,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
             // update selected item and title in nav drawer, then close the drawer
             mDrawerList.setItemChecked(position, true);
-            mDrawerLayout.closeDrawer(mDrawerList);
+            mDrawerLayout.closeDrawer(DrawerLinear);
         }
 
 
@@ -139,5 +162,11 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(DrawerLinear);
+        return drawerOpen;
     }
 }

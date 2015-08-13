@@ -14,6 +14,13 @@ public class Fragment_Seller_Items extends Fragment {
 
     OnHeadlineSelectedListener mCallback;
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_seller__items, container, false);
+    }
+
     // Container Activity must implement this interface
     public interface OnHeadlineSelectedListener {
         public void onSellerItemSelected(int position);
@@ -29,16 +36,11 @@ public class Fragment_Seller_Items extends Fragment {
             mCallback = (OnHeadlineSelectedListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnHeadlineSelectedListener");
+                    + " must implement OnBuyerOrderSelectedListener");
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_seller__items, container, false);
-    }
+
 
 
 

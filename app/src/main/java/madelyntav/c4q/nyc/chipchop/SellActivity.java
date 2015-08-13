@@ -10,10 +10,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Items;
@@ -21,6 +24,7 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Orders;
 
 public class SellActivity extends AppCompatActivity implements Fragment_Seller_Orders.OnHeadlineSelectedListener, Fragment_Seller_Items.OnHeadlineSelectedListener {
 
+    LinearLayout DrawerLinear;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private String[] mListTitles;
@@ -33,8 +37,15 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buy);
 
-
-
+        Button buyButton = (Button) findViewById(R.id.buyButton);
+        buyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent buyIntent = new Intent(SellActivity.this, BuyActivity.class);
+                startActivity(buyIntent);
+            }
+        });
+        DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mListTitles = getResources().getStringArray(R.array.SELLER_nav_drawer_titles);
@@ -109,9 +120,6 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
             fragment = new Fragment_Seller_Orders();
         } else if (position == 2) {
             // TODO: PROFILE SETTINGS
-        } else if (position == 3) {
-            Intent buyIntent = new Intent(SellActivity.this, BuyActivity.class);
-            startActivity(buyIntent);
         }
 
             // Create fragment manager to begin interacting with the fragments and the container
@@ -121,7 +129,7 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
 
             // update selected item and title in nav drawer, then close the drawer
             mDrawerList.setItemChecked(position, true);
-            mDrawerLayout.closeDrawer(mDrawerList);
+            mDrawerLayout.closeDrawer(DrawerLinear);
 
     }
 
@@ -153,5 +161,11 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(DrawerLinear);
+        return drawerOpen;
     }
 }

@@ -1,7 +1,6 @@
 package madelyntav.c4q.nyc.chipchop.fragments;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,10 +12,17 @@ import madelyntav.c4q.nyc.chipchop.R;
 
 public class Fragment_Buyer_Orders extends Fragment {
 
-    OnHeadlineSelectedListener mCallback;
+    OnBuyerOrderSelectedListener mCallback;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_buyer__orders, container, false);
+    }
 
     // Container Activity must implement this interface
-    public interface OnHeadlineSelectedListener {
+    public interface OnBuyerOrderSelectedListener {
         public void onArticleSelected(int position);
     }
 
@@ -27,19 +33,14 @@ public class Fragment_Buyer_Orders extends Fragment {
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            mCallback = (OnHeadlineSelectedListener) activity;
+            mCallback = (OnBuyerOrderSelectedListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnHeadlineSelectedListener");
+                    + " must implement OnBuyerOrderSelectedListener");
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_buyer__orders, container, false);
-    }
+
 
 
 

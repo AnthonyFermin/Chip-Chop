@@ -4,7 +4,6 @@
         <item>Find Food</item>
         <item>Orders</item>
         <item>Profile Settings</item>
-        <item>SELL</item>
     </string-array>
 
 
@@ -13,7 +12,6 @@
         <item>Seller Items</item>
         <item>Orders</item>
         <item>Profile Settings</item>
-        <item>BUY</item>
     </string-array>
 
 

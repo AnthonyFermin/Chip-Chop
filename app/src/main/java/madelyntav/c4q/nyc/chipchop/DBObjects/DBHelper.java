@@ -16,26 +16,30 @@ import java.util.Map;
  */
 public class DBHelper {
     Firebase firebaseRef;
-    String URL="https://chipchop.firebaseio.com/";
+    private static final String URL="https://chipchop.firebaseio.com/";
     Context context;
     String UID;
-    String sName="NAME";
-    String sEmailAddress="Email";
-    String sPhoneNumber="Phone Number";
-    String sAddress="ADDRESS";
-    String sPhotoLink="Photo Link";
-    String sStreet="STREET";
-    String sApartment="APARTMENT";
-    String sCity="CITY";
-    String sState="STATE";
-    String sZipCode="ZIPCODE";
+    private static final String sName="NAME";
+    private static final String sEmailAddress="Email";
+    private static final String sPhoneNumber="Phone Number";
+    private static final String sAddress="ADDRESS";
+    private static final String sPhotoLink="Photo Link";
+    private static final String sStreet="STREET";
+    private static final String sApartment="APARTMENT";
+    private static final String sCity="CITY";
+    private static final String sState="STATE";
+    private static final String sZipCode="ZIPCODE";
     User user;
     Address address;
 
     public DBHelper(Context context){
         this.context=context;
+        firebaseRef=new Firebase(URL);
     }
 
+    public Firebase getFirebaseRef() {
+        return firebaseRef;
+    }
 
     public void createUser(final String email, String password){
         UID = "";

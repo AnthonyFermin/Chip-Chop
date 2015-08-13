@@ -22,8 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     Firebase firebaseRef;
     String userID="";
-    DBHelper dbHelper;
-    String URL="https://chipchop.firebaseio.com/";
+    private static DBHelper dbHelper = null;
 
 
     @Override
@@ -31,8 +30,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Firebase.setAndroidContext(this);
-        firebaseRef = new Firebase(URL);
-        dbHelper=new DBHelper(this);
+
+        if(dbHelper == null) {
+            dbHelper = new DBHelper(getApplicationContext());
+        }
+
     }
 
 

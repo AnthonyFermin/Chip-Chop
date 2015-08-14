@@ -35,16 +35,9 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_buy);
+        setContentView(R.layout.activity_sell);
 
-        Button buyButton = (Button) findViewById(R.id.buyButton);
-        buyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent buyIntent = new Intent(SellActivity.this, BuyActivity.class);
-                startActivity(buyIntent);
-            }
-        });
+
         DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -72,6 +65,15 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
             public void onDrawerOpened(View drawerView) {
                 getSupportActionBar().setTitle(R.string.app_name);
                 ActivityCompat.invalidateOptionsMenu(SellActivity.this);
+
+                Button buyButton = (Button) findViewById(R.id.buyButton);
+                buyButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent buyIntent = new Intent(SellActivity.this, BuyActivity.class);
+                        startActivity(buyIntent);
+                    }
+                });
             }
         };
         mDrawerToggle.setDrawerIndicatorEnabled(true);
@@ -81,6 +83,8 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+
     }
 
 

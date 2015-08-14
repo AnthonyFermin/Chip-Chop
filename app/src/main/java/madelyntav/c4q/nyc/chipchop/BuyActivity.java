@@ -18,14 +18,18 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+
+
 
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Orders;
 
 public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Orders.OnBuyerOrderSelectedListener, Fragment_Buyer_Map.OnBuyerMapFragmentInteractionListener {
 
+    FrameLayout frameLayout;
     LinearLayout DrawerLinear;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -40,16 +44,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         setContentView(R.layout.activity_buy);
 
 
-        Button sellButton = (Button) findViewById(R.id.sellButton);
-        sellButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent sellIntent = new Intent(getApplicationContext(), SellActivity.class);
-                startActivity(sellIntent);
-            }
-        });
-
-
+        frameLayout = (FrameLayout) findViewById(R.id.frameLayout);
         DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -72,11 +67,23 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
             public void onDrawerClosed(View view) {
                 getSupportActionBar().setTitle(R.string.app_name);
                 ActivityCompat.invalidateOptionsMenu(BuyActivity.this);
+                frameLayout.setAlpha(Float.parseFloat("1.0"));
             }
 
             public void onDrawerOpened(View drawerView) {
                 getSupportActionBar().setTitle(R.string.app_name);
                 ActivityCompat.invalidateOptionsMenu(BuyActivity.this);
+                frameLayout.setAlpha(Float.parseFloat("0.1"));
+
+                Button sellButton = (Button) findViewById(R.id.sellButton);
+                sellButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent sellIntent = new Intent(getApplicationContext(), SellActivity.class);
+                        startActivity(sellIntent);
+                    }
+                });
+
             }
         };
         mDrawerToggle.setDrawerIndicatorEnabled(true);

@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -24,6 +25,7 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Orders;
 
 public class SellActivity extends AppCompatActivity implements Fragment_Seller_Orders.OnHeadlineSelectedListener, Fragment_Seller_Items.OnHeadlineSelectedListener {
 
+    FrameLayout frameLayout;
     LinearLayout DrawerLinear;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -37,7 +39,7 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sell);
 
-
+        frameLayout = (FrameLayout) findViewById(R.id.frameLayout);
         DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -60,11 +62,14 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
             public void onDrawerClosed(View view) {
                 getSupportActionBar().setTitle(R.string.app_name);
                 ActivityCompat.invalidateOptionsMenu(SellActivity.this);
+                frameLayout.setAlpha(Float.parseFloat("1.0"));
+
             }
 
             public void onDrawerOpened(View drawerView) {
                 getSupportActionBar().setTitle(R.string.app_name);
                 ActivityCompat.invalidateOptionsMenu(SellActivity.this);
+                frameLayout.setAlpha(Float.parseFloat("0.1"));
 
                 Button buyButton = (Button) findViewById(R.id.buyButton);
                 buyButton.setOnClickListener(new View.OnClickListener() {
@@ -72,6 +77,7 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
                     public void onClick(View view) {
                         Intent buyIntent = new Intent(SellActivity.this, BuyActivity.class);
                         startActivity(buyIntent);
+                        finish();
                     }
                 });
             }

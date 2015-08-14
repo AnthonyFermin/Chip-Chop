@@ -81,6 +81,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
                     public void onClick(View view) {
                         Intent sellIntent = new Intent(getApplicationContext(), SellActivity.class);
                         startActivity(sellIntent);
+                        finish();
                     }
                 });
 

@@ -1,12 +1,89 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="madelyntav.c4q.nyc.chipchop.SignupActivity2">
+    tools:context="madelyntav.c4q.nyc.chipchop.SignupActivity2"
+    android:orientation="vertical"
+    android:background="#CCC">
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/profile_image"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/github"
+        app:border_width="2dp"
+        android:padding="10dp"
+        app:border_color="#FFF"
+        android:layout_gravity="center_horizontal"/>
 
-</RelativeLayout>
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Name"
+        android:textSize="25sp"
+        android:layout_margin="10dp"/>
+
+    <EditText
+        android:id="@+id/address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Street Address"
+        android:textSize="25sp"
+        android:layout_margin="10dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+    <EditText
+        android:id="@+id/apt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Apt"
+        android:textSize="25sp"
+        android:layout_margin="10dp"
+        android:layout_weight="1"/>
+
+        <EditText
+            android:id="@+id/city"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="City"
+            android:textSize="25sp"
+            android:layout_margin="10dp"
+            android:layout_weight="4"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text=", NY "
+            android:textSize="25sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/zipcode"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:hint="Zipcode"
+        android:textSize="25sp"
+        android:layout_margin="10dp"
+        android:layout_weight="1"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="sign up!"
+        style="@style/button_design"/>
+
+
+</LinearLayout>

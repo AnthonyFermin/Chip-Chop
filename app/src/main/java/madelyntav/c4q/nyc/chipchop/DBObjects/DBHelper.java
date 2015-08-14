@@ -186,24 +186,24 @@ public class DBHelper {
         firebaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("Number",dataSnapshot.getChildrenCount()+"");
+                Log.d("Number", dataSnapshot.getChildrenCount() + "");
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                     Item item=dataSnapshot1.getValue(Item.class);
-                        Log.d("SNAPSHOT","Got Snapshot");
-                   String key= dataSnapshot1.getKey();
-                         Log.d(itemID,key+"");
-                     String nameOfItem1=item.nameOfItem;
-                        Log.d(nameOfItem,nameOfItem1+"");
+                    Item item = dataSnapshot1.getValue(Item.class);
+                    Log.d("SNAPSHOT", "Got Snapshot");
+                    String key = dataSnapshot1.getKey();
+                    Log.d(itemID, key + "");
+                    String nameOfItem1 = item.nameOfItem;
+                    Log.d(nameOfItem, nameOfItem1 + "");
 
-                    String descriptionOfItem1=item.descriptionOfItem;
-                    Log.d(descriptionOfItem,descriptionOfItem1+"");
+                    String descriptionOfItem1 = item.descriptionOfItem;
+                    Log.d(descriptionOfItem, descriptionOfItem1 + "");
 
-                    String quantityAvailable1=item.quantityAvailable;
-                    Log.d(quantityAvailable,quantityAvailable1+"");
+                    String quantityAvailable1 = item.quantityAvailable;
+                    Log.d(quantityAvailable, quantityAvailable1 + "");
 
-                    String imageLink1=item.imageLink;
-                    Log.d(imageLink,imageLink1+"");
+                    String imageLink1 = item.imageLink;
+                    Log.d(imageLink, imageLink1 + "");
 
                 }
 
@@ -211,11 +211,46 @@ public class DBHelper {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-                Log.d("Error Retrieving","Error");
+                Log.d("Error Retrieving", "Error");
 
             }
         });
 
-        }
+    }
+
+    public void getAddressFromDB(String id){
+        UID="";
+        this.UID=id;
+
+        firebaseRef=new Firebase(URL+"Addresses/"+id);
+
+        firebaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Address address = dataSnapshot.getValue(Address.class);
+                String streetAddress1 = address.streetAddress;
+                Log.d("Street", streetAddress1);
+
+                String apartment=address.apartment;
+                Log.d("apartment",apartment);
+
+                String city=address.city;
+                Log.d("city",city);
+
+                String state=address.state;
+                Log.d("state",state);
+
+                String zipCode=address.zipCode;
+                Log.d("zipCode",zipCode);
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+
+    }
 
 }

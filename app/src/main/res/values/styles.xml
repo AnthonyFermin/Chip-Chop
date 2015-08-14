@@ -11,5 +11,9 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:background">@drawable/button</item>
     </style>
+    
+    <style name="text_design">
+        <item name="android:textColor">#D32F2F</item>
+    </style>
 
 </resources>

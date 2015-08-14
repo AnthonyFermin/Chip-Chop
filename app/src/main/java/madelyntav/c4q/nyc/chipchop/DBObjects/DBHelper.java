@@ -5,8 +5,10 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -19,17 +21,24 @@ public class DBHelper {
     private static final String URL="https://chipchop.firebaseio.com/";
     Context context;
     String UID;
+
+    private static final String userID="userID";
     private static final DBHelper dbHelper = null;
-    private static final String sName="NAME";
-    private static final String sEmailAddress="Email";
-    private static final String sPhoneNumber="Phone Number";
-    private static final String sAddress="ADDRESS";
-    private static final String sPhotoLink="Photo Link";
-    private static final String sStreet="STREET";
-    private static final String sApartment="APARTMENT";
-    private static final String sCity="CITY";
-    private static final String sState="STATE";
-    private static final String sZipCode="ZIPCODE";
+    private static final String sStreet="streetAddress";
+    private static final String sApartment="apartment";
+    private static final String sCity="city";
+    private static final String sState="state";
+    private static final String sZipCode="zipCode";
+    private static final String nameOfItem="nameOfItem";
+    private static final String descriptionOfItem="descriptionOfItem";
+    private static final String quantityAvailable="quantityAvailable";
+    private static final String itemID="itemID";
+    private static final String imageLink="imageLink";
+    private static final String sName="name";
+    private static final String sEmailAddress="eMail";
+    private static final String sPhoneNumber="phoneNumber";
+    private static final String sAddress="address";
+    private static final String sPhotoLink="photoLink";
     User user;
     Address address;
 
@@ -61,8 +70,11 @@ public class DBHelper {
                 SharedPreferences.Editor editor=sharedPreferences.edit();
                 editor.putString("id",UID);
                 editor.apply();
-//                firebaseRef.child("UserName").setValue(email);
-//                firebaseRef.child("UserName").child("passWord").setValue("Tomorrow");
+                    firebaseRef = new Firebase(URL+"UserLogins");
+                firebaseRef.child(UID);
+
+//                firebaseRef.child(UID).child("UserName").setValue(email);
+//                firebaseRef.child(UID).child("UserName").child("passWord").setValue("Tomorrow");
             }
 
             @Override
@@ -73,7 +85,7 @@ public class DBHelper {
     }
 
     public void addUserProfileInfoToDB(User user){
-        firebaseRef= new Firebase(URL+"Users");
+        firebaseRef= new Firebase(URL+"UserProfiles");
         UID=user.getUserId();
 
         firebaseRef.child(UID).push();
@@ -113,31 +125,97 @@ public class DBHelper {
         firebaseRef.child(itemID).child("NAME").setValue(item.getNameOfItem());
         firebaseRef.child(itemID).child("DESCRIPTION").setValue(item.getDescriptionOfItem());
         firebaseRef.child(itemID).child("QUANTITY").setValue(item.getQuantityAvailable());
-        firebaseRef.child(itemID).child("ImageLink").setValue(item.getEncodedImageString());
+        firebaseRef.child(itemID).child("ImageLink").setValue(item.getImageLink());
 
-        Log.d("ItemID",itemID);
-
+        Log.d("ItemID", itemID);
     }
 
     public void addOrderToDB(Order order){
         UID="";
         UID=order.getUserID();
+
         firebaseRef= new Firebase(URL+"Orders/"+UID);
 
         ArrayList<Item> itemsOrdered=order.getItemsOrdered();
 
         Firebase fire1=firebaseRef.child(UID).push();
         String orderID=fire1.getKey();
-        firebaseRef.child(UID).child(orderID).push();
+
+
 
         for(Item item: itemsOrdered) {
+
             String itemID=item.getItemID();
-            firebaseRef.child(UID).child(itemID).child(itemID).push();
-            firebaseRef.child(itemID).child("NAME").setValue(item.getNameOfItem());
-            firebaseRef.child(itemID).child("DESCRIPTION").setValue(item.getDescriptionOfItem());
-            firebaseRef.child(itemID).child("QUANTITY").setValue(item.getQuantityAvailable());
-            firebaseRef.child(itemID).child("ImageLink").setValue(item.getEncodedImageString());
+            firebaseRef.child(UID).child(orderID).push();
+            firebaseRef.child(orderID).child(itemID);
+            firebaseRef.child(orderID).child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
+            firebaseRef.child(orderID).child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
+            firebaseRef.child(orderID).child(itemID).child("quantityAvailable").setValue(item.getQuantityAvailable());
+            firebaseRef.child(orderID).child(itemID).child("imageLink").setValue(item.getImageLink());
         }
 
     }
+
+    public void currentlyOnSale(Item item){
+
+        UID="";
+        UID=item.getUserID();
+        firebaseRef= new Firebase(URL+"itemsForSale/"+UID);
+
+        Firebase fire1=firebaseRef.child(UID).push();
+        String itemID=fire1.getKey();
+        item.setItemID(itemID);
+
+        firebaseRef.child(UID).child(itemID).push();
+        firebaseRef.child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
+        firebaseRef.child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
+        firebaseRef.child(itemID).child("userID").setValue(item.getQuantityAvailable());
+        firebaseRef.child(itemID).child("imageLink").setValue(item.getImageLink());
+
+        Log.d("ItemID", itemID);
+    }
+
+    public void getSellersOnSaleItems(Order order){
+        UID="";
+
+        UID=order.getUserID();
+        String orderID=order.getOrderID();
+
+        firebaseRef=new Firebase(URL+"Orders/"+"5"+"/"+orderID);
+
+        firebaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("Number",dataSnapshot.getChildrenCount()+"");
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                     Item item=dataSnapshot1.getValue(Item.class);
+                        Log.d("SNAPSHOT","Got Snapshot");
+                   String key= dataSnapshot1.getKey();
+                         Log.d(itemID,key+"");
+                     String nameOfItem1=item.nameOfItem;
+                        Log.d(nameOfItem,nameOfItem1+"");
+
+                    String descriptionOfItem1=item.descriptionOfItem;
+                    Log.d(descriptionOfItem,descriptionOfItem1+"");
+
+                    String quantityAvailable1=item.quantityAvailable;
+                    Log.d(quantityAvailable,quantityAvailable1+"");
+
+                    String imageLink1=item.imageLink;
+                    Log.d(imageLink,imageLink1+"");
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Log.d("Error Retrieving","Error");
+
+            }
+        });
+
+        }
+
 }

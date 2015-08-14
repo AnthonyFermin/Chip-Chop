@@ -8,11 +8,11 @@ import com.firebase.client.Firebase;
  * Created by c4q-madelyntavarez on 8/11/15.
  */
 public class User {
-    String sName="NAME";
-    String sEmailAddress="Email";
-    String sPhoneNumber="Phone Number";
-    String sAddress="ADDRESS";
-    String sPhotoLink="PhotoLink";
+    String sName="name";
+    String sEmailAddress="eMail";
+    String sPhoneNumber="phoneNumber";
+    String sAddress="address";
+    String sPhotoLink="photoLink";
     String emailAddress;
     String name;
     Address address;

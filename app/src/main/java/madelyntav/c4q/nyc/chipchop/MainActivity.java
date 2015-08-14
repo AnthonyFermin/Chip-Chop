@@ -38,22 +38,32 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    
+    //Madelyn's Testing Code Below
+
+
 
     public void createUserLets(View view){
         Item item=new Item("5","Beans","5","yellow","The fin");
         item.setItemID("hgg");
         Item item1= new Item("5","Rice","2","Black","IGHGH");
         item1.setItemID("gff");
-        Item item2= new Item("5","Chicken","6","Brown","jfjfd");
+        Item item2= new Item("5","Chicken","6","Blue","jfjfd");
         item2.setItemID("Iggj");
 
         ArrayList<Item> items=new ArrayList<>();
         items.add(item);
         items.add(item1);
         items.add(item2);
-        Order order=new Order(item.getUserID(),items);
+        Order order= new Order();
+        order.setOrderID("-Jwh6593TmhGUXVJ2oMP");
+        order.setUserID("5");
 
-        dbHelper.addOrderToDB(order);
+        //dbHelper.addOrderToDB(order);
+
+
+        dbHelper.getSellersOnSaleItems(order);
+
     }
 
 

@@ -8,7 +8,9 @@ public class Item {
     String nameOfItem;
     String quantityAvailable;
     String descriptionOfItem;
-    String encodedImageString;
+    String imageLink;
+
+    public Item(){}
 
     public String getItemID() {
         return itemID;
@@ -20,12 +22,12 @@ public class Item {
 
     String itemID;
 
-    public Item(String userID, String nameOfItem, String quantityAvailable, String descriptionOfItem, String encodedImageString){
+    public Item(String userID, String nameOfItem, String quantityAvailable, String descriptionOfItem, String imageLink){
         this.userID=userID;
         this.nameOfItem=nameOfItem;
         this.quantityAvailable=quantityAvailable;
         this.descriptionOfItem=descriptionOfItem;
-        this.encodedImageString=encodedImageString;
+        this.imageLink=imageLink;
     }
 
     public String getNameOfItem() {
@@ -59,12 +61,12 @@ public class Item {
     public void setDescriptionOfItem(String descriptionOfItem) {
         this.descriptionOfItem = descriptionOfItem;
     }
-    public String getEncodedImageString() {
-        return encodedImageString;
+    public String getImageLink() {
+        return imageLink;
     }
 
-    public void setEncodedImageString(String encodedImageString) {
-        this.encodedImageString = encodedImageString;
+    public void setImageLink(String imageLink) {
+        this.imageLink = imageLink;
     }
 
 

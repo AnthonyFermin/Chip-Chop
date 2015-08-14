@@ -1,14 +1,20 @@
 package madelyntav.c4q.nyc.chipchop.DBObjects;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 
 /**
  * Created by c4q-madelyntavarez on 8/11/15.
  */
+
 public class Order {
     String userID;
     String orderID;
     ArrayList<Item> itemsOrdered;
+
+    public Order(){
+        //this.userID=userID;
+    }
 
     public Order(ArrayList<Item> itemsOrdered){
         this.itemsOrdered=itemsOrdered;
@@ -20,6 +26,7 @@ public class Order {
         this.itemsOrdered=itemsOrdered;
     }
 
+    @JsonIgnore
     public String getOrderID() {
         return orderID;
     }

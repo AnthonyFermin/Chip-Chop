@@ -35,6 +35,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:style="@style/text_design"
             android:textSize="30sp"
             android:padding="15dp"
             android:text="NAME HERE"

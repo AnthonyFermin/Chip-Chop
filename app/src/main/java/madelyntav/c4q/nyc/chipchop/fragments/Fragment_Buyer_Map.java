@@ -16,6 +16,8 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,9 +37,13 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.R;
+import madelyntav.c4q.nyc.chipchop.adapters.FoodListAdapter;
 
 
 public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -47,7 +53,6 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     public static final String LASTLONGITUDE = "LastLongitude";
     public static final String LASTLATITUDE = "LastLatitude";
 
-    private Context aContext;
     private LocationRequest mLocationRequest;
     private GoogleMap map;
     private SharedPreferences preferences;
@@ -55,11 +60,14 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     private boolean gps_enabled = false;
     private GoogleApiClient googleApiClient;
 
+    private DBHelper dbHelper;
+    private ArrayList<Item> foodItems;
+
+    private RecyclerView foodList;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        aContext = container.getContext();
 
         View root = inflater.inflate(R.layout.fragment_buyer_map, container, false);
 
@@ -75,8 +83,25 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         map = mapFragment.getMap();
+//        dbHelper = new DBHelper(getActivity().getApplicationContext());  TODO: DBHelper constructor should set androidContext
+        //TODO: next line should be foodItems = dbHelper.getAvailableFoodItems(currentLocation);
+        foodItems = new ArrayList<>();
+        populateItems();
+
+        foodList = (RecyclerView) root.findViewById(R.id.foodList);
+        foodList.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        FoodListAdapter foodListAdapter = new FoodListAdapter(getActivity(),foodItems);
+        foodList.setAdapter(foodListAdapter);
 
         return root;
+    }
+
+    //test method to populate RecyclerView
+    private void populateItems(){
+        for(int i = 0; i < 10; i++) {
+            foodItems.add(new Item("test", "Something Fancy", "3", "The fanciest homemade meal you've ever had", "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg"));
+        }
     }
 
 

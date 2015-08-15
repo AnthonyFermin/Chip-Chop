@@ -180,5 +180,12 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
     @Override
     public void onBackPressed() {
+        replaceFragment(new Fragment_Buyer_Map());
+    }
+
+    public void replaceFragment(Fragment fragment) {
+        FragmentManager BuyFragmentManager = getSupportFragmentManager();
+        BuyFragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
+
     }
 }

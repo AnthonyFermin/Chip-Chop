@@ -42,7 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
-import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
+import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.adapters.SellersListAdapter;
 
@@ -63,7 +63,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     private GoogleApiClient googleApiClient;
 
     private DBHelper dbHelper;
-    private ArrayList<Item> sellers;
+    private ArrayList<User> sellers;
 
     private RecyclerView sellersList;
     private View root;
@@ -110,7 +110,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     //test method to populate RecyclerView
     private void populateItems(){
         for(int i = 0; i < 10; i++) {
-            sellers.add(new Item("test", "Github Cat", "3", "Spanish Food", "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg"));
+            sellers.add(new User("test", "Github Cat", "Github Cat", new madelyntav.c4q.nyc.chipchop.DBObjects.Address(), "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg", "ajs;djf;d"));
         }
     }
 

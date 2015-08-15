@@ -1,5 +1,7 @@
 package madelyntav.c4q.nyc.chipchop.adapters;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -11,26 +13,31 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
+import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
+import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.R;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile;
 
 /**
  * Created by c4q-anthonyf on 8/14/15.
  */
-public class SellersListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class SellersListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<Item> foodItems;
+    private List<User> sellers;
     private Context context;
     private int lastPosition = -1;
 
-    public SellersListAdapter(Context context, List<Item> foodItems){
+    public SellersListAdapter(Context context, List<User> sellers) {
         this.context = context;
-        this.foodItems = foodItems;
+        this.sellers = sellers;
     }
 
-    private class SellersViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    private class SellersViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         CardView container;
         ImageView image;
@@ -63,21 +70,31 @@ public class SellersListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
 
-        Item foodItem = foodItems.get(position);
+        User seller = sellers.get(position);
         SellersViewHolder vh = (SellersViewHolder) viewHolder;
-        vh.name.setText(foodItem.getNameOfItem());
-        vh.description.setText(foodItem.getDescriptionOfItem());
-//        Picasso.with(context).load(foodItem.getImageLink()).fit().into(vh.image);
-        vh.image.setImageDrawable(context.getResources().getDrawable(R.drawable.github));
+        vh.name.setText(seller.getName());
+        //TODO: CHANGE TO DESCRIPTION !!
+        vh.description.setText("BLAH BLAH");
+        Picasso.with(context).load(R.drawable.github).fit().into(vh.image);
+
+        vh.container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                BuyActivity activity = (BuyActivity) context;
+                activity.replaceFragment(new Fragment_Buyer_SellerProfile());
+            }
+        });
+
 
         setAnimation(vh.container, position);
 
 
+
     }
 
-    private void setAnimation(View viewToAnimate, int position){
+    private void setAnimation(View viewToAnimate, int position) {
         // only animates the view if it was not already displayed on the screen
-        if(position > lastPosition){
+        if (position > lastPosition) {
             Animation animation = AnimationUtils.loadAnimation(context, R.anim.abc_slide_in_bottom); //can make a custom animation here
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
@@ -86,6 +103,8 @@ public class SellersListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        return foodItems.size();
+        return sellers.size();
     }
 }
+
+

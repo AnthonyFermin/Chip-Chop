@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="8dp">
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SIGN IN"
+        android:id="@+id/signupButton"
+        style="@style/button_design"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,12 +34,6 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_below="@id/search_bar"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical">
 
         <fragment
             class="com.google.android.gms.maps.MapFragment"
@@ -48,5 +50,3 @@
             android:id="@+id/foodList"/>
 
     </LinearLayout>
-
-</RelativeLayout>

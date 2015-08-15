@@ -24,7 +24,6 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button signupButton;
     Firebase firebaseRef;
     String userID="";
     private static DBHelper dbHelper = null;
@@ -40,15 +39,6 @@ public class MainActivity extends AppCompatActivity {
             dbHelper = new DBHelper(getApplicationContext());
         }
 
-        signupButton = (Button) findViewById(R.id.signupButton);
-        signupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent signupIntent1 = new Intent(getApplicationContext(), SignupActivity1.class);
-                startActivity(signupIntent1);
-                finish();
-            }
-        });
 
 
     }

@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -43,6 +44,7 @@ import java.util.List;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.R;
+import madelyntav.c4q.nyc.chipchop.SignupActivity1;
 import madelyntav.c4q.nyc.chipchop.adapters.FoodListAdapter;
 
 
@@ -53,6 +55,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     public static final String LASTLONGITUDE = "LastLongitude";
     public static final String LASTLATITUDE = "LastLatitude";
 
+    Button signupButton;
     private LocationRequest mLocationRequest;
     private GoogleMap map;
     private SharedPreferences preferences;
@@ -65,11 +68,15 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
     private RecyclerView foodList;
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_buyer_map, container, false);
+
+
+
 
         // Connect to Geolocation API to make current location request
         locationServiceIsAvailable();

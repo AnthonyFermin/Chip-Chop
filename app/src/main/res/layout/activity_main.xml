@@ -20,11 +20,6 @@
         android:onClick="getData"
         android:text="GET DATA"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="SIGN UP"
-        android:id="@+id/signupButton"
-        style="@style/button_design"/>
+
 
 </LinearLayout>

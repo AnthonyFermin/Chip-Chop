@@ -1,5 +1,6 @@
 package madelyntav.c4q.nyc.chipchop;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,8 +9,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Checkout;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile;
+
 public class SignupActivity2 extends AppCompatActivity {
 
+    private Context context;
     Button startButton;
 
     @Override
@@ -22,9 +27,7 @@ public class SignupActivity2 extends AppCompatActivity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent signupIntent1 = new Intent(getApplicationContext(), BuyActivity.class);
-                startActivity(signupIntent1);
-                finish();
+                //TODO: CODE TO LINK TO CHECKOUT FRAGMENT + DO LAYOUT FOR CHECKOUT
             }
         });
 

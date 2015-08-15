@@ -8,7 +8,8 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="CHECKOUT"
-        android:id="@+id/checkoutButton"/>
+        android:text="CONFIRM ORDER"
+        style="@style/button_design"
+        android:id="@+id/confirmOrder"/>
 
 </LinearLayout>

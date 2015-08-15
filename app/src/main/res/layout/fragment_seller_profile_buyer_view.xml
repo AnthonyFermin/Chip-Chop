@@ -46,6 +46,15 @@
                 android:gravity="center"
                 android:layout_weight="1"/>
 
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="CHECKOUT"
+                android:textSize="14sp"
+                android:layout_margin="10dp"
+                style="@style/button_design"
+                android:id="@+id/checkoutButton"/>
+
 
         </LinearLayout>
 

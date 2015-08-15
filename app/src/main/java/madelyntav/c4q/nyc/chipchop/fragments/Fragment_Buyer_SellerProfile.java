@@ -1,5 +1,6 @@
 package madelyntav.c4q.nyc.chipchop.fragments;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,16 +9,19 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import java.util.ArrayList;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.R;
+import madelyntav.c4q.nyc.chipchop.SignupActivity1;
 import madelyntav.c4q.nyc.chipchop.adapters.FoodListAdapter;
 
 
 public class Fragment_Buyer_SellerProfile extends Fragment {
 
+    Button checkoutButton;
     private ArrayList<Item> foodItems;
     private RecyclerView foodList;
 
@@ -36,6 +40,15 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
 
         FoodListAdapter foodListAdapter = new FoodListAdapter(getActivity(),foodItems);
         foodList.setAdapter(foodListAdapter);
+
+        checkoutButton = (Button) root.findViewById(R.id.checkoutButton);
+        checkoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent signupIntent = new Intent(getActivity(), SignupActivity1.class);
+                startActivity(signupIntent);
+            }
+        });
 
         return root;
     }

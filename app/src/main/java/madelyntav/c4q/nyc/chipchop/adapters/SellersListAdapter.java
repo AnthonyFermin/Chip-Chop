@@ -37,7 +37,7 @@ public class SellersListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.sellers = sellers;
     }
 
-    private class SellersViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    private class SellersViewHolder extends RecyclerView.ViewHolder {
 
         CardView container;
         ImageView image;
@@ -54,10 +54,6 @@ public class SellersListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         }
 
-        @Override
-        public void onClick(View view) {
-
-        }
     }
 
     @Override

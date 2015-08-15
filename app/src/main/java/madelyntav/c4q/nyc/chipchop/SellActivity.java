@@ -62,14 +62,12 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
             public void onDrawerClosed(View view) {
                 getSupportActionBar().setTitle(R.string.app_name);
                 ActivityCompat.invalidateOptionsMenu(SellActivity.this);
-                frameLayout.setAlpha(Float.parseFloat("1.0"));
 
             }
 
             public void onDrawerOpened(View drawerView) {
                 getSupportActionBar().setTitle(R.string.app_name);
                 ActivityCompat.invalidateOptionsMenu(SellActivity.this);
-                frameLayout.setAlpha(Float.parseFloat("0.1"));
 
                 Button buyButton = (Button) findViewById(R.id.buyButton);
                 buyButton.setOnClickListener(new View.OnClickListener() {

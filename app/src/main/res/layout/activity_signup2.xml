@@ -8,45 +8,56 @@
     android:orientation="vertical"
     android:background="#CCC">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/text_design"
+        android:text="● ●"
+        android:textSize="30sp"
+        android:gravity="center_horizontal"/>
+
+
     <de.hdodenhof.circleimageview.CircleImageView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/profile_image"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:src="@drawable/github"
         app:border_width="2dp"
-        android:padding="10dp"
         app:border_color="#FFF"
         android:layout_gravity="center_horizontal"/>
 
     <EditText
         android:id="@+id/name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:hint="Name"
-        android:textSize="25sp"
-        android:layout_margin="10dp"/>
+        android:textSize="20sp"
+        android:layout_margin="5dp"
+        android:layout_weight="1"/>
 
     <EditText
         android:id="@+id/address"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:hint="Street Address"
-        android:textSize="25sp"
-        android:layout_margin="10dp"/>
+        android:textSize="20sp"
+        android:layout_margin="5dp"
+        android:layout_weight="1"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1">
 
     <EditText
         android:id="@+id/apt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Apt"
-        android:textSize="25sp"
-        android:layout_margin="10dp"
+        android:textSize="20sp"
+        android:layout_margin="5dp"
         android:layout_weight="1"/>
 
         <EditText
@@ -54,18 +65,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="City"
-            android:textSize="25sp"
-            android:layout_margin="10dp"
+            android:textSize="20sp"
+            android:layout_margin="5dp"
             android:layout_weight="4"/>
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text=", NY "
-            android:textSize="25sp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="10dp"
+            android:textSize="20sp"
             android:layout_weight="1"/>
 
     </LinearLayout>
@@ -75,15 +83,16 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:hint="Zipcode"
-        android:textSize="25sp"
-        android:layout_margin="10dp"
+        android:textSize="20sp"
+        android:layout_margin="5dp"
         android:layout_weight="1"/>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="sign up!"
-        style="@style/button_design"/>
+        style="@style/button_design"
+        android:id="@+id/startButton"/>
 
 
 </LinearLayout>

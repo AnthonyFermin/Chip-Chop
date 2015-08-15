@@ -1,17 +1,52 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_margin="8dp">
 
 
-
-    <TextView
+    <Button
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="MAP FRAGMENT HERE"
-        android:textSize="40sp"
-        android:gravity="center"/>
+        android:layout_height="wrap_content"
+        android:text="SIGN IN"
+        android:id="@+id/signupButton"
+        style="@style/button_design"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/search_bar">
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Cuisine"
+        android:id="@+id/cuisine_search"
+        android:layout_weight="3"/>
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Zipcode"
+        android:id="@+id/address_search"
+        android:layout_weight="1"/>
+
+    </LinearLayout>
 
 
-</LinearLayout>
+        <fragment
+            class="com.google.android.gms.maps.MapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/map"
+            />
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/foodList"/>
+
+    </LinearLayout>

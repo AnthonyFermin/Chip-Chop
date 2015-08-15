@@ -19,11 +19,10 @@ import java.util.Map;
 public class DBHelper {
     Firebase firebaseRef;
     private static final String URL="https://chipchop.firebaseio.com/";
-    Context context;
+    public static Context context;
     String UID;
-
     private static final String userID="userID";
-    private static final DBHelper dbHelper = null;
+    private static DBHelper dbHelper = null;
     private static final String sStreet="streetAddress";
     private static final String sApartment="apartment";
     private static final String sCity="city";
@@ -42,15 +41,21 @@ public class DBHelper {
     User user;
     Address address;
 
-    public DBHelper(Context context){
+    private DBHelper(Context context){
         this.context=context;
         firebaseRef=new Firebase(URL);
+        firebaseRef.setAndroidContext(context);
     }
 
     public Firebase getFirebaseRef() {
         return firebaseRef;
     }
     public static DBHelper getDbHelper() {
+
+        if(dbHelper == null) {
+            dbHelper = new DBHelper(context);
+        }
+
         return dbHelper;
     }
 

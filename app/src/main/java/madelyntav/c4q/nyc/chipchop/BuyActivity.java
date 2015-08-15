@@ -67,13 +67,11 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
             public void onDrawerClosed(View view) {
                 getSupportActionBar().setTitle(R.string.app_name);
                 ActivityCompat.invalidateOptionsMenu(BuyActivity.this);
-                frameLayout.setAlpha(Float.parseFloat("1.0"));
             }
 
             public void onDrawerOpened(View drawerView) {
                 getSupportActionBar().setTitle(R.string.app_name);
                 ActivityCompat.invalidateOptionsMenu(BuyActivity.this);
-                frameLayout.setAlpha(Float.parseFloat("0.1"));
 
                 Button sellButton = (Button) findViewById(R.id.sellButton);
                 sellButton.setOnClickListener(new View.OnClickListener() {

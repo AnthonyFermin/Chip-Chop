@@ -32,7 +32,7 @@ public class Fragment_Seller_Orders extends Fragment {
         foodOrders = new ArrayList<>();
         populateItems();
 
-        orderList = (RecyclerView) root.findViewById(R.id.sellersList);
+        orderList = (RecyclerView) root.findViewById(R.id.buyers_orders_list);
         orderList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         FoodListAdapter foodListAdapter = new FoodListAdapter(getActivity(),foodOrders);

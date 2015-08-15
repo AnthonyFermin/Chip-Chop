@@ -11,8 +11,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
@@ -32,20 +30,25 @@ public class SellersListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.foodItems = foodItems;
     }
 
-    private class FoodItemViewHolder extends RecyclerView.ViewHolder{
+    private class SellersViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         CardView container;
         ImageView image;
         TextView name;
         TextView description;
 
-        public FoodItemViewHolder(View itemView) {
+        public SellersViewHolder(View itemView) {
             super(itemView);
 
             container = (CardView) itemView.findViewById(R.id.card_view);
-            image = (ImageView) itemView.findViewById(R.id.seller_image);
+            image = (ImageView) itemView.findViewById(R.id.profile_image);
             name = (TextView) itemView.findViewById(R.id.seller_name);
             description = (TextView) itemView.findViewById(R.id.seller_description);
+
+        }
+
+        @Override
+        public void onClick(View view) {
 
         }
     }
@@ -54,14 +57,14 @@ public class SellersListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int position) {
 
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.results_search_list_item, parent, false);
-        return new FoodItemViewHolder(itemView);
+        return new SellersViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
 
         Item foodItem = foodItems.get(position);
-        FoodItemViewHolder vh = (FoodItemViewHolder) viewHolder;
+        SellersViewHolder vh = (SellersViewHolder) viewHolder;
         vh.name.setText(foodItem.getNameOfItem());
         vh.description.setText(foodItem.getDescriptionOfItem());
 //        Picasso.with(context).load(foodItem.getImageLink()).fit().into(vh.image);

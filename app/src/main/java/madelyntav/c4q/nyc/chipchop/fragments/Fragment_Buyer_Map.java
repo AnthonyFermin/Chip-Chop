@@ -44,7 +44,6 @@ import java.util.List;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.R;
-import madelyntav.c4q.nyc.chipchop.adapters.FoodListAdapter;
 import madelyntav.c4q.nyc.chipchop.adapters.SellersListAdapter;
 
 
@@ -96,11 +95,14 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         sellers = new ArrayList<>();
         populateItems();
 
-        sellersList = (RecyclerView) root.findViewById(R.id.sellersList);
+        sellersList = (RecyclerView) root.findViewById(R.id.buyers_orders_list);
         sellersList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         SellersListAdapter sellersListAdapter = new SellersListAdapter(getActivity(), sellers);
         sellersList.setAdapter(sellersListAdapter);
+
+
+
 
         return root;
     }

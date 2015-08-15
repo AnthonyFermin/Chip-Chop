@@ -25,6 +25,7 @@ import android.widget.ListView;
 
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Orders;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile;
 
 public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Orders.OnBuyerOrderSelectedListener, Fragment_Buyer_Map.OnBuyerMapFragmentInteractionListener {
 
@@ -126,6 +127,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         } else if (position == 1) {
             fragment = new Fragment_Buyer_Orders();
         } else if (position == 2) {
+            fragment = new Fragment_Buyer_SellerProfile();
             // TODO: PROFILE SETTINGS
         }
 
@@ -174,5 +176,9 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(DrawerLinear);
         return drawerOpen;
+    }
+
+    @Override
+    public void onBackPressed() {
     }
 }

@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
-import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -51,7 +50,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         mListTitles = getResources().getStringArray(R.array.BUYER_nav_drawer_titles);
 
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, mListTitles));
+                R.layout.navdrawer_list_item, mListTitles));
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 

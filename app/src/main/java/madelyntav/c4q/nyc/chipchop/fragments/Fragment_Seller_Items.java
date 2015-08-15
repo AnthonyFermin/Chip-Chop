@@ -1,7 +1,6 @@
 package madelyntav.c4q.nyc.chipchop.fragments;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,7 +31,7 @@ public class Fragment_Seller_Items extends Fragment {
         foodItems = new ArrayList<>();
         populateItems();
 
-        foodList = (RecyclerView) root.findViewById(R.id.foodList);
+        foodList = (RecyclerView) root.findViewById(R.id.sellersList);
         foodList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         FoodListAdapter foodListAdapter = new FoodListAdapter(getActivity(),foodItems);
@@ -44,7 +43,7 @@ public class Fragment_Seller_Items extends Fragment {
     //test method to populate RecyclerView
     private void populateItems(){
         for(int i = 0; i < 10; i++) {
-            foodItems.add(new Item("test", "Something Fancy", "3", "The fanciest homemade meal you've ever had", "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg"));
+            foodItems.add(new Item("test", "Github Cat", "3", "Spanish Food", "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg"));
         }
     }
 

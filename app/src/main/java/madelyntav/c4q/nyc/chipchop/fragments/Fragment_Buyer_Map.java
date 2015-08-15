@@ -33,7 +33,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -45,8 +44,8 @@ import java.util.List;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.R;
-import madelyntav.c4q.nyc.chipchop.SignupActivity1;
 import madelyntav.c4q.nyc.chipchop.adapters.FoodListAdapter;
+import madelyntav.c4q.nyc.chipchop.adapters.SellersListAdapter;
 
 
 public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -65,9 +64,9 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     private GoogleApiClient googleApiClient;
 
     private DBHelper dbHelper;
-    private ArrayList<Item> foodItems;
+    private ArrayList<Item> sellers;
 
-    private RecyclerView foodList;
+    private RecyclerView sellersList;
     private View root;
 
 
@@ -93,15 +92,15 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         mapFragment.getMapAsync(this);
         map = mapFragment.getMap();
 //        dbHelper = new DBHelper(getActivity().getApplicationContext());  TODO: DBHelper constructor should set androidContext
-        //TODO: next line should be foodItems = dbHelper.getAvailableFoodItems(currentLocation);
-        foodItems = new ArrayList<>();
+        //TODO: next line should be sellers = dbHelper.getAvailableFoodItems(currentLocation);
+        sellers = new ArrayList<>();
         populateItems();
 
-        foodList = (RecyclerView) root.findViewById(R.id.foodList);
-        foodList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        sellersList = (RecyclerView) root.findViewById(R.id.sellersList);
+        sellersList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        FoodListAdapter foodListAdapter = new FoodListAdapter(getActivity(),foodItems);
-        foodList.setAdapter(foodListAdapter);
+        SellersListAdapter sellersListAdapter = new SellersListAdapter(getActivity(), sellers);
+        sellersList.setAdapter(sellersListAdapter);
 
         return root;
     }
@@ -109,7 +108,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     //test method to populate RecyclerView
     private void populateItems(){
         for(int i = 0; i < 10; i++) {
-            foodItems.add(new Item("test", "Something Fancy", "3", "The fanciest homemade meal you've ever had", "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg"));
+            sellers.add(new Item("test", "Github Cat", "3", "Spanish Food", "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg"));
         }
     }
 

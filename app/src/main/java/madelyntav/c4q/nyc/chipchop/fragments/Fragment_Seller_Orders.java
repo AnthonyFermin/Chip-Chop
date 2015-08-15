@@ -1,7 +1,6 @@
 package madelyntav.c4q.nyc.chipchop.fragments;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,7 +32,7 @@ public class Fragment_Seller_Orders extends Fragment {
         foodOrders = new ArrayList<>();
         populateItems();
 
-        orderList = (RecyclerView) root.findViewById(R.id.foodList);
+        orderList = (RecyclerView) root.findViewById(R.id.sellersList);
         orderList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         FoodListAdapter foodListAdapter = new FoodListAdapter(getActivity(),foodOrders);

@@ -46,7 +46,7 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
         mListTitles = getResources().getStringArray(R.array.SELLER_nav_drawer_titles);
 
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, mListTitles));
+                R.layout.navdrawer_list_item, mListTitles));
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 

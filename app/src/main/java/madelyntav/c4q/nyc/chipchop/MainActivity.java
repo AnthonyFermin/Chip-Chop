@@ -6,6 +6,7 @@ import android.util.Base64;
 import android.view.View;
 
 import com.firebase.client.Firebase;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -21,15 +22,14 @@ public class MainActivity extends AppCompatActivity {
 
     Firebase firebaseRef;
     String userID="";
-    private static DBHelper dbHelper = null;
+    private DBHelper dbHelper = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Firebase.setAndroidContext(this);
-        dbHelper.getDbHelper();
 
+        dbHelper = dbHelper.getDbHelper(this);
 
     }
 
@@ -37,35 +37,25 @@ public class MainActivity extends AppCompatActivity {
     //Madelyn's Testing Code Below
 
     public void createUserLets(View view){
-//        Item item=new Item("5","Beans","5","yellow","The fin");
-//        item.setItemID("hgg");
-//        Item item1= new Item("5","Rice","2","Black","IGHGH");
-//        item1.setItemID("gff");
-//        Item item2= new Item("5","Chicken","6","Blue","jfjfd");
-//        item2.setItemID("Iggj");
-//
-//        ArrayList<Item> items=new ArrayList<>();
-//        items.add(item);
-//        items.add(item1);
-//        items.add(item2);
-//        Order order= new Order();
-//        order.setOrderID("-Jwh6593TmhGUXVJ2oMP");
-//        order.setUserID("5");
 
-        //dbHelper.addOrderToDB(order);
+        //dbHelper.createUser("hjg00fhjhn909hjkhjjh@gmail.com", "hjdfjvghdafi");
 
 
         //dbHelper.getSellersOnSaleItems(order);
-        Address address= new Address("560 east 242nd Stret", "Apt 64", "New York", "NY", "10040", "5");
-
-        User user= new User("5","MadelynTav@Gmail.com","Madelyn Tavarez",address,"Photo","677-987-0564");
+        Address address= new Address("570 west 189 street", "Apt 64", "New York", "NY", "10040", "1");
+        User user= new User("1","MadelynTav@Gmail.com","Madelyn Tavarez",address,"Photo","677-987-0564");
+        //47-98 31st Pl, Queens, NY, 11101
+        Address address1=new Address("47-98 31st Pl","","Queens","NY","11101","2");
+        User user1=new User("2","coalition@gmail.com","Coalition4Queens",address1,"Photo","677-988-0988");
 
         dbHelper.addUserAddressToProfile(user);
-
+        dbHelper.addUserAddressToProfile(user1);
 
     }
     public void getData(View v){
-     dbHelper.getAddressFromDB("5");
+        LatLng latLng=new LatLng(40.748817,-73.985428);
+        dbHelper.addAddressesToMap(latLng);
+
     }
 
 

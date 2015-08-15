@@ -11,8 +11,6 @@ public class Address {
     String zipCode;
     String userID;
 
-    public Address(){}
-
     public Address(String streetAddress, String apartment, String city, String state, String zipCode,String userID){
         this.streetAddress=streetAddress;
         this.apartment=apartment;

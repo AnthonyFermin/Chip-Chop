@@ -13,12 +13,13 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
@@ -64,12 +66,13 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     private ArrayList<Item> foodItems;
 
     private RecyclerView foodList;
+    private View root;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.fragment_buyer_map, container, false);
+        root = inflater.inflate(R.layout.fragment_buyer_map, container, false);
 
         // Connect to Geolocation API to make current location request
         locationServiceIsAvailable();
@@ -79,7 +82,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
                 .setInterval(10000)        // 10 seconds, in milliseconds
                 .setFastestInterval(5000); // 1 second, in milliseconds
 
-        MapFragment mapFragment = (MapFragment) getFragmentManager()
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         map = mapFragment.getMap();

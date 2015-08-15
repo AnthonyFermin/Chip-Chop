@@ -2,11 +2,13 @@ package madelyntav.c4q.nyc.chipchop;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import android.util.Base64;
 import android.view.View;
+import android.widget.Button;
 
 import com.firebase.client.Firebase;
 
@@ -22,6 +24,7 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 
 public class MainActivity extends AppCompatActivity {
 
+    Button signupButton;
     Firebase firebaseRef;
     String userID="";
     private static DBHelper dbHelper = null;
@@ -36,6 +39,17 @@ public class MainActivity extends AppCompatActivity {
         if(dbHelper == null) {
             dbHelper = new DBHelper(getApplicationContext());
         }
+
+        signupButton = (Button) findViewById(R.id.signupButton);
+        signupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent signupIntent1 = new Intent(getApplicationContext(), SignupActivity1.class);
+                startActivity(signupIntent1);
+                finish();
+            }
+        });
+
 
     }
 

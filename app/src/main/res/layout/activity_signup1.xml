@@ -8,6 +8,15 @@
     android:orientation="vertical"
     android:gravity="center_vertical">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/text_design"
+        android:text="● ○"
+        android:textSize="30sp"
+        android:layout_margin="10dp"
+        android:gravity="center_horizontal"/>
+
     <EditText
         android:id="@+id/emailAddress"
         android:layout_width="match_parent"
@@ -29,6 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text=">"
-        style="@style/button_design"/>
+        style="@style/button_design"
+        android:id="@+id/signup1Button"/>
 
 </LinearLayout>

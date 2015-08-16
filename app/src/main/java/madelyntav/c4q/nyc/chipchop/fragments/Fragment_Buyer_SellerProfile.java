@@ -29,7 +29,7 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View root = inflater.inflate(R.layout.fragment_seller_profile_buyer_view, container, false);
+        View root = inflater.inflate(R.layout.fragment_buyer_seller_profile, container, false);
 
 
         foodItems = new ArrayList<>();

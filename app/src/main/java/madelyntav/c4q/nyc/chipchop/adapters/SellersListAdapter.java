@@ -70,7 +70,7 @@ public class SellersListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         SellersViewHolder vh = (SellersViewHolder) viewHolder;
         vh.name.setText(seller.getName());
         //TODO: CHANGE TO DESCRIPTION !!
-        vh.description.setText("BLAH BLAH");
+        vh.description.setText("I LOVE TO COOK !");
         Picasso.with(context).load(R.drawable.github).fit().into(vh.image);
 
         vh.container.setOnClickListener(new View.OnClickListener() {

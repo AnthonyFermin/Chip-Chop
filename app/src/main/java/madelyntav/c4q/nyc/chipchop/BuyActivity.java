@@ -22,7 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 
-
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Checkout;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Orders;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile;
@@ -127,7 +127,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         } else if (position == 1) {
             fragment = new Fragment_Buyer_Orders();
         } else if (position == 2) {
-            fragment = new Fragment_Buyer_SellerProfile();
+            fragment = new Fragment_Buyer_Checkout();
             // TODO: PROFILE SETTINGS
         }
 

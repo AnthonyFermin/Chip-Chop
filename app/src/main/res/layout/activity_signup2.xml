@@ -5,8 +5,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="madelyntav.c4q.nyc.chipchop.SignupActivity2"
-    android:orientation="vertical"
-    android:background="#CCC">
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
@@ -14,6 +13,7 @@
         style="@style/text_design"
         android:text="● ●"
         android:textSize="30sp"
+        android:padding="5dp"
         android:gravity="center_horizontal"/>
 
 
@@ -90,7 +90,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="sign up!"
+        android:text="sign up"
         style="@style/button_design"
         android:id="@+id/startButton"/>
 

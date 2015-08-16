@@ -23,6 +23,10 @@ public class User {
     String UID;
     String URL="https://chipchop.firebaseio.com/";
 
+    public User(String UID){
+        this.UID=UID;
+    }
+
     public User(String UID, String emailAddress, String name, Address address, String encodedPhotoString, String phoneNumber){
         this.UID=UID;
         this.emailAddress=emailAddress;

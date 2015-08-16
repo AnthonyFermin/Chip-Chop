@@ -77,6 +77,12 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
                 sellButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+
+                        // TODO:
+                        //Using DBHelper, check if current user is logged in
+                        //if User is not logged in send to SignUpActivity1
+                        //else if User is logged in send to SellActivity
+
                         Intent sellIntent = new Intent(getApplicationContext(), SellActivity.class);
                         startActivity(sellIntent);
                         finish();

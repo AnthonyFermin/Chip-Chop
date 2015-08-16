@@ -10,13 +10,22 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
+import madelyntav.c4q.nyc.chipchop.GeolocationAPI.Geolocation;
+import madelyntav.c4q.nyc.chipchop.GeolocationAPI.GeolocationAPI;
+import madelyntav.c4q.nyc.chipchop.GeolocationAPI.Location;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Checkout;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile;
+import retrofit.Callback;
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class SignupActivity2 extends AppCompatActivity {
 
-    private final String ENDPOINT = "https://maps.googleapis.com/maps/api/geocode/json";
+    private final String ENDPOINT = "https://maps.googleapis.com/maps/api/geocode";
 
     private Button startButton;
     private EditText nameET;
@@ -24,6 +33,13 @@ public class SignupActivity2 extends AppCompatActivity {
     private EditText aptET;
     private EditText cityET;
     private EditText zipET;
+
+    private String address;
+    private String apt;
+    private String city;
+    private String zipcode;
+
+    private Address userAddress;
 
 
     @Override
@@ -57,6 +73,29 @@ public class SignupActivity2 extends AppCompatActivity {
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(ENDPOINT)
                 .build();
+
+        GeolocationAPI geolocationAPI = restAdapter.create(GeolocationAPI.class);
+
+        String address = addressET.getText().toString();
+        address = address.trim().replace(" ", "+");
+
+        String queryString = address + ",";
+
+        geolocationAPI.getGeolocation(queryString, new Callback<Geolocation>() {
+            @Override
+            public void success(Geolocation geolocation, Response response) {
+                Location location = geolocation.getResults().get(0).getGeometry().getLocation();
+                location.getLng();
+                LatLng latlng = new LatLng(location.getLat(), location.getLng());
+                Address = new Address(address,apt,city,"NY")
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+
 
 
     }

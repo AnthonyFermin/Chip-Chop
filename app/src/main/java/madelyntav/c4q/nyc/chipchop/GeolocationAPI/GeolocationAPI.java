@@ -1,6 +1,7 @@
 package madelyntav.c4q.nyc.chipchop.GeolocationAPI;
 
 import retrofit.Callback;
+import retrofit.http.GET;
 import retrofit.http.Query;
 
 /**
@@ -8,7 +9,7 @@ import retrofit.http.Query;
  */
 public interface GeolocationAPI {
 
-    @Query("address=")
-    public void getGeolocation(Callback<Geolocation> response);
+    @GET("/json")
+    public void getGeolocation(@Query("address=") String queryString, Callback<Geolocation> response);
 
 }

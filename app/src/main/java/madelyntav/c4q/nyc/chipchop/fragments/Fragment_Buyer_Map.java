@@ -80,16 +80,6 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         dbHelper = DBHelper.getDbHelper(getActivity());
 
 
-        signupButton = (Button) root.findViewById(R.id.signupButton);
-        signupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent signUp = new Intent(getActivity(), SignupActivity1.class);
-                startActivity(signUp);
-            }
-        });
-
-
         // Connect to Geolocation API to make current location request
         locationServiceIsAvailable();
         connectGoogleApiClient();
@@ -261,7 +251,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
         @Override
         protected void onPostExecute(Address address) {
-            String zipcode = address.getPostalCode();
+//            String zipcode = address.getPostalCode();
             // would launch another async that returns available food providers based on buyer's current zip
             // would then use list of food providers to populate markers and listview
         }

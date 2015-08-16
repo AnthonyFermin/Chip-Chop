@@ -35,12 +35,24 @@
                 android:textSize="35sp"
                 android:gravity="center"/>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#8bc34a"
+                android:text="● Currently Cooking"
+                android:padding="2dp"
+                android:textSize="18sp"
+                android:id="@+id/cooking_status"
+                android:gravity="center" />
+
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="ADD ITEM"
                 android:textSize="14sp"
+                android:layout_gravity="center_horizontal"
                 android:layout_margin="10dp"
+                android:id="@+id/addButton"
                 style="@style/button_design"/>
 
         </LinearLayout>

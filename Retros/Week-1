@@ -1,1 +1,71 @@
+Goals for last Sprint:
+Get a working prototype, push info to database and pull info from database and creating userflow
+
+Goals for this Sprint: 
+- Front and back end fully connected
+- Reviews system up and running and connected to DB
+- CartFlow working (Seller and Buyer side testing)
+- Notifications for orders(When order is ready and when seller receives a new order) 
+- Getting pictures from Gallery methods and displaying it
+- Saving photos to DB as a String
+- Splash screen check sharedPrefs
+- Methods to clear sharedPrefs when user logs Out
+-Connecting all info to views in recyclerView
+- Get UID from login user method
+- Due: Wednesday 9:30pm (Google Hangouts to report progress and regroup)
+
+- Implement cardPayments and FB Authentication (By sunday)
+
+Guiding Questions (consider before the meeting):
+
+What went well?
+We got a large part of the prototype done. Prototyping made it really easy to design and make a skeleton. We figured
+out efficient ways to store data and connect is via UID. We were good at communication.
+
+What should we do differently next time?
+Plan more and better because we didn't know the exact details of everything that was needed. More standup meetings. 
+
+What did we learn?
+We need to communicate consistently and communicat specifics in a clear manner. Its good to check in with 
+atleast one other member with questions and to get another perspective. 
+Keep track of things you forsee having to work on later. 
+
+What still puzzles us?
+Geofencing and GeoCoding flow
+
+Team Member Analysis: If you did not meet your goals, how will this affect the progression of the product? What will you do differently to meet your goals this week?
+
+Team Member Alvin
+Goals/Responsibilities Last Week: Basic Skeleton and user flow
+Did you meet your goals/responsibilities last week? Why or why not? Yes
+
+
+Team Member #2 Anthony
+Goals/Responsibilities Last Week: Map and connecting data, views and creating methods needed for classes
+Did you meet your goals/responsibilities last week? Why or why not? yes a lot of progress was made. Need to work 
+with Madelyn to define helper methods for database needed for methods outside of DBHElper
+
+
+Team Member #3 Madelyn
+Goals/Responsibilities Last Week: Database
+Did you meet your goals/responsibilities last week? Why or why not? Yes, need to create more methods but data has
+is structured and efficiently sent to and from the firebase DB.
+
+
+Roles, Goals and Resposibility: 
+
+[Visit ToDoist!](https://en.todoist.com/app?v=402#project%2F149091349)
+
+
+
+Compare your work planned with what your work completed.
+
+Is the divison of roles within your team working? YES! Great division of work
+How is communication and collaboration between team members? Its going well and we have defined how it can be better
+Are you getting adequate support? How are you reviewing code? Code has to be tested by two team members before merging
+to master
+How can you improve productivity and get the most work done within the next week? By planning out everything today
+in advance and communicating our problems and progress with the team
+
+Mentor Comments:
 

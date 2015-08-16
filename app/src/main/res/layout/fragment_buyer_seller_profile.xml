@@ -32,6 +32,7 @@
                 android:layout_height="0dp"
                 android:id="@+id/seller_name"
                 android:text="Github Cat"
+                style="@style/text_design"
                 android:textSize="35sp"
                 android:gravity="center"
                 android:layout_weight="1"/>
@@ -43,18 +44,37 @@
                 android:text="● Currently Cooking"
                 android:textSize="18sp"
                 android:id="@+id/cooking_status"
+                android:padding="2dp"
                 android:gravity="center"
                 android:layout_weight="1"/>
 
-            <Button
+            <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="10dp">
+
+            <Button
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="CHECKOUT"
                 android:textSize="14sp"
-                android:layout_margin="10dp"
                 style="@style/button_design"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
                 android:id="@+id/checkoutButton"/>
 
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="VIEW CART"
+                android:textSize="14sp"
+                style="@style/button_design"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:id="@+id/viewCartButton"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

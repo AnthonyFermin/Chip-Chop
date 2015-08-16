@@ -40,7 +40,7 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sell);
 
-        frameLayout = (FrameLayout) findViewById(R.id.frameLayout);
+        frameLayout = (FrameLayout) findViewById(R.id.sellerFrameLayout);
         DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -133,12 +133,13 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
             fragment = new Fragment_Seller_Orders();
         } else if (position == 2) {
             // TODO: PROFILE SETTINGS
-            fragment = new Fragment_SellerProfile();
+            Intent profileIntent = new Intent(getApplicationContext(), SignupActivity2.class);
+            startActivity(profileIntent);
         }
 
             // Create fragment manager to begin interacting with the fragments and the container
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
+            fragmentManager.beginTransaction().replace(R.id.sellerFrameLayout, fragment).addToBackStack(null).commit();
 
 
             // update selected item and title in nav drawer, then close the drawer
@@ -181,5 +182,15 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
 
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(DrawerLinear);
         return drawerOpen;
+    }
+
+    @Override
+    public void onBackPressed() {
+    }
+
+    public void replaceSellerFragment(Fragment fragment) {
+        FragmentManager BuyFragmentManager = getSupportFragmentManager();
+        BuyFragmentManager.beginTransaction().replace(R.id.sellerFrameLayout, fragment).addToBackStack(null).commit();
+
     }
 }

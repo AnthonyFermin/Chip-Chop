@@ -82,7 +82,6 @@ public class DBHelper extends Firebase {
                 for (int i = 12; i < userIDOne.length(); i++) {
                     UID += userIDOne.charAt(i);
                 }
-
                 SharedPreferences sharedPreferences = mContext.getSharedPreferences("UID", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("id", UID);
@@ -90,11 +89,10 @@ public class DBHelper extends Firebase {
                 editor.putString("password", password);
                 editor.apply();
 
-                Firebase fRef = DBHelper.fireBaseRef.child("UserLogins");
+                user=new User(UID,email);
+                Firebase fRef = new Firebase(URL + "UserProfiles");
                 fRef.child(UID);
-                fRef.child(UID).child("UserName").setValue(email);
-                fRef.child(UID).child("UserName").child("passWord").setValue("Tomorrow");
-
+                fRef.child(UID).child(sEmailAddress).setValue(email);
             }
 
             @Override
@@ -117,6 +115,7 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
         fRef.child(UID).child(sPhotoLink).setValue(user.getEncodedPhotoString());
         fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
+
         addUserAddressToProfile(user.address);
     }
 
@@ -491,14 +490,16 @@ public class DBHelper extends Firebase {
     }
 
     public boolean userIsLoggedIn() {
+
         if(UID==null){
+
             return false;
         }
         else{return true; }
     }
 
     public String getUserID() {
-        return user.getUserId();
+            return UID;
     }
 
     public User getCurrentUser() {
@@ -513,7 +514,6 @@ public class DBHelper extends Firebase {
             LatLng latLng=address.getLatLng();
             latLngList.add(latLng);
         }
-
         return latLngList;
     }
 

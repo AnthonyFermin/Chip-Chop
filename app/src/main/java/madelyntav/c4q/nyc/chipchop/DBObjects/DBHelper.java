@@ -22,6 +22,7 @@ public class DBHelper extends Firebase {
     private static final String URL = "https://chipchop.firebaseio.com/";
     public static Context mContext;
     String UID;
+    static ArrayList<Item> items;
      static ArrayList<Address> addresses;
     private static final String userID = "userID";
     private static final String sStreet = "streetAddress";
@@ -58,6 +59,7 @@ public class DBHelper extends Firebase {
             Firebase.setAndroidContext(context);
             firebaseRef = new DBHelper();
             addresses= new ArrayList<>();
+            items= new ArrayList<>();
         }
         return firebaseRef;
 
@@ -294,10 +296,51 @@ public class DBHelper extends Firebase {
 
                 }
             });
-
         return addresses;
     }
 
+    public ArrayList<Item> getSellerItems(String UID) {
+        this.UID = UID;
 
+        Firebase fRef = firebaseRef.child("Items/"+UID);
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("Number2", dataSnapshot.getChildrenCount() + "");
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+                    Item item = dataSnapshot1.getValue(Item.class);
+                    items.add(item);
+
+                    Log.d("SellerItems",items.toString());
+
+                }
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+        return items;
+    }
+
+    public void createSellerItems(Item item){
+        UID = "";
+        UID = item.getUserID();
+        Firebase fRef = firebaseRef.child("Sellers/Items/" + UID);
+
+        Firebase fire1 = firebaseRef.child(UID).push();
+        String itemID = fire1.getKey();
+        item.setItemID(itemID);
+
+        fRef.child(UID).child(itemID).push();
+        fRef.child(itemID).child("NAME").setValue(item.getNameOfItem());
+        fRef.child(itemID).child("DESCRIPTION").setValue(item.getDescriptionOfItem());
+        fRef.child(itemID).child("QUANTITY").setValue(item.getQuantityAvailable());
+        fRef.child(itemID).child("ImageLink").setValue(item.getImageLink());
+
+        Log.d("ItemID", itemID);
+    }
 
 }

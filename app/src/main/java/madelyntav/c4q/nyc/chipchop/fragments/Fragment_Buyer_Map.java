@@ -298,7 +298,6 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
               }
 
               Log.d("Addresses", addresses.toString());
-
           }
 }
 

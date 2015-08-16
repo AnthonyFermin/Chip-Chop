@@ -117,8 +117,6 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
         fRef.child(UID).child(sPhotoLink).setValue(user.getEncodedPhotoString());
         fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
-        fRef.child(UID).child(sLatLng).setValue(user.getAddress().getLatLng());
-
         addUserAddressToProfile(user.address);
     }
 

@@ -12,10 +12,12 @@ import android.view.ViewGroup;
  */
 public class FoodItemSelectDialogue extends DialogFragment implements View.OnClickListener {
 
+    public static FoodItemSelectDialogue newInstance() { FoodItemSelectDialogue f = new FoodItemSelectDialogue(); return f; }
 
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+
 
         View root = inflater.inflate(R.layout.fragment_dialog, container, false);
 

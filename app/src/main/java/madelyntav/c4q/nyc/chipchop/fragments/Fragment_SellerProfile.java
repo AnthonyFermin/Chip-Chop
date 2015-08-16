@@ -46,7 +46,7 @@ public class Fragment_SellerProfile extends Fragment {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SellActivity activity = (SellActivity) context;
+                SellActivity activity = (SellActivity) getActivity();
                 activity.replaceSellerFragment(new Fragment_Seller_CreateItem());
             }
         });

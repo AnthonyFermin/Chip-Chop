@@ -11,8 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import java.sql.BatchUpdateException;
 import java.util.ArrayList;
 
+import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.SignupActivity1;
@@ -21,7 +23,7 @@ import madelyntav.c4q.nyc.chipchop.adapters.FoodListAdapter;
 
 public class Fragment_Buyer_SellerProfile extends Fragment {
 
-    Button checkoutButton;
+    Button checkoutButton, cartButton;
     private ArrayList<Item> foodItems;
     private RecyclerView foodList;
 
@@ -47,6 +49,16 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
             public void onClick(View view) {
                 Intent signupIntent = new Intent(getActivity(), SignupActivity1.class);
                 startActivity(signupIntent);
+            }
+        });
+
+
+        cartButton = (Button) root.findViewById(R.id.viewCartButton);
+        cartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                BuyActivity activity = (BuyActivity) getActivity();
+                activity.replaceFragment(new Fragment_Buyer_ViewCart());
             }
         });
 

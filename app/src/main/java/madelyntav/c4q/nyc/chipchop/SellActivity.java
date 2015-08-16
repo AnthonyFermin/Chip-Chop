@@ -133,7 +133,8 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
             fragment = new Fragment_Seller_Orders();
         } else if (position == 2) {
             // TODO: PROFILE SETTINGS
-            fragment = new Fragment_SellerProfile();
+            Intent profileIntent = new Intent(getApplicationContext(), SignupActivity2.class);
+            startActivity(profileIntent);
         }
 
             // Create fragment manager to begin interacting with the fragments and the container
@@ -185,7 +186,6 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
 
     @Override
     public void onBackPressed() {
-
     }
 
     public void replaceSellerFragment(Fragment fragment) {

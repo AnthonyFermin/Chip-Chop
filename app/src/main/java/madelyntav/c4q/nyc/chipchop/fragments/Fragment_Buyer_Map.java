@@ -21,6 +21,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
@@ -37,6 +38,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -289,9 +291,28 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             madelyntav.c4q.nyc.chipchop.DBObjects.Address address = user.getAddress();
             LatLng latLng = address.getLatLng();
             latLngList.add(latLng);
-            LatLng center;
+            LatLng user1=DBHelper.user.getAddress().getLatLng();
+
+            float[] distance = new float[2];
+
+            Location.distanceBetween( latLng.latitude, latLng.longitude,
+                    user1.latitude, user1.longitude, distance);
+
+            if( distance[0] > 100  ){
+                Toast.makeText(getActivity(), "Outside", Toast.LENGTH_LONG).show();
+                addMarker(latLng.latitude,latLng.longitude);
+
+            } else {
+                Toast.makeText(getActivity(), "Inside", Toast.LENGTH_LONG).show();
+            }
 
         }
 
+    }
+
+    public void addMarker(double lat, double lon){
+        map.addMarker(new MarkerOptions()
+                .position(new LatLng(lat, lon))
+                .title("Marker in Zone"));
     }
 }

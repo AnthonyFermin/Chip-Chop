@@ -29,6 +29,11 @@ public class User {
         this.UID=UID;
     }
 
+    public User(String UID, String emailAddress){
+        this.UID=UID;
+        this.emailAddress=emailAddress;
+    }
+
     public User(String UID, String emailAddress, String name, Address address, String encodedPhotoString, String phoneNumber){
         this.UID=UID;
         this.emailAddress=emailAddress;

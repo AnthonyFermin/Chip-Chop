@@ -342,5 +342,33 @@ public class DBHelper extends Firebase {
 
         Log.d("ItemID", itemID);
     }
+    public void createSellerProfile(User user) {
+        UID = user.getUserId();
+        Firebase fRef = firebaseRef.child("UserProfiles/Seller/" + UID);
+
+        fRef.child(UID).push();
+        fRef.child(UID).child(sName).setValue(user.getName());
+        fRef.child(UID).child(sEmailAddress).setValue(user.getEmailAddress());
+        fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
+        fRef.child(UID).child(sPhotoLink).setValue(user.getEncodedPhotoString());
+        fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
+
+        addUserAddressToProfile(user);
+    }
+    
+    public void createBuyerProfile(User user) {
+        UID = user.getUserId();
+        Firebase fRef = firebaseRef.child("UserProfiles/Buyer/"+UID);
+        fRef.child(UID).push();
+        fRef.child(UID).child(sName).setValue(user.getName());
+        fRef.child(UID).child(sEmailAddress).setValue(user.getEmailAddress());
+        fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
+        fRef.child(UID).child(sPhotoLink).setValue(user.getEncodedPhotoString());
+        fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
+
+        addUserAddressToProfile(user);
+
+    }
+
 
 }

@@ -31,7 +31,8 @@ import retrofit.client.Response;
 public class SignupActivity2 extends AppCompatActivity {
 
     private final String ENDPOINT = "https://maps.googleapis.com/maps/api/geocode";
-    private final String APIKEY = "AIzaSyAZ6ZNk_DPZN2A_0dpHb0MpWdGpEPLxom4";
+    private final String APIKEY2 = "AIzaSyAZ6ZNk_DPZN2A_0dpHb0MpWdGpEPLxom4";
+    private final String APIKEY = "AIzaSyDTaAeiCfVCXJhdweubPkgIvsni3s1-9ss";
 
     private Button startButton;
     private EditText nameET;
@@ -96,16 +97,16 @@ public class SignupActivity2 extends AppCompatActivity {
         city = cityET.getText().toString().trim().replace(' ','+');
 
 
-        String queryString = address + ",+" + city + ",+NY" + "&key=" + APIKEY;
+        String queryString = address + ",+" + city + ",+NY";// + "&key=" + APIKEY;
+        Log.i("RETROFIT- Geocode Query",queryString);
 
         geolocationAPI.getGeolocation(queryString, new Callback<Geolocation>() {
             @Override
             public void success(Geolocation geolocation, Response response) {
                 String uid = dbHelper.getUserID();
-                Result result = geolocation.getResults().get(0);
-                Location location = result.getGeometry().getLocation();
+                Location location = geolocation.getResults().get(0).getGeometry().getLocation();
 
-                address = address.replace('+', ' ');
+                address = address.replace('+',' ');
                 city = city.replace('+',' ');
 
 

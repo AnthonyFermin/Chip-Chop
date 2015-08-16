@@ -86,4 +86,13 @@ public class User {
         this.address = address;
     }
 
+    public void clearUser(){
+        emailAddress=null;
+        name=null;
+        address=null;
+        phoneNumber=null;
+        UID=null;
+        encodedPhotoString=null;
+    }
+
 }

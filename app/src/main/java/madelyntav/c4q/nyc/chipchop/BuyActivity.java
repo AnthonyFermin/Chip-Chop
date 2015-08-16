@@ -84,7 +84,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
                         // TODO:
                         //launch sellactivity
                         //else launch signUpActivity1
-                        if(dbHelper.userIsLoggedIn(true)){
+                        if(dbHelper.userIsLoggedIn()){
                             Intent sellIntent = new Intent(getApplicationContext(), SellActivity.class);
                             startActivity(sellIntent);
                             finish();

@@ -283,4 +283,15 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         public void onFragmentInteraction(Uri uri);
     }
 
+    public void addWithinRangeMarkersToMap(ArrayList<User> usersList) {
+        ArrayList<LatLng> latLngList = new ArrayList<>();
+        for (User user : usersList) {
+            madelyntav.c4q.nyc.chipchop.DBObjects.Address address = user.getAddress();
+            LatLng latLng = address.getLatLng();
+            latLngList.add(latLng);
+            LatLng center;
+
+        }
+
+    }
 }

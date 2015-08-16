@@ -22,7 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 
-
+import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Orders;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile;
@@ -36,12 +36,15 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
     private String[] mListTitles;
     private Fragment fragment;
     private ActionBarDrawerToggle mDrawerToggle;
+    private DBHelper dbHelper;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buy);
+
+        dbHelper = DBHelper.getDbHelper(this);
 
 
         frameLayout = (FrameLayout) findViewById(R.id.frameLayout);
@@ -79,9 +82,9 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
                     public void onClick(View view) {
 
                         // TODO:
-                        //Using DBHelper, check if current user is logged in
-                        //if User is not logged in send to SignUpActivity1
-                        //else if User is logged in send to SellActivity
+                        //if(dbHelper.userIsLoggedIn())
+                        //launch sellactivity
+                        //else launch signUpActivity1
 
                         Intent sellIntent = new Intent(getApplicationContext(), SellActivity.class);
                         startActivity(sellIntent);

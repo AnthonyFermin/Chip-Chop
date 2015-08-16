@@ -92,7 +92,7 @@
         android:layout_height="wrap_content"
         android:text="sign up!"
         style="@style/button_design"
-        android:id="@+id/startButton"/>
+        android:id="@+id/createUserButton"/>
 
 
 </LinearLayout>

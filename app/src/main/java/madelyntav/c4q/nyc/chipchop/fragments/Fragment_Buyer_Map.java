@@ -13,9 +13,9 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -35,7 +35,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,20 +55,19 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     public final static String PREF_NAME = "Settings";
     public static final String LASTLONGITUDE = "LastLongitude";
     public static final String LASTLATITUDE = "LastLatitude";
-
-    Button signupButton;
+    public Button signupButton;
     private LocationRequest mLocationRequest;
     private GoogleMap map;
+    private Circle mCircle;
     private SharedPreferences preferences;
     private Location location = new Location("Current Location");
     private boolean gps_enabled = false;
     private GoogleApiClient googleApiClient;
-
     private DBHelper dbHelper;
     private ArrayList<User> sellers;
-
     private RecyclerView sellersList;
     private View root;
+    ArrayList<madelyntav.c4q.nyc.chipchop.DBObjects.Address> addresses;
 
 
     @Nullable
@@ -74,8 +75,11 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.fragment_buyer_map, container, false);
+        dbHelper = DBHelper.getDbHelper(getActivity());
 
 
+
+        signupButton= (Button) root.findViewById(R.id.signupButton);
 
 
         // Connect to Geolocation API to make current location request
@@ -91,6 +95,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         mapFragment.getMapAsync(this);
         map = mapFragment.getMap();
 //        dbHelper = new DBHelper(getActivity().getApplicationContext());  TODO: DBHelper constructor should set androidContext
+
         //TODO: next line should be sellers = dbHelper.getAvailableFoodItems(currentLocation);
         sellers = new ArrayList<>();
         populateItems();
@@ -101,8 +106,20 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         SellersListAdapter sellersListAdapter = new SellersListAdapter(getActivity(), sellers);
         sellersList.setAdapter(sellersListAdapter);
 
+        madelyntav.c4q.nyc.chipchop.DBObjects.Address address= new madelyntav.c4q.nyc.chipchop.DBObjects.Address("570 west 189 street", "Apt 64", "New York", "NY", "10040", "5");
+        User user= new User("1","MadelynTav@Gmail.com","Madelyn Tavarez",address,"Photo","677-987-0564");
+        //47-98 31st Pl, Queens, NY, 11101
+        madelyntav.c4q.nyc.chipchop.DBObjects.Address address1=new madelyntav.c4q.nyc.chipchop.DBObjects.Address("47-98 31st Pl","","Queens","NY","11101","2");
+        User user1=new User("2","coalition@gmail.com","Coalition4Queens",address1,"Photo","677-988-0988");
 
+        dbHelper.addUserProfileInfoToDB(user);
+        dbHelper.addUserProfileInfoToDB(user1);
+        Log.d("Done Adding User", "Added Users ");
 
+        
+        addresses=new ArrayList<>();
+        addresses.addAll(dbHelper.addAddressesToMap());
+        addMarkersWithinRadius("10040");
 
         return root;
     }
@@ -263,4 +280,24 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         public void onFragmentInteraction(Uri uri);
     }
 
+    public void addMarkersWithinRadius(String userZipcode){
+              //empire state building LatLong
+              LatLng latLng = new LatLng(40.748817, -73.985428);
+              float[] distance = new float[2];
+
+              if(addresses.size()>0){
+                  for(madelyntav.c4q.nyc.chipchop.DBObjects.Address address1: addresses){
+                      String mZipCode=address1.getZipCode();
+                      if ((userZipcode==mZipCode)) {
+                          User user=new User(address1.getUserID());
+
+                          map.addMarker(new MarkerOptions().title(user.getName()).snippet("Do You Work?!").visible(true));
+                      }
+                  }
+              }
+
+              Log.d("Addresses", addresses.toString());
+          }
 }
+
+

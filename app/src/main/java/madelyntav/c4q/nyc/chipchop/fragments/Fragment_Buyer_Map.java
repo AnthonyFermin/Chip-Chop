@@ -113,8 +113,8 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         madelyntav.c4q.nyc.chipchop.DBObjects.Address address1=new madelyntav.c4q.nyc.chipchop.DBObjects.Address("47-98 31st Pl","","Queens","NY","11101","2");
         User user1=new User("2","coalition@gmail.com","Coalition4Queens",address1,"Photo","677-988-0988");
 
-        dbHelper.addUserAddressToProfile(user);
-        dbHelper.addUserAddressToProfile(user1);
+        dbHelper.addUserProfileInfoToDB(user);
+        dbHelper.addUserProfileInfoToDB(user1);
         Log.d("Done Adding User", "Added Users ");
 
         
@@ -292,6 +292,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
                       String mZipCode=address1.getZipCode();
                       if ((userZipcode==mZipCode)) {
                           User user=new User(address1.getUserID());
+
                           map.addMarker(new MarkerOptions().title(user.getName()).snippet("Do You Work?!").visible(true));
                       }
                   }

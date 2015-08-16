@@ -22,8 +22,9 @@ public class DBHelper extends Firebase {
     private static final String URL = "https://chipchop.firebaseio.com/";
     public static Context mContext;
     String UID;
+    static ArrayList<User> allUsers;
     static ArrayList<Item> items;
-     static ArrayList<Address> addresses;
+    static ArrayList<Address> addresses;
     private static final String userID = "userID";
     private static final String sStreet = "streetAddress";
     private static final String sApartment = "apartment";
@@ -40,7 +41,7 @@ public class DBHelper extends Firebase {
     private static final String sPhoneNumber = "phoneNumber";
     private static final String sAddress = "address";
     private static final String sPhotoLink = "photoLink";
-    User user;
+    static User user;
     Address address;
 
     public DBHelper() {
@@ -58,8 +59,10 @@ public class DBHelper extends Firebase {
         if (firebaseRef == null) {
             Firebase.setAndroidContext(context);
             firebaseRef = new DBHelper();
-            addresses= new ArrayList<>();
-            items= new ArrayList<>();
+            addresses = new ArrayList<>();
+            items = new ArrayList<>();
+            allUsers = new ArrayList<>();
+            user = new User();
         }
         return firebaseRef;
 
@@ -287,22 +290,23 @@ public class DBHelper extends Firebase {
                     String address1 = address.toString();
                     addresses.add(address);
 
-                    Log.d("AddressList",addresses.toString());
+                    Log.d("AddressList", addresses.toString());
 
                 }
             }
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
 
-                }
-            });
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
         return addresses;
     }
 
     public ArrayList<Item> getSellerItems(String UID) {
         this.UID = UID;
 
-        Firebase fRef = firebaseRef.child("Items/"+UID);
+        Firebase fRef = firebaseRef.child("Items/" + UID);
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -313,10 +317,11 @@ public class DBHelper extends Firebase {
                     Item item = dataSnapshot1.getValue(Item.class);
                     items.add(item);
 
-                    Log.d("SellerItems",items.toString());
+                    Log.d("SellerItems", items.toString());
 
                 }
             }
+
             @Override
             public void onCancelled(FirebaseError firebaseError) {
 
@@ -325,7 +330,7 @@ public class DBHelper extends Firebase {
         return items;
     }
 
-    public void createSellerItems(Item item){
+    public void createSellerItems(Item item) {
         UID = "";
         UID = item.getUserID();
         Firebase fRef = firebaseRef.child("Sellers/Items/" + UID);
@@ -342,6 +347,7 @@ public class DBHelper extends Firebase {
 
         Log.d("ItemID", itemID);
     }
+
     public void createSellerProfile(User user) {
         UID = user.getUserId();
         Firebase fRef = firebaseRef.child("UserProfiles/Seller/" + UID);
@@ -355,10 +361,10 @@ public class DBHelper extends Firebase {
 
         addUserAddressToProfile(user);
     }
-    
+
     public void createBuyerProfile(User user) {
         UID = user.getUserId();
-        Firebase fRef = firebaseRef.child("UserProfiles/Buyer/"+UID);
+        Firebase fRef = firebaseRef.child("UserProfiles/Buyer/" + UID);
         fRef.child(UID).push();
         fRef.child(UID).child(sName).setValue(user.getName());
         fRef.child(UID).child(sEmailAddress).setValue(user.getEmailAddress());
@@ -367,8 +373,53 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
 
         addUserAddressToProfile(user);
+    }
+
+    public ArrayList<User> getAllUsers() {
+        Firebase fRef = firebaseRef.child("UserProfiles");
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+                    User user = dataSnapshot1.getValue(User.class);
+                    allUsers.add(user);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+        return allUsers;
 
     }
 
+    public User getSpecificUser(String UID) {
+        this.UID = UID;
+            Firebase fRef = firebaseRef.child("UserProfiles/"+UID);
+            fRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
-}
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+                        user = dataSnapshot1.getValue(User.class);
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+
+                }
+            });
+        
+        return user;
+
+        }
+    }
+

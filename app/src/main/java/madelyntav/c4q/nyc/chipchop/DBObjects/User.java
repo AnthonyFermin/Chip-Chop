@@ -23,6 +23,8 @@ public class User {
     String UID;
     String URL="https://chipchop.firebaseio.com/";
 
+    public User(){}
+
     public User(String UID){
         this.UID=UID;
     }

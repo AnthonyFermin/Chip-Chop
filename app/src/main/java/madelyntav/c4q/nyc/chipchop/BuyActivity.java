@@ -144,8 +144,9 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         } else if (position == 1) {
             fragment = new Fragment_Buyer_Orders();
         } else if (position == 2) {
-            Intent editProfileIntent = new Intent(getApplicationContext(), SignupActivity2.class);
-            startActivity(editProfileIntent);
+//            Intent editProfileIntent = new Intent(getApplicationContext(), SignupActivity2.class);
+//            startActivity(editProfileIntent);
+//            finish();
         }
 
             // Create fragment manager to begin interacting with the fragments and the container
@@ -197,7 +198,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
     @Override
     public void onBackPressed() {
-        replaceFragment(new Fragment_Buyer_Map());
+        getSupportFragmentManager().popBackStack();
     }
 
     public void replaceFragment(Fragment fragment) {

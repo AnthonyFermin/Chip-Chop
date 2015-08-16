@@ -75,6 +75,7 @@ public class CheckoutListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             Picasso.with(context).load(checkoutItem.getImageLink()).fit().into(vh.image);
 
 
+
             setAnimation(vh.container, position);
 
 

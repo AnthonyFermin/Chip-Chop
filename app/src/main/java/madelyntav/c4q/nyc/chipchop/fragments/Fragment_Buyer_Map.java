@@ -75,9 +75,6 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
         root = inflater.inflate(R.layout.fragment_buyer_map, container, false);
 
-
-
-
         // Connect to Geolocation API to make current location request
         locationServiceIsAvailable();
         connectGoogleApiClient();

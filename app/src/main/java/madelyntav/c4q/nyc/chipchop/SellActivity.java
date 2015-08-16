@@ -20,6 +20,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_ViewCart;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_SellerProfile;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Items;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Orders;
@@ -133,8 +134,9 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
             fragment = new Fragment_Seller_Orders();
         } else if (position == 2) {
             // TODO: PROFILE SETTINGS
-            Intent profileIntent = new Intent(getApplicationContext(), SignupActivity2.class);
-            startActivity(profileIntent);
+//            Intent profileIntent = new Intent(getApplicationContext(), SignupActivity2.class);
+//            startActivity(profileIntent);
+            fragment = new Fragment_SellerProfile();
         }
 
             // Create fragment manager to begin interacting with the fragments and the container
@@ -186,6 +188,7 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
 
     @Override
     public void onBackPressed() {
+        getSupportFragmentManager().popBackStack();
     }
 
     public void replaceSellerFragment(Fragment fragment) {

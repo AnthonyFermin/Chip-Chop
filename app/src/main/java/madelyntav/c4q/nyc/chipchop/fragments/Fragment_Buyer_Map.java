@@ -237,7 +237,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
         @Override
         protected void onPostExecute(Address address) {
-            String zipcode = address.getPostalCode();
+//            String zipcode = address.getPostalCode();
             // would launch another async that returns available food providers based on buyer's current zip
             // would then use list of food providers to populate markers and listview
         }

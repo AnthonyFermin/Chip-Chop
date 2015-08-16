@@ -6,7 +6,7 @@
 
     <!-- The container for fragments -->
     <FrameLayout
-        android:id="@+id/frameLayout"
+        android:id="@+id/sellerFrameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

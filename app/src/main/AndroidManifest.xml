@@ -21,27 +21,27 @@
         </activity>
         <activity
             android:name=".BuyActivity"
-            android:label="@string/title_activity_buy"
+            android:label="ChipChop"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".SignupActivity1"
-            android:label="@string/title_activity_signup1"
+            android:label="ChipChop"
             android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".SignupActivity2"
-            android:label="@string/title_activity_signup2"
+            android:label="ChipChop"
             android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".SellActivity"
-            android:label="@string/title_activity_sell"
+            android:label="ChipChop"
             android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".SplashScreenActivity"
-            android:label="@string/title_activity_splash_screen"
+            android:label="ChipChop"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

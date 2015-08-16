@@ -1,11 +1,14 @@
 package madelyntav.c4q.nyc.chipchop;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -22,10 +25,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 
-import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Checkout;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Orders;
-import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile;
 
 public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Orders.OnBuyerOrderSelectedListener, Fragment_Buyer_Map.OnBuyerMapFragmentInteractionListener {
 
@@ -44,7 +45,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         setContentView(R.layout.activity_buy);
 
 
-        frameLayout = (FrameLayout) findViewById(R.id.frameLayout);
+        frameLayout = (FrameLayout) findViewById(R.id.sellerFrameLayout);
         DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -97,6 +98,22 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         if (savedInstanceState == null) {
             selectItem(0);
         }
+
+
+
+        // NOTIFICATION CODE
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(getApplicationContext())
+                        .setSmallIcon(R.drawable.cc_logo_red)
+                        .setContentTitle("ChipChop")
+                        .setContentText("Your order is ready!");
+
+        mBuilder.setAutoCancel(true);
+        Notification notification = mBuilder.build();
+        notificationManager.notify(1234, notification);
+
+
     }
 
     // TODO: PUT CODE FOR INTERACTION WITH LIST HERE !!
@@ -127,13 +144,13 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         } else if (position == 1) {
             fragment = new Fragment_Buyer_Orders();
         } else if (position == 2) {
-            fragment = new Fragment_Buyer_Checkout();
-            // TODO: PROFILE SETTINGS
+            Intent editProfileIntent = new Intent(getApplicationContext(), SignupActivity2.class);
+            startActivity(editProfileIntent);
         }
 
             // Create fragment manager to begin interacting with the fragments and the container
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
+            fragmentManager.beginTransaction().replace(R.id.sellerFrameLayout, fragment).addToBackStack(null).commit();
 
 
             // update selected item and title in nav drawer, then close the drawer
@@ -185,7 +202,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
     public void replaceFragment(Fragment fragment) {
         FragmentManager BuyFragmentManager = getSupportFragmentManager();
-        BuyFragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
+        BuyFragmentManager.beginTransaction().replace(R.id.sellerFrameLayout, fragment).addToBackStack(null).commit();
 
     }
 }

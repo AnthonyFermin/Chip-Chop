@@ -24,10 +24,10 @@ public class DBHelper extends Firebase {
     private static final String URL = "https://chipchop.firebaseio.com/";
     public static Context mContext;
     String UID;
-    static ArrayList<User> allUsers;
-    static ArrayList<Item> items;
-    static ArrayList<User> userList;
-    private static final String userID = "userID";
+    public static ArrayList<User> allUsers;
+    public static ArrayList<Item> items;
+    public static ArrayList<User> userList;
+    private static String userID = "userID";
     private static final String sLatLng = "latLng";
     private static final String sStreet = "streetAddress";
     private static final String sApartment = "apartment";
@@ -44,9 +44,9 @@ public class DBHelper extends Firebase {
     private static final String sPhoneNumber = "phoneNumber";
     private static final String sAddress = "address";
     private static final String sPhotoLink = "photoLink";
-    static User user;
+    public static User user;
     public boolean mSuccess = false;
-    Address address;
+    public static Address address;
 
     public DBHelper() {
         super(URL);
@@ -71,7 +71,7 @@ public class DBHelper extends Firebase {
 
     }
 
-    public boolean createUser(final String email, String password) {
+    public boolean createUser(final String email, final String password) {
         UID = "";
 
         firebaseRef.createUser(email, password, new Firebase.ValueResultHandler<Map<String, Object>>() {
@@ -87,6 +87,8 @@ public class DBHelper extends Firebase {
                 SharedPreferences sharedPreferences = mContext.getSharedPreferences("UID", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("id", UID);
+                editor.putString("eMail", email);
+                editor.putString("password",password);
                 editor.apply();
 
                 Firebase fRef = firebaseRef.child("UserLogins");
@@ -445,6 +447,10 @@ public class DBHelper extends Firebase {
 
     public boolean signOutUser() {
         firebaseRef.unauth();
+        userID=null;
+        user.clearUser();
+        address.clearAddress();
+
         return true;
     }
 
@@ -465,12 +471,10 @@ public class DBHelper extends Firebase {
                             case FirebaseError.USER_DOES_NOT_EXIST:
                                 Toast.makeText(mContext, "E-mail or Password Invalid", Toast.LENGTH_LONG).show();
                                 mSuccess = false;
-                                userIsLoggedIn(mSuccess);
                                 break;
                             case FirebaseError.INVALID_PASSWORD:
                                 Toast.makeText(mContext, "Invalid Password", Toast.LENGTH_LONG).show();
                                 mSuccess = false;
-                                userIsLoggedIn(mSuccess);
                                 break;
                             default:
                                 // handle other errors
@@ -481,8 +485,11 @@ public class DBHelper extends Firebase {
         return mSuccess;
     }
 
-    public boolean userIsLoggedIn(Boolean isUserLoggedIn) {
-        return isUserLoggedIn;
+    public boolean userIsLoggedIn() {
+        if(UID==null){
+            return false;
+        }
+        else{return true; }
     }
 
     public String getUserID() {
@@ -495,13 +502,12 @@ public class DBHelper extends Firebase {
 
     public ArrayList<LatLng> getUserListLatLng(ArrayList<User> usersList){
         ArrayList<LatLng> latLngList=new ArrayList<>();
-        
+
         for(User user: usersList){
             Address address=user.getAddress();
             LatLng latLng=address.getLatLng();
             latLngList.add(latLng);
         }
-
 
         return latLngList;
     }

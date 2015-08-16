@@ -75,6 +75,15 @@ public class Address {
     public LatLng getLatLng() {return latLng;}
 
     public void setLatLng(LatLng latLng) {this.latLng = latLng;}
+
+    public void clearAddress(){
+        streetAddress=null;
+        apartment=null;
+        city=null;
+        state=null;
+        zipCode=null;
+    }
+
     @Override
     public String toString() {
         return streetAddress+", APT:"+apartment+", "+city+", "+state.toUpperCase()+" "+zipCode;

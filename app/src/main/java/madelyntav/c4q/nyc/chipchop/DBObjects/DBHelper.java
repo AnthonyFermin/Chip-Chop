@@ -495,6 +495,12 @@ public class DBHelper extends Firebase {
 
     public ArrayList<LatLng> getUserListLatLng(ArrayList<User> usersList){
         ArrayList<LatLng> latLngList=new ArrayList<>();
+        
+        for(User user: usersList){
+            Address address=user.getAddress();
+            LatLng latLng=address.getLatLng();
+            latLngList.add(latLng);
+        }
 
 
         return latLngList;

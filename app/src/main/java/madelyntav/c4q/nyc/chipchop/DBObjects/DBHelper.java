@@ -72,16 +72,19 @@ public class DBHelper extends Firebase {
     }
 
     public boolean createUser(final String email, final String password) {
+        UID="";
 
         fireBaseRef.createUser(email, password, new Firebase.ValueResultHandler<Map<String, Object>>() {
             @Override
             public void onSuccess(Map<String, Object> stringObjectMap) {
                 Toast.makeText(mContext, "Account Created", Toast.LENGTH_SHORT).show();
                 mSuccess = true;
+
                 String userIDOne = String.valueOf(stringObjectMap.get("uid"));
                 for (int i = 12; i < userIDOne.length(); i++) {
                     UID += userIDOne.charAt(i);
                 }
+
                 SharedPreferences sharedPreferences = mContext.getSharedPreferences("UID", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("id", UID);
@@ -90,9 +93,11 @@ public class DBHelper extends Firebase {
                 editor.apply();
 
                 user=new User(UID,email);
+
                 Firebase fRef = new Firebase(URL + "UserProfiles");
                 fRef.child(UID);
                 fRef.child(UID).child(sEmailAddress).setValue(email);
+
             }
 
             @Override
@@ -120,7 +125,7 @@ public class DBHelper extends Firebase {
     }
 
     public void addUserAddressToProfile(Address address) {
-        UID = "";
+       // UID = "";
         UID = address.getUserID();
         Firebase fRef = new Firebase(URL+"Addresses");
 

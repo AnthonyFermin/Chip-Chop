@@ -37,10 +37,11 @@ public class SignupActivity1 extends AppCompatActivity {
                 email = emailET.getText().toString();
                 password = passET.getText().toString();
 
-                //if(dbHelper.logInUser(email,password){
+                if(dbHelper.logInUser(email,password)){
                     Intent sellActivityIntent = new Intent(getApplicationContext(), SellActivity.class);
                     startActivity(sellActivityIntent);
                     finish();
+                }
             }
         });
 
@@ -51,10 +52,11 @@ public class SignupActivity1 extends AppCompatActivity {
                 email = emailET.getText().toString();
                 password = passET.getText().toString();
 
-                //if(dbHelper.createUser(email, password){
+                if(dbHelper.createUser(email, password)) {
                     Intent createUserIntent = new Intent(getApplicationContext(), SignupActivity2.class);
                     startActivity(createUserIntent);
                     finish();
+                }
             }
         });
 

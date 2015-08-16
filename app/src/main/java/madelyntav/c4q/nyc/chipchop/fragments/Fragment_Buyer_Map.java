@@ -37,7 +37,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,6 +45,7 @@ import java.util.List;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.R;
+import madelyntav.c4q.nyc.chipchop.SignupActivity1;
 import madelyntav.c4q.nyc.chipchop.adapters.SellersListAdapter;
 
 
@@ -67,7 +67,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     private ArrayList<User> sellers;
     private RecyclerView sellersList;
     private View root;
-    ArrayList<madelyntav.c4q.nyc.chipchop.DBObjects.Address> addresses;
+    ArrayList<User> userList;
 
 
     @Nullable
@@ -78,8 +78,14 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         dbHelper = DBHelper.getDbHelper(getActivity());
 
 
-
-        signupButton= (Button) root.findViewById(R.id.signupButton);
+        signupButton = (Button) root.findViewById(R.id.signupButton);
+        signupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent signUp = new Intent(getActivity(), SignupActivity1.class);
+                startActivity(signUp);
+            }
+        });
 
 
         // Connect to Geolocation API to make current location request
@@ -106,20 +112,18 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         SellersListAdapter sellersListAdapter = new SellersListAdapter(getActivity(), sellers);
         sellersList.setAdapter(sellersListAdapter);
 
-        madelyntav.c4q.nyc.chipchop.DBObjects.Address address= new madelyntav.c4q.nyc.chipchop.DBObjects.Address("570 west 189 street", "Apt 64", "New York", "NY", "10040", "5");
-        User user= new User("1","MadelynTav@Gmail.com","Madelyn Tavarez",address,"Photo","677-987-0564");
+        madelyntav.c4q.nyc.chipchop.DBObjects.Address address = new madelyntav.c4q.nyc.chipchop.DBObjects.Address("570 west 189 street", "Apt 64", "New York", "NY", "10040", "5");
+        User user = new User("1", "MadelynTav@Gmail.com", "Madelyn Tavarez", address, "Photo", "677-987-0564");
         //47-98 31st Pl, Queens, NY, 11101
-        madelyntav.c4q.nyc.chipchop.DBObjects.Address address1=new madelyntav.c4q.nyc.chipchop.DBObjects.Address("47-98 31st Pl","","Queens","NY","11101","2");
-        User user1=new User("2","coalition@gmail.com","Coalition4Queens",address1,"Photo","677-988-0988");
+        madelyntav.c4q.nyc.chipchop.DBObjects.Address address1 = new madelyntav.c4q.nyc.chipchop.DBObjects.Address("47-98 31st Pl", "", "Queens", "NY", "11101", "2");
+        User user1 = new User("2", "coalition@gmail.com", "Coalition4Queens", address1, "Photo", "677-988-0988");
 
-        dbHelper.addUserProfileInfoToDB(user);
-        dbHelper.addUserProfileInfoToDB(user1);
+//        dbHelper.addUserProfileInfoToDB(user);
+//        dbHelper.addUserProfileInfoToDB(user1);
         Log.d("Done Adding User", "Added Users ");
 
-        
-        addresses=new ArrayList<>();
-        addresses.addAll(dbHelper.addAddressesToMap());
-        addMarkersWithinRadius("10040");
+        userList = new ArrayList<>();
+        userList.addAll(dbHelper.addAddressesToMap());
 
         return root;
     }
@@ -128,6 +132,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     private void populateItems(){
         for(int i = 0; i < 10; i++) {
             sellers.add(new User("test", "Github Cat", "Github Cat", new madelyntav.c4q.nyc.chipchop.DBObjects.Address(), "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg", "ajs;djf;d"));
+
         }
     }
 
@@ -273,31 +278,9 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     }
 
 
-
-
     public interface OnBuyerMapFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
 
-    public void addMarkersWithinRadius(String userZipcode){
-              //empire state building LatLong
-              LatLng latLng = new LatLng(40.748817, -73.985428);
-              float[] distance = new float[2];
-
-              if(addresses.size()>0){
-                  for(madelyntav.c4q.nyc.chipchop.DBObjects.Address address1: addresses){
-                      String mZipCode=address1.getZipCode();
-                      if ((userZipcode==mZipCode)) {
-                          User user=new User(address1.getUserID());
-
-                          map.addMarker(new MarkerOptions().title(user.getName()).snippet("Do You Work?!").visible(true));
-                      }
-                  }
-              }
-
-              Log.d("Addresses", addresses.toString());
-          }
 }
-
-

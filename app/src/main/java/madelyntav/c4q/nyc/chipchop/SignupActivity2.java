@@ -4,18 +4,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
+import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
+import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.GeolocationAPI.Geolocation;
 import madelyntav.c4q.nyc.chipchop.GeolocationAPI.GeolocationAPI;
 import madelyntav.c4q.nyc.chipchop.GeolocationAPI.Location;
+import madelyntav.c4q.nyc.chipchop.GeolocationAPI.Result;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Checkout;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile;
 import retrofit.Callback;
@@ -26,6 +31,7 @@ import retrofit.client.Response;
 public class SignupActivity2 extends AppCompatActivity {
 
     private final String ENDPOINT = "https://maps.googleapis.com/maps/api/geocode";
+    private final String APIKEY = "AIzaSyAZ6ZNk_DPZN2A_0dpHb0MpWdGpEPLxom4";
 
     private Button startButton;
     private EditText nameET;
@@ -39,7 +45,12 @@ public class SignupActivity2 extends AppCompatActivity {
     private String city;
     private String zipcode;
 
+    private String name;
+    private String phoneNumber;
+
     private Address userAddress;
+
+    DBHelper dbHelper;
 
 
     @Override
@@ -48,6 +59,8 @@ public class SignupActivity2 extends AppCompatActivity {
         setContentView(R.layout.activity_signup2);
 
         //TODO: onclick circleImageview allows user to upload a profile image
+
+        dbHelper = DBHelper.getDbHelper(this);
 
         nameET = (EditText) findViewById(R.id.name);
         addressET = (EditText) findViewById(R.id.address);
@@ -62,7 +75,7 @@ public class SignupActivity2 extends AppCompatActivity {
             public void onClick(View view) {
                 //TODO: CODE TO LINK TO CHECKOUT FRAGMENT + DO LAYOUT FOR CHECKOUT
                 //TODO: Uses google api to get geolocation of address, if successful, save profile info to DB
-                // Else give error message to user "invalid address"
+                getGeoLocation();
 
             }
         });
@@ -76,23 +89,44 @@ public class SignupActivity2 extends AppCompatActivity {
 
         GeolocationAPI geolocationAPI = restAdapter.create(GeolocationAPI.class);
 
-        String address = addressET.getText().toString();
+        address = addressET.getText().toString();
         address = address.trim().replace(" ", "+");
+        name = nameET.getText().toString().trim();
+        apt = aptET.getText().toString();
+        city = cityET.getText().toString().trim().replace(' ','+');
 
-        String queryString = address + ",";
+
+        String queryString = address + ",+" + city + ",+NY" + "&key=" + APIKEY;
 
         geolocationAPI.getGeolocation(queryString, new Callback<Geolocation>() {
             @Override
             public void success(Geolocation geolocation, Response response) {
-                Location location = geolocation.getResults().get(0).getGeometry().getLocation();
-                location.getLng();
-                LatLng latlng = new LatLng(location.getLat(), location.getLng());
-                Address = new Address(address,apt,city,"NY")
+                String uid = dbHelper.getUserID();
+                Result result = geolocation.getResults().get(0);
+                Location location = result.getGeometry().getLocation();
+
+                address = address.replace('+', ' ');
+                city = city.replace('+',' ');
+
+
+                Log.i("RETROFIT: LatLng", "" + location.getLat() + ", " + location.getLng());
+                LatLng latLng = new LatLng(location.getLat(), location.getLng());
+                userAddress = new Address(address,apt,city,"NY",zipcode, uid);
+                userAddress.setLatLng(latLng);
+                User user = dbHelper.getCurrentUser();
+                user.setAddress(userAddress);
+                user.setName(name);
+
+                dbHelper.addUserProfileInfoToDB(user);
+
+                Intent buyActivity = new Intent(getApplicationContext(), BuyActivity.class);
+                startActivity(buyActivity);
+                finish();
             }
 
             @Override
             public void failure(RetrofitError error) {
-
+                Toast.makeText(SignupActivity2.this, "Invalid Address", Toast.LENGTH_SHORT).show();
             }
         });
 

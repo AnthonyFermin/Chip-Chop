@@ -5,10 +5,12 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -24,8 +26,9 @@ public class DBHelper extends Firebase {
     String UID;
     static ArrayList<User> allUsers;
     static ArrayList<Item> items;
-    static ArrayList<Address> addresses;
+    static ArrayList<User> userList;
     private static final String userID = "userID";
+    private static final String sLatLng = "latLng";
     private static final String sStreet = "streetAddress";
     private static final String sApartment = "apartment";
     private static final String sCity = "city";
@@ -42,11 +45,11 @@ public class DBHelper extends Firebase {
     private static final String sAddress = "address";
     private static final String sPhotoLink = "photoLink";
     static User user;
+    public boolean mSuccess = false;
     Address address;
 
     public DBHelper() {
         super(URL);
-
     }
 
     public Firebase getFirebaseRef() {
@@ -59,7 +62,7 @@ public class DBHelper extends Firebase {
         if (firebaseRef == null) {
             Firebase.setAndroidContext(context);
             firebaseRef = new DBHelper();
-            addresses = new ArrayList<>();
+            userList = new ArrayList<>();
             items = new ArrayList<>();
             allUsers = new ArrayList<>();
             user = new User();
@@ -68,16 +71,15 @@ public class DBHelper extends Firebase {
 
     }
 
-    public void createUser(final String email, String password) {
+    public boolean createUser(final String email, String password) {
         UID = "";
 
         firebaseRef.createUser(email, password, new Firebase.ValueResultHandler<Map<String, Object>>() {
             @Override
             public void onSuccess(Map<String, Object> stringObjectMap) {
                 Toast.makeText(mContext, "Account Created", Toast.LENGTH_SHORT).show();
-
+                mSuccess = true;
                 String userIDOne = String.valueOf(stringObjectMap.get("uid"));
-
                 for (int i = 12; i < userIDOne.length(); i++) {
                     UID += userIDOne.charAt(i);
                 }
@@ -91,45 +93,75 @@ public class DBHelper extends Firebase {
                 fRef.child(UID);
                 fRef.child(UID).child("UserName").setValue(email);
                 fRef.child(UID).child("UserName").child("passWord").setValue("Tomorrow");
+
             }
 
             @Override
             public void onError(FirebaseError firebaseError) {
                 Toast.makeText(mContext, "Email already in use", Toast.LENGTH_SHORT).show();
                 Log.d("Firebase", firebaseError.toString());
+                mSuccess = false;
             }
         });
+
+        return mSuccess;
     }
 
     public void addUserProfileInfoToDB(User user) {
-//        firebaseRef= (DBHelper) new Firebase(URL+"UserProfiles");
-        Firebase fRef = firebaseRef.child("UserProfiles");
-        UID = user.getUserId();
 
-        fRef.child(UID).push();
-        fRef.child(UID).child(sName).setValue(user.getName());
-        fRef.child(UID).child(sEmailAddress).setValue(user.getEmailAddress());
-        fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
-        fRef.child(UID).child(sPhotoLink).setValue(user.getEncodedPhotoString());
-        fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
+        Firebase firebaseRef2= new Firebase(URL+"UserProfiles");
 
-        addUserAddressToProfile(user);
+        //UID = user.getUserId();
 
+        firebaseRef2.child(UID).push();
+        firebaseRef2.child(UID).child(sName).setValue(user.getName());
+        firebaseRef2.child(UID).child(sEmailAddress).setValue(user.getEmailAddress());
+        firebaseRef2.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
+        firebaseRef2.child(UID).child(sPhotoLink).setValue(user.getEncodedPhotoString());
+        firebaseRef2.child(UID).child(sAddress).setValue(user.getAddress().toString());
+        firebaseRef2.child(UID).child(sLatLng).setValue(user.getAddress().getLatLng());
+
+        addUserAddressToProfile(user.address);
     }
 
-    public void addUserAddressToProfile(User user) {
+    public void addUserAddressToProfile(Address address) {
         UID = "";
-        Address address = user.getAddress();
-
-        UID = address.getUserID();
-        Firebase fRef = firebaseRef.child("Addresses");
+       // UID = address.getUserID();
+        //Firebase fRef = firebaseRef.child("Addresses");
+        Firebase fRef= new Firebase(URL+"UserProfiles");
         fRef.child(UID).push();
         fRef.child(UID).child(sStreet).setValue(address.getStreetAddress());
         fRef.child(UID).child(sApartment).setValue(address.getApartment());
         fRef.child(UID).child(sCity).setValue(address.getCity());
         fRef.child(UID).child(sState).setValue(address.getState());
         fRef.child(UID).child(sZipCode).setValue(address.getZipCode());
+        fRef.child(UID).child(sLatLng).setValue(address.getLatLng());
+    }
 
+    public void updateUserProfile(String UID) {
+        this.UID = UID;
+        Firebase fRef = firebaseRef.child("UserProfiles/" + UID);
+        fRef.child(UID).push();
+        fRef.child(UID).child(sStreet).setValue(address.getStreetAddress());
+        fRef.child(UID).child(sApartment).setValue(address.getApartment());
+        fRef.child(UID).child(sCity).setValue(address.getCity());
+        fRef.child(UID).child(sState).setValue(address.getState());
+        fRef.child(UID).child(sZipCode).setValue(address.getZipCode());
+        fRef.child(UID).child(sLatLng).setValue(address.getLatLng());
+
+        updateUserAddress(UID);
+    }
+
+    public void updateUserAddress(String UID) {
+        this.UID = UID;
+        Firebase fRef = firebaseRef.child("Addresses/" + UID);
+        fRef.child(UID).push();
+        fRef.child(UID).child(sStreet).setValue(address.getStreetAddress());
+        fRef.child(UID).child(sApartment).setValue(address.getApartment());
+        fRef.child(UID).child(sCity).setValue(address.getCity());
+        fRef.child(UID).child(sState).setValue(address.getState());
+        fRef.child(UID).child(sZipCode).setValue(address.getZipCode());
+        fRef.child(UID).child(sLatLng).setValue(address.getLatLng());
     }
 
     public void addItemToDB(Item item) {
@@ -172,7 +204,6 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child(itemID).child("quantityAvailable").setValue(item.getQuantityAvailable());
             fRef.child(orderID).child(itemID).child("imageLink").setValue(item.getImageLink());
         }
-
     }
 
     public void currentlyOnSale(Item item) {
@@ -223,9 +254,7 @@ public class DBHelper extends Firebase {
 
                     String imageLink1 = item.imageLink;
                     Log.d(imageLink, imageLink1 + "");
-
                 }
-
             }
 
             @Override
@@ -234,7 +263,6 @@ public class DBHelper extends Firebase {
 
             }
         });
-
     }
 
     public void getAddressFromDB(String id) {
@@ -268,13 +296,11 @@ public class DBHelper extends Firebase {
 
             }
         });
-
-
     }
 
-    public ArrayList<Address> addAddressesToMap() {
+    public ArrayList<User> addAddressesToMap() {
 
-        Firebase fRef = firebaseRef.child("Addresses");
+        Firebase fRef = firebaseRef.child("UserProfiles/Seller/");
         //final ArrayList<android.location.Address> addresses= new ArrayList<android.location.Address>();
 
         //UID = user.getUserId();
@@ -286,11 +312,11 @@ public class DBHelper extends Firebase {
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
 
-                    Address address = dataSnapshot1.getValue(Address.class);
-                    String address1 = address.toString();
-                    addresses.add(address);
+                    User user = dataSnapshot1.getValue(User.class);
+                    String address1 = user.toString();
+                    userList.add(user);
 
-                    Log.d("AddressList", addresses.toString());
+                    Log.d("AddressList", userList.toString());
 
                 }
             }
@@ -300,7 +326,7 @@ public class DBHelper extends Firebase {
 
             }
         });
-        return addresses;
+        return userList;
     }
 
     public ArrayList<Item> getSellerItems(String UID) {
@@ -359,7 +385,7 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sPhotoLink).setValue(user.getEncodedPhotoString());
         fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
 
-        addUserAddressToProfile(user);
+        addUserAddressToProfile(user.address);
     }
 
     public void createBuyerProfile(User user) {
@@ -372,7 +398,7 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sPhotoLink).setValue(user.getEncodedPhotoString());
         fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
 
-        addUserAddressToProfile(user);
+        addUserAddressToProfile(user.address);
     }
 
     public ArrayList<User> getAllUsers() {
@@ -395,31 +421,91 @@ public class DBHelper extends Firebase {
             }
         });
         return allUsers;
-
     }
 
     public User getSpecificUser(String UID) {
         this.UID = UID;
-            Firebase fRef = firebaseRef.child("UserProfiles/"+UID);
-            fRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
+        Firebase fRef = firebaseRef.child("UserProfiles/" + UID);
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
 
-                        user = dataSnapshot1.getValue(User.class);
-
-                    }
+                    user = dataSnapshot1.getValue(User.class);
                 }
+            }
 
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
 
-                }
-            });
-        
+            }
+        });
+
         return user;
-
-        }
     }
 
+    public boolean signOutUser() {
+        firebaseRef.unauth();
+        return true;
+    }
+
+    public boolean logInUser(String email, String password) {
+        mSuccess = false;
+        firebaseRef.authWithPassword(email, password,
+                new Firebase.AuthResultHandler() {
+                    @Override
+                    public void onAuthenticated(AuthData authData) { /* ... */
+                        mSuccess = true;
+                        UID = authData.getUid();
+                    }
+
+                    @Override
+                    public void onAuthenticationError(FirebaseError error) {
+                        // Something went wrong :(
+                        switch (error.getCode()) {
+                            case FirebaseError.USER_DOES_NOT_EXIST:
+                                Toast.makeText(mContext, "E-mail or Password Invalid", Toast.LENGTH_LONG).show();
+                                mSuccess = false;
+                                userIsLoggedIn(mSuccess);
+                                break;
+                            case FirebaseError.INVALID_PASSWORD:
+                                Toast.makeText(mContext, "Invalid Password", Toast.LENGTH_LONG).show();
+                                mSuccess = false;
+                                userIsLoggedIn(mSuccess);
+                                break;
+                            default:
+                                // handle other errors
+                                break;
+                        }
+                    }
+                });
+        return mSuccess;
+    }
+
+    public boolean userIsLoggedIn(Boolean isUserLoggedIn) {
+        return isUserLoggedIn;
+    }
+
+    public String getUserID() {
+        return user.getUserId();
+    }
+
+    public User getCurrentUser() {
+        return user;
+    }
+
+    public ArrayList<LatLng> getUserListLatLng(ArrayList<User> usersList){
+        ArrayList<LatLng> latLngList=new ArrayList<>();
+        
+        for(User user: usersList){
+            Address address=user.getAddress();
+            LatLng latLng=address.getLatLng();
+            latLngList.add(latLng);
+        }
+
+
+        return latLngList;
+    }
+
+}

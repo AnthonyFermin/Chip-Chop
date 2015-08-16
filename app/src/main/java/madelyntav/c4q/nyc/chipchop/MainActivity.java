@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
         User user= new User("5","MadelynTav@Gmail.com","Madelyn Tavarez",address,"Photo","677-987-0564");
 
-        dbHelper.addUserAddressToProfile(user);
+        dbHelper.addUserProfileInfoToDB(user);
 
 
     }

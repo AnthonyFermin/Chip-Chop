@@ -82,13 +82,20 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
                     public void onClick(View view) {
 
                         // TODO:
-                        //if(dbHelper.userIsLoggedIn())
                         //launch sellactivity
                         //else launch signUpActivity1
+                        if(dbHelper.userIsLoggedIn(true)){
+                            Intent sellIntent = new Intent(getApplicationContext(), SellActivity.class);
+                            startActivity(sellIntent);
+                            finish();
+                        }else{
+                            Intent signUpIntent = new Intent(getApplicationContext(), SignupActivity1.class);
+                            startActivity(signUpIntent);
+                            finish();
+                        }
 
-                        Intent sellIntent = new Intent(getApplicationContext(), SellActivity.class);
-                        startActivity(sellIntent);
-                        finish();
+
+
                     }
                 });
 

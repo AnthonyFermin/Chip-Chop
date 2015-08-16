@@ -20,7 +20,7 @@ import java.util.Map;
  * Created by c4q-madelyntavarez on 8/12/15.
  */
 public class DBHelper extends Firebase {
-    static DBHelper firebaseRef;
+    static DBHelper fireBaseRef;
     private static final String URL = "https://chipchop.firebaseio.com/";
     public static Context mContext;
     String UID;
@@ -53,28 +53,27 @@ public class DBHelper extends Firebase {
     }
 
     public Firebase getFirebaseRef() {
-        return firebaseRef;
+        return fireBaseRef;
     }
 
     public static DBHelper getDbHelper(Context context) {
 
         mContext = context;
-        if (firebaseRef == null) {
+        if (fireBaseRef == null) {
             Firebase.setAndroidContext(context);
-            firebaseRef = new DBHelper();
+            fireBaseRef = new DBHelper();
             userList = new ArrayList<>();
             items = new ArrayList<>();
             allUsers = new ArrayList<>();
             user = new User();
         }
-        return firebaseRef;
+        return fireBaseRef;
 
     }
 
     public boolean createUser(final String email, final String password) {
-        UID = "";
 
-        firebaseRef.createUser(email, password, new Firebase.ValueResultHandler<Map<String, Object>>() {
+        fireBaseRef.createUser(email, password, new Firebase.ValueResultHandler<Map<String, Object>>() {
             @Override
             public void onSuccess(Map<String, Object> stringObjectMap) {
                 Toast.makeText(mContext, "Account Created", Toast.LENGTH_SHORT).show();
@@ -88,10 +87,10 @@ public class DBHelper extends Firebase {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("id", UID);
                 editor.putString("eMail", email);
-                editor.putString("password",password);
+                editor.putString("password", password);
                 editor.apply();
 
-                Firebase fRef = firebaseRef.child("UserLogins");
+                Firebase fRef = DBHelper.fireBaseRef.child("UserLogins");
                 fRef.child(UID);
                 fRef.child(UID).child("UserName").setValue(email);
                 fRef.child(UID).child("UserName").child("passWord").setValue("Tomorrow");
@@ -110,9 +109,7 @@ public class DBHelper extends Firebase {
     }
 
     public void addUserProfileInfoToDB(User user) {
-//        firebaseRef= (DBHelper) new Firebase(URL+"UserProfiles");
-        Firebase fRef = firebaseRef.child("UserProfiles");
-        UID = user.getUserId();
+        Firebase fRef =  new Firebase(URL+"UserProfiles");
 
         fRef.child(UID).push();
         fRef.child(UID).child(sName).setValue(user.getName());
@@ -128,7 +125,8 @@ public class DBHelper extends Firebase {
     public void addUserAddressToProfile(Address address) {
         UID = "";
         UID = address.getUserID();
-        Firebase fRef = firebaseRef.child("Addresses");
+        Firebase fRef = new Firebase(URL+"Addresses");
+
         fRef.child(UID).push();
         fRef.child(UID).child(sStreet).setValue(address.getStreetAddress());
         fRef.child(UID).child(sApartment).setValue(address.getApartment());
@@ -139,9 +137,12 @@ public class DBHelper extends Firebase {
     }
 
     public void updateUserProfile(String UID) {
-        this.UID = UID;
-        Firebase fRef = firebaseRef.child("UserProfiles/" + UID);
-        fRef.child(UID).push();
+        this.UID=UID;
+        //Firebase fRef = DBHelper.fRef.child("UserProfiles/" + UID);
+
+        Firebase fRef = new Firebase(URL+"UserProfiles/" + UID);
+
+
         fRef.child(UID).child(sStreet).setValue(address.getStreetAddress());
         fRef.child(UID).child(sApartment).setValue(address.getApartment());
         fRef.child(UID).child(sCity).setValue(address.getCity());
@@ -154,8 +155,8 @@ public class DBHelper extends Firebase {
 
     public void updateUserAddress(String UID) {
         this.UID = UID;
-        Firebase fRef = firebaseRef.child("Addresses/" + UID);
-        fRef.child(UID).push();
+        Firebase fRef =  new Firebase(URL+"Addresses/" + UID);
+
         fRef.child(UID).child(sStreet).setValue(address.getStreetAddress());
         fRef.child(UID).child(sApartment).setValue(address.getApartment());
         fRef.child(UID).child(sCity).setValue(address.getCity());
@@ -167,9 +168,9 @@ public class DBHelper extends Firebase {
     public void addItemToDB(Item item) {
         UID = "";
         UID = item.getUserID();
-        Firebase fRef = firebaseRef.child("Items/" + UID);
+        Firebase fRef = new Firebase(URL+"Items/" + UID);
 
-        Firebase fire1 = firebaseRef.child(UID).push();
+        Firebase fire1 = fRef.child(UID).push();
         String itemID = fire1.getKey();
         item.setItemID(itemID);
 
@@ -186,7 +187,7 @@ public class DBHelper extends Firebase {
         UID = "";
         UID = order.getUserID();
 
-        Firebase fRef = firebaseRef.child("Orders/" + UID);
+        Firebase fRef = new Firebase(URL+"Orders/" + UID);
 
         ArrayList<Item> itemsOrdered = order.getItemsOrdered();
 
@@ -210,7 +211,7 @@ public class DBHelper extends Firebase {
 
         UID = "";
         UID = item.getUserID();
-        Firebase fRef = firebaseRef.child("itemsForSale/" + UID);
+        Firebase fRef = new Firebase(URL+"itemsForSale/" + UID);
 
         Firebase fire1 = fRef.child(UID).push();
         String itemID = fire1.getKey();
@@ -231,7 +232,7 @@ public class DBHelper extends Firebase {
         UID = order.getUserID();
         String orderID = order.getOrderID();
 
-        Firebase fRef = firebaseRef.child("Orders/" + "5" + "/" + orderID);
+        Firebase fRef = new Firebase(URL+"Orders/" + "5" + "/" + orderID);
 
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -269,7 +270,7 @@ public class DBHelper extends Firebase {
         UID = "";
         this.UID = id;
 
-        Firebase fRef = firebaseRef.child("Addresses/" + id);
+        Firebase fRef = new Firebase(URL+"Addresses/" + id);
 
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -300,9 +301,8 @@ public class DBHelper extends Firebase {
 
     public ArrayList<User> addAddressesToMap() {
 
-        Firebase fRef = firebaseRef.child("UserProfiles/Seller/");
+        Firebase fRef = new Firebase(URL+"UserProfiles/Seller/");
         //final ArrayList<android.location.Address> addresses= new ArrayList<android.location.Address>();
-
         //UID = user.getUserId();
 
         fRef.addValueEventListener(new ValueEventListener() {
@@ -332,7 +332,8 @@ public class DBHelper extends Firebase {
     public ArrayList<Item> getSellerItems(String UID) {
         this.UID = UID;
 
-        Firebase fRef = firebaseRef.child("Items/" + UID);
+        Firebase fRef = new Firebase(URL+"Items/" + UID);
+
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -359,9 +360,10 @@ public class DBHelper extends Firebase {
     public void createSellerItems(Item item) {
         UID = "";
         UID = item.getUserID();
-        Firebase fRef = firebaseRef.child("Sellers/Items/" + UID);
+        Firebase fRef =  new Firebase(URL+"UserProfiles/Sellers/Items/" + UID);
 
-        Firebase fire1 = firebaseRef.child(UID).push();
+
+        Firebase fire1 = fRef.child(UID).push();
         String itemID = fire1.getKey();
         item.setItemID(itemID);
 
@@ -376,7 +378,7 @@ public class DBHelper extends Firebase {
 
     public void createSellerProfile(User user) {
         UID = user.getUserId();
-        Firebase fRef = firebaseRef.child("UserProfiles/Seller/" + UID);
+        Firebase fRef = new Firebase(URL+"UserProfiles/Seller/" + UID);
 
         fRef.child(UID).push();
         fRef.child(UID).child(sName).setValue(user.getName());
@@ -390,7 +392,8 @@ public class DBHelper extends Firebase {
 
     public void createBuyerProfile(User user) {
         UID = user.getUserId();
-        Firebase fRef = firebaseRef.child("UserProfiles/Buyer/" + UID);
+        Firebase fRef = new Firebase(URL+"UserProfiles/Buyer/" + UID);
+
         fRef.child(UID).push();
         fRef.child(UID).child(sName).setValue(user.getName());
         fRef.child(UID).child(sEmailAddress).setValue(user.getEmailAddress());
@@ -402,7 +405,8 @@ public class DBHelper extends Firebase {
     }
 
     public ArrayList<User> getAllUsers() {
-        Firebase fRef = firebaseRef.child("UserProfiles");
+        Firebase fRef = new Firebase(URL+"UserProfiles");
+
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -425,7 +429,8 @@ public class DBHelper extends Firebase {
 
     public User getSpecificUser(String UID) {
         this.UID = UID;
-        Firebase fRef = firebaseRef.child("UserProfiles/" + UID);
+        Firebase fRef = new Firebase(URL+"UserProfiles/"+ UID);
+
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -446,17 +451,19 @@ public class DBHelper extends Firebase {
     }
 
     public boolean signOutUser() {
-        firebaseRef.unauth();
+
+        fireBaseRef.unauth();
         userID=null;
         user.clearUser();
         address.clearAddress();
-
+        userList.clear();
+        items.clear();
         return true;
     }
 
     public boolean logInUser(String email, String password) {
         mSuccess = false;
-        firebaseRef.authWithPassword(email, password,
+        fireBaseRef.authWithPassword(email, password,
                 new Firebase.AuthResultHandler() {
                     @Override
                     public void onAuthenticated(AuthData authData) { /* ... */

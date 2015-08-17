@@ -15,6 +15,8 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.Map;
 
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
+
 
 /**
  * Created by c4q-madelyntavarez on 8/12/15.
@@ -23,12 +25,12 @@ public class DBHelper extends Firebase {
     static DBHelper fireBaseRef;
     private static final String URL = "https://chipchop.firebaseio.com/";
     public static Context mContext;
+    private static Fragment_Buyer_Map fragment_buyer_map;
     String UID;
     public static ArrayList<User> allUsers;
     public static ArrayList<Item> items;
     public static ArrayList<User> userList;
     private static String userID = "userID";
-    private static final String sLatLng = "latLng";
     private static final String sStreet = "streetAddress";
     private static final String sApartment = "apartment";
     private static final String sCity = "city";
@@ -53,13 +55,6 @@ public class DBHelper extends Firebase {
 
     public DBHelper() {
         super(URL);
-
-        userList = new ArrayList<>();
-        items = new ArrayList<>();
-        allUsers = new ArrayList<>();
-        user = new User();
-        latLngList = new ArrayList<>();
-
     }
 
     public Firebase getFirebaseRef() {
@@ -73,7 +68,12 @@ public class DBHelper extends Firebase {
             Firebase.setAndroidContext(context);
             fireBaseRef = new DBHelper();
         }
-
+        userList = new ArrayList<>();
+        items = new ArrayList<>();
+        allUsers = new ArrayList<>();
+        user = new User();
+        latLngList = new ArrayList<>();
+        fragment_buyer_map=new Fragment_Buyer_Map();
         return fireBaseRef;
     }
 
@@ -147,17 +147,13 @@ public class DBHelper extends Firebase {
 
     public void updateUserProfile(String UID) {
         this.UID = UID;
-        //Firebase fRef = DBHelper.fRef.child("UserProfiles/" + UID);
-
         Firebase fRef = new Firebase(URL + "UserProfiles/" + UID);
-
 
         fRef.child(UID).child(sStreet).setValue(address.getStreetAddress());
         fRef.child(UID).child(sApartment).setValue(address.getApartment());
         fRef.child(UID).child(sCity).setValue(address.getCity());
         fRef.child(UID).child(sState).setValue(address.getState());
         fRef.child(UID).child(sZipCode).setValue(address.getZipCode());
-       // fRef.child(UID).child(sLatLng).setValue(address.getLatLng());
 
         updateUserAddress(UID);
     }
@@ -457,10 +453,10 @@ public class DBHelper extends Firebase {
                     Address address = dataSnapshot1.getValue(Address.class);
                     //Log.d("Fin", String.valueOf(address.latLng.latitude));
 
-                    double lat=address.latitude;
-                    double lng=address.longitude;
+                    double lat = address.latitude;
+                    double lng = address.longitude;
 
-                    LatLng latLng= new LatLng(lat,lng);
+                    LatLng latLng = new LatLng(lat, lng);
 
                     latLngList.add(latLng);
                 }
@@ -474,6 +470,11 @@ public class DBHelper extends Firebase {
 
 
         Log.d("DBHelperLatsList",latLngList.toString());
+
+        if(latLngList!=null||latLngList.size()>0){
+            fragment_buyer_map.getDataHere();
+        }
+
         return latLngList;
     }
 

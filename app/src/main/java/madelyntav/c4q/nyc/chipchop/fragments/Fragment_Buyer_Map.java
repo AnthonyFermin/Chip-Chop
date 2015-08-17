@@ -278,7 +278,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
     public void addWithinRangeMarkersToMap() {
 
-        latsList.addAll(dbHelper.getUserListLatLng());
+        //latsList.addAll(dbHelper.getUserListLatLng());
 
         Log.d("UserLatList",latsList.toString());
 
@@ -322,12 +322,29 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
                 seller.latitude, seller.longitude, distance);
 
         if( distance[0] < circle.getRadius()  ){
-
             addMarker(seller.latitude,seller.longitude);
 
             Toast.makeText(getActivity(), "Outside", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(getActivity(), "Inside", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void getDataHere(){
+        Handler handler= new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                latsList.addAll(dbHelper.getUserListLatLng());
+
+                while (latsList == null || latsList.size() == 0) {
+                    latsList.addAll(dbHelper.getUserListLatLng());
+                }
+
+                addWithinRangeMarkersToMap();
+
+            }
+        },2000);
     }
 }

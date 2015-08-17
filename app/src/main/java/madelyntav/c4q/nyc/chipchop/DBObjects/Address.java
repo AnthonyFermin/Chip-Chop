@@ -19,6 +19,16 @@ public class Address {
         userID=UID;
     }
 
+    public Address(String streetAddress, String apartment, String city, String state, String zipCode,String userID){
+        this.streetAddress=streetAddress;
+        this.apartment=apartment;
+        this.city=city;
+        this.state=state;
+        this.zipCode=zipCode;
+        this.userID=userID;
+
+    }
+
     public Address(String streetAddress, String apartment, String city, String state, String zipCode,String userID, double latitude, double longitude){
         this.streetAddress=streetAddress;
         this.apartment=apartment;

@@ -45,14 +45,21 @@ public class DBHelper extends Firebase {
     private static final String sAddress = "address";
     private static final String sPhotoLink = "photoLink";
     public static User user;
-    public static String sLatitude="latitude";
-    public static String sLongitude="longitude";
+    public static final String sLatitude="latitude";
+    public static final String sLongitude="longitude";
     public boolean mSuccess = false;
     public static Address address;
     public static ArrayList<LatLng> latLngList;
 
     public DBHelper() {
         super(URL);
+
+        userList = new ArrayList<>();
+        items = new ArrayList<>();
+        allUsers = new ArrayList<>();
+        user = new User();
+        latLngList = new ArrayList<>();
+
     }
 
     public Firebase getFirebaseRef() {
@@ -66,12 +73,6 @@ public class DBHelper extends Firebase {
             Firebase.setAndroidContext(context);
             fireBaseRef = new DBHelper();
         }
-
-        userList = new ArrayList<>();
-        items = new ArrayList<>();
-        allUsers = new ArrayList<>();
-        user = new User();
-        latLngList = new ArrayList<>();
 
         return fireBaseRef;
     }
@@ -420,12 +421,13 @@ public class DBHelper extends Firebase {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
+                allUsers = new ArrayList<>();
+
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
 
                     User user = dataSnapshot1.getValue(User.class);
-                    Log.d("Fin", user.phoneNumber);
+                    //Log.d("Fin", user.phoneNumber);
                     allUsers.add(user);
-
                 }
             }
 
@@ -437,11 +439,12 @@ public class DBHelper extends Firebase {
 
         getUserListLatLng();
 
-        Log.d("DBHELPERUSERLIST", allUsers.toString());
+
         return allUsers;
     }
 
     public ArrayList<LatLng> getUserListLatLng() {
+        Log.d("DBHELPERUSERLIST", allUsers.toString());
 
         Firebase fRef = new Firebase(URL + "Addresses");
 

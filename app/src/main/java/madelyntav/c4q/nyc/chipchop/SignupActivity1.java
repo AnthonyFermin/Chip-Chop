@@ -27,7 +27,7 @@ public class SignupActivity1 extends AppCompatActivity {
 
         dbHelper = DBHelper.getDbHelper(this);
 
-        emailET = (EditText) findViewById(R.id.emailAddress);
+        emailET = (EditText) findViewById(R.id.eMail);
         passET = (EditText) findViewById(R.id.password);
 
         signInButton = (Button) findViewById(R.id.signInButton);

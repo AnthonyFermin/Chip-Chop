@@ -82,6 +82,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         root = inflater.inflate(R.layout.fragment_buyer_map, container, false);
         dbHelper = DBHelper.getDbHelper(getActivity());
         latsList= new ArrayList<>();
+        signupButton= (Button) root.findViewById(R.id.signInButton);
 
         // Connect to Geolocation API to make current location request
         locationServiceIsAvailable();
@@ -108,19 +109,14 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         SellersListAdapter sellersListAdapter = new SellersListAdapter(getActivity(), sellers);
         sellersList.setAdapter(sellersListAdapter);
 
-
-//        dbHelper.addUserProfileInfoToDB(user);
-//        dbHelper.addUserProfileInfoToDB(user1);
-        Log.d("Done Adding User", "Added Users ");
-
-        signupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               // addWithinRangeMarkersToMap();
-                dbHelper.getAllUsers();
-
-            }
-        });
+//        signupButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//               // addWithinRangeMarkersToMap();
+//                dbHelper.getAllUsers();
+//
+//            }
+//        });
 
         return root;
     }

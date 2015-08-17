@@ -13,14 +13,15 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
@@ -35,7 +36,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,6 +47,7 @@ import java.util.List;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.R;
+import madelyntav.c4q.nyc.chipchop.SignupActivity1;
 import madelyntav.c4q.nyc.chipchop.adapters.SellersListAdapter;
 
 
@@ -53,20 +57,19 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     public final static String PREF_NAME = "Settings";
     public static final String LASTLONGITUDE = "LastLongitude";
     public static final String LASTLATITUDE = "LastLatitude";
-
-    Button signupButton;
+    public Button signupButton;
     private LocationRequest mLocationRequest;
     private GoogleMap map;
+    private Circle mCircle;
     private SharedPreferences preferences;
     private Location location = new Location("Current Location");
     private boolean gps_enabled = false;
     private GoogleApiClient googleApiClient;
-
     private DBHelper dbHelper;
     private ArrayList<User> sellers;
-
     private RecyclerView sellersList;
     private View root;
+    ArrayList<User> userList;
 
 
     @Nullable
@@ -74,6 +77,8 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.fragment_buyer_map, container, false);
+        dbHelper = DBHelper.getDbHelper(getActivity());
+
 
         // Connect to Geolocation API to make current location request
         locationServiceIsAvailable();
@@ -88,6 +93,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         mapFragment.getMapAsync(this);
         map = mapFragment.getMap();
 //        dbHelper = new DBHelper(getActivity().getApplicationContext());  TODO: DBHelper constructor should set androidContext
+
         //TODO: next line should be sellers = dbHelper.getAvailableFoodItems(currentLocation);
         sellers = new ArrayList<>();
         populateItems();
@@ -98,8 +104,18 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         SellersListAdapter sellersListAdapter = new SellersListAdapter(getActivity(), sellers);
         sellersList.setAdapter(sellersListAdapter);
 
+        madelyntav.c4q.nyc.chipchop.DBObjects.Address address = new madelyntav.c4q.nyc.chipchop.DBObjects.Address("570 west 189 street", "Apt 64", "New York", "NY", "10040", "5");
+        User user = new User("1", "MadelynTav@Gmail.com", "Madelyn Tavarez", address, "Photo", "677-987-0564");
+        //47-98 31st Pl, Queens, NY, 11101
+        madelyntav.c4q.nyc.chipchop.DBObjects.Address address1 = new madelyntav.c4q.nyc.chipchop.DBObjects.Address("47-98 31st Pl", "", "Queens", "NY", "11101", "2");
+        User user1 = new User("2", "coalition@gmail.com", "Coalition4Queens", address1, "Photo", "677-988-0988");
 
+//        dbHelper.addUserProfileInfoToDB(user);
+//        dbHelper.addUserProfileInfoToDB(user1);
+        Log.d("Done Adding User", "Added Users ");
 
+        userList = new ArrayList<>();
+        userList.addAll(dbHelper.addAddressesToMap());
 
         return root;
     }
@@ -108,6 +124,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     private void populateItems(){
         for(int i = 0; i < 10; i++) {
             sellers.add(new User("test", "Github Cat", "Github Cat", new madelyntav.c4q.nyc.chipchop.DBObjects.Address(), "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg", "ajs;djf;d"));
+
         }
     }
 
@@ -253,11 +270,39 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     }
 
 
-
-
     public interface OnBuyerMapFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
 
+    public void addWithinRangeMarkersToMap(ArrayList<User> usersList) {
+        ArrayList<LatLng> latLngList = new ArrayList<>();
+        for (User user : usersList) {
+            madelyntav.c4q.nyc.chipchop.DBObjects.Address address = user.getAddress();
+            LatLng latLng = address.getLatLng();
+            latLngList.add(latLng);
+            LatLng user1=DBHelper.user.getAddress().getLatLng();
+
+            float[] distance = new float[2];
+
+            Location.distanceBetween( latLng.latitude, latLng.longitude,
+                    user1.latitude, user1.longitude, distance);
+
+            if( distance[0] > 100  ){
+                Toast.makeText(getActivity(), "Outside", Toast.LENGTH_LONG).show();
+                addMarker(latLng.latitude,latLng.longitude);
+
+            } else {
+                Toast.makeText(getActivity(), "Inside", Toast.LENGTH_LONG).show();
+            }
+
+        }
+
+    }
+
+    public void addMarker(double lat, double lon){
+        map.addMarker(new MarkerOptions()
+                .position(new LatLng(lat, lon))
+                .title("Marker in Zone"));
+    }
 }

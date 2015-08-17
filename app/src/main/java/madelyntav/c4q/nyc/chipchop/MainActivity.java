@@ -1,14 +1,9 @@
 package madelyntav.c4q.nyc.chipchop;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-
 import android.util.Base64;
 import android.view.View;
-import android.widget.Button;
 
 import com.firebase.client.Firebase;
 
@@ -34,9 +29,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Firebase.setAndroidContext(this);
 
-        dbHelper=DBHelper.getDbHelper();
+        dbHelper=DBHelper.getDbHelper(this);
         if(dbHelper == null) {
-            dbHelper = new DBHelper(getApplicationContext());
+            dbHelper = new DBHelper();
         }
 
 
@@ -72,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
         User user= new User("5","MadelynTav@Gmail.com","Madelyn Tavarez",address,"Photo","677-987-0564");
 
-        dbHelper.addUserAddressToProfile(user);
+        dbHelper.addUserProfileInfoToDB(user);
 
 
     }

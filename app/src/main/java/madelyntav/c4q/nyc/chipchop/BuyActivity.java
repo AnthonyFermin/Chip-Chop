@@ -25,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 
+import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Orders;
 
@@ -37,12 +38,15 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
     private String[] mListTitles;
     private Fragment fragment;
     private ActionBarDrawerToggle mDrawerToggle;
+    private DBHelper dbHelper;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buy);
+
+        dbHelper = DBHelper.getDbHelper(this);
 
 
         frameLayout = (FrameLayout) findViewById(R.id.sellerFrameLayout);
@@ -78,9 +82,22 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
                 sellButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent sellIntent = new Intent(getApplicationContext(), SellActivity.class);
-                        startActivity(sellIntent);
-                        finish();
+
+                        // TODO:
+                        //launch sellactivity
+                        //else launch signUpActivity1
+                        if(dbHelper.userIsLoggedIn()){
+                            Intent sellIntent = new Intent(getApplicationContext(), SellActivity.class);
+                            startActivity(sellIntent);
+                            finish();
+                        }else{
+                            Intent signUpIntent = new Intent(getApplicationContext(), SignupActivity1.class);
+                            startActivity(signUpIntent);
+                            finish();
+                        }
+
+
+
                     }
                 });
 

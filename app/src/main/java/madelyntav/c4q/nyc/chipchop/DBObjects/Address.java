@@ -1,7 +1,5 @@
 package madelyntav.c4q.nyc.chipchop.DBObjects;
 
-import com.google.android.gms.maps.model.LatLng;
-
 /**
  * Created by c4q-madelyntavarez on 8/11/15.
  */
@@ -12,31 +10,15 @@ public class Address {
     String state;
     String zipCode;
     String userID;
-    LatLng latLng;
     double latitude;
     double longitude;
 
-
-
     public Address(){}
-
-    public Address(LatLng latLng){
-        this.latLng=latLng;
-    }
 
     public Address(String UID){
         userID=UID;
     }
-    public Address(String streetAddress, String apartment, String city, String state, String zipCode,String userID,LatLng latLng){
-        this.streetAddress=streetAddress;
-        this.apartment=apartment;
-        this.city=city;
-        this.state=state;
-        this.zipCode=zipCode;
-        this.userID=userID;
-        this.latLng=latLng;
-    }
-
+    
     public Address(String streetAddress, String apartment, String city, String state, String zipCode,String userID){
         this.streetAddress=streetAddress;
         this.apartment=apartment;
@@ -94,9 +76,7 @@ public class Address {
         this.apartment = apartment;
     }
 
-    public LatLng getLatLng() {return latLng;}
 
-    public void setLatLng(LatLng latLng) {this.latLng = latLng;}
 
     public double getLongitude() {
         return longitude;

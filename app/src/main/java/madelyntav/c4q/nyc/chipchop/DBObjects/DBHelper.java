@@ -4,13 +4,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.model.LatLng;
-import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -44,6 +45,8 @@ public class DBHelper extends Firebase {
     private static final String sAddress = "address";
     private static final String sPhotoLink = "photoLink";
     public static User user;
+    public static String sLatitude="latitude";
+    public static String sLongitude="longitude";
     public boolean mSuccess = false;
     public static Address address;
     public static ArrayList<LatLng> latLngList;
@@ -138,7 +141,8 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sCity).setValue(address.getCity());
         fRef.child(UID).child(sState).setValue(address.getState());
         fRef.child(UID).child(sZipCode).setValue(address.getZipCode());
-        fRef.child(UID).child(sLatLng).setValue(address.getLatLng());
+        fRef.child(UID).child(sLatitude).setValue(address.getLatitude());
+        fRef.child(UID).child(sLongitude).setValue(address.getLongitude());
     }
 
     public void updateUserProfile(String UID) {
@@ -153,7 +157,7 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sCity).setValue(address.getCity());
         fRef.child(UID).child(sState).setValue(address.getState());
         fRef.child(UID).child(sZipCode).setValue(address.getZipCode());
-        fRef.child(UID).child(sLatLng).setValue(address.getLatLng());
+       // fRef.child(UID).child(sLatLng).setValue(address.getLatLng());
 
         updateUserAddress(UID);
     }
@@ -167,7 +171,8 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sCity).setValue(address.getCity());
         fRef.child(UID).child(sState).setValue(address.getState());
         fRef.child(UID).child(sZipCode).setValue(address.getZipCode());
-        fRef.child(UID).child(sLatLng).setValue(address.getLatLng());
+        fRef.child(UID).child("latitude").setValue(address.getLatitude());
+        fRef.child(UID).child("longitude").setValue(address.getLongitude());
     }
 
     public void addItemToDB(Item item) {

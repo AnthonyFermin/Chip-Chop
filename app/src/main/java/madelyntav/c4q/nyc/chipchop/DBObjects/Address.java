@@ -18,7 +18,7 @@ public class Address {
     public Address(String UID){
         userID=UID;
     }
-    
+
     public Address(String streetAddress, String apartment, String city, String state, String zipCode,String userID){
         this.streetAddress=streetAddress;
         this.apartment=apartment;

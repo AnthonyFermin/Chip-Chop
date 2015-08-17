@@ -113,15 +113,6 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 //        dbHelper.addUserProfileInfoToDB(user1);
         Log.d("Done Adding User", "Added Users ");
 
-        signupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               // addWithinRangeMarkersToMap();
-                dbHelper.getAllUsers();
-
-            }
-        });
-
         return root;
     }
 

@@ -27,7 +27,7 @@ public class SignupActivity1 extends AppCompatActivity {
 
         dbHelper = DBHelper.getDbHelper(this);
 
-        emailET = (EditText) findViewById(R.id.emailAddress);
+        emailET = (EditText) findViewById(R.id.eMail);
         passET = (EditText) findViewById(R.id.password);
 
         signInButton = (Button) findViewById(R.id.signInButton);
@@ -52,14 +52,20 @@ public class SignupActivity1 extends AppCompatActivity {
                 email = emailET.getText().toString();
                 password = passET.getText().toString();
 
+                // TODO: dbHelper.createUser(email, password, Class class)
+                // inside onSuccess also launch the activity;
+
                 if(dbHelper.createUser(email, password)) {
-                    Intent createUserIntent = new Intent(getApplicationContext(), SignupActivity2.class);
-                    startActivity(createUserIntent);
-                    finish();
+                    launch(SignupActivity2.class);
                 }
             }
         });
+    }
 
+    public void launch(Class activityToLaunch){
+        Intent launch = new Intent(getApplicationContext(), activityToLaunch);
+        startActivity(launch);
+        finish();
     }
 
 }

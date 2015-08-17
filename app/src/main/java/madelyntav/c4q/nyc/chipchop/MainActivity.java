@@ -63,17 +63,11 @@ public class MainActivity extends AppCompatActivity {
 
 
         //dbHelper.getSellersOnSaleItems(order);
-        Address address= new Address("560 east 242nd Stret", "Apt 64", "New York", "NY", "10040", "5");
+        Address address= new Address("560 east 242nd Stret", "Apt 64", "New York", "NY", "10040", "5",1,1);
 
         User user= new User("5","MadelynTav@Gmail.com","Madelyn Tavarez",address,"Photo","677-987-0564");
 
-<<<<<<< HEAD
-        dbHelper.addUserAddressToProfile(user.getAddress());
-
-        dbHelper.getAllUsers();
-=======
         dbHelper.addUserProfileInfoToDB(user);
->>>>>>> 2ff4c2f46ef6fa5f36b8836b275ae2b38e430649
 
 
     }

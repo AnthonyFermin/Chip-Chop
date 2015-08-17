@@ -13,8 +13,29 @@ public class Address {
     String zipCode;
     String userID;
     LatLng latLng;
+    double latitude;
+    double longitude;
+
+
 
     public Address(){}
+
+    public Address(LatLng latLng){
+        this.latLng=latLng;
+    }
+
+    public Address(String UID){
+        userID=UID;
+    }
+    public Address(String streetAddress, String apartment, String city, String state, String zipCode,String userID,LatLng latLng){
+        this.streetAddress=streetAddress;
+        this.apartment=apartment;
+        this.city=city;
+        this.state=state;
+        this.zipCode=zipCode;
+        this.userID=userID;
+        this.latLng=latLng;
+    }
 
     public Address(String streetAddress, String apartment, String city, String state, String zipCode,String userID){
         this.streetAddress=streetAddress;
@@ -72,9 +93,26 @@ public class Address {
     public void setApartment(String apartment) {
         this.apartment = apartment;
     }
+
     public LatLng getLatLng() {return latLng;}
 
     public void setLatLng(LatLng latLng) {this.latLng = latLng;}
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
 
     public void clearAddress(){
         streetAddress=null;

@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -13,6 +14,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,13 +23,13 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -37,6 +39,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -61,6 +64,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     private LocationRequest mLocationRequest;
     private GoogleMap map;
     private Circle mCircle;
+    private Geofence mGeofence;
     private SharedPreferences preferences;
     private Location location = new Location("Current Location");
     private boolean gps_enabled = false;
@@ -70,6 +74,9 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     private RecyclerView sellersList;
     private View root;
     ArrayList<User> userList;
+    User user;
+    User user1;
+    ArrayList<LatLng> latsList;
 
 
     @Nullable
@@ -78,7 +85,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
         root = inflater.inflate(R.layout.fragment_buyer_map, container, false);
         dbHelper = DBHelper.getDbHelper(getActivity());
-
+        latsList= new ArrayList<>();
 
         signupButton = (Button) root.findViewById(R.id.signupButton);
 
@@ -101,24 +108,23 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         sellers = new ArrayList<>();
         populateItems();
 
+
         sellersList = (RecyclerView) root.findViewById(R.id.sellersList);
         sellersList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         SellersListAdapter sellersListAdapter = new SellersListAdapter(getActivity(), sellers);
         sellersList.setAdapter(sellersListAdapter);
 
-        madelyntav.c4q.nyc.chipchop.DBObjects.Address address = new madelyntav.c4q.nyc.chipchop.DBObjects.Address("570 west 189 street", "Apt 64", "New York", "NY", "10040", "5");
-        User user = new User("1", "MadelynTav@Gmail.com", "Madelyn Tavarez", address, "Photo", "677-987-0564");
-        //47-98 31st Pl, Queens, NY, 11101
-        madelyntav.c4q.nyc.chipchop.DBObjects.Address address1 = new madelyntav.c4q.nyc.chipchop.DBObjects.Address("47-98 31st Pl", "", "Queens", "NY", "11101", "2");
-        User user1 = new User("2", "coalition@gmail.com", "Coalition4Queens", address1, "Photo", "677-988-0988");
 
-        dbHelper.addUserProfileInfoToDB(user);
-        dbHelper.addUserProfileInfoToDB(user1);
-        Log.d("Done Adding User", "Added Users ");
 
-        userList = new ArrayList<>();
-        userList.addAll(dbHelper.addAddressesToMap());
+        signupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               // addWithinRangeMarkersToMap();
+                dbHelper.getAllUsers();
+
+            }
+        });
 
 
         return root;
@@ -230,8 +236,8 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         map.moveCamera(CameraUpdateFactory.newLatLng(locationLatLng));
         map.animateCamera(CameraUpdateFactory.zoomTo(13));
 
-        if (gps_enabled)
-            geocodeTask.execute();
+        if (gps_enabled){}
+            //geocodeTask.execute();
     }
 
     // Task to decode current location
@@ -278,28 +284,28 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         public void onFragmentInteraction(Uri uri);
     }
 
-    public void addWithinRangeMarkersToMap(ArrayList<User> usersList) {
-        ArrayList<LatLng> latLngList = new ArrayList<>();
-        for (User user : usersList) {
-            madelyntav.c4q.nyc.chipchop.DBObjects.Address address = user.getAddress();
-            LatLng latLng = address.getLatLng();
-            latLngList.add(latLng);
-            LatLng user1=DBHelper.user.getAddress().getLatLng();
+    public void addWithinRangeMarkersToMap() {
 
-            float[] distance = new float[2];
+        latsList.addAll(dbHelper.getUserListLatLng());
 
-            Location.distanceBetween( latLng.latitude, latLng.longitude,
-                    user1.latitude, user1.longitude, distance);
+        Log.d("UserLatList",latsList.toString());
 
-            if( distance[0] > 100  ){
-                Toast.makeText(getActivity(), "Outside", Toast.LENGTH_LONG).show();
-                addMarker(latLng.latitude,latLng.longitude);
+        Handler handler= new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
 
-            } else {
-                Toast.makeText(getActivity(), "Inside", Toast.LENGTH_LONG).show();
+                for (LatLng latLng : latsList) {
+
+                    double lat = 40.7484;
+                    double lng = -73.9857;
+                    LatLng MSG = new LatLng(lat, lng);
+
+                    computeDistance(MSG, latLng);
+
+                }
             }
-
-        }
+        },3000);
 
     }
 
@@ -307,5 +313,29 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         map.addMarker(new MarkerOptions()
                 .position(new LatLng(lat, lon))
                 .title("Marker in Zone"));
+    }
+
+
+    public void computeDistance(LatLng userCurrentLocation,LatLng seller){
+
+        Circle circle = map.addCircle(new CircleOptions()
+                .center(new LatLng(userCurrentLocation.latitude, userCurrentLocation.longitude))
+                .radius(1000)
+                .strokeColor(Color.RED)
+                .fillColor(Color.BLUE));
+
+        float[] distance = new float[latsList.size()];
+
+        Location.distanceBetween(userCurrentLocation.latitude, userCurrentLocation.longitude,
+                seller.latitude, seller.longitude, distance);
+
+        if( distance[0] < circle.getRadius()  ){
+
+            addMarker(seller.latitude,seller.longitude);
+
+            Toast.makeText(getActivity(), "Outside", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getActivity(), "Inside", Toast.LENGTH_LONG).show();
+        }
     }
 }

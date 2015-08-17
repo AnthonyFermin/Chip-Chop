@@ -13,10 +13,10 @@ public class User {
     String sPhoneNumber="phoneNumber";
     String sAddress="address";
     String sPhotoLink="photoLink";
-    String emailAddress;
+    String eMail;
     String name;
     Address address;
-    String encodedPhotoString;
+    String photoLink;
     String phoneNumber;
     Firebase firebaseRef;
     Context context;
@@ -29,17 +29,17 @@ public class User {
         this.UID=UID;
     }
 
-    public User(String UID, String emailAddress){
+    public User(String UID, String eMail){
         this.UID=UID;
-        this.emailAddress=emailAddress;
+        this.eMail = eMail;
     }
 
-    public User(String UID, String emailAddress, String name, Address address, String encodedPhotoString, String phoneNumber){
+    public User(String UID, String eMail, String name, Address address, String encodedPhotoString, String phoneNumber){
         this.UID=UID;
-        this.emailAddress=emailAddress;
+        this.eMail = eMail;
         this.name=name;
         this.address=address;
-        this.encodedPhotoString=encodedPhotoString;
+        this.photoLink=encodedPhotoString;
         this.phoneNumber=phoneNumber;
     }
 
@@ -59,20 +59,20 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getEncodedPhotoString() {
-        return encodedPhotoString;
+    public String getPhotoLink() {
+        return photoLink;
     }
 
-    public void setEncodedPhotoString(String encodedPhotoString) {
-        this.encodedPhotoString = encodedPhotoString;
+    public void setPhotoLink(String photoLink) {
+        this.photoLink = photoLink;
     }
 
-    public String getEmailAddress() {
-        return emailAddress;
+    public String geteMail() {
+        return eMail;
     }
 
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
+    public void seteMail(String eMail) {
+        this.eMail = eMail;
     }
 
     public String getName() {
@@ -92,12 +92,12 @@ public class User {
     }
 
     public void clearUser(){
-        emailAddress=null;
+        eMail =null;
         name=null;
         address=null;
         phoneNumber=null;
         UID=null;
-        encodedPhotoString=null;
+        photoLink=null;
     }
 
 }

@@ -74,7 +74,6 @@ public class DBHelper extends Firebase {
         latLngList = new ArrayList<>();
 
         return fireBaseRef;
-
     }
 
     public boolean createUser(final String email, final String password) {
@@ -455,8 +454,12 @@ public class DBHelper extends Firebase {
                     Address address = dataSnapshot1.getValue(Address.class);
                     //Log.d("Fin", String.valueOf(address.latLng.latitude));
 
-                    //latLngList.add(latLong);
+                    double lat=address.latitude;
+                    double lng=address.longitude;
 
+                    LatLng latLng= new LatLng(lat,lng);
+
+                    latLngList.add(latLng);
                 }
             }
 

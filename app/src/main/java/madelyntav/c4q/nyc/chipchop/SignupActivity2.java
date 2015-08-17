@@ -111,9 +111,9 @@ public class SignupActivity2 extends AppCompatActivity {
 
 
                 Log.i("RETROFIT: LatLng", "" + location.getLat() + ", " + location.getLng());
-                LatLng latLng = new LatLng(location.getLat(), location.getLng());
+                userAddress.setLatitude(location.getLat());
+                userAddress.setLongitude(location.getLng());
                 userAddress = new Address(address,apt,city,"NY",zipcode, uid);
-                userAddress.setLatLng(latLng);
                 User user = dbHelper.getCurrentUser();
                 user.setAddress(userAddress);
                 user.setName(name);

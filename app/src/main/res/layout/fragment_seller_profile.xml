@@ -1,10 +1,83 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="madelyntav.c4q.nyc.chipchop.fragments.Fragment_SellerProfile">
+    tools:context="madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile"
+    android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
 
-</FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="15dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/profile_image"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:src="@drawable/github"
+            app:border_width="2dp"
+            app:border_color="#FFF"
+            android:layout_gravity="center"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/seller_name"
+                android:text="Github Cat"
+                android:textSize="35sp"
+                android:gravity="center"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#8bc34a"
+                android:text="● Currently Cooking"
+                android:padding="2dp"
+                android:textSize="18sp"
+                android:id="@+id/cooking_status"
+                android:gravity="center" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ADD ITEM"
+                android:textSize="14sp"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="10dp"
+                android:id="@+id/addButton"
+                style="@style/button_design"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/seller_profile_items_list"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="COOKING STATUS"
+        android:gravity="center_horizontal"
+        android:textSize="18sp"
+        style="@style/text_design"
+        android:textStyle="bold"/>
+
+    <ToggleButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"/>
+
+
+</LinearLayout>

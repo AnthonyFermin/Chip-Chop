@@ -2,12 +2,13 @@ package madelyntav.c4q.nyc.chipchop.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import java.util.ArrayList;
 
@@ -31,19 +32,19 @@ public class Fragment_Seller_Items extends Fragment {
         foodItems = new ArrayList<>();
         populateItems();
 
-        foodList = (RecyclerView) root.findViewById(R.id.sellersList);
+        foodList = (RecyclerView) root.findViewById(R.id.seller_items_list);
         foodList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         FoodListAdapter foodListAdapter = new FoodListAdapter(getActivity(),foodItems);
         foodList.setAdapter(foodListAdapter);
 
-        return root;
+              return root;
     }
 
     //test method to populate RecyclerView
     private void populateItems(){
         for(int i = 0; i < 10; i++) {
-            foodItems.add(new Item("test", "Github Cat", "3", "Spanish Food", "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg"));
+            foodItems.add(new Item("test", "Something Fancy", "3", "The fanciest homemade meal you've ever had", "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg"));
         }
     }
 

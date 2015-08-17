@@ -4,16 +4,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.model.LatLng;
-
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -120,6 +117,7 @@ public class DBHelper extends Firebase {
     public void addUserProfileInfoToDB(User user) {
         Firebase fRef = new Firebase(URL + "UserProfiles");
         UID = user.getUserId();
+
         fRef.child(UID).push();
         fRef.child(UID).child(sName).setValue(user.getName());
         fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
@@ -131,7 +129,6 @@ public class DBHelper extends Firebase {
     }
 
     public void addUserAddressToProfile(Address address) {
-        // UID = "";
         UID = address.getUserID();
         Firebase fRef = new Firebase(URL + "Addresses");
 
@@ -452,9 +449,8 @@ public class DBHelper extends Firebase {
 
                     Address address = dataSnapshot1.getValue(Address.class);
                     //Log.d("Fin", String.valueOf(address.latLng.latitude));
-                    JSONObject latLong= address.latLng;
 
-                    latLngList.add(latLong);
+                    //latLngList.add(latLong);
 
                 }
             }

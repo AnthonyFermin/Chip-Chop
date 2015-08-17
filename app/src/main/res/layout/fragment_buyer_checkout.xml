@@ -1,14 +1,102 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
     tools:context="madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Checkout">
 
-    <!-- TODO: Update blank fragment layout -->
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:id="@+id/chipchop_logo"
+        android:src="@drawable/cc_logo_red"/>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chipchop_logo"
+        android:text="Order Summary"
+        android:textSize="20sp"
+        android:layout_margin="5dp"
+        android:id="@+id/order_summary_tv"
+        android:textStyle="bold"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_margin="5dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@+id/order_summary_tv"
+        android:id="@+id/order_summary_divider"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/order_summary_divider"
+        android:id="@+id/header_linear_layout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ITEM"
+            android:gravity="center"
+            android:layout_weight="3"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="QTY"
+            android:gravity="end"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PRICE"
+            android:gravity="center"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkout_items_list"
+        android:layout_above="@+id/total_tv"
+        android:layout_below="@+id/header_linear_layout"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total: "
+        android:textSize="20sp"
+        android:id="@+id/total_tv"
+        android:layout_margin="10dp"
+        android:layout_above="@+id/confirmOrderButton"
+        android:textStyle="bold"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$ TOTAL PRICE HERE"
+        android:textSize="20sp"
+        android:id="@+id/total_price_tv"
+        android:layout_margin="10dp"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/confirmOrderButton"
+        android:textStyle="bold"/>
+
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="CHECKOUT"
-        android:id="@+id/checkoutButton"/>
+        android:text="CONFIRM ORDER"
+        style="@style/button_design"
+        android:id="@+id/confirmOrderButton"
+        android:layout_alignParentBottom="true"/>
 
-</LinearLayout>
+</RelativeLayout>

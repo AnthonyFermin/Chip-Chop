@@ -48,7 +48,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
-import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.adapters.SellersListAdapter;
@@ -70,7 +69,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     private boolean gps_enabled = false;
     private GoogleApiClient googleApiClient;
     private DBHelper dbHelper;
-    private ArrayList<Item> sellers;
+    private ArrayList<User> sellers;
     private RecyclerView sellersList;
     private View root;
     ArrayList<User> userList;
@@ -86,9 +85,6 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         root = inflater.inflate(R.layout.fragment_buyer_map, container, false);
         dbHelper = DBHelper.getDbHelper(getActivity());
         latsList= new ArrayList<>();
-
-        signupButton = (Button) root.findViewById(R.id.signupButton);
-
 
         // Connect to Geolocation API to make current location request
         locationServiceIsAvailable();
@@ -109,13 +105,16 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         populateItems();
 
 
-        sellersList = (RecyclerView) root.findViewById(R.id.sellersList);
+        sellersList = (RecyclerView) root.findViewById(R.id.buyers_orders_list);
         sellersList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         SellersListAdapter sellersListAdapter = new SellersListAdapter(getActivity(), sellers);
         sellersList.setAdapter(sellersListAdapter);
 
 
+//        dbHelper.addUserProfileInfoToDB(user);
+//        dbHelper.addUserProfileInfoToDB(user1);
+        Log.d("Done Adding User", "Added Users ");
 
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,14 +125,14 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             }
         });
 
-
         return root;
     }
 
     //test method to populate RecyclerView
-    private void populateItems() {
-        for (int i = 0; i < 10; i++) {
-            sellers.add(new Item("test", "Github Cat", "3", "Spanish Food", "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg"));
+    private void populateItems(){
+        for(int i = 0; i < 10; i++) {
+            sellers.add(new User("test", "Github Cat", "Github Cat", new madelyntav.c4q.nyc.chipchop.DBObjects.Address(), "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg", "ajs;djf;d"));
+
         }
     }
 
@@ -260,7 +259,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
         @Override
         protected void onPostExecute(Address address) {
-            String zipcode = address.getPostalCode();
+//            String zipcode = address.getPostalCode();
             // would launch another async that returns available food providers based on buyer's current zip
             // would then use list of food providers to populate markers and listview
         }

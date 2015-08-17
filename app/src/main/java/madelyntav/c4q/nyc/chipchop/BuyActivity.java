@@ -1,11 +1,14 @@
 package madelyntav.c4q.nyc.chipchop;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 
-
+import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Orders;
 
@@ -35,6 +38,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
     private String[] mListTitles;
     private Fragment fragment;
     private ActionBarDrawerToggle mDrawerToggle;
+    private DBHelper dbHelper;
 
 
     @Override
@@ -42,8 +46,10 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buy);
 
+        dbHelper = DBHelper.getDbHelper(this);
 
-        frameLayout = (FrameLayout) findViewById(R.id.frameLayout);
+
+        frameLayout = (FrameLayout) findViewById(R.id.sellerFrameLayout);
         DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -76,9 +82,22 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
                 sellButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent sellIntent = new Intent(getApplicationContext(), SellActivity.class);
-                        startActivity(sellIntent);
-                        finish();
+
+                        // TODO:
+                        //launch sellactivity
+                        //else launch signUpActivity1
+                        if(dbHelper.userIsLoggedIn()){
+                            Intent sellIntent = new Intent(getApplicationContext(), SellActivity.class);
+                            startActivity(sellIntent);
+                            finish();
+                        }else{
+                            Intent signUpIntent = new Intent(getApplicationContext(), SignupActivity1.class);
+                            startActivity(signUpIntent);
+                            finish();
+                        }
+
+
+
                     }
                 });
 
@@ -96,6 +115,22 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         if (savedInstanceState == null) {
             selectItem(0);
         }
+
+
+
+        // NOTIFICATION CODE
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(getApplicationContext())
+                        .setSmallIcon(R.drawable.cc_logo_red)
+                        .setContentTitle("ChipChop")
+                        .setContentText("Your order is ready!");
+
+        mBuilder.setAutoCancel(true);
+        Notification notification = mBuilder.build();
+        notificationManager.notify(1234, notification);
+
+
     }
 
     // TODO: PUT CODE FOR INTERACTION WITH LIST HERE !!
@@ -126,12 +161,14 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         } else if (position == 1) {
             fragment = new Fragment_Buyer_Orders();
         } else if (position == 2) {
-            // TODO: PROFILE SETTINGS
+//            Intent editProfileIntent = new Intent(getApplicationContext(), SignupActivity2.class);
+//            startActivity(editProfileIntent);
+//            finish();
         }
 
             // Create fragment manager to begin interacting with the fragments and the container
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
+            fragmentManager.beginTransaction().replace(R.id.sellerFrameLayout, fragment).addToBackStack(null).commit();
 
 
             // update selected item and title in nav drawer, then close the drawer
@@ -174,5 +211,16 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(DrawerLinear);
         return drawerOpen;
+    }
+
+    @Override
+    public void onBackPressed() {
+        getSupportFragmentManager().popBackStack();
+    }
+
+    public void replaceFragment(Fragment fragment) {
+        FragmentManager BuyFragmentManager = getSupportFragmentManager();
+        BuyFragmentManager.beginTransaction().replace(R.id.sellerFrameLayout, fragment).addToBackStack(null).commit();
+
     }
 }

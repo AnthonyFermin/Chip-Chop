@@ -110,6 +110,7 @@ public class SignupActivity2 extends AppCompatActivity {
                 User user = dbHelper.getCurrentUser();
                 user.setAddress(userAddress);
                 user.setName(name);
+                user.setUserId(uid);
 
                 dbHelper.addUserProfileInfoToDB(user);
 

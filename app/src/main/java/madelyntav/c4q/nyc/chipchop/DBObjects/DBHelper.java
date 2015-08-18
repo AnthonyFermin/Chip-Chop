@@ -1,6 +1,7 @@
 package madelyntav.c4q.nyc.chipchop.DBObjects;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
@@ -15,6 +16,8 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.Map;
 
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
+
 
 /**
  * Created by c4q-madelyntavarez on 8/12/15.
@@ -23,12 +26,12 @@ public class DBHelper extends Firebase {
     static DBHelper fireBaseRef;
     private static final String URL = "https://chipchop.firebaseio.com/";
     public static Context mContext;
+    private static Fragment_Buyer_Map fragment_buyer_map;
     String UID;
     public static ArrayList<User> allUsers;
     public static ArrayList<Item> items;
     public static ArrayList<User> userList;
     private static String userID = "userID";
-    private static final String sLatLng = "latLng";
     private static final String sStreet = "streetAddress";
     private static final String sApartment = "apartment";
     private static final String sCity = "city";
@@ -45,11 +48,13 @@ public class DBHelper extends Firebase {
     private static final String sAddress = "address";
     private static final String sPhotoLink = "photoLink";
     public static User user;
-    public static String sLatitude="latitude";
-    public static String sLongitude="longitude";
+    public static final String sLatitude="latitude";
+    public static final String sLongitude="longitude";
     public boolean mSuccess = false;
     public static Address address;
+    long sizeofAddDBList;
     public static ArrayList<LatLng> latLngList;
+    public static ArrayList<Address> addressList;
 
     public DBHelper() {
         super(URL);
@@ -60,19 +65,18 @@ public class DBHelper extends Firebase {
     }
 
     public static DBHelper getDbHelper(Context context) {
-
         mContext = context;
         if (fireBaseRef == null) {
             Firebase.setAndroidContext(context);
             fireBaseRef = new DBHelper();
         }
-
         userList = new ArrayList<>();
         items = new ArrayList<>();
         allUsers = new ArrayList<>();
         user = new User();
         latLngList = new ArrayList<>();
-
+        addressList= new ArrayList<>();
+        fragment_buyer_map=new Fragment_Buyer_Map();
         return fireBaseRef;
     }
 
@@ -116,6 +120,48 @@ public class DBHelper extends Firebase {
         return mSuccess;
     }
 
+    public Boolean createUserAndLaunchIntent(final String email, final String password, Intent intent){
+        UID="";
+
+        fireBaseRef.createUser(email, password, new Firebase.ValueResultHandler<Map<String, Object>>() {
+            @Override
+            public void onSuccess(Map<String, Object> stringObjectMap) {
+                Toast.makeText(mContext, "Account Created", Toast.LENGTH_SHORT).show();
+                mSuccess = true;
+
+                String userIDOne = String.valueOf(stringObjectMap.get("uid"));
+                for (int i = 12; i < userIDOne.length(); i++) {
+                    UID += userIDOne.charAt(i);
+                }
+
+                SharedPreferences sharedPreferences = mContext.getSharedPreferences("UID", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("id", UID);
+                editor.putString("eMail", email);
+                editor.putString("password", password);
+                editor.apply();
+
+                user = new User(UID, email);
+
+                Firebase fRef = new Firebase(URL + "UserProfiles");
+                fRef.child(UID);
+                fRef.child(UID).child(sEmailAddress).setValue(email);
+
+            }
+
+            @Override
+            public void onError(FirebaseError firebaseError) {
+                Toast.makeText(mContext, "Email already in use", Toast.LENGTH_SHORT).show();
+                Log.d("Firebase", firebaseError.toString());
+                mSuccess = false;
+            }
+        });
+
+        mContext.startActivity(intent);
+
+        return mSuccess;
+    }
+
     public void addUserProfileInfoToDB(User user) {
         Firebase fRef = new Firebase(URL + "UserProfiles");
         UID = user.getUserId();
@@ -126,6 +172,22 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
         fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
         fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
+
+        addUserAddressToProfile(user.address);
+    }
+
+    public void addUserProfileInfoToDBAndLaunchIntent(User user,Intent intent) {
+        Firebase fRef = new Firebase(URL + "UserProfiles");
+        UID = user.getUserId();
+
+        fRef.child(UID).push();
+        fRef.child(UID).child(sName).setValue(user.getName());
+        fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
+        fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
+        fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
+        fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
+
+        mContext.startActivity(intent);
 
         addUserAddressToProfile(user.address);
     }
@@ -146,17 +208,13 @@ public class DBHelper extends Firebase {
 
     public void updateUserProfile(String UID) {
         this.UID = UID;
-        //Firebase fRef = DBHelper.fRef.child("UserProfiles/" + UID);
-
         Firebase fRef = new Firebase(URL + "UserProfiles/" + UID);
-
 
         fRef.child(UID).child(sStreet).setValue(address.getStreetAddress());
         fRef.child(UID).child(sApartment).setValue(address.getApartment());
         fRef.child(UID).child(sCity).setValue(address.getCity());
         fRef.child(UID).child(sState).setValue(address.getState());
         fRef.child(UID).child(sZipCode).setValue(address.getZipCode());
-       // fRef.child(UID).child(sLatLng).setValue(address.getLatLng());
 
         updateUserAddress(UID);
     }
@@ -420,12 +478,13 @@ public class DBHelper extends Firebase {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
+                allUsers = new ArrayList<>();
+
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
 
                     User user = dataSnapshot1.getValue(User.class);
-                    Log.d("Fin", user.phoneNumber);
+                    //Log.d("Fin", user.phoneNumber);
                     allUsers.add(user);
-
                 }
             }
 
@@ -437,30 +496,33 @@ public class DBHelper extends Firebase {
 
         getUserListLatLng();
 
-        Log.d("DBHELPERUSERLIST", allUsers.toString());
+
         return allUsers;
     }
 
-    public ArrayList<LatLng> getUserListLatLng() {
+    public void getUserListLatLng() {
+        Log.d("DBHELPERUSERLIST", allUsers.toString());
 
         Firebase fRef = new Firebase(URL + "Addresses");
 
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                // sizeofAddDBList = dataSnapshot.getChildrenCount();
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
 
                     Address address = dataSnapshot1.getValue(Address.class);
                     //Log.d("Fin", String.valueOf(address.latLng.latitude));
 
-                    double lat=address.latitude;
-                    double lng=address.longitude;
+                    double lat = address.latitude;
+                    double lng = address.longitude;
 
-                    LatLng latLng= new LatLng(lat,lng);
-
+                    LatLng latLng = new LatLng(lat, lng);
                     latLngList.add(latLng);
                 }
+
+                updateUserList();
             }
 
             @Override
@@ -469,12 +531,56 @@ public class DBHelper extends Firebase {
             }
         });
 
-
-        Log.d("DBHelperLatsList",latLngList.toString());
-        return latLngList;
     }
 
 
+    public ArrayList<LatLng> updateUserList(){
+
+        if(latLngList.size()<sizeofAddDBList){
+            getUserListLatLng();
+        }
+
+        return latLngList;
+    }
+
+    public void getUserAddressList(){
+        Firebase fRef = new Firebase(URL + "Addresses");
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                sizeofAddDBList = dataSnapshot.getChildrenCount();
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+                    Address address = dataSnapshot1.getValue(Address.class);
+                    //Log.d("Fin", String.valueOf(address.latLng.latitude));
+
+
+                    addressList.add(address);
+                }
+
+                updateAddressList();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+        //Log.d("DBHelperLatsList", addressList.toString());
+    }
+
+    public ArrayList<Address> updateAddressList(){
+
+        if(addressList.size()<=sizeofAddDBList){
+            getUserAddressList();
+        }
+
+        return addressList;
+    }
 
     public User getSpecificUser(String UID) {
         this.UID = UID;

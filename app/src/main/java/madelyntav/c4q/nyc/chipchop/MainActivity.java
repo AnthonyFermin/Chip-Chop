@@ -13,9 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
-import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -63,13 +61,21 @@ public class MainActivity extends AppCompatActivity {
 
 
         //dbHelper.getSellersOnSaleItems(order);
-        Address address= new Address("560 east 242nd Stret", "Apt 64", "New York", "NY", "10040", "5",1,1);
+       // Address address= new Address("560 east 242nd Stret", "Apt 64", "New York", "NY", "10040", "5");
 
-        User user= new User("5","MadelynTav@Gmail.com","Madelyn Tavarez",address,"Photo","677-987-0564");
-
-        dbHelper.addUserProfileInfoToDB(user);
+//        User user= new User("5","MadelynTav@Gmail.com","Madelyn Tavarez",address,"Photo","677-987-0564");
 
 
+       // dbHelper.addUserAddressToProfile(user.getAddress());
+
+       // dbHelper.getAllUsers();
+        //dbHelper.addUserProfileInfoToDB(user);
+
+//        ArrayList<LatLng> arrayList=new ArrayList<>();
+//
+//        arrayList.addAll(dbHelper.updateUserList());
+
+        dbHelper.getUserListLatLng();
     }
     public void getData(View v){
      dbHelper.getAddressFromDB("5");

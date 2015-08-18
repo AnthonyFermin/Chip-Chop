@@ -1,18 +1,13 @@
 package madelyntav.c4q.nyc.chipchop;
 
-import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.google.android.gms.maps.model.LatLng;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
@@ -20,9 +15,6 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.GeolocationAPI.Geolocation;
 import madelyntav.c4q.nyc.chipchop.GeolocationAPI.GeolocationAPI;
 import madelyntav.c4q.nyc.chipchop.GeolocationAPI.Location;
-import madelyntav.c4q.nyc.chipchop.GeolocationAPI.Result;
-import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Checkout;
-import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -109,14 +101,19 @@ public class SignupActivity2 extends AppCompatActivity {
                 address = address.replace('+',' ');
                 city = city.replace('+',' ');
 
+                userAddress = new Address(address,apt,city,"NY",zipcode, uid);
 
                 Log.i("RETROFIT: LatLng", "" + location.getLat() + ", " + location.getLng());
-                userAddress = new Address(address,apt,city,"NY",zipcode, uid,location.getLat(),location.getLng());
+
+                userAddress.setLatitude(location.getLat());
+                userAddress.setLongitude(location.getLng());
                 User user = dbHelper.getCurrentUser();
                 user.setAddress(userAddress);
                 user.setName(name);
 
                 dbHelper.addUserProfileInfoToDB(user);
+
+               // dbHelper.getUserListLatLng();
 
                 Intent buyActivity = new Intent(getApplicationContext(), BuyActivity.class);
                 startActivity(buyActivity);

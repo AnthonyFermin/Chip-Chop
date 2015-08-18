@@ -34,7 +34,7 @@ public class SignupActivity1 extends AppCompatActivity {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                email = emailET.getText().toString();
+                email = emailET.getText().toString().trim();
                 password = passET.getText().toString();
 
                 if(dbHelper.logInUser(email,password)){
@@ -49,23 +49,17 @@ public class SignupActivity1 extends AppCompatActivity {
         newUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                email = emailET.getText().toString();
+                email = emailET.getText().toString().trim();
                 password = passET.getText().toString();
 
                 // TODO: dbHelper.createUser(email, password, Class class)
                 // inside onSuccess also launch the activity;
 
-                if(dbHelper.createUser(email, password)) {
-                    launch(SignupActivity2.class);
-                }
+                Intent intent = new Intent(getApplicationContext(), SignupActivity2.class);
+                dbHelper.createUserAndLaunchIntent(email, password,intent);
             }
         });
     }
 
-    public void launch(Class activityToLaunch){
-        Intent launch = new Intent(getApplicationContext(), activityToLaunch);
-        startActivity(launch);
-        finish();
-    }
 
 }

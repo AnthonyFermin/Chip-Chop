@@ -57,7 +57,13 @@ public class CartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             price = (TextView) itemView.findViewById(R.id.food_price_tv);
             quantity = (TextView) itemView.findViewById(R.id.food_quantity_tv);
             removeItemButton = (Button) itemView.findViewById(R.id.remove_item_button);
-
+            removeItemButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    cartItems.remove(cartItems.get(getAdapterPosition()));
+                    notifyItemRemoved(getAdapterPosition());
+                }
+            });
         }
 
     }
@@ -85,9 +91,7 @@ public class CartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             public void onClick(View view) {
                 // TODO: put the listener for the specific ITEM selected with the quantity !!
                 Log.d("ALVIN", String.valueOf(position));
-                cartItems.remove(cartItems.get(position));
 
-                notifyItemRemoved(position);
                 // TODO: to re-index the arraylist so that  pressing out of order won't crash app !!
 
 //                FragmentManager manager = getFragmentManager;

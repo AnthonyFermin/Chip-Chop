@@ -449,7 +449,7 @@ public class DBHelper extends Firebase {
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                sizeofAddDBList = dataSnapshot.getChildrenCount();
+               // sizeofAddDBList = dataSnapshot.getChildrenCount();
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
 
@@ -472,7 +472,6 @@ public class DBHelper extends Firebase {
             }
         });
 
-        Log.d("DBHelperLatsList", addressList.toString());
     }
 
 
@@ -491,6 +490,7 @@ public class DBHelper extends Firebase {
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
                 sizeofAddDBList = dataSnapshot.getChildrenCount();
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
@@ -511,12 +511,12 @@ public class DBHelper extends Firebase {
             }
         });
 
-        Log.d("DBHelperLatsList", latLngList.toString());
+        Log.d("DBHelperLatsList", addressList.toString());
     }
 
     public ArrayList<Address> updateAddressList(){
 
-        if(addressList.size()<sizeofAddDBList){
+        if(addressList.size()<=sizeofAddDBList){
             getUserAddressList();
         }
 

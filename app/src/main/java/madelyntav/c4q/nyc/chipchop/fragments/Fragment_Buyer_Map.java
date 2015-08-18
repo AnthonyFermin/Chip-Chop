@@ -14,7 +14,6 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -26,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.Geofence;
@@ -41,9 +41,11 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.R;
@@ -284,72 +286,45 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     }
 
     public void addWithinRangeMarkersToMap() {
-
-        //latsList.addAll(dbHelper.getUserListLatLng());
-
-        Log.d("UserLatList",latsList.toString());
-
-        Handler handler= new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-
                 for (madelyntav.c4q.nyc.chipchop.DBObjects.Address address : addressList) {
-                    double gLat=address.getLatitude();
-                    double gLng=address.getLongitude();
 
-                    LatLng latLng=new LatLng(gLat,gLng);
+                    double gLat = address.getLatitude();
+                    double gLng = address.getLongitude();
 
                     double lat = 40.7484;
                     double lng = -73.9857;
-                    LatLng MSG = new LatLng(lat, lng);
 
-                    computeDistance(MSG, latLng);
+                    Circle circle = map.addCircle(new CircleOptions()
+                            .center(new LatLng(lat, lng))
+                            .radius(100000)
+                            .strokeColor(Color.RED));
 
+                    float[] distance = new float[addressList.size()];
+
+                    Location.distanceBetween(lat, lng,
+                            gLat, gLng, distance);
+
+                    User user=dbHelper.getSpecificUser(address.getUserID());
+                    String userName= user.getName();
+
+                    if (distance[0] < circle.getRadius()) {
+
+                        map.addMarker(new MarkerOptions()
+                                .position(new LatLng(gLat, gLng))
+                                .title(userName)).setSnippet("HERE");
+
+                    } else {
+
+                    }
                 }
             }
-        },3000);
-
-    }
-
-    public void addMarker(double lat, double lon){
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(lat, lon))
-                .title("Marker in Zone"));
-    }
-
-
-    public void computeDistance(LatLng userCurrentLocation,LatLng seller){
-
-        Circle circle = map.addCircle(new CircleOptions()
-                .center(new LatLng(userCurrentLocation.latitude, userCurrentLocation.longitude))
-                .radius(100000)
-                .strokeColor(Color.RED));
-
-        float[] distance = new float[addressList.size()];
-
-        Location.distanceBetween(userCurrentLocation.latitude, userCurrentLocation.longitude,
-                seller.latitude, seller.longitude, distance);
-
-        if( distance[0] < circle.getRadius()  ){
-            addMarker(seller.latitude, seller.longitude);
-
-        } else {
-
-        }
-    }
-
-    public void getDataHere() {
-        addWithinRangeMarkersToMap();
-    }
-
 
     // Task to get LatLng List and populate markers when done
     AsyncTask<Void, Void, Void> getListForMarkers = new AsyncTask<Void, Void, Void>() {
         @Override
         protected Void doInBackground(Void... voids) {
             dbHelper.getUserAddressList();
+
             while(addressList.size()==0){
                 // thread cannot continue until dbHelper.getUserListLatLng returns an ArrayList
                 Log.d("LATSLIST", addressList.toString());
@@ -361,8 +336,8 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            Log.d("LATSLIST", latsList.toString());
-            getDataHere();
+            Log.d("LATSLIST", addressList.toString());
+            addWithinRangeMarkersToMap();
         }
     };
 

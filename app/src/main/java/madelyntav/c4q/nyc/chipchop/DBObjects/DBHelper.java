@@ -1,6 +1,7 @@
 package madelyntav.c4q.nyc.chipchop.DBObjects;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
@@ -119,6 +120,48 @@ public class DBHelper extends Firebase {
         return mSuccess;
     }
 
+    public Boolean createUserAndLaunchIntent(final String email, final String password, Intent intent){
+        UID="";
+
+        fireBaseRef.createUser(email, password, new Firebase.ValueResultHandler<Map<String, Object>>() {
+            @Override
+            public void onSuccess(Map<String, Object> stringObjectMap) {
+                Toast.makeText(mContext, "Account Created", Toast.LENGTH_SHORT).show();
+                mSuccess = true;
+
+                String userIDOne = String.valueOf(stringObjectMap.get("uid"));
+                for (int i = 12; i < userIDOne.length(); i++) {
+                    UID += userIDOne.charAt(i);
+                }
+
+                SharedPreferences sharedPreferences = mContext.getSharedPreferences("UID", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("id", UID);
+                editor.putString("eMail", email);
+                editor.putString("password", password);
+                editor.apply();
+
+                user = new User(UID, email);
+
+                Firebase fRef = new Firebase(URL + "UserProfiles");
+                fRef.child(UID);
+                fRef.child(UID).child(sEmailAddress).setValue(email);
+
+            }
+
+            @Override
+            public void onError(FirebaseError firebaseError) {
+                Toast.makeText(mContext, "Email already in use", Toast.LENGTH_SHORT).show();
+                Log.d("Firebase", firebaseError.toString());
+                mSuccess = false;
+            }
+        });
+
+        mContext.startActivity(intent);
+
+        return mSuccess;
+    }
+
     public void addUserProfileInfoToDB(User user) {
         Firebase fRef = new Firebase(URL + "UserProfiles");
         UID = user.getUserId();
@@ -129,6 +172,22 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
         fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
         fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
+
+        addUserAddressToProfile(user.address);
+    }
+
+    public void addUserProfileInfoToDBAndLaunchIntent(User user,Intent intent) {
+        Firebase fRef = new Firebase(URL + "UserProfiles");
+        UID = user.getUserId();
+
+        fRef.child(UID).push();
+        fRef.child(UID).child(sName).setValue(user.getName());
+        fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
+        fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
+        fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
+        fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
+
+        mContext.startActivity(intent);
 
         addUserAddressToProfile(user.address);
     }
@@ -449,7 +508,7 @@ public class DBHelper extends Firebase {
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-               // sizeofAddDBList = dataSnapshot.getChildrenCount();
+                // sizeofAddDBList = dataSnapshot.getChildrenCount();
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
 

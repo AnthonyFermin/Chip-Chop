@@ -287,6 +287,8 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
     public void addWithinRangeMarkersToMap() {
                 for (madelyntav.c4q.nyc.chipchop.DBObjects.Address address : addressList) {
+                    User user=dbHelper.getSpecificUser(address.getUserID());
+                    String userName= user.getName();
 
                     double gLat = address.getLatitude();
                     double gLng = address.getLongitude();
@@ -304,8 +306,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
                     Location.distanceBetween(lat, lng,
                             gLat, gLng, distance);
 
-                    User user=dbHelper.getSpecificUser(address.getUserID());
-                    String userName= user.getName();
+                    Log.d("nameofUser",userName);
 
                     if (distance[0] < circle.getRadius()) {
 

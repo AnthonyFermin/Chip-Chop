@@ -87,6 +87,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
         latsList= new ArrayList<>();
         addressList=new ArrayList<>();
+        userList= new ArrayList<>();
         signupButton= (Button) root.findViewById(R.id.signInButton);
 
         // Connect to Geolocation API to make current location request
@@ -101,9 +102,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         map = mapFragment.getMap();
-//        dbHelper = new DBHelper(getActivity().getApplicationContext());  TODO: DBHelper constructor should set androidContext
 
-        //TODO: next line should be sellers = dbHelper.getAvailableFoodItems(currentLocation);
         sellers = new ArrayList<>();
         populateItems();
 
@@ -113,16 +112,6 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
         SellersListAdapter sellersListAdapter = new SellersListAdapter(getActivity(), sellers);
         sellersList.setAdapter(sellersListAdapter);
-
-//        signupButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//               // addWithinRangeMarkersToMap();
-//                dbHelper.getAllUsers();
-//
-//            }
-//        });
-
 
         getListForMarkers.execute();
 
@@ -190,6 +179,8 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         map.getUiSettings().setRotateGesturesEnabled(true);
         map.setMyLocationEnabled(true);
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        if(location != null)
+            handleNewLocation(location);
     }
 
     @Override
@@ -238,35 +229,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         map.moveCamera(CameraUpdateFactory.newLatLng(locationLatLng));
         map.animateCamera(CameraUpdateFactory.zoomTo(13));
 
-        if (gps_enabled){}
-            //geocodeTask.execute();
     }
-
-    // Task to decode current location
-    AsyncTask<Void, Void, Address> geocodeTask = new AsyncTask<Void, Void, Address>() {
-        @Override
-        protected Address doInBackground(Void... params) {
-            Address address = null;
-
-            Geocoder geocoder = new Geocoder(getActivity());
-            try {
-                List<Address> locations = geocoder.getFromLocation(
-                        location.getLatitude(), location.getLongitude(), 1 /* maxResults */);
-                address = locations.get(0);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return address;
-        }
-
-        @Override
-        protected void onPostExecute(Address address) {
-//            String zipcode = address.getPostalCode();
-            // would launch another async that returns available food providers based on buyer's current zip
-            // would then use list of food providers to populate markers and listview
-        }
-    };
 
     protected synchronized void connectGoogleApiClient() {
         googleApiClient = new GoogleApiClient.Builder(getActivity())
@@ -288,9 +251,8 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
     public void addWithinRangeMarkersToMap() {
                 for (madelyntav.c4q.nyc.chipchop.DBObjects.Address address : addressList) {
-                    User user=dbHelper.getSpecificUser(address.getUserID());
-                    String userName= user.getName();
 
+                    String userName= address.getName();
                     double gLat = address.getLatitude();
                     double gLng = address.getLongitude();
 
@@ -307,13 +269,11 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
                     Location.distanceBetween(lat, lng,
                             gLat, gLng, distance);
 
-                    //Log.d("nameofUser",userName);
-
                     if (distance[0] < circle.getRadius()) {
 
                         map.addMarker(new MarkerOptions()
                                 .position(new LatLng(gLat, gLng))
-                                .title(userName)).setSnippet("HERE");
+                                .title(userName));
 
                     } else {
 

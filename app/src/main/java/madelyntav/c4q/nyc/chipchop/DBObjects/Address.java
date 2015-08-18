@@ -12,6 +12,7 @@ public class Address {
     String userID;
     double latitude;
     double longitude;
+    String name;
 
     public Address(){}
 
@@ -29,11 +30,12 @@ public class Address {
 
     }
 
-    public Address(String streetAddress, String apartment, String city, String state, String zipCode,String userID, double latitude, double longitude){
+    public Address(String streetAddress, String apartment, String city, String state, String zipCode,String userID, String name, double latitude, double longitude){
         this.streetAddress=streetAddress;
         this.apartment=apartment;
         this.city=city;
         this.state=state;
+        this.name = name;
         this.zipCode=zipCode;
         this.userID=userID;
         this.latitude=latitude;
@@ -46,6 +48,13 @@ public class Address {
 
     public void setUserID(String userID) {
         this.userID = userID;
+    }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getZipCode() {

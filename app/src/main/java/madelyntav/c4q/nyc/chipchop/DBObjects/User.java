@@ -23,6 +23,7 @@ public class User {
     String UID;
     String URL="https://chipchop.firebaseio.com/";
 
+
     public User(){}
 
     public User(String UID){
@@ -33,13 +34,20 @@ public class User {
         this.UID=UID;
         this.eMail = eMail;
     }
-
-    public User(String UID, String eMail, String name, Address address, String encodedPhotoString, String phoneNumber){
+    public User(String UID, String eMail, String name, Address address, String phoneNumber){
         this.UID=UID;
         this.eMail = eMail;
         this.name=name;
         this.address=address;
-        this.photoLink=encodedPhotoString;
+        this.phoneNumber=phoneNumber;
+    }
+
+    public User(String UID, String eMail, String name, Address address, String photoLink, String phoneNumber){
+        this.UID=UID;
+        this.eMail = eMail;
+        this.name=name;
+        this.address=address;
+        this.photoLink=photoLink;
         this.phoneNumber=phoneNumber;
     }
 

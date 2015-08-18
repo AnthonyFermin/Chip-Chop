@@ -17,8 +17,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
-
-
 /**
  * Created by c4q-madelyntavarez on 8/12/15.
  */

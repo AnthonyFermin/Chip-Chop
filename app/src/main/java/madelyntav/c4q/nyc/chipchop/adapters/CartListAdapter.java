@@ -1,6 +1,7 @@
 package madelyntav.c4q.nyc.chipchop.adapters;
 
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,6 +19,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
+import madelyntav.c4q.nyc.chipchop.FoodItemSelectDialogue;
 import madelyntav.c4q.nyc.chipchop.R;
 
 /**
@@ -81,9 +83,21 @@ public class CartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         vh.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: put the listener for the specific ITEM selected with the quantity
-//                cartItems.remove(position-1);
-//                notifyItemRemoved(position-1);
+                // TODO: put the listener for the specific ITEM selected with the quantity !!
+                Log.d("ALVIN", String.valueOf(position));
+                cartItems.remove(cartItems.get(position));
+                
+                notifyItemRemoved(position);
+                // TODO: to re-index the arraylist so that  pressing out of order won't crash app !!
+
+//                FragmentManager manager = getFragmentManager;
+//                FoodItemSelectDialogue dialog = new FoodItemSelectDialogue();
+//                dialog.show(null, "foodItemDialog");
+
+
+                for(int i = 0; i < cartItems.size() && i > position; i++) {
+
+                 }
 
             }
         });

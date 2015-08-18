@@ -113,7 +113,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         SellersListAdapter sellersListAdapter = new SellersListAdapter(getActivity(), sellers);
         sellersList.setAdapter(sellersListAdapter);
 
-//        getListForMarkers.execute();
+        //getListForMarkers.execute();
 
         return root;
     }

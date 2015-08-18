@@ -27,13 +27,6 @@
             android:orientation="vertical"
             android:layout_weight="1">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/seller_name"
-                android:text="Github Cat"
-                android:textSize="35sp"
-                android:gravity="center"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -58,6 +51,13 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DELIVERY"
+        android:id="@+id/switch1"
+        android:layout_gravity="center_horizontal" />
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"

@@ -81,7 +81,8 @@ public class FoodListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             @Override
             public void onClick(View view) {
                 FoodItemSelectDialogue dialog = new FoodItemSelectDialogue();
-                dialog.show(null, "foodItemDialog");
+//                dialog.show(null, "foodItemDialog");
+
             }
         });
 

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
+
 /**
  * Created by c4q-madelyntavarez on 8/12/15.
  */
@@ -53,7 +54,7 @@ public class DBHelper extends Firebase {
     public static ArrayList<LatLng> latLngList;
     public static ArrayList<Address> addressList;
     public static ArrayList<User> userList;
-
+    public static ArrayList<Item> arrayListOfSellerItems;
     public DBHelper() {
         super(URL);
     }
@@ -75,17 +76,19 @@ public class DBHelper extends Firebase {
         latLngList = new ArrayList<>();
         addressList= new ArrayList<>();
         userList= new ArrayList<>();
+        arrayListOfSellerItems=new ArrayList<>();
         return fireBaseRef;
     }
 
     public boolean createUser(final String email, final String password) {
         UID = "";
 
-        fireBaseRef.createUser(email, password, new Firebase.ValueResultHandler<Map<String, Object>>() {
+        fireBaseRef.createUser(email, password, new ValueResultHandler<Map<String, Object>>() {
             @Override
             public void onSuccess(Map<String, Object> stringObjectMap) {
                 Toast.makeText(mContext, "Account Created", Toast.LENGTH_SHORT).show();
                 mSuccess = true;
+
 
                 String userIDOne = String.valueOf(stringObjectMap.get("uid"));
                 for (int i = 12; i < userIDOne.length(); i++) {
@@ -105,6 +108,8 @@ public class DBHelper extends Firebase {
                 fRef.child(UID);
                 fRef.child(UID).child(sEmailAddress).setValue(email);
 
+
+
             }
 
             @Override
@@ -116,12 +121,13 @@ public class DBHelper extends Firebase {
         });
 
         return mSuccess;
+
     }
 
     public Boolean createUserAndLaunchIntent(final String email, final String password, final Intent intent){
         UID="";
 
-        fireBaseRef.createUser(email, password, new Firebase.ValueResultHandler<Map<String, Object>>() {
+        fireBaseRef.createUser(email, password, new ValueResultHandler<Map<String, Object>>() {
             @Override
             public void onSuccess(Map<String, Object> stringObjectMap) {
                 Toast.makeText(mContext, "Account Created", Toast.LENGTH_SHORT).show();
@@ -159,6 +165,18 @@ public class DBHelper extends Firebase {
 
         return mSuccess;
     }
+
+    public Boolean changeUserEmail(String oldEmail, String newEmail, String password){
+        fireBaseRef.changeUserEmail(oldEmail, newEmail, password);
+
+        //TODO check if successful or not and dispay toast
+
+
+        return mSuccess;
+
+        }
+
+
 
     public void addUserProfileInfoToDB(User user) {
         Firebase fRef = new Firebase(URL + "UserProfiles");
@@ -316,7 +334,7 @@ public class DBHelper extends Firebase {
                     String descriptionOfItem1 = item.descriptionOfItem;
                     Log.d(descriptionOfItem, descriptionOfItem1 + "");
 
-                    String quantityAvailable1 = item.quantityAvailable;
+                    int quantityAvailable1 = item.quantityAvailable;
                     Log.d(quantityAvailable, quantityAvailable1 + "");
 
                     String imageLink1 = item.imageLink;
@@ -643,6 +661,39 @@ public class DBHelper extends Firebase {
         return user;
     }
 
+    public void getOnSaleItems(String sellersUid){
+        this.UID = UID;
+        Firebase fRef = new Firebase(URL+"Items/"+ UID);
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                sizeofAddDBList=dataSnapshot.getChildrenCount();
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+                    Item item = dataSnapshot1.getValue(Item.class);
+
+                    arrayListOfSellerItems.add(item);
+                }
+                sendAllOnSaleItems();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+    }
+
+    public ArrayList<Item> sendAllOnSaleItems(){
+        if(arrayListOfSellerItems.size()<sizeofAddDBList){
+            getUserListLatLng();
+        }
+
+        return arrayListOfSellerItems;
+    }
     public boolean signOutUser() {
 
         fireBaseRef.unauth();
@@ -771,6 +822,86 @@ public class DBHelper extends Firebase {
         });
      return invitesSent;
     }
+
+    public void setSellerAsCurrentlyCooking(Order order){
+        UID = "";
+        UID = order.getUserID();
+
+        Firebase fRef = new Firebase(URL + "OnSale/" + UID);
+
+        ArrayList<Item> itemsOrdered = order.getItemsOrdered();
+
+        Firebase fire1 = fRef.child(UID).push();
+        String orderID = fire1.getKey();
+
+
+        for (Item item : itemsOrdered) {
+
+            String itemID = item.getItemID();
+            fRef.child(UID).child(orderID).push();
+            fRef.child(orderID).child(itemID);
+            fRef.child(orderID).child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
+            fRef.child(orderID).child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
+            fRef.child(orderID).child(itemID).child("quantityAvailable").setValue(item.getQuantityAvailable());
+            fRef.child(orderID).child(itemID).child("imageLink").setValue(item.getImageLink());
+        }
+
+    }
+
+    public void savePreviouslyCookedItems(Item item){
+        UID = "";
+        UID = item.getUserID();
+
+        Firebase fRef = new Firebase(URL + "LibraryOfItemsCookedPreviously/" + UID);
+
+            String itemID = item.getItemID();
+
+            fRef.child(UID).push();
+            fRef.child(UID).child(itemID);
+            fRef.child(UID).child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
+            fRef.child(UID).child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
+            fRef.child(UID).child(itemID).child("quantityAvailable").setValue(item.getQuantityAvailable());
+            fRef.child(UID).child(itemID).child("imageLink").setValue(item.getImageLink());
+        }
+
+    public void updateSellerItemsWhenItemIsBought(Item item){
+        UID=item.getUserID();
+
+        final int quantity=item.getQuantityAvailable();
+        final String itemID=item.getItemID();
+
+        Firebase fRef = new Firebase(URL + "OnSale/" + UID);
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Item item=dataSnapshot1.getValue(Item.class);
+
+                    if(item.getItemID()==itemID){
+                        int updateQuantityAvailable=item.quantityAvailable-quantity;
+                        subtractBoughtQuantityFromQuantityInDB(item.getUserID(),item.getItemID(),updateQuantityAvailable);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
+    public void subtractBoughtQuantityFromQuantityInDB(String UID, String itemID, int quantityAvailable){
+        Firebase fRef = new Firebase(URL + "OnSale/" + UID+"/"+itemID);
+
+        fRef.child(UID).push();
+        fRef.child(UID).child(itemID);
+        fRef.child(UID).child(itemID).child("quantityAvailable").setValue(quantityAvailable);
+
+    }
+
 
     public void addUserReviewToUserProfile(User buyer, User seller, int numOfStars, String details){
 

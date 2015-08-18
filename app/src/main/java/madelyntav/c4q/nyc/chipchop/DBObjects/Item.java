@@ -6,7 +6,7 @@ package madelyntav.c4q.nyc.chipchop.DBObjects;
 public class Item {
     String userID;
     String nameOfItem;
-    String quantityAvailable;
+    int quantityAvailable;
     String descriptionOfItem;
     String imageLink;
 
@@ -22,7 +22,7 @@ public class Item {
 
     String itemID;
 
-    public Item(String userID, String nameOfItem, String quantityAvailable, String descriptionOfItem, String imageLink){
+    public Item(String userID, String nameOfItem, int quantityAvailable, String descriptionOfItem, String imageLink){
         this.userID=userID;
         this.nameOfItem=nameOfItem;
         this.quantityAvailable=quantityAvailable;
@@ -46,11 +46,11 @@ public class Item {
         this.userID = userID;
     }
 
-    public String getQuantityAvailable() {
+    public int getQuantityAvailable() {
         return quantityAvailable;
     }
 
-    public void setQuantityAvailable(String quantityAvailable) {
+    public void setQuantityAvailable(int quantityAvailable) {
         this.quantityAvailable = quantityAvailable;
     }
 

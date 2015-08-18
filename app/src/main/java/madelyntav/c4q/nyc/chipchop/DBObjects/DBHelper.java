@@ -118,7 +118,7 @@ public class DBHelper extends Firebase {
         return mSuccess;
     }
 
-    public Boolean createUserAndLaunchIntent(final String email, final String password, Intent intent){
+    public Boolean createUserAndLaunchIntent(final String email, final String password, final Intent intent){
         UID="";
 
         fireBaseRef.createUser(email, password, new Firebase.ValueResultHandler<Map<String, Object>>() {
@@ -145,6 +145,7 @@ public class DBHelper extends Firebase {
                 fRef.child(UID);
                 fRef.child(UID).child(sEmailAddress).setValue(email);
 
+                mContext.startActivity(intent);
             }
 
             @Override
@@ -155,7 +156,6 @@ public class DBHelper extends Firebase {
             }
         });
 
-        mContext.startActivity(intent);
 
         return mSuccess;
     }

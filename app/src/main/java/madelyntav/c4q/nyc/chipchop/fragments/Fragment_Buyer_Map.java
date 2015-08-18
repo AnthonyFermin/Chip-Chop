@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -42,9 +40,7 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;

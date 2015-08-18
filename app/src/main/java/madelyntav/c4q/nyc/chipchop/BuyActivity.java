@@ -2,6 +2,7 @@ package madelyntav.c4q.nyc.chipchop;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.Intent;
@@ -26,8 +27,10 @@ import android.widget.ListView;
 
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Checkout;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Orders;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile;
 
 public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Orders.OnBuyerOrderSelectedListener, Fragment_Buyer_Map.OnBuyerMapFragmentInteractionListener {
 
@@ -111,8 +114,15 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        SharedPreferences sharedPreferences = getSharedPreferences(Fragment_Buyer_SellerProfile.FROM_CHECKOUT, MODE_PRIVATE);
 
-        if (savedInstanceState == null) {
+
+        if(sharedPreferences.getBoolean(Fragment_Buyer_SellerProfile.FROM_CHECKOUT, false)) {
+            replaceFragment(new Fragment_Buyer_Checkout());
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(Fragment_Buyer_SellerProfile.FROM_CHECKOUT, false);
+            editor.apply();
+        } else if (savedInstanceState == null) {
             selectItem(0);
         }
 

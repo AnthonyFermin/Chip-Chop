@@ -70,7 +70,11 @@ public class MainActivity extends AppCompatActivity {
        // dbHelper.getAllUsers();
         //dbHelper.addUserProfileInfoToDB(user);
 
+//        ArrayList<LatLng> arrayList=new ArrayList<>();
+//
+//        arrayList.addAll(dbHelper.updateUserList());
 
+        dbHelper.getUserListLatLng();
     }
     public void getData(View v){
      dbHelper.getAddressFromDB("5");

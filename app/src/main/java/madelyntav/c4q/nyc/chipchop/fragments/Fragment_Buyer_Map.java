@@ -57,6 +57,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     public static final String LASTLONGITUDE = "LastLongitude";
     public static final String LASTLATITUDE = "LastLatitude";
     public Button signupButton;
+    public ArrayList<madelyntav.c4q.nyc.chipchop.DBObjects.Address> addressList;
     private LocationRequest mLocationRequest;
     private GoogleMap map;
     private Circle mCircle;
@@ -81,7 +82,9 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
         root = inflater.inflate(R.layout.fragment_buyer_map, container, false);
         dbHelper = DBHelper.getDbHelper(getActivity());
+
         latsList= new ArrayList<>();
+        addressList=new ArrayList<>();
         signupButton= (Button) root.findViewById(R.id.signInButton);
 
         // Connect to Geolocation API to make current location request
@@ -118,6 +121,8 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 //            }
 //        });
 
+        getListForMarkers.execute();
+
         return root;
     }
 
@@ -135,6 +140,8 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         super.onStart();
         locationServiceIsAvailable();
         LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+
         try {
             gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
         } catch (Exception ex) {
@@ -287,7 +294,12 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             @Override
             public void run() {
 
-                for (LatLng latLng : latsList) {
+
+                for (madelyntav.c4q.nyc.chipchop.DBObjects.Address address : addressList) {
+                    double gLat=address.getLatitude();
+                    double gLng=address.getLongitude();
+
+                    LatLng latLng=new LatLng(gLat,gLng);
 
                     double lat = 40.7484;
                     double lng = -73.9857;
@@ -312,39 +324,46 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
         Circle circle = map.addCircle(new CircleOptions()
                 .center(new LatLng(userCurrentLocation.latitude, userCurrentLocation.longitude))
-                .radius(1000)
-                .strokeColor(Color.RED)
-                .fillColor(Color.BLUE));
+                .radius(100000)
+                .strokeColor(Color.RED));
 
-        float[] distance = new float[latsList.size()];
+        float[] distance = new float[addressList.size()];
 
         Location.distanceBetween(userCurrentLocation.latitude, userCurrentLocation.longitude,
                 seller.latitude, seller.longitude, distance);
 
         if( distance[0] < circle.getRadius()  ){
-            addMarker(seller.latitude,seller.longitude);
+            addMarker(seller.latitude, seller.longitude);
 
-            Toast.makeText(getActivity(), "Outside", Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(getActivity(), "Inside", Toast.LENGTH_LONG).show();
+
         }
     }
 
-    public void getDataHere(){
-        Handler handler= new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-                latsList.addAll(dbHelper.getUserListLatLng());
-
-                while (latsList == null || latsList.size() == 0) {
-                    latsList.addAll(dbHelper.getUserListLatLng());
-                }
-
-                addWithinRangeMarkersToMap();
-
-            }
-        },2000);
+    public void getDataHere() {
+        addWithinRangeMarkersToMap();
     }
+
+
+    // Task to get LatLng List and populate markers when done
+    AsyncTask<Void, Void, Void> getListForMarkers = new AsyncTask<Void, Void, Void>() {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            dbHelper.getUserAddressList();
+            while(addressList.size()==0){
+                // thread cannot continue until dbHelper.getUserListLatLng returns an ArrayList
+                Log.d("LATSLIST", addressList.toString());
+                addressList.addAll(dbHelper.updateAddressList());
+            }
+            //create markers list by sorting throught latsList
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Log.d("LATSLIST", latsList.toString());
+            getDataHere();
+        }
+    };
+
 }

@@ -101,17 +101,18 @@ public class SignupActivity2 extends AppCompatActivity {
                 address = address.replace('+',' ');
                 city = city.replace('+',' ');
 
+                userAddress = new Address(address,apt,city,"NY",zipcode, uid);
 
                 Log.i("RETROFIT: LatLng", "" + location.getLat() + ", " + location.getLng());
                 userAddress.setLatitude(location.getLat());
                 userAddress.setLongitude(location.getLng());
-                userAddress = new Address(address,apt,city,"NY",zipcode, uid);
                 User user = dbHelper.getCurrentUser();
                 user.setAddress(userAddress);
                 user.setName(name);
 
                 dbHelper.addUserProfileInfoToDB(user);
-                dbHelper.getUserListLatLng();
+
+               // dbHelper.getUserListLatLng();
 
                 Intent buyActivity = new Intent(getApplicationContext(), BuyActivity.class);
                 startActivity(buyActivity);

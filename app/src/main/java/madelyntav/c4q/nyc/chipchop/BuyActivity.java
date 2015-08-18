@@ -223,4 +223,8 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         BuyFragmentManager.beginTransaction().replace(R.id.sellerFrameLayout, fragment).addToBackStack(null).commit();
 
     }
+
+
+
+
 }

@@ -30,7 +30,6 @@ public class DBHelper extends Firebase {
     String UID;
     public static ArrayList<User> allUsers;
     public static ArrayList<Item> items;
-    public static ArrayList<User> userList;
     private static String userID = "userID";
     private static final String sStreet = "streetAddress";
     private static final String sApartment = "apartment";
@@ -55,6 +54,7 @@ public class DBHelper extends Firebase {
     long sizeofAddDBList;
     public static ArrayList<LatLng> latLngList;
     public static ArrayList<Address> addressList;
+    public static ArrayList<User> userList;
 
     public DBHelper() {
         super(URL);
@@ -76,7 +76,7 @@ public class DBHelper extends Firebase {
         user = new User();
         latLngList = new ArrayList<>();
         addressList= new ArrayList<>();
-        fragment_buyer_map=new Fragment_Buyer_Map();
+        userList= new ArrayList<>();
         return fireBaseRef;
     }
 
@@ -134,7 +134,7 @@ public class DBHelper extends Firebase {
                     UID += userIDOne.charAt(i);
                 }
 
-                SharedPreferences sharedPreferences = mContext.getSharedPreferences("UID", Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = mContext.getSharedPreferences("New User", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("id", UID);
                 editor.putString("eMail", email);
@@ -197,6 +197,7 @@ public class DBHelper extends Firebase {
         Firebase fRef = new Firebase(URL + "Addresses");
 
         fRef.child(UID).push();
+        fRef.child(UID).child(sName).setValue(address.getName());
         fRef.child(UID).child(sStreet).setValue(address.getStreetAddress());
         fRef.child(UID).child(sApartment).setValue(address.getApartment());
         fRef.child(UID).child(sCity).setValue(address.getCity());
@@ -522,7 +523,7 @@ public class DBHelper extends Firebase {
                     latLngList.add(latLng);
                 }
 
-                updateUserList();
+                updateUserLatList();
             }
 
             @Override
@@ -534,7 +535,7 @@ public class DBHelper extends Firebase {
     }
 
 
-    public ArrayList<LatLng> updateUserList(){
+    public ArrayList<LatLng> updateUserLatList(){
 
         if(latLngList.size()<sizeofAddDBList){
             getUserListLatLng();
@@ -582,6 +583,45 @@ public class DBHelper extends Firebase {
         return addressList;
     }
 
+
+    public void getAllSellersUserList(){
+        Firebase fRef = new Firebase(URL + "UserProfiles");//TODO: Will change to UserProfiles/Sellers
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                sizeofAddDBList = dataSnapshot.getChildrenCount();
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+                    User user = dataSnapshot1.getValue(User.class);
+                    //Log.d("Fin", String.valueOf(address.latLng.latitude));
+
+                    userList.add(user);
+                }
+
+                updateUsersList();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+        Log.d("DBUserList", userList.toString());
+    }
+
+    public ArrayList<User> updateUsersList(){
+
+        if(userList.size()<=sizeofAddDBList){
+            getUserAddressList();
+        }
+
+        return userList;
+    }
+
     public User getSpecificUser(String UID) {
         this.UID = UID;
         Firebase fRef = new Firebase(URL+"UserProfiles/"+ UID);
@@ -613,6 +653,12 @@ public class DBHelper extends Firebase {
         address.clearAddress();
         userList.clear();
         items.clear();
+
+        SharedPreferences sharedPreferences=mContext.getSharedPreferences("New User",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        editor.clear();
+        editor.commit();
+
         return true;
     }
 

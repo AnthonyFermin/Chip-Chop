@@ -87,6 +87,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
         latsList= new ArrayList<>();
         addressList=new ArrayList<>();
+        userList= new ArrayList<>();
         signupButton= (Button) root.findViewById(R.id.signInButton);
 
         // Connect to Geolocation API to make current location request
@@ -287,9 +288,8 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
     public void addWithinRangeMarkersToMap() {
                 for (madelyntav.c4q.nyc.chipchop.DBObjects.Address address : addressList) {
-                    User user=dbHelper.getSpecificUser(address.getUserID());
-                    String userName= user.getName();
 
+                    String userName= address.getName();
                     double gLat = address.getLatitude();
                     double gLng = address.getLongitude();
 
@@ -306,13 +306,11 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
                     Location.distanceBetween(lat, lng,
                             gLat, gLng, distance);
 
-                    Log.d("nameofUser",userName);
-
                     if (distance[0] < circle.getRadius()) {
 
                         map.addMarker(new MarkerOptions()
                                 .position(new LatLng(gLat, gLng))
-                                .title(userName)).setSnippet("HERE");
+                                .title(userName));
 
                     } else {
 

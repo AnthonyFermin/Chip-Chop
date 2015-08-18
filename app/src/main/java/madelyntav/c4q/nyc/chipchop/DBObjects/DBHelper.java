@@ -691,6 +691,38 @@ public class DBHelper extends Firebase {
         return mSuccess;
     }
 
+    public boolean logInUser(String email, String password, final Intent intent) {
+        mSuccess = false;
+        fireBaseRef.authWithPassword(email, password,
+                new Firebase.AuthResultHandler() {
+                    @Override
+                    public void onAuthenticated(AuthData authData) { /* ... */
+                        mSuccess = true;
+                        UID = authData.getUid();
+                        mContext.startActivity(intent);
+                    }
+
+                    @Override
+                    public void onAuthenticationError(FirebaseError error) {
+                        // Something went wrong :(
+                        switch (error.getCode()) {
+                            case FirebaseError.USER_DOES_NOT_EXIST:
+                                Toast.makeText(mContext, "E-mail or Password Invalid", Toast.LENGTH_LONG).show();
+                                mSuccess = false;
+                                break;
+                            case FirebaseError.INVALID_PASSWORD:
+                                Toast.makeText(mContext, "Invalid Password", Toast.LENGTH_LONG).show();
+                                mSuccess = false;
+                                break;
+                            default:
+                                // handle other errors
+                                break;
+                        }
+                    }
+                });
+        return mSuccess;
+    }
+
     public boolean userIsLoggedIn() {
 
         if(UID==null){

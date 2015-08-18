@@ -86,7 +86,7 @@ public class CartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 // TODO: put the listener for the specific ITEM selected with the quantity !!
                 Log.d("ALVIN", String.valueOf(position));
                 cartItems.remove(cartItems.get(position));
-                
+
                 notifyItemRemoved(position);
                 // TODO: to re-index the arraylist so that  pressing out of order won't crash app !!
 

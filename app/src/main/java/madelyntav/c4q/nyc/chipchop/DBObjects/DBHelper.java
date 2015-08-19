@@ -922,7 +922,6 @@ public class DBHelper extends Firebase {
         if(listOfItemsSellingForSeller.size()<=sizeofAddDBList){
             getItemsSellerIsCurrentlyCooking(sellerId);
         }
-
         return listOfItemsSellingForSeller;
     }
 
@@ -1043,18 +1042,46 @@ public class DBHelper extends Firebase {
     }
 
     public void addUserReviewToUserProfile(User buyer, User seller, int numOfStars, String details){
+        sellerId=seller.getUserId();
+        UID=buyer.getUserId();
+        Firebase fRef = new Firebase(URL + "Reviews/" + UID+"/"+sellerId);
+
+        fRef.child(UID).push();
+        fRef.child(UID).child(sellerId);
+        fRef.child(UID).child(sellerId).child("numOfStars").setValue(numOfStars);
+        fRef.child(UID).child(sellerId).child("description").setValue(details);
 
     }
 
     public void addUserReviewToUserProfile(User buyer, User seller, int numOfStars) {
+        sellerId=seller.getUserId();
+        UID=buyer.getUserId();
+        Firebase fRef = new Firebase(URL + "Reviews/" + UID+"/"+sellerId);
+        fRef.child(UID).push();
+        fRef.child(UID).child(sellerId);
+        fRef.child(UID).child(sellerId).child("numOfStars").setValue(numOfStars);
 
     }
 
-    public void addReviewToSellerProfile(User buyer, User seller, int numOfStarts){
-
+    public void addReviewToSellerProfile(User buyer, User seller, int numOfStars){
+        sellerId=seller.getUserId();
+        UID=buyer.getUserId();
+        Firebase fRef = new Firebase(URL + "Reviews/SellerReviews" + sellerId+"/"+UID);
+        fRef.child(sellerId).push();
+        fRef.child(sellerId).child(UID);
+        fRef.child(sellerId).child(UID).child("numOfStars").setValue(numOfStars);
     }
 
-    public void addReviewToSellerProfile(User buyer, User seller, int numOfStarts, String details){
+    public void addReviewToSellerProfile(User buyer, User seller, int numOfStars, String details){
+        sellerId=seller.getUserId();
+        UID=buyer.getUserId();
+        Firebase fRef = new Firebase(URL + "Reviews/SellerReviews" + sellerId+"/"+UID);
+
+        fRef.child(sellerId).push();
+        fRef.child(sellerId).child(UID);
+        fRef.child(sellerId).child(UID).child("numOfStars").setValue(numOfStars);
+        fRef.child(sellerId).child(UID).child("description").setValue(details);
+
 
     }
 

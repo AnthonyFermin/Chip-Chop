@@ -201,6 +201,19 @@ public class DBHelper extends Firebase {
 
         addUserAddressToProfile(user.address);
     }
+    public void addSellerProfileInfoToDB(User user) {
+        Firebase fRef = new Firebase(URL + "UserProfiles/Sellers");
+        UID = user.getUserId();
+
+        fRef.child(UID).push();
+        fRef.child(UID).child(sName).setValue(user.getName());
+        fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
+        fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
+        fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
+        fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
+
+        addUserAddressToProfile(user.address);
+    }
 
     public void addUserAddressToProfile(Address address) {
         UID = address.getUserID();

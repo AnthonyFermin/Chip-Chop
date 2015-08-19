@@ -52,6 +52,8 @@ public class DBHelper extends Firebase {
     public static ArrayList<Address> addressList;
     public static ArrayList<User> userList;
     public static ArrayList<Item> arrayListOfSellerItems;
+    static Order returnOrder;
+
     public DBHelper() {
         super(URL);
     }
@@ -74,6 +76,7 @@ public class DBHelper extends Firebase {
         addressList= new ArrayList<>();
         userList= new ArrayList<>();
         arrayListOfSellerItems=new ArrayList<>();
+        returnOrder=new Order();
         return fireBaseRef;
     }
 
@@ -313,7 +316,7 @@ public class DBHelper extends Firebase {
         UID = order.getUserID();
         String orderID = order.getOrderID();
 
-        Firebase fRef = new Firebase(URL + "Orders/" + "5" + "/" + orderID);
+        Firebase fRef = new Firebase(URL + "Orders/" + UID + "/" + orderID);
 
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -861,6 +864,10 @@ public class DBHelper extends Firebase {
             fRef.child(UID).child(itemID).child("imageLink").setValue(item.getImageLink());
         }
 
+    //method takes in an item and checks who the seller of that item is, then goes
+    //into the database and subtracts the number that was bought from the quantity
+    //the seller currently has available. So for this we can pass it for each item
+    //in the order
     public void updateSellerItemsWhenItemIsBought(Item item){
         UID=item.getUserID();
 
@@ -874,12 +881,13 @@ public class DBHelper extends Firebase {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    Item item=dataSnapshot1.getValue(Item.class);
+                    Item item = dataSnapshot1.getValue(Item.class);
 
-                    if(item.getItemID()==itemID){
-                        int updateQuantityAvailable=item.quantityAvailable-quantity;
-                        subtractBoughtQuantityFromQuantityInDB(item.getUserID(),item.getItemID(),updateQuantityAvailable);
+                    if (item.getItemID() == itemID) {
+                        int updateQuantityAvailable = item.quantityAvailable - quantity;
+                        subtractBoughtQuantityFromQuantityInDB(item.getUserID(), item.getItemID(), updateQuantityAvailable);
                     }
+
                 }
             }
 
@@ -889,16 +897,73 @@ public class DBHelper extends Firebase {
             }
         });
     }
-
-    public void subtractBoughtQuantityFromQuantityInDB(String UID, String itemID, int quantityAvailable){
+    //Method that actually updates the number in the database
+    public String subtractBoughtQuantityFromQuantityInDB(String UID, String itemID, int quantityAvailable){
         Firebase fRef = new Firebase(URL + "OnSale/" + UID+"/"+itemID);
 
         fRef.child(UID).push();
         fRef.child(UID).child(itemID);
         fRef.child(UID).child(itemID).child("quantityAvailable").setValue(quantityAvailable);
-
+        return UID;
     }
 
+    public void sendOrderToSeller(String UID,Order order){
+
+        UID = order.getUserID();
+
+        Firebase fRef = new Firebase(URL + "Orders/CurrentOrders" + UID);
+
+        ArrayList<Item> itemsOrdered = order.getItemsOrdered();
+
+        Firebase fire1 = fRef.child(UID).push();
+        String orderID = fire1.getKey();
+
+        for (Item item : itemsOrdered) {
+
+            String itemID = item.getItemID();
+            fRef.child(UID).child(orderID).push();
+            fRef.child(orderID).child(itemID);
+            fRef.child(orderID).child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
+            fRef.child(orderID).child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
+            fRef.child(orderID).child(itemID).child("quantityAvailable").setValue(item.getQuantityAvailable());
+            fRef.child(orderID).child(itemID).child("imageLink").setValue(item.getImageLink());
+        }
+
+        getOrderToSendToSeller(UID,order);
+    }
+
+    public Order getOrderToSendToSeller(String UID, final Order order){
+        UID=order.getUserID();
+        String orderID=order.getOrderID();
+
+
+
+        Firebase fRef = new Firebase(URL + "Orders/CurrentOrders" + UID);
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Order order1 = dataSnapshot1.getValue(Order.class);
+
+                    if (order1.getOrderID()==order.getOrderID()){
+                        returnOrder=order1;
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Toast.makeText(mContext,"Unable To Send Order To Seller, Please Try Again",Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        return returnOrder;
+
+    }
 
     public void addUserReviewToUserProfile(User buyer, User seller, int numOfStars, String details){
 

@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import java.sql.BatchUpdateException;
 import java.util.ArrayList;
 
 import madelyntav.c4q.nyc.chipchop.BuyActivity;
@@ -84,7 +83,7 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
     //test method to populate RecyclerView
     private void populateItems(){
         for(int i = 0; i < 10; i++) {
-            foodItems.add(new Item("test", "Something Fancy", "3", "The fanciest homemade meal you've ever had", "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg"));
+            foodItems.add(new Item("test", "Something Fancy", 3, "The fanciest homemade meal you've ever had", "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg"));
         }
     }
 

@@ -107,11 +107,7 @@ public class DBHelper extends Firebase {
                 Firebase fRef = new Firebase(URL + "UserProfiles");
                 fRef.child(UID);
                 fRef.child(UID).child(sEmailAddress).setValue(email);
-
-
-
             }
-
             @Override
             public void onError(FirebaseError firebaseError) {
                 Toast.makeText(mContext, "Account Creation Failed", Toast.LENGTH_SHORT).show();
@@ -119,9 +115,7 @@ public class DBHelper extends Firebase {
                 mSuccess = false;
             }
         });
-
         return mSuccess;
-
     }
 
     public Boolean createUserAndLaunchIntent(final String email, final String password, final Intent intent){
@@ -488,6 +482,7 @@ public class DBHelper extends Firebase {
         addUserAddressToProfile(user.address);
     }
 
+    //Returns all users- don't think we would ever need this in the app... should only return sellers
     public ArrayList<User> getAllUsers() {
         Firebase fRef = new Firebase(URL + "UserProfiles");
 
@@ -517,6 +512,7 @@ public class DBHelper extends Firebase {
         return allUsers;
     }
 
+    //Returns list of addresses should be modified to only get activeSeller addresses
     public void getUserListLatLng() {
         Log.d("DBHELPERUSERLIST", allUsers.toString());
 
@@ -550,7 +546,7 @@ public class DBHelper extends Firebase {
 
     }
 
-
+    //Returns list of LatLngs
     public ArrayList<LatLng> updateUserLatList(){
 
         if(latLngList.size()<sizeofAddDBList){
@@ -560,6 +556,7 @@ public class DBHelper extends Firebase {
         return latLngList;
     }
 
+    //gets Addresses from DB and can be modified further if needed
     public void getUserAddressList(){
         Firebase fRef = new Firebase(URL + "Addresses");
 
@@ -589,7 +586,7 @@ public class DBHelper extends Firebase {
 
         //Log.d("DBHelperLatsList", addressList.toString());
     }
-
+    //returns list of addresses
     public ArrayList<Address> updateAddressList(){
 
         if(addressList.size()<=sizeofAddDBList){
@@ -599,9 +596,9 @@ public class DBHelper extends Firebase {
         return addressList;
     }
 
-
+    //returns a list of all sellers
     public void getAllSellersUserList(){
-        Firebase fRef = new Firebase(URL + "UserProfiles");//TODO: Will change to UserProfiles/Sellers
+        Firebase fRef = new Firebase(URL + "UserProfiles");//TODO: Will change to UserProfiles/CurrentActiveSellers
 
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -628,7 +625,7 @@ public class DBHelper extends Firebase {
 
         Log.d("DBUserList", userList.toString());
     }
-
+    //Returns an arraylist of Users
     public ArrayList<User> updateUsersList(){
 
         if(userList.size()<=sizeofAddDBList){
@@ -638,8 +635,8 @@ public class DBHelper extends Firebase {
         return userList;
     }
 
+    //gets a specific user from the DB
     public User getSpecificUser(String UID) {
-        this.UID = UID;
         Firebase fRef = new Firebase(URL+"UserProfiles/"+ UID);
 
         fRef.addValueEventListener(new ValueEventListener() {
@@ -647,11 +644,9 @@ public class DBHelper extends Firebase {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-
                     user = dataSnapshot1.getValue(User.class);
                 }
             }
-
             @Override
             public void onCancelled(FirebaseError firebaseError) {
 
@@ -662,8 +657,7 @@ public class DBHelper extends Firebase {
     }
 
     public void getOnSaleItems(String sellersUid){
-        this.UID = UID;
-        Firebase fRef = new Firebase(URL+"Items/"+ UID);
+        Firebase fRef = new Firebase(URL+"Items/"+ sellersUid);
 
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -686,7 +680,7 @@ public class DBHelper extends Firebase {
         });
 
     }
-
+    //sends all items on sale for a specific user
     public ArrayList<Item> sendAllOnSaleItems(){
         if(arrayListOfSellerItems.size()<sizeofAddDBList){
             getUserListLatLng();
@@ -694,6 +688,7 @@ public class DBHelper extends Firebase {
 
         return arrayListOfSellerItems;
     }
+    //signs out user and clears data
     public boolean signOutUser() {
 
         fireBaseRef.unauth();
@@ -710,7 +705,7 @@ public class DBHelper extends Firebase {
 
         return true;
     }
-
+    //logsInUser without launching an intent
     public boolean logInUser(String email, String password) {
         mSuccess = false;
         fireBaseRef.authWithPassword(email, password,
@@ -741,7 +736,7 @@ public class DBHelper extends Firebase {
                 });
         return mSuccess;
     }
-
+    //logs in user and launches an intent
     public boolean logInUser(String email, String password, final Intent intent) {
         mSuccess = false;
         fireBaseRef.authWithPassword(email, password,
@@ -774,6 +769,7 @@ public class DBHelper extends Firebase {
         return mSuccess;
     }
 
+    //checks if user is logged in
     public boolean userIsLoggedIn() {
 
         if(UID==null){
@@ -791,8 +787,7 @@ public class DBHelper extends Firebase {
         return user;
     }
 
-
-
+    //adds an email/potential user to a users invite tree
     public void addToInviteTree(String newUserInviteEmail){
         Firebase fRef =  new Firebase(URL+"InviteTree");
 
@@ -800,6 +795,7 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child("invited").setValue(newUserInviteEmail);
     }
 
+    //Returns a list of emails of users invited by a specific user
     public ArrayList<String> getInviteListForSpecificUser(){
         final ArrayList<String> invitesSent=new ArrayList<>();
 
@@ -823,6 +819,7 @@ public class DBHelper extends Firebase {
      return invitesSent;
     }
 
+    //Method that sends all items seller lists to the Database for sale now
     public void setSellerAsCurrentlyCooking(Order order){
         UID = "";
         UID = order.getUserID();
@@ -830,13 +827,11 @@ public class DBHelper extends Firebase {
         Firebase fRef = new Firebase(URL + "OnSale/" + UID);
 
         ArrayList<Item> itemsOrdered = order.getItemsOrdered();
-
         Firebase fire1 = fRef.child(UID).push();
         String orderID = fire1.getKey();
 
 
         for (Item item : itemsOrdered) {
-
             String itemID = item.getItemID();
             fRef.child(UID).child(orderID).push();
             fRef.child(orderID).child(itemID);
@@ -845,9 +840,10 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child(itemID).child("quantityAvailable").setValue(item.getQuantityAvailable());
             fRef.child(orderID).child(itemID).child("imageLink").setValue(item.getImageLink());
         }
-
     }
 
+    //method saves a cooked item to the sellers library of items when the seller removes it from
+    //his/her list
     public void savePreviouslyCookedItems(Item item){
         UID = "";
         UID = item.getUserID();
@@ -887,7 +883,6 @@ public class DBHelper extends Firebase {
                         int updateQuantityAvailable = item.quantityAvailable - quantity;
                         subtractBoughtQuantityFromQuantityInDB(item.getUserID(), item.getItemID(), updateQuantityAvailable);
                     }
-
                 }
             }
 
@@ -897,6 +892,7 @@ public class DBHelper extends Firebase {
             }
         });
     }
+
     //Method that actually updates the number in the database
     public String subtractBoughtQuantityFromQuantityInDB(String UID, String itemID, int quantityAvailable){
         Firebase fRef = new Firebase(URL + "OnSale/" + UID+"/"+itemID);
@@ -907,11 +903,12 @@ public class DBHelper extends Firebase {
         return UID;
     }
 
-    public void sendOrderToSeller(String UID,Order order){
+    //method to send an order to the sellers database and then send that order to the user
+    public void sendOrderToSeller(String UID,Order order, String buyerID){
 
-        UID = order.getUserID();
+        this.UID = UID;
 
-        Firebase fRef = new Firebase(URL + "Orders/CurrentOrders" + UID);
+        Firebase fRef = new Firebase(URL + "Orders/CurrentOrders" + UID+"/"+buyerID);
 
         ArrayList<Item> itemsOrdered = order.getItemsOrdered();
 
@@ -921,24 +918,22 @@ public class DBHelper extends Firebase {
         for (Item item : itemsOrdered) {
 
             String itemID = item.getItemID();
-            fRef.child(UID).child(orderID).push();
+            fRef.child(UID).child(buyerID).child(orderID).push();
             fRef.child(orderID).child(itemID);
             fRef.child(orderID).child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
             fRef.child(orderID).child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
             fRef.child(orderID).child(itemID).child("quantityAvailable").setValue(item.getQuantityAvailable());
             fRef.child(orderID).child(itemID).child("imageLink").setValue(item.getImageLink());
         }
-
-        getOrderToSendToSeller(UID,order);
+        getOrderToSendToSeller(UID,order,buyerID);
     }
 
-    public Order getOrderToSendToSeller(String UID, final Order order){
-        UID=order.getUserID();
-        String orderID=order.getOrderID();
+    //method which returns the right order to be sent to the seller when buyer places an order
+    public Order getOrderToSendToSeller(String sellerID, final Order order, String buyerID){
+        UID=sellerID;
+        final String orderID=order.getOrderID();
 
-
-
-        Firebase fRef = new Firebase(URL + "Orders/CurrentOrders" + UID);
+        Firebase fRef = new Firebase(URL + "Orders/CurrentOrders" + UID+"/"+buyerID);
 
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -947,7 +942,7 @@ public class DBHelper extends Firebase {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     Order order1 = dataSnapshot1.getValue(Order.class);
 
-                    if (order1.getOrderID()==order.getOrderID()){
+                    if (order1.getOrderID()==orderID){
                         returnOrder=order1;
                     }
 
@@ -960,9 +955,7 @@ public class DBHelper extends Firebase {
 
             }
         });
-
         return returnOrder;
-
     }
 
     public void addUserReviewToUserProfile(User buyer, User seller, int numOfStars, String details){

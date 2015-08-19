@@ -63,10 +63,6 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-//        if (savedInstanceState == null) {
-//            selectItem(0);
-//        }
-
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 new Toolbar(this), R.string.drawer_open,

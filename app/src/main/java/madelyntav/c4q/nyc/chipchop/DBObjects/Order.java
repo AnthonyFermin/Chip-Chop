@@ -1,6 +1,4 @@
 package madelyntav.c4q.nyc.chipchop.DBObjects;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.ArrayList;
 
 /**
@@ -26,7 +24,6 @@ public class Order {
         this.itemsOrdered=itemsOrdered;
     }
 
-    @JsonIgnore
     public String getOrderID() {
         return orderID;
     }

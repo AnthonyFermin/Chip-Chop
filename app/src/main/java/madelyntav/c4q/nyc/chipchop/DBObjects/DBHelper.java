@@ -229,8 +229,8 @@ public class DBHelper extends Firebase {
 
                     User user1 = dataSnapshot1.getValue(User.class);
 
-                    if(user1.getUserId()==sellerID){
-                        user=user1;
+                    if (user1.getUserId() == sellerID) {
+                        user = user1;
                     }
 
                     Log.d("AddressList", userList.toString());
@@ -240,8 +240,8 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-                Toast.makeText(mContext,"Error: Please Try Again",Toast.LENGTH_SHORT).show();
-                user=null;
+                Toast.makeText(mContext, "Error: Please Try Again", Toast.LENGTH_SHORT).show();
+                user = null;
             }
         });
 
@@ -909,7 +909,7 @@ public class DBHelper extends Firebase {
     //method takes in an item and checks who the seller of that item is, then goes
     //into the database and subtracts the number that was bought from the quantity
     //the seller currently has available. So for this we can pass it for each item
-    //in the order
+    //in the order. You can run this in the background
     public void updateSellerItemsWhenItemIsBought(Item item){
         UID=item.getUserID();
 
@@ -949,7 +949,7 @@ public class DBHelper extends Firebase {
         return UID;
     }
 
-    //method to send an order to the sellers database and then send that order to the user
+    //method to send an order to the sellers database and then send that order to the seller
     public void sendOrderToSeller(String UID,Order order, String buyerID){
 
         this.UID = UID;
@@ -962,7 +962,6 @@ public class DBHelper extends Firebase {
         String orderID = fire1.getKey();
 
         for (Item item : itemsOrdered) {
-
             String itemID = item.getItemID();
             fRef.child(UID).child(buyerID).child(orderID).push();
             fRef.child(orderID).child(itemID);
@@ -971,7 +970,7 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child(itemID).child("quantityAvailable").setValue(item.getQuantityAvailable());
             fRef.child(orderID).child(itemID).child("imageLink").setValue(item.getImageLink());
         }
-        getOrderToSendToSeller(UID,order,buyerID);
+        getOrderToSendToSeller(UID, order, buyerID);
     }
 
     //method which returns the right order to be sent to the seller when buyer places an order
@@ -988,16 +987,15 @@ public class DBHelper extends Firebase {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     Order order1 = dataSnapshot1.getValue(Order.class);
 
-                    if (order1.getOrderID()==orderID){
-                        returnOrder=order1;
+                    if (order1.getOrderID() == orderID) {
+                        returnOrder = order1;
                     }
-
                 }
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-                Toast.makeText(mContext,"Unable To Send Order To Seller, Please Try Again",Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Unable To Send Order To Seller, Please Try Again", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -1008,12 +1006,21 @@ public class DBHelper extends Firebase {
 
     }
 
+    public void addUserReviewToUserProfile(User buyer, User seller, int numOfStars) {
+
+    }
+
+    public void addReviewToSellerProfile(User buyer, User seller, int numOfStarts){
+
+    }
+
     public void addReviewToSellerProfile(User buyer, User seller, int numOfStarts, String details){
 
     }
 
-    public void getReviewsForCertainPerson(String id){
+    public ArrayList<Review> getAllReviewsForCertainPerson(String id){
+    ArrayList<Review> reviewArrayList= new ArrayList<>();
 
+       return reviewArrayList;
     }
-
 }

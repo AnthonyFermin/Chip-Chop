@@ -43,8 +43,8 @@ public class DBHelper extends Firebase {
     private static final String sAddress = "address";
     private static final String sPhotoLink = "photoLink";
     public static User user;
-    public static final String sLatitude="latitude";
-    public static final String sLongitude="longitude";
+    public static final String sLatitude = "latitude";
+    public static final String sLongitude = "longitude";
     public boolean mSuccess = false;
     public static Address address;
     long sizeofAddDBList;
@@ -73,10 +73,10 @@ public class DBHelper extends Firebase {
         allUsers = new ArrayList<>();
         user = new User();
         latLngList = new ArrayList<>();
-        addressList= new ArrayList<>();
-        userList= new ArrayList<>();
-        arrayListOfSellerItems=new ArrayList<>();
-        returnOrder=new Order();
+        addressList = new ArrayList<>();
+        userList = new ArrayList<>();
+        arrayListOfSellerItems = new ArrayList<>();
+        returnOrder = new Order();
         return fireBaseRef;
     }
 
@@ -108,6 +108,7 @@ public class DBHelper extends Firebase {
                 fRef.child(UID);
                 fRef.child(UID).child(sEmailAddress).setValue(email);
             }
+
             @Override
             public void onError(FirebaseError firebaseError) {
                 Toast.makeText(mContext, "Account Creation Failed", Toast.LENGTH_SHORT).show();
@@ -118,8 +119,8 @@ public class DBHelper extends Firebase {
         return mSuccess;
     }
 
-    public Boolean createUserAndLaunchIntent(final String email, final String password, final Intent intent){
-        UID="";
+    public Boolean createUserAndLaunchIntent(final String email, final String password, final Intent intent) {
+        UID = "";
 
         fireBaseRef.createUser(email, password, new ValueResultHandler<Map<String, Object>>() {
             @Override
@@ -160,7 +161,7 @@ public class DBHelper extends Firebase {
         return mSuccess;
     }
 
-    public Boolean changeUserEmail(String oldEmail, String newEmail, String password){
+    public Boolean changeUserEmail(String oldEmail, String newEmail, String password) {
         fireBaseRef.changeUserEmail(oldEmail, newEmail, password);
 
         //TODO check if successful or not and dispay toast
@@ -168,8 +169,7 @@ public class DBHelper extends Firebase {
 
         return mSuccess;
 
-        }
-
+    }
 
 
     public void addUserProfileInfoToDB(User user) {
@@ -186,7 +186,7 @@ public class DBHelper extends Firebase {
         addUserAddressToProfile(user.address);
     }
 
-    public void addUserProfileInfoToDBAndLaunchIntent(User user,Intent intent) {
+    public void addUserProfileInfoToDBAndLaunchIntent(User user, Intent intent) {
         Firebase fRef = new Firebase(URL + "UserProfiles");
         UID = user.getUserId();
 
@@ -201,6 +201,7 @@ public class DBHelper extends Firebase {
 
         addUserAddressToProfile(user.address);
     }
+
     public void addSellerProfileInfoToDB(User user) {
         Firebase fRef = new Firebase(URL + "UserProfiles/Sellers");
         UID = user.getUserId();
@@ -214,6 +215,39 @@ public class DBHelper extends Firebase {
 
         addUserAddressToProfile(user.address);
     }
+
+    public User getSellerFromDB(final String sellerID) {
+
+        Firebase fRef = new Firebase(URL + "UserProfiles/Seller/");
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("Number2", dataSnapshot.getChildrenCount() + "");
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+                    User user1 = dataSnapshot1.getValue(User.class);
+
+                    if(user1.getUserId()==sellerID){
+                        user=user1;
+                    }
+
+                    Log.d("AddressList", userList.toString());
+
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Toast.makeText(mContext,"Error: Please Try Again",Toast.LENGTH_SHORT).show();
+                user=null;
+            }
+        });
+
+        return user;
+    }
+
 
     public void addUserAddressToProfile(Address address) {
         UID = address.getUserID();

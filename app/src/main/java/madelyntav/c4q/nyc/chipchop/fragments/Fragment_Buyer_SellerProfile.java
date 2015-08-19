@@ -1,6 +1,8 @@
 package madelyntav.c4q.nyc.chipchop.fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,6 +17,7 @@ import java.sql.BatchUpdateException;
 import java.util.ArrayList;
 
 import madelyntav.c4q.nyc.chipchop.BuyActivity;
+import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.SignupActivity1;
@@ -23,9 +26,12 @@ import madelyntav.c4q.nyc.chipchop.adapters.FoodListAdapter;
 
 public class Fragment_Buyer_SellerProfile extends Fragment {
 
+    public static final String FROM_CHECKOUT = "FromCheckout";
     Button checkoutButton, cartButton;
     private ArrayList<Item> foodItems;
     private RecyclerView foodList;
+    private DBHelper dbHelper;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,6 +39,7 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_buyer_seller_profile, container, false);
 
+        dbHelper = DBHelper.getDbHelper(getActivity());
 
         foodItems = new ArrayList<>();
         populateItems();
@@ -47,8 +54,17 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
         checkoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent signupIntent = new Intent(getActivity(), SignupActivity1.class);
-                startActivity(signupIntent);
+
+                if(dbHelper.userIsLoggedIn()) {
+                    ((BuyActivity) getActivity()).replaceFragment(new Fragment_Buyer_Checkout());
+                }else{
+                    SharedPreferences preferences = getActivity().getSharedPreferences(FROM_CHECKOUT, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putBoolean(FROM_CHECKOUT, true);
+                    editor.apply();
+                    Intent signupIntent = new Intent(getActivity(), SignupActivity1.class);
+                    startActivity(signupIntent);
+                }
             }
         });
 

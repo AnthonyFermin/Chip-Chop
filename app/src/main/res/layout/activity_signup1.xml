@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Email"
-        android:textSize="25sp"
+        android:textSize="22sp"
         android:layout_margin="10dp" />
 
 
@@ -31,7 +31,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Password"
-        android:textSize="25sp"
+        android:inputType="textPassword"
+        android:textSize="22sp"
         android:layout_margin="10dp"/>
 
     <Button

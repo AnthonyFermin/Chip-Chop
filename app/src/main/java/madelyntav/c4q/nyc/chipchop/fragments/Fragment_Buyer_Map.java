@@ -167,14 +167,14 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        map.getUiSettings().setMapToolbarEnabled(true);
-        map.getUiSettings().setZoomControlsEnabled(true);
-        map.getUiSettings().setCompassEnabled(true);
-        map.getUiSettings().setMapToolbarEnabled(true);
-        map.getUiSettings().setScrollGesturesEnabled(true);
-        map.getUiSettings().setRotateGesturesEnabled(true);
-        map.setMyLocationEnabled(true);
-        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        googleMap.getUiSettings().setMapToolbarEnabled(true);
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
+        googleMap.getUiSettings().setCompassEnabled(true);
+        googleMap.getUiSettings().setMapToolbarEnabled(true);
+        googleMap.getUiSettings().setScrollGesturesEnabled(true);
+        googleMap.getUiSettings().setRotateGesturesEnabled(true);
+        googleMap.setMyLocationEnabled(true);
+        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         if(location != null)
             handleNewLocation(location);
     }

@@ -111,7 +111,7 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onError(FirebaseError firebaseError) {
-                Toast.makeText(mContext, "Email already in use", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Account Creation Failed", Toast.LENGTH_SHORT).show();
                 Log.d("Firebase", firebaseError.toString());
                 mSuccess = false;
             }

@@ -1,6 +1,5 @@
 package madelyntav.c4q.nyc.chipchop;
 
-import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -10,7 +9,7 @@ import android.view.ViewGroup;
 /**
  * Created by alvin2 on 8/16/15.
  */
-public class FoodItemSelectDialogue extends DialogFragment implements View.OnClickListener {
+public class FoodItemSelectDialogue extends android.support.v4.app.DialogFragment implements View.OnClickListener {
 
     public static FoodItemSelectDialogue newInstance() { FoodItemSelectDialogue f = new FoodItemSelectDialogue(); return f; }
 

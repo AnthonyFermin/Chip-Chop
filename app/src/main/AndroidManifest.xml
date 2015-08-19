@@ -30,8 +30,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-
         </activity>
         <activity
             android:name=".SignupActivity1"
@@ -47,6 +45,7 @@
             android:name=".SellActivity"
             android:label="ChipChop"
             android:screenOrientation="portrait">
+
         </activity>
         <activity
             android:name=".SplashScreenActivity"

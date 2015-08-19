@@ -52,10 +52,6 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-//        if (savedInstanceState == null) {
-//            selectItem(0);
-//        }
-
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 new Toolbar(this), R.string.drawer_open,

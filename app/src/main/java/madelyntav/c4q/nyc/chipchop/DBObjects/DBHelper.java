@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -52,7 +54,10 @@ public class DBHelper extends Firebase {
     public static ArrayList<Address> addressList;
     public static ArrayList<User> userList;
     public static ArrayList<Item> arrayListOfSellerItems;
-    static Order returnOrder;
+    public static Order returnOrder;
+    public ArrayList<Item> listOfItemsSellingForSeller;
+    public String sellerId;
+
 
     public DBHelper() {
         super(URL);
@@ -77,6 +82,7 @@ public class DBHelper extends Firebase {
         userList = new ArrayList<>();
         arrayListOfSellerItems = new ArrayList<>();
         returnOrder = new Order();
+        arrayListOfSellerItems=new ArrayList<>();
         return fireBaseRef;
     }
 
@@ -865,7 +871,8 @@ public class DBHelper extends Firebase {
      return invitesSent;
     }
 
-    //Method that sends all items seller lists to the Database for sale now
+    //Method that sends all items seller lists to the Database for sale now can add setSeller
+    //Since this will mark that the seller is now Active, this is how we determine who is active
     public void setSellerAsCurrentlyCooking(Order order){
         UID = "";
         UID = order.getUserID();
@@ -887,6 +894,39 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child(itemID).child("imageLink").setValue(item.getImageLink());
         }
     }
+
+    public void getItemsSellerIsCurrentlyCooking(String sellerID){
+
+        Firebase fRef = new Firebase(URL + "OnSale/" + sellerID);
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Order order=dataSnapshot1.getValue(Order.class);
+
+                    listOfItemsSellingForSeller.addAll(order.getItemsOrdered());
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+            Toast.makeText(mContext,"No items available for this user",Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public ArrayList<Item> updateListOfCurrentItemsForSeller(){
+
+        if(listOfItemsSellingForSeller.size()<=sizeofAddDBList){
+            getItemsSellerIsCurrentlyCooking(sellerId);
+        }
+
+        return listOfItemsSellingForSeller;
+    }
+
+
 
     //method saves a cooked item to the sellers library of items when the seller removes it from
     //his/her list

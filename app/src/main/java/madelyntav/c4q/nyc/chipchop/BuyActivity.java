@@ -117,7 +117,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
             replaceFragment(new Fragment_Buyer_Checkout());
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean(Fragment_Buyer_SellerProfile.FROM_CHECKOUT, false);
-            editor.apply();
+            editor.commit();
         } else if (savedInstanceState == null) {
             selectItem(0);
         }
@@ -185,6 +185,10 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
     @Override
     protected void onStop () {
+        SharedPreferences sharedPreferences = getSharedPreferences(Fragment_Buyer_SellerProfile.FROM_CHECKOUT, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.commit();
         super.onStop();
     }
 
@@ -221,7 +225,11 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
     @Override
     public void onBackPressed() {
-        getSupportFragmentManager().popBackStack();
+        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+
+        } else {
+            getSupportFragmentManager().popBackStack();
+        }
     }
 
     public void replaceFragment(Fragment fragment) {
@@ -230,7 +238,15 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
     }
 
+    @Override
+    protected void onDestroy() {
+        SharedPreferences sharedPreferences = getSharedPreferences(Fragment_Buyer_SellerProfile.FROM_CHECKOUT, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.commit();
+        super.onDestroy();
 
+    }
 
 
 }

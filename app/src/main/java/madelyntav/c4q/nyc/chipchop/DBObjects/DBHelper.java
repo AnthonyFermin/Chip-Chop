@@ -248,7 +248,6 @@ public class DBHelper extends Firebase {
         return user;
     }
 
-
     public void addUserAddressToProfile(Address address) {
         UID = address.getUserID();
         Firebase fRef = new Firebase(URL + "Addresses");
@@ -676,7 +675,7 @@ public class DBHelper extends Firebase {
     public ArrayList<User> updateUsersList(){
 
         if(userList.size()<=sizeofAddDBList){
-            getUserAddressList();
+            getAllSellersUserList();
         }
 
         return userList;

@@ -57,6 +57,7 @@ public class DBHelper extends Firebase {
     public static Order returnOrder;
     public ArrayList<Item> listOfItemsSellingForSeller;
     public String sellerId;
+    static ArrayList<Review> reviewArrayList;
 
 
     public DBHelper() {
@@ -83,7 +84,9 @@ public class DBHelper extends Firebase {
         arrayListOfSellerItems = new ArrayList<>();
         returnOrder = new Order();
         arrayListOfSellerItems=new ArrayList<>();
+        reviewArrayList= new ArrayList<>();
         return fireBaseRef;
+
     }
 
     public boolean createUser(final String email, final String password) {
@@ -993,7 +996,7 @@ public class DBHelper extends Firebase {
 
         this.UID = UID;
 
-        Firebase fRef = new Firebase(URL + "Orders/CurrentOrders" + UID+"/"+buyerID);
+        Firebase fRef = new Firebase(URL + "Orders/CurrentOrders/" + UID+"/"+buyerID);
 
         ArrayList<Item> itemsOrdered = order.getItemsOrdered();
 
@@ -1017,7 +1020,7 @@ public class DBHelper extends Firebase {
         UID=sellerID;
         final String orderID=order.getOrderID();
 
-        Firebase fRef = new Firebase(URL + "Orders/CurrentOrders" + UID+"/"+buyerID);
+        Firebase fRef = new Firebase(URL + "Orders/CurrentOrders/" + UID+"/"+buyerID);
 
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -1050,7 +1053,6 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sellerId);
         fRef.child(UID).child(sellerId).child("numOfStars").setValue(numOfStars);
         fRef.child(UID).child(sellerId).child("description").setValue(details);
-
     }
 
     public void addUserReviewToUserProfile(User buyer, User seller, int numOfStars) {
@@ -1066,7 +1068,7 @@ public class DBHelper extends Firebase {
     public void addReviewToSellerProfile(User buyer, User seller, int numOfStars){
         sellerId=seller.getUserId();
         UID=buyer.getUserId();
-        Firebase fRef = new Firebase(URL + "Reviews/SellerReviews" + sellerId+"/"+UID);
+        Firebase fRef = new Firebase(URL + "Reviews/SellerReviews/" + sellerId+"/"+UID);
         fRef.child(sellerId).push();
         fRef.child(sellerId).child(UID);
         fRef.child(sellerId).child(UID).child("numOfStars").setValue(numOfStars);
@@ -1075,19 +1077,73 @@ public class DBHelper extends Firebase {
     public void addReviewToSellerProfile(User buyer, User seller, int numOfStars, String details){
         sellerId=seller.getUserId();
         UID=buyer.getUserId();
-        Firebase fRef = new Firebase(URL + "Reviews/SellerReviews" + sellerId+"/"+UID);
+        Firebase fRef = new Firebase(URL + "Reviews/SellerReviews/" + sellerId+"/"+UID);
 
         fRef.child(sellerId).push();
         fRef.child(sellerId).child(UID);
         fRef.child(sellerId).child(UID).child("numOfStars").setValue(numOfStars);
         fRef.child(sellerId).child(UID).child("description").setValue(details);
+    }
 
+    public void getAllReviewsForCertainSeller(String sellerID){
+        this.sellerId=sellerID;
+
+        Firebase fRef = new Firebase(URL + "Reviews/SellerReviews/" + sellerID);
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                sizeofAddDBList=dataSnapshot.getChildrenCount();
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Review review=dataSnapshot1.getValue(Review.class);
+                    reviewArrayList.add(review);
+                }
+                updateListOfReviewsForSeller();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Toast.makeText(mContext, "Unable To Retrieve Reviews Please Try Again", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
-    public ArrayList<Review> getAllReviewsForCertainPerson(String id){
-    ArrayList<Review> reviewArrayList= new ArrayList<>();
+    public void getListOfReviewsForCertainUser(String UID){
+        this.UID=UID;
+        Firebase fRef = new Firebase(URL + "Reviews/" + UID);
 
-       return reviewArrayList;
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                sizeofAddDBList=dataSnapshot.getChildrenCount();
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Review review=dataSnapshot1.getValue(Review.class);
+                    reviewArrayList.add(review);
+                }
+                updateListOfReviews();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Toast.makeText(mContext, "Unable To Retrieve Reviews Please Try Again", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public ArrayList<Review> updateListOfReviews() {
+        if (reviewArrayList.size() < sizeofAddDBList) {
+            getListOfReviewsForCertainUser(UID);
+        }
+        return reviewArrayList;
+    }
+
+    public ArrayList<Review> updateListOfReviewsForSeller() {
+        if (reviewArrayList.size() < sizeofAddDBList) {
+            getAllReviewsForCertainSeller(UID);
+        }
+        return reviewArrayList;
     }
 }

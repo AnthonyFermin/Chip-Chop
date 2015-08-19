@@ -5,19 +5,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.model.LatLng;
-
 import java.util.ArrayList;
 import java.util.Map;
 
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
-
 /**
  * Created by c4q-madelyntavarez on 8/12/15.
  */

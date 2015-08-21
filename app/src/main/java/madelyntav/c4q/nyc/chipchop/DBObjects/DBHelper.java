@@ -15,8 +15,6 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Map;
-
-import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
 /**
  * Created by c4q-madelyntavarez on 8/12/15.
  */
@@ -24,11 +22,11 @@ public class DBHelper extends Firebase {
     static DBHelper fireBaseRef;
     private static final String URL = "https://chipchop.firebaseio.com/";
     public static Context mContext;
-    private static Fragment_Buyer_Map fragment_buyer_map;
+    private static Item item;
     String UID;
     public static ArrayList<User> allUsers;
     public static ArrayList<Item> items;
-    private static String userID = "userID";
+    private static String userID = "buyerID";
     private static final String sStreet = "streetAddress";
     private static final String sApartment = "apartment";
     private static final String sCity = "city";
@@ -45,14 +43,22 @@ public class DBHelper extends Firebase {
     private static final String sAddress = "address";
     private static final String sPhotoLink = "photoLink";
     public static User user;
-    public static final String sLatitude="latitude";
-    public static final String sLongitude="longitude";
+    public static final String sLatitude = "latitude";
+    public static final String sLongitude = "longitude";
     public boolean mSuccess = false;
     public static Address address;
     long sizeofAddDBList;
     public static ArrayList<LatLng> latLngList;
     public static ArrayList<Address> addressList;
     public static ArrayList<User> userList;
+    public static ArrayList<Item> arrayListOfSellerItems;
+    public static Order returnOrder;
+    public ArrayList<Item> listOfItemsSellingForSeller;
+    public String sellerId;
+    static Seller seller;
+    static ArrayList<Seller> allSellersInDB;
+    static ArrayList<Review> reviewArrayList;
+    static ArrayList<Seller> allActiveSellers;
 
     public DBHelper() {
         super(URL);
@@ -73,19 +79,46 @@ public class DBHelper extends Firebase {
         allUsers = new ArrayList<>();
         user = new User();
         latLngList = new ArrayList<>();
-        addressList= new ArrayList<>();
-        userList= new ArrayList<>();
+        addressList = new ArrayList<>();
+        userList = new ArrayList<>();
+        arrayListOfSellerItems = new ArrayList<>();
+        returnOrder = new Order();
+        arrayListOfSellerItems=new ArrayList<>();
+        reviewArrayList= new ArrayList<>();
+        allActiveSellers=new ArrayList<>();
+        seller=new Seller();
+        item=new Item();
+        allSellersInDB=new ArrayList<>();
         return fireBaseRef;
+    }
+
+    //checks if user is logged in
+    public boolean userIsLoggedIn() {
+
+        if(UID==null){
+
+            return false;
+        }
+        else{return true; }
+    }
+
+    public String getUserID() {
+        return UID;
+    }
+
+    public User getCurrentUser() {
+        return user;
     }
 
     public boolean createUser(final String email, final String password) {
         UID = "";
 
-        fireBaseRef.createUser(email, password, new Firebase.ValueResultHandler<Map<String, Object>>() {
+        fireBaseRef.createUser(email, password, new ValueResultHandler<Map<String, Object>>() {
             @Override
             public void onSuccess(Map<String, Object> stringObjectMap) {
                 Toast.makeText(mContext, "Account Created", Toast.LENGTH_SHORT).show();
                 mSuccess = true;
+
 
                 String userIDOne = String.valueOf(stringObjectMap.get("uid"));
                 for (int i = 12; i < userIDOne.length(); i++) {
@@ -104,7 +137,6 @@ public class DBHelper extends Firebase {
                 Firebase fRef = new Firebase(URL + "UserProfiles");
                 fRef.child(UID);
                 fRef.child(UID).child(sEmailAddress).setValue(email);
-
             }
 
             @Override
@@ -114,14 +146,13 @@ public class DBHelper extends Firebase {
                 mSuccess = false;
             }
         });
-
         return mSuccess;
     }
 
-    public Boolean createUserAndLaunchIntent(final String email, final String password, final Intent intent){
-        UID="";
+    public Boolean createUserAndLaunchIntent(final String email, final String password, final Intent intent) {
+        UID = "";
 
-        fireBaseRef.createUser(email, password, new Firebase.ValueResultHandler<Map<String, Object>>() {
+        fireBaseRef.createUser(email, password, new ValueResultHandler<Map<String, Object>>() {
             @Override
             public void onSuccess(Map<String, Object> stringObjectMap) {
                 Toast.makeText(mContext, "Account Created", Toast.LENGTH_SHORT).show();
@@ -159,507 +190,7 @@ public class DBHelper extends Firebase {
 
         return mSuccess;
     }
-
-    public void addUserProfileInfoToDB(User user) {
-        Firebase fRef = new Firebase(URL + "UserProfiles");
-        UID = user.getUserId();
-
-        fRef.child(UID).push();
-        fRef.child(UID).child(sName).setValue(user.getName());
-        fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
-        fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
-        fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
-        fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
-
-        addUserAddressToProfile(user.address);
-    }
-
-    public void addUserProfileInfoToDBAndLaunchIntent(User user,Intent intent) {
-        Firebase fRef = new Firebase(URL + "UserProfiles");
-        UID = user.getUserId();
-
-        fRef.child(UID).push();
-        fRef.child(UID).child(sName).setValue(user.getName());
-        fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
-        fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
-        fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
-        fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
-
-        mContext.startActivity(intent);
-
-        addUserAddressToProfile(user.address);
-    }
-
-    public void addUserAddressToProfile(Address address) {
-        UID = address.getUserID();
-        Firebase fRef = new Firebase(URL + "Addresses");
-
-        fRef.child(UID).push();
-        fRef.child(UID).child(sName).setValue(address.getName());
-        fRef.child(UID).child(sStreet).setValue(address.getStreetAddress());
-        fRef.child(UID).child(sApartment).setValue(address.getApartment());
-        fRef.child(UID).child(sCity).setValue(address.getCity());
-        fRef.child(UID).child(sState).setValue(address.getState());
-        fRef.child(UID).child(sZipCode).setValue(address.getZipCode());
-        fRef.child(UID).child(sLatitude).setValue(address.getLatitude());
-        fRef.child(UID).child(sLongitude).setValue(address.getLongitude());
-    }
-
-    public void updateUserProfile(String UID) {
-        this.UID = UID;
-        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID);
-
-        fRef.child(UID).child(sStreet).setValue(address.getStreetAddress());
-        fRef.child(UID).child(sApartment).setValue(address.getApartment());
-        fRef.child(UID).child(sCity).setValue(address.getCity());
-        fRef.child(UID).child(sState).setValue(address.getState());
-        fRef.child(UID).child(sZipCode).setValue(address.getZipCode());
-
-        updateUserAddress(UID);
-    }
-
-    public void updateUserAddress(String UID) {
-        this.UID = UID;
-        Firebase fRef = new Firebase(URL + "Addresses/" + UID);
-
-        fRef.child(UID).child(sStreet).setValue(address.getStreetAddress());
-        fRef.child(UID).child(sApartment).setValue(address.getApartment());
-        fRef.child(UID).child(sCity).setValue(address.getCity());
-        fRef.child(UID).child(sState).setValue(address.getState());
-        fRef.child(UID).child(sZipCode).setValue(address.getZipCode());
-        fRef.child(UID).child("latitude").setValue(address.getLatitude());
-        fRef.child(UID).child("longitude").setValue(address.getLongitude());
-    }
-
-    public void addItemToDB(Item item) {
-        UID = "";
-        UID = item.getUserID();
-        Firebase fRef = new Firebase(URL + "Items/" + UID);
-
-        Firebase fire1 = fRef.child(UID).push();
-        String itemID = fire1.getKey();
-        item.setItemID(itemID);
-
-        fRef.child(UID).child(itemID).push();
-        fRef.child(itemID).child("NAME").setValue(item.getNameOfItem());
-        fRef.child(itemID).child("DESCRIPTION").setValue(item.getDescriptionOfItem());
-        fRef.child(itemID).child("QUANTITY").setValue(item.getQuantityAvailable());
-        fRef.child(itemID).child("ImageLink").setValue(item.getImageLink());
-
-        Log.d("ItemID", itemID);
-    }
-
-    public void addOrderToDB(Order order) {
-        UID = "";
-        UID = order.getUserID();
-
-        Firebase fRef = new Firebase(URL + "Orders/" + UID);
-
-        ArrayList<Item> itemsOrdered = order.getItemsOrdered();
-
-        Firebase fire1 = fRef.child(UID).push();
-        String orderID = fire1.getKey();
-
-
-        for (Item item : itemsOrdered) {
-
-            String itemID = item.getItemID();
-            fRef.child(UID).child(orderID).push();
-            fRef.child(orderID).child(itemID);
-            fRef.child(orderID).child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
-            fRef.child(orderID).child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
-            fRef.child(orderID).child(itemID).child("quantityAvailable").setValue(item.getQuantityAvailable());
-            fRef.child(orderID).child(itemID).child("imageLink").setValue(item.getImageLink());
-        }
-    }
-
-    public void currentlyOnSale(Item item) {
-
-        UID = "";
-        UID = item.getUserID();
-        Firebase fRef = new Firebase(URL + "itemsForSale/" + UID);
-
-        Firebase fire1 = fRef.child(UID).push();
-        String itemID = fire1.getKey();
-        item.setItemID(itemID);
-
-        fRef.child(UID).child(itemID).push();
-        fRef.child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
-        fRef.child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
-        fRef.child(itemID).child("userID").setValue(item.getQuantityAvailable());
-        fRef.child(itemID).child("imageLink").setValue(item.getImageLink());
-
-        Log.d("ItemID", itemID);
-    }
-
-    public void getSellersOnSaleItems(Order order) {
-        UID = "";
-
-        UID = order.getUserID();
-        String orderID = order.getOrderID();
-
-        Firebase fRef = new Firebase(URL + "Orders/" + "5" + "/" + orderID);
-
-        fRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("Number", dataSnapshot.getChildrenCount() + "");
-
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    Item item = dataSnapshot1.getValue(Item.class);
-                    Log.d("SNAPSHOT", "Got Snapshot");
-                    String key = dataSnapshot1.getKey();
-                    Log.d(itemID, key + "");
-                    String nameOfItem1 = item.nameOfItem;
-                    Log.d(nameOfItem, nameOfItem1 + "");
-
-                    String descriptionOfItem1 = item.descriptionOfItem;
-                    Log.d(descriptionOfItem, descriptionOfItem1 + "");
-
-                    String quantityAvailable1 = item.quantityAvailable;
-                    Log.d(quantityAvailable, quantityAvailable1 + "");
-
-                    String imageLink1 = item.imageLink;
-                    Log.d(imageLink, imageLink1 + "");
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                Log.d("Error Retrieving", "Error");
-
-            }
-        });
-    }
-
-    public void getAddressFromDB(String id) {
-        UID = "";
-        this.UID = id;
-
-        Firebase fRef = new Firebase(URL + "Addresses/" + id);
-
-        fRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Address address = dataSnapshot.getValue(Address.class);
-                String streetAddress1 = address.streetAddress;
-                Log.d("Street", streetAddress1);
-
-                String apartment = address.apartment;
-                Log.d("apartment", apartment);
-
-                String city = address.city;
-                Log.d("city", city);
-
-                String state = address.state;
-                Log.d("state", state);
-
-                String zipCode = address.zipCode;
-                Log.d("zipCode", zipCode);
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-    }
-
-    public ArrayList<User> addAddressesToMap() {
-
-        Firebase fRef = new Firebase(URL + "UserProfiles/Seller/");
-        //final ArrayList<android.location.Address> addresses= new ArrayList<android.location.Address>();
-        //UID = user.getUserId();
-
-        fRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("Number2", dataSnapshot.getChildrenCount() + "");
-
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-
-                    User user = dataSnapshot1.getValue(User.class);
-                    String address1 = user.toString();
-                    userList.add(user);
-
-                    Log.d("AddressList", userList.toString());
-
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-        return userList;
-    }
-
-    public ArrayList<Item> getSellerItems(String UID) {
-        this.UID = UID;
-
-        Firebase fRef = new Firebase(URL + "Items/" + UID);
-
-        fRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("Number2", dataSnapshot.getChildrenCount() + "");
-
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-
-                    Item item = dataSnapshot1.getValue(Item.class);
-                    items.add(item);
-
-                    Log.d("SellerItems", items.toString());
-
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-        return items;
-    }
-
-    public void createSellerItems(Item item) {
-        UID = "";
-        UID = item.getUserID();
-        Firebase fRef = new Firebase(URL + "UserProfiles/Sellers/Items/" + UID);
-
-
-        Firebase fire1 = fRef.child(UID).push();
-        String itemID = fire1.getKey();
-        item.setItemID(itemID);
-
-        fRef.child(UID).child(itemID).push();
-        fRef.child(itemID).child("NAME").setValue(item.getNameOfItem());
-        fRef.child(itemID).child("DESCRIPTION").setValue(item.getDescriptionOfItem());
-        fRef.child(itemID).child("QUANTITY").setValue(item.getQuantityAvailable());
-        fRef.child(itemID).child("ImageLink").setValue(item.getImageLink());
-
-        Log.d("ItemID", itemID);
-    }
-
-    public void createSellerProfile(User user) {
-        UID = user.getUserId();
-        Firebase fRef = new Firebase(URL + "UserProfiles/Seller/" + UID);
-
-        fRef.child(UID).push();
-        fRef.child(UID).child(sName).setValue(user.getName());
-        fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
-        fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
-        fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
-        fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
-
-        addUserAddressToProfile(user.address);
-    }
-
-    public void createBuyerProfile(User user) {
-        UID = user.getUserId();
-        Firebase fRef = new Firebase(URL + "UserProfiles/Buyer/" + UID);
-
-        fRef.child(UID).push();
-        fRef.child(UID).child(sName).setValue(user.getName());
-        fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
-        fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
-        fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
-        fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
-
-        addUserAddressToProfile(user.address);
-    }
-
-    public ArrayList<User> getAllUsers() {
-        Firebase fRef = new Firebase(URL + "UserProfiles");
-
-        fRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                allUsers = new ArrayList<>();
-
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-
-                    User user = dataSnapshot1.getValue(User.class);
-                    //Log.d("Fin", user.phoneNumber);
-                    allUsers.add(user);
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-
-        getUserListLatLng();
-
-
-        return allUsers;
-    }
-
-    public void getUserListLatLng() {
-        Log.d("DBHELPERUSERLIST", allUsers.toString());
-
-        Firebase fRef = new Firebase(URL + "Addresses");
-
-        fRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // sizeofAddDBList = dataSnapshot.getChildrenCount();
-
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-
-                    Address address = dataSnapshot1.getValue(Address.class);
-                    //Log.d("Fin", String.valueOf(address.latLng.latitude));
-
-                    double lat = address.latitude;
-                    double lng = address.longitude;
-
-                    LatLng latLng = new LatLng(lat, lng);
-                    latLngList.add(latLng);
-                }
-
-                updateUserLatList();
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-
-    }
-
-
-    public ArrayList<LatLng> updateUserLatList(){
-
-        if(latLngList.size()<sizeofAddDBList){
-            getUserListLatLng();
-        }
-
-        return latLngList;
-    }
-
-    public void getUserAddressList(){
-        Firebase fRef = new Firebase(URL + "Addresses");
-
-        fRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                sizeofAddDBList = dataSnapshot.getChildrenCount();
-
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-
-                    Address address = dataSnapshot1.getValue(Address.class);
-                    //Log.d("Fin", String.valueOf(address.latLng.latitude));
-
-
-                    addressList.add(address);
-                }
-
-                updateAddressList();
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-
-        //Log.d("DBHelperLatsList", addressList.toString());
-    }
-
-    public ArrayList<Address> updateAddressList(){
-
-        if(addressList.size()<=sizeofAddDBList){
-            getUserAddressList();
-        }
-
-        return addressList;
-    }
-
-
-    public void getAllSellersUserList(){
-        Firebase fRef = new Firebase(URL + "UserProfiles");//TODO: Will change to UserProfiles/Sellers
-
-        fRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                sizeofAddDBList = dataSnapshot.getChildrenCount();
-
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-
-                    User user = dataSnapshot1.getValue(User.class);
-                    //Log.d("Fin", String.valueOf(address.latLng.latitude));
-
-                    userList.add(user);
-                }
-
-                updateUsersList();
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-
-        Log.d("DBUserList", userList.toString());
-    }
-
-    public ArrayList<User> updateUsersList(){
-
-        if(userList.size()<=sizeofAddDBList){
-            getUserAddressList();
-        }
-
-        return userList;
-    }
-
-    public User getSpecificUser(String UID) {
-        this.UID = UID;
-        Firebase fRef = new Firebase(URL+"UserProfiles/"+ UID);
-
-        fRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-
-                    user = dataSnapshot1.getValue(User.class);
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-
-        return user;
-    }
-
-    public boolean signOutUser() {
-
-        fireBaseRef.unauth();
-        userID=null;
-        user.clearUser();
-        address.clearAddress();
-        userList.clear();
-        items.clear();
-
-        SharedPreferences sharedPreferences=mContext.getSharedPreferences("New User",Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor=sharedPreferences.edit();
-        editor.clear();
-        editor.commit();
-
-        return true;
-    }
-
+    //logsInUser without launching an intent
     public boolean logInUser(String email, String password) {
         mSuccess = false;
         fireBaseRef.authWithPassword(email, password,
@@ -690,7 +221,7 @@ public class DBHelper extends Firebase {
                 });
         return mSuccess;
     }
-
+    //logs in user and launches an intent
     public boolean logInUser(String email, String password, final Intent intent) {
         mSuccess = false;
         fireBaseRef.authWithPassword(email, password,
@@ -723,32 +254,721 @@ public class DBHelper extends Firebase {
         return mSuccess;
     }
 
-    public boolean userIsLoggedIn() {
+    public Boolean changeUserEmail(String oldEmail, String newEmail, String password) {
+        fireBaseRef.changeUserEmail(oldEmail, newEmail, password);
 
-        if(UID==null){
+        //TODO check if successful or not and dispay toast
 
-            return false;
+        return mSuccess;
+
+    }
+
+
+    public void addUserProfileInfoToDB(User user) {
+        Firebase fRef = new Firebase(URL + "UserProfiles");
+        UID = user.getUID();
+
+        fRef.child(UID).push();
+        fRef.child(UID).child(sName).setValue(user.getName());
+        fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
+        fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
+        fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
+        fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
+
+    }
+
+    public void addUserProfileInfoToDBAndLaunchIntent(User user, Intent intent) {
+        Firebase fRef = new Firebase(URL + "UserProfiles");
+        UID = user.getUID();
+
+        fRef.child(UID).push();
+        fRef.child(UID).child(sName).setValue(user.getName());
+        fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
+        fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
+        fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
+        fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
+
+        mContext.startActivity(intent);
+    }
+
+    public void addSellerProfileInfoToDB(Seller user) {
+        Firebase fRef = new Firebase(URL + "SellerProfiles");
+        UID = user.getUID();
+
+        fRef.child(UID).push();
+        fRef.child(UID).child(sName).setValue(user.getName());
+        fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
+        fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
+        fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
+        fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
+        fRef.child(UID).child(sLatitude).setValue(user.getAddress().getLatitude());
+        fRef.child(UID).child(sLongitude).setValue(user.getAddress().getLongitude());
+    }
+
+    public void addSellerProfileInfoToDB(User user,Intent intent) {
+        Firebase fRef = new Firebase(URL + "SellerProfiles");
+        UID = user.getUID();
+
+        fRef.child(UID).push();
+        fRef.child(UID).child(sName).setValue(user.getName());
+        fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
+        fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
+        fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
+        fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
+        fRef.child(UID).child(sLatitude).setValue(user.getAddress().getLatitude());
+        fRef.child(UID).child(sLongitude).setValue(user.getAddress().getLongitude());
+    }
+
+    public User getSellerFromDB(final String sellerID) {
+        sellerId=sellerID;
+
+        Firebase fRef = new Firebase(URL + "SellerProfiles/");
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("Number2", dataSnapshot.getChildrenCount() + "");
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Seller seller1 = dataSnapshot1.getValue(Seller.class);
+
+                    if (dataSnapshot1.getKey().equals(sellerID)) {
+                        seller.setName(seller1.name);
+                        seller.setAddress(seller1.address);
+                        seller.setDescription(seller1.description);
+                        seller.seteMail(seller1.eMail);
+                        seller.setUID(seller1.UID);
+                        seller.setPhoneNumber(seller1.phoneNumber);
+                        seller.setSellerItems(seller1.sellerItems);
+                        seller.setLongitude(seller1.latitude);
+                        seller.setLatitude(seller1.longitude);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Toast.makeText(mContext, "Error: Please Try Again", Toast.LENGTH_SHORT).show();
+                user = null;
+            }
+        });
+
+        return user;
+    }
+
+    public User getUserFromDB(final String userID) {
+        this.UID=userID;
+
+        Firebase fRef = new Firebase(URL + "UserProfiles/"+userID);
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("Number2", dataSnapshot.getChildrenCount() + "");
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    User user1 = dataSnapshot1.getValue(User.class);
+
+                    if (dataSnapshot1.getKey().equals(userID)) {
+                        user.setName(user1.name);
+                        user.setAddress(user1.address);
+                        user.seteMail(user1.eMail);
+                        user.setUID(user1.UID);
+                        user.setPhoneNumber(user1.phoneNumber);
+                        user.setUserItems(user1.userItems);
+                        user.setLongitude(user1.latitude);
+                        user.setLongitude(user1.longitude);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Toast.makeText(mContext, "Error: Please Try Again", Toast.LENGTH_SHORT).show();
+                user = null;
+            }
+        });
+
+        return user;
+    }
+
+    public void addActiveSellerToTable(Seller seller){
+
+        Firebase fRef = new Firebase(URL + "ActiveSellers/");
+        sellerId = seller.getUID();
+
+        fRef.child(sellerId).push();
+        fRef.child(sellerId).child(sName).setValue(seller.getName());
+        fRef.child(sellerId).child(sEmailAddress).setValue(seller.geteMail());
+        fRef.child(sellerId).child(sPhoneNumber).setValue(seller.getPhoneNumber());
+        fRef.child(sellerId).child(sPhotoLink).setValue(seller.getPhotoLink());
+        fRef.child(sellerId).child(sAddress).setValue(seller.getAddress().toString());
+        fRef.child(sellerId).child(sLatitude).setValue(seller.getAddress().getLatitude());
+        fRef.child(sellerId).child(sLongitude).setValue(seller.getAddress().getLatitude());
+    }
+
+    public void getAllActiveSellers(){
+
+        Firebase fRef = new Firebase(URL + "ActiveSellers/");
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("Number2", dataSnapshot.getChildrenCount() + "");
+                sizeofAddDBList = dataSnapshot.getChildrenCount();
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Seller seller1 = dataSnapshot1.getValue(Seller.class);
+                    allActiveSellers.add(seller1);
+                }
+                updateAllActiveSellersList();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Toast.makeText(mContext, "Error: Please Try Again", Toast.LENGTH_SHORT).show();
+                user = null;
+            }
+        });
+
+    }
+    public ArrayList<Seller> updateAllActiveSellersList() {
+        if (allActiveSellers.size() < sizeofAddDBList) {
+            getAllActiveSellers();
         }
-        else{return true; }
+        return allActiveSellers;
     }
 
-    public String getUserID() {
-            return UID;
+    public Seller getSpecificActiveSeller(final String sellerID){
+        Firebase fRef = new Firebase(URL + "ActiveSellers/");
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("Number2", dataSnapshot.getChildrenCount() + "");
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+                    Seller seller1 = dataSnapshot1.getValue(Seller.class);
+
+                    if (dataSnapshot1.getKey().equals(sellerID)) {
+                        seller.setName(seller1.name);
+                        seller.setAddress(seller1.address);
+                        seller.setDescription(seller1.description);
+                        seller.seteMail(seller1.eMail);
+                        seller.setUID(seller1.UID);
+                        seller.setPhoneNumber(seller1.phoneNumber);
+                        seller.setSellerItems(seller1.sellerItems);
+                        seller.setLongitude(seller1.latitude);
+                        seller.setLatitude(seller1.longitude);
+                    }
+                    Log.d("SellerOne", seller.name + "");
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Toast.makeText(mContext, "Error: Seller not found", Toast.LENGTH_SHORT).show();
+                seller = null;
+            }
+        });
+
+        return seller;
+    }
+    //Method which adds a seller to the ActiveSellers table and updates their items for sale,
+    //checks if quantity is greater than 0 for each item
+    public void sendSellerToActiveSellerTable(Seller seller){
+
+        this.sellerId=seller.getUID();
+        Firebase fRef = new Firebase(URL + "ActiveSellers/"+sellerId);
+        Seller sellerToSend= getSpecificActiveSeller(sellerId);
+
+        fRef.child(sellerId).push();
+        fRef.child(sellerId).child(sName).setValue(seller.getName());
+        fRef.child(sellerId).child(sEmailAddress).setValue(seller.geteMail());
+        fRef.child(sellerId).child(sPhoneNumber).setValue(seller.getPhoneNumber());
+        fRef.child(sellerId).child(sPhotoLink).setValue(seller.getPhotoLink());
+        fRef.child(sellerId).child(sAddress).setValue(seller.getAddress().toString());
+        fRef.child(sellerId).child(sLatitude).setValue(seller.getAddress().getLatitude());
+        fRef.child(sellerId).child(sLongitude).setValue(seller.getAddress().getLatitude());
+
+        ArrayList<Item> itemsSellerHas= sellerToSend.getSellerItems();
+
+        for(Item item: itemsSellerHas) {
+            if (item.quantityAvailable > 0) {
+
+                Firebase fRef1 = new Firebase(URL + "ActiveSellers" + sellerId + "/itemsForSale/");
+
+                fRef1.child(sellerId).child(item.getNameOfItem()).push();
+                fRef1.child(itemID).child("DESCRIPTION").setValue(item.descriptionOfItem);
+                fRef1.child(itemID).child("QUANTITY").setValue(item.quantityAvailable);
+                fRef1.child(itemID).child("ImageLink").setValue(item.imageLink);
+            }
+        }
     }
 
-    public User getCurrentUser() {
+    //Method that adds one item to the sellers onSale Items
+    public void addItemToActiveSellerTable(Item item) {
+        sellerId = item.getBuyerID();
+        Firebase fRef = new Firebase(URL + "ActiveSellers"+sellerId+"/itemsForSale/" );
+        Firebase fire1 = fRef.child(sellerId).push();
+        String itemID = fire1.getKey();
+        item.setItemID(itemID);
+
+        fRef.child(sellerId).child(itemID).push();
+        fRef.child(itemID).child("NAME").setValue(item.getNameOfItem());
+        fRef.child(itemID).child("DESCRIPTION").setValue(item.getDescriptionOfItem());
+        fRef.child(itemID).child("QUANTITY").setValue(item.getQuantityAvailable());
+        fRef.child(itemID).child("ImageLink").setValue(item.getImageLink());
+
+        Log.d("ItemID", itemID);
+    }
+
+    public void addItemToSellerProfileDB(Item item) {
+        sellerId = item.getBuyerID();
+        Firebase fRef = new Firebase(URL + "SellerProfiles"+sellerId+"/itemsForSale/" );
+        Firebase fire1 = fRef.child(sellerId).push();
+        String itemID = fire1.getKey();
+        item.setItemID(itemID);
+
+        fRef.child(sellerId).child(itemID).push();
+        fRef.child(itemID).child("NAME").setValue(item.getNameOfItem());
+        fRef.child(itemID).child("DESCRIPTION").setValue(item.getDescriptionOfItem());
+        fRef.child(itemID).child("QUANTITY").setValue(item.getQuantityAvailable());
+        fRef.child(itemID).child("ImageLink").setValue(item.getImageLink());
+
+        Log.d("ItemID", itemID);
+    }
+
+    //Method that sends a list of items to the sellersProfile... if num>0 display on listView
+    public void sendArrayListOfItemsToItemsForSale(ArrayList<Item> itemsforSale,String sellerID){
+        sellerId = sellerID;
+
+        Firebase fRef = new Firebase(URL + "ActiveSellers/" + sellerId+ "itemsForSale/");
+
+        for (Item item : itemsforSale) {
+            String itemID = item.getItemID();
+
+            fRef.child(sellerID).child(itemID);
+            fRef.child(sellerID).child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
+            fRef.child(sellerID).child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
+            fRef.child(sellerID).child(itemID).child("quantityAvailable").setValue(item.getQuantityAvailable());
+            fRef.child(sellerID).child(itemID).child("imageLink").setValue(item.getImageLink());
+        }
+    }
+
+    public void removeSellersFromActiveSellers(Seller seller1){
+        final Firebase fRef = new Firebase(URL + "ActiveSellers");
+        final String sellerID=seller1.getUID();
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("Number2", dataSnapshot.getChildrenCount() + "");
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+                    Seller seller1 = dataSnapshot1.getValue(Seller.class);
+
+                    if (dataSnapshot1.getKey().equals(sellerID)) {
+                        Log.d("SellerOne", seller.name + "");
+
+                        fRef.child(dataSnapshot1.getKey()).removeValue();
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Toast.makeText(mContext, "Error: Seller not found", Toast.LENGTH_SHORT).show();
+                seller = null;
+            }
+        });
+
+    }
+
+    public Item removeItemFromSale(Item item1){
+        sellerId = item1.getBuyerID();
+        final String itemid1=item1.getItemID();
+
+
+        final Firebase fRef = new Firebase(URL + "ActiveSellers/" + sellerId+ "itemsForSale/");
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("Number2", dataSnapshot.getChildrenCount() + "");
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+                    Item item1 = dataSnapshot1.getValue(Item.class);
+
+                    if (dataSnapshot1.getKey().equals(itemid1)) {
+                        item.setItemID(item1.itemID);
+                        item.setContainsPeanuts(item1.containsPeanuts);
+                        item.setDescriptionOfItem(item1.descriptionOfItem);
+                        item.setGlutenFree(item1.glutenFree);
+                        item.setImageLink(item1.imageLink);
+                        item.setNameOfItem(item1.nameOfItem);
+                        item.setVegan(item1.vegan);
+                        item.setQuantityAvailable(item1.quantityAvailable);
+                        moveItemToPreviouslySoldItems(item);
+                        moveItemToPreviouslyBoughtItems(item);
+
+                        fRef.child(dataSnapshot1.getKey()).removeValue();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Toast.makeText(mContext, "Error: Seller not found", Toast.LENGTH_SHORT).show();
+                seller = null;
+            }
+        });
+        return item;
+    }
+
+    public void moveItemToPreviouslySoldItems(Item item){
+        Firebase fRef = new Firebase(URL + "previouslySoldItems/"+item.getSellerID()+"/"+item.getBuyerID());
+        String itemID=item.getItemID();
+        fRef.child(item.getSellerID()).child(item.getBuyerID()).child(itemID).push();
+        fRef.child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
+        fRef.child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
+        fRef.child(itemID).child("buyerID").setValue(item.getQuantityAvailable());
+        fRef.child(itemID).child("imageLink").setValue(item.getImageLink());
+    }
+
+    public void moveItemToPreviouslyBoughtItems(Item item){
+        Firebase fRef = new Firebase(URL + "previouslyBoughtItems/"+item.getBuyerID()+"/"+item.getSellerID());
+        String itemID=item.getItemID();
+        fRef.child(item.getBuyerID()).child(item.getSellerID()).child(itemID).push();
+        fRef.child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
+        fRef.child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
+        fRef.child(itemID).child("buyerID").setValue(item.getQuantityAvailable());
+        fRef.child(itemID).child("imageLink").setValue(item.getImageLink());
+    }
+
+    public void sendSingleItemToCurrentlyOnSale(Item item) {
+        sellerId = item.getSellerID();
+        Firebase fRef = new Firebase(URL + "sellerProfiles/" + sellerId+"/"+"itemsForSale/");
+
+        Firebase fire1 = fRef.child(sellerId).push();
+        String itemID = fire1.getKey();
+        item.setItemID(itemID);
+
+        fRef.child(sellerId).child(itemID).push();
+        fRef.child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
+        fRef.child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
+        fRef.child(itemID).child("buyerID").setValue(item.getQuantityAvailable());
+        fRef.child(itemID).child("imageLink").setValue(item.getImageLink());
+
+        Log.d("ItemID", itemID);
+    }
+
+    public void addCurrentOrderToSellerDB(Order order) {
+        UID = order.getBuyerID();
+        sellerId=order.getSellerID();
+
+        Firebase fRef = new Firebase(URL + "ActiveSellers/" + sellerId+"/CurrentOrders/" + UID);
+        ArrayList<Item> itemsOrdered = order.getItemsOrdered();
+
+        Firebase fire1 = fRef.child(sellerId).push();
+        String orderID = fire1.getKey();
+        for (Item item : itemsOrdered) {
+
+            String itemID = item.getItemID();
+            fRef.child(sellerId).child(UID).push();
+            fRef.child(UID).child(orderID);
+            fRef.child(orderID).child(itemID);
+            fRef.child(orderID).child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
+            fRef.child(orderID).child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
+            fRef.child(orderID).child(itemID).child("quantityAvailable").setValue(item.getQuantityAvailable());
+            fRef.child(orderID).child(itemID).child("imageLink").setValue(item.getImageLink());
+        }
+    }
+
+    //TODO check these 2 methods
+    public void getSellersOnSaleItems(String sellerId) {
+        this.sellerId=sellerId;
+
+        Firebase fRef = new Firebase(URL + "ActiveSellers/"+sellerId + "itemsForSale/");
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("Number", dataSnapshot.getChildrenCount() + "");
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Item item = dataSnapshot1.getValue(Item.class);
+                    arrayListOfSellerItems.add(item);
+                    Log.d("SNAPSHOT", "Got Snapshot");
+                    String key = dataSnapshot1.getKey();
+                    Log.d(itemID, key + "");
+                    String nameOfItem1 = item.nameOfItem;
+                    Log.d(nameOfItem, nameOfItem1 + "");
+
+                    String descriptionOfItem1 = item.descriptionOfItem;
+                    Log.d(descriptionOfItem, descriptionOfItem1 + "");
+
+                    int quantityAvailable1 = item.quantityAvailable;
+                    Log.d(quantityAvailable, quantityAvailable1 + "");
+
+                    String imageLink1 = item.imageLink;
+                    Log.d(imageLink, imageLink1 + "");
+                }
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Log.d("Error Retrieving", "Error");
+
+            }
+        });
+    }
+
+    public ArrayList<Item> updateItemsList(String sellerID){
+
+        if(arrayListOfSellerItems.size()<sizeofAddDBList){
+        }
+        return arrayListOfSellerItems;
+    }
+
+
+    //TODO test review IDs
+    public void sendReviewedOrderToSellerDB(Order order){
+        Firebase fRef = new Firebase(URL + "sellerProfiles/" +order.getSellerID() + "/reviews/" + order.getBuyerID());
+        String orderID=order.getOrderID();
+
+        fRef.child(order.getBuyerID()).child(order.getOrderID()).push();
+        fRef.child(orderID).child("nameOfItem").setValue(item.getNameOfItem());
+        fRef.child(orderID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
+        fRef.child(orderID).child("buyerID").setValue(item.getQuantityAvailable());
+        fRef.child(orderID).child("imageLink").setValue(item.getImageLink());
+
+    }
+
+    public void sendReviewedOrderToBuyerDB(Order order){
+
+        Firebase fRef = new Firebase(URL + "UserProfiles/" + order.getBuyerID()+ "reviews/"+order.getSellerID());
+        String orderID=order.getOrderID();
+
+        fRef.child(order.getBuyerID()).child(order.getOrderID()).push();
+        fRef.child(orderID).child("nameOfItem").setValue(item.getNameOfItem());
+        fRef.child(orderID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
+        fRef.child(orderID).child("buyerID").setValue(item.getQuantityAvailable());
+        fRef.child(orderID).child("imageLink").setValue(item.getImageLink());
+    }
+
+
+    public ArrayList<User> getArrayListOfUsers() {
+        //TOOD come back to this method and rethink the proccess
+
+        Firebase fRef = new Firebase(URL + "UserProfiles/");
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("Number2", dataSnapshot.getChildrenCount() + "");
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+                    User user = dataSnapshot1.getValue(User.class);
+                    userList.add(user);
+
+                    Log.d("AddressList", userList.toString());
+
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+        return userList;
+    }
+
+    public ArrayList<Item> getSellerItems(String sellerId) {
+        this.sellerId = sellerId;
+
+        Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId+"/Items");
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("Number2", dataSnapshot.getChildrenCount() + "");
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+                    Item item = dataSnapshot1.getValue(Item.class);
+                    items.add(item);
+
+                    Log.d("SellerItems", items.toString());
+
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+        return items;
+    }
+
+
+
+    public ArrayList<User> getAllSellers() {
+        Firebase fRef = new Firebase(URL + "SellerProfiles/");
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                sizeofAddDBList = dataSnapshot.getChildrenCount();
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+                    Seller seller = dataSnapshot1.getValue(Seller.class);
+                    //Log.d("Fin", user.phoneNumber);
+                    allSellersInDB.add(seller);
+                }
+                updateAllSellersList();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+
+
+        return allUsers;
+    }
+
+    //Returns list of all users
+    public ArrayList<Seller> updateAllSellersList(){
+
+        if(allSellersInDB.size()<sizeofAddDBList){
+            getAllSellers();
+        }
+        return allSellersInDB;
+    }
+
+    //gets Addresses from DB and can be modified further if needed
+    public void getUserAddressList(){
+        Firebase fRef = new Firebase(URL + "Addresses");
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                sizeofAddDBList = dataSnapshot.getChildrenCount();
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+                    Address address = dataSnapshot1.getValue(Address.class);
+                    //Log.d("Fin", String.valueOf(address.latLng.latitude));
+
+
+                    addressList.add(address);
+                }
+
+                updateAddressList();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+        //Log.d("DBHelperLatsList", addressList.toString());
+    }
+    //returns list of addresses
+    public ArrayList<Address> updateAddressList(){
+        if(addressList.size()<=sizeofAddDBList){
+            getUserAddressList();
+        }
+
+        return addressList;
+    }
+
+    //returns a list of all sellers
+
+
+    //gets a specific user from the DB
+    public User getSpecificUser(String UID) {
+        Firebase fRef = new Firebase(URL+"UserProfiles/"+ UID);
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    user = dataSnapshot1.getValue(User.class);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+        return user;
+    }
+    //gets a specific user from the DB
+    public User getSpecificSeller(String sellerID) {
+        Firebase fRef = new Firebase(URL+"SellerProfiles/"+ sellerID);
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    user = dataSnapshot1.getValue(User.class);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
         return user;
     }
 
 
 
-    public void addToInviteTree(String newUserInviteEmail){
-        Firebase fRef =  new Firebase(URL+"InviteTree");
+    //signs out user and clears data
+    public boolean signOutUser() {
+        fireBaseRef.unauth();
+        userID=null;
+        user.clearUser();
+        address.clearAddress();
+        userList.clear();
+        items.clear();
 
-        fRef.child(UID).push();
-        fRef.child(UID).child("invited").setValue(newUserInviteEmail);
+        SharedPreferences sharedPreferences=mContext.getSharedPreferences("New User",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        editor.clear();
+        editor.commit();
+
+        return true;
     }
 
+
+    //adds an email/potential user to a users invite tree and sends an e-mail to the invited person
+    public void addToInviteTree(String newUserInviteEmail,String inviteeID, Intent intent){
+        Firebase fRef =  new Firebase(URL+"InviteTree");
+
+        fRef.child(inviteeID).push();
+        fRef.child(inviteeID).child("invited").setValue(newUserInviteEmail);
+    }
+
+    //Returns a list of emails of users invited by a specific user
     public ArrayList<String> getInviteListForSpecificUser(){
         final ArrayList<String> invitesSent=new ArrayList<>();
 
@@ -772,16 +992,222 @@ public class DBHelper extends Firebase {
      return invitesSent;
     }
 
+    //method takes in an item and checks who the seller of that item is, then goes
+    //into the database and subtracts the number that was bought from the quantity
+    //the seller currently has available. So for this we can pass it for each item
+    //in the order. You can run this in the background
+    public void updateSellerItemsWhenItemIsBought(Item item){
+        UID=item.getBuyerID();
+
+        final int quantity=item.getQuantityAvailable();
+        final String itemID=item.getItemID();
+
+        Firebase fRef = new Firebase(URL + "SellerProfiles/"+ "Orders/" + sellerId+"/"+UID);
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Item item = dataSnapshot1.getValue(Item.class);
+
+                    if (item.getItemID() == itemID) {
+                        int updateQuantityAvailable = item.quantityAvailable - quantity;
+                        subtractBoughtQuantityFromQuantityInDB(item.getBuyerID(), item.getItemID(), updateQuantityAvailable);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
+    //Method that actually updates the number in the database
+    public String subtractBoughtQuantityFromQuantityInDB(String UID, String itemID, int quantityAvailable){
+        Firebase fRef = new Firebase(URL + "OnSale/" + UID+"/"+itemID);
+
+        fRef.child(UID).push();
+        fRef.child(UID).child(itemID);
+        fRef.child(UID).child(itemID).child("quantityAvailable").setValue(quantityAvailable);
+        return UID;
+    }
+
+    //method to send an order to the sellers database and then send that order to the seller
+    public void sendOrderToSeller(String sellerId,Order order, String UID){
+        this.UID = UID;
+        this.sellerId=sellerId;
+
+        Firebase fRef = new Firebase(URL + "Orders/CurrentOrders/" + sellerId+"/"+UID);
+
+        ArrayList<Item> itemsOrdered = order.getItemsOrdered();
+
+        Firebase fire1 = fRef.child(UID).push();
+        String orderID = fire1.getKey();
+
+        for (Item item : itemsOrdered) {
+
+            String itemID = item.getItemID();
+            fRef.child(UID).child(orderID).push();
+            fRef.child(orderID).child(itemID);
+            fRef.child(orderID).child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
+            fRef.child(orderID).child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
+            fRef.child(orderID).child(itemID).child("quantityAvailable").setValue(item.getQuantityAvailable());
+            fRef.child(orderID).child(itemID).child("imageLink").setValue(item.getImageLink());
+        }
+        getOrderToSendToSeller(UID, order, UID);
+    }
+
+    //method which returns the right order to be sent to the seller when buyer places an order
+    public Order getOrderToSendToSeller(String sellerID, final Order order, String buyerID){
+        UID=sellerID;
+        final String orderID=order.getOrderID();
+
+        Firebase fRef = new Firebase(URL + "Orders/CurrentOrders/" + UID+"/"+buyerID);
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Order order1 = dataSnapshot1.getValue(Order.class);
+
+                    if (order1.getOrderID() == orderID) {
+                        returnOrder = order1;
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Toast.makeText(mContext, "Unable To Send Order To Seller, Please Try Again", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+        return returnOrder;
+    }
+
     public void addUserReviewToUserProfile(User buyer, User seller, int numOfStars, String details){
+        sellerId=seller.getUID();
+        UID=buyer.getUID();
+        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID+"/Reviews/"+sellerId);
+
+        fRef.child(UID).push();
+        fRef.child(UID).child(sellerId);
+        fRef.child(UID).child(sellerId).child("numOfStars").setValue(numOfStars);
+        fRef.child(UID).child(sellerId).child("description").setValue(details);
+    }
+
+    public void addUserReviewToUserProfile(User buyer, User seller, int numOfStars) {
+        sellerId=seller.getUID();
+        UID=buyer.getUID();
+        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID+"/Reviews/"+sellerId);
+        fRef.child(UID).push();
+        fRef.child(UID).child(sellerId);
+        fRef.child(UID).child(sellerId).child("numOfStars").setValue(numOfStars);
 
     }
 
-    public void addReviewToSellerProfile(User buyer, User seller, int numOfStarts, String details){
+    public void addReviewToSellerProfile(User buyer, User seller, int numOfStars){
+        sellerId=seller.getUID();
+        UID=buyer.getUID();
+        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+"/Reviews/"+UID);
+        fRef.child(sellerId).push();
+        fRef.child(sellerId).child(UID);
+        fRef.child(sellerId).child(UID).child("numOfStars").setValue(numOfStars);
+    }
+
+    public void addReviewToSellerProfile(User buyer, User seller, int numOfStars, String details){
+        sellerId=seller.getUID();
+        UID=buyer.getUID();
+        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+"/Reviews/"+UID);
+
+        fRef.child(sellerId).push();
+        fRef.child(sellerId).child(UID);
+        fRef.child(sellerId).child(UID).child("numOfStars").setValue(numOfStars);
+        fRef.child(sellerId).child(UID).child("description").setValue(details);
+    }
+
+    public void getAllReviewsForCertainSeller(String sellerID){
+        sellerId=sellerID;
+
+        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerID+"/Reviews/" );
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                sizeofAddDBList = dataSnapshot.getChildrenCount();
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Review review = dataSnapshot1.getValue(Review.class);
+                    reviewArrayList.add(review);
+                }
+                updateListOfReviewsForSeller();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Toast.makeText(mContext, "Unable To Retrieve Reviews Please Try Again", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
-    public void getReviewsForCertainPerson(String id){
+    public void getListOfReviewsForCertainUser(String UID){
+        this.UID=UID;
+        Firebase fRef = new Firebase(URL + "UserProfiles/"+ UID+"/Reviews/");
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                sizeofAddDBList=dataSnapshot.getChildrenCount();
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Review review=dataSnapshot1.getValue(Review.class);
+                    reviewArrayList.add(review);
+                }
+                updateListOfReviews();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Toast.makeText(mContext, "Unable To Retrieve Reviews Please Try Again", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public ArrayList<Review> updateListOfReviews() {
+        if (reviewArrayList.size() < sizeofAddDBList) {
+            getListOfReviewsForCertainUser(UID);
+        }
+        return reviewArrayList;
+    }
+
+    public ArrayList<Review> updateListOfReviewsForSeller() {
+        if (reviewArrayList.size() < sizeofAddDBList) {
+            getAllReviewsForCertainSeller(sellerId);
+        }
+        return reviewArrayList;
+    }
+
+    public void updateNumOfReviewsForSeller(Seller seller){
+        int numOfReviews=seller.getNumOfReviews();
+        avgNumOfReviews(numOfReviews);
 
     }
 
+    public void avgNumOfReviews(int num){
+
+
+    }
+
+    //May want to implement this later
+    public void moveOrderFromActiveToFulfilled(String sellerId,String orderID,String buyerID){
+        this.sellerId=sellerId;
+        this.UID=buyerID;
+
+        Firebase fRef = new Firebase(URL + "Orders/CurrentOrders/" + UID+"/"+buyerID);
+        fRef.child(UID).child(buyerID).removeValue();
+    }
 }

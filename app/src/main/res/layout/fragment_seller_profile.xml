@@ -15,6 +15,7 @@
         android:textStyle="bold"/>
 
     <ToggleButton
+        android:id="@+id/cooking_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"/>
@@ -58,7 +59,7 @@
                 android:text="● Currently Cooking"
                 android:padding="2dp"
                 android:textSize="18sp"
-                android:id="@+id/cooking_status"
+                android:id="@+id/cooking_statusTV"
                 android:gravity="center" />
 
 
@@ -80,7 +81,8 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Name"/>
+            android:hint="Name"
+            android:id="@+id/store_name"/>
 
     <EditText
         android:id="@+id/address"
@@ -136,14 +138,16 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter Phone Number"/>
+            android:hint="Enter Phone Number"
+            android:id="@+id/phone_number"/>
 
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="SAVE CHANGES"
-        style="@style/button_design"/>
+        style="@style/button_design"
+        android:id="@+id/save_button"/>
 
 
 

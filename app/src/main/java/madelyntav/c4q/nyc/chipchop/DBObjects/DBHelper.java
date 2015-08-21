@@ -1091,7 +1091,7 @@ public class DBHelper extends Firebase {
     public void addUserReviewToUserProfile(User buyer, User seller, int numOfStars, String details){
         sellerId=seller.getUID();
         UID=buyer.getUID();
-        Firebase fRef = new Firebase(URL + "Reviews/" + UID+"/"+sellerId);
+        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID+"/Reviews/"+sellerId);
 
         fRef.child(UID).push();
         fRef.child(UID).child(sellerId);
@@ -1102,7 +1102,7 @@ public class DBHelper extends Firebase {
     public void addUserReviewToUserProfile(User buyer, User seller, int numOfStars) {
         sellerId=seller.getUID();
         UID=buyer.getUID();
-        Firebase fRef = new Firebase(URL + "Reviews/" + UID+"/"+sellerId);
+        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID+"/Reviews/"+sellerId);
         fRef.child(UID).push();
         fRef.child(UID).child(sellerId);
         fRef.child(UID).child(sellerId).child("numOfStars").setValue(numOfStars);
@@ -1112,7 +1112,7 @@ public class DBHelper extends Firebase {
     public void addReviewToSellerProfile(User buyer, User seller, int numOfStars){
         sellerId=seller.getUID();
         UID=buyer.getUID();
-        Firebase fRef = new Firebase(URL + "Reviews/SellerReviews/" + sellerId+"/"+UID);
+        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+"/Reviews/"+UID);
         fRef.child(sellerId).push();
         fRef.child(sellerId).child(UID);
         fRef.child(sellerId).child(UID).child("numOfStars").setValue(numOfStars);
@@ -1121,7 +1121,7 @@ public class DBHelper extends Firebase {
     public void addReviewToSellerProfile(User buyer, User seller, int numOfStars, String details){
         sellerId=seller.getUID();
         UID=buyer.getUID();
-        Firebase fRef = new Firebase(URL + "Reviews/SellerReviews/" + sellerId+"/"+UID);
+        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+"/Reviews/"+UID);
 
         fRef.child(sellerId).push();
         fRef.child(sellerId).child(UID);
@@ -1130,9 +1130,9 @@ public class DBHelper extends Firebase {
     }
 
     public void getAllReviewsForCertainSeller(String sellerID){
-        this.sellerId=sellerID;
+        sellerId=sellerID;
 
-        Firebase fRef = new Firebase(URL + "Reviews/SellerReviews/" + sellerID);
+        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerID+"/Reviews/" );
 
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -1156,7 +1156,7 @@ public class DBHelper extends Firebase {
 
     public void getListOfReviewsForCertainUser(String UID){
         this.UID=UID;
-        Firebase fRef = new Firebase(URL + "Reviews/" + UID);
+        Firebase fRef = new Firebase(URL + "UserProfiles/"+ UID+"/Reviews/");
 
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -1186,7 +1186,7 @@ public class DBHelper extends Firebase {
 
     public ArrayList<Review> updateListOfReviewsForSeller() {
         if (reviewArrayList.size() < sizeofAddDBList) {
-            getAllReviewsForCertainSeller(UID);
+            getAllReviewsForCertainSeller(sellerId);
         }
         return reviewArrayList;
     }

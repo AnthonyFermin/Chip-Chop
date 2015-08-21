@@ -1078,7 +1078,7 @@ public class DBHelper extends Firebase {
         fRef.child(UID).push();
         fRef.child(UID).child(sellerId);
         fRef.child(UID).child(sellerId).child("numOfStars").setValue(numOfStars);
-        fRef.child(UID).child(sellerId).child("description").setValue(details);
+        fRef.child(UID).child(sellerId).child("reviewDescription").setValue(details);
     }
 
     public void addUserReviewToUserProfile(User buyer, User seller, int numOfStars) {
@@ -1108,7 +1108,7 @@ public class DBHelper extends Firebase {
         fRef.child(sellerId).push();
         fRef.child(sellerId).child(UID);
         fRef.child(sellerId).child(UID).child("numOfStars").setValue(numOfStars);
-        fRef.child(sellerId).child(UID).child("description").setValue(details);
+        fRef.child(sellerId).child(UID).child("reviewDescription").setValue(details);
     }
 
     public void getAllReviewsForCertainSeller(String sellerID){
@@ -1207,7 +1207,31 @@ public class DBHelper extends Firebase {
 
         fRef.child(UID).child(buyerID).removeValue();
     }
-    public void sentToFullfilledOrdersTable(Order order){
+    public void sentToFullfilledOrdersTable(Order order) {
+        sellerId = order.getSellerID();
+        UID = order.getBuyerID();
+
+        Firebase fRef = new Firebase(URL + "FulfilledOrders/" + sellerId + "/" + UID);
+        ArrayList<Item> itemsOrdered = order.getItemsOrdered();
+
+        Firebase fire1 = fRef.child(sellerId).push();
+        String orderID = fire1.getKey();
+        for (Item item : itemsOrdered) {
+
+            String itemID = item.getItemID();
+            fRef.child(sellerId).child(UID).push();
+            fRef.child(UID).child(orderID);
+            fRef.child(orderID).child(itemID);
+            fRef.child(orderID).child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
+            fRef.child(orderID).child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
+            fRef.child(orderID).child(itemID).child("quantityAvailable").setValue(item.getQuantityAvailable());
+            fRef.child(orderID).child(itemID).child("imageLink").setValue(item.getImageLink());
+            fRef.child(orderID).child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
+            fRef.child(orderID).child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
+            fRef.child(orderID).child(itemID).child("isVegan").setValue(item.getVegan());
+        }
+    }
+    public void sentToFullfilledOrdersTableWithReview(Order order){
         sellerId=order.getSellerID();
         UID=order.getBuyerID();
 
@@ -1229,8 +1253,8 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
             fRef.child(orderID).child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
             fRef.child(orderID).child(itemID).child("isVegan").setValue(item.getVegan());
-
+            fRef.child(orderID).child(itemID).child("numOfStars").setValue(order.getReview().getNumOfStars());
+            fRef.child(orderID).child(itemID).child("reviewDescription").setValue(order.getReview().getReviewDescription());
         }
-
     }
 }

@@ -7,7 +7,7 @@ public class Review {
     String sellerID;
     String buyerID;
     int numOfStars;
-    String description;
+    String reviewDescription;
 
     public Review(){}
 
@@ -17,19 +17,19 @@ public class Review {
         this.numOfStars = numOfStars;
     }
 
-    public Review(String sellerID, String description, int numOfStars, String buyerID) {
+    public Review(String sellerID, String reviewDescription, int numOfStars, String buyerID) {
         this.sellerID = sellerID;
-        this.description = description;
+        this.reviewDescription = reviewDescription;
         this.numOfStars = numOfStars;
         this.buyerID = buyerID;
     }
 
-    public String getDescription() {
-        return description;
+    public String getReviewDescription() {
+        return reviewDescription;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setReviewDescription(String reviewDescription) {
+        this.reviewDescription = reviewDescription;
     }
 
     public String getSellerID() {

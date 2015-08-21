@@ -10,7 +10,7 @@
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:onClick="createUserLets"
+        android:onClick="sendData"
         android:layout_marginBottom="20dp"
         android:text="SEND DATA"/>
 

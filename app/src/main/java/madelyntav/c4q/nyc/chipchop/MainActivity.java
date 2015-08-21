@@ -13,25 +13,57 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
+import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 
 public class MainActivity extends AppCompatActivity {
 
     Firebase firebaseRef;
-    String userID="";
+    String userID="5";
+    String sellerID="101";
+    String name="Madey";
+    String phoneNumber="646-549-0877";
+    String streetAddress="570 West 189 street";
+    String apt="5E";
+    String city="New York";
+    String state="NY";
+    String zipCode="10040";
+    Item item;
+    String email="madey189@aol.com";
+    Order order;
+    User user;
+    Seller seller;
+    Address address;
+    Address sellerAddress;
+    String sellerName="Jack";
+    String sellerPhone="646-777-9087";
+    String sellerStreet="256 Wadsworth Avenue";
+    String sellerApt="2A";
+    String sellerCity="New York";
+    String sellerState="NY";
+    String sellerZipcode="10033";
+    String sellerEmail="JackFinnish@gmail.com";
+
+
     private static DBHelper dbHelper = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Firebase.setAndroidContext(this);
-
         dbHelper=DBHelper.getDbHelper(this);
-        if(dbHelper == null) {
-            dbHelper = new DBHelper();
-        }
 
+
+        item=new Item();
+        order=new Order();
+        address=new Address(streetAddress,apt,city,state,zipCode,userID);
+        user=new User(userID,email,name,address,phoneNumber);
+        sellerAddress= new Address(sellerStreet,sellerApt,sellerCity,sellerState,sellerZipcode,sellerID);
+        seller=new Seller(sellerID,sellerEmail,sellerName,sellerAddress,sellerPhone);
 
 
     }
@@ -40,47 +72,20 @@ public class MainActivity extends AppCompatActivity {
     //Madelyn's Testing Code Below
 
 
-
-    public void createUserLets(View view){
-//        Item item=new Item("5","Beans","5","yellow","The fin");
-//        item.setItemID("hgg");
-//        Item item1= new Item("5","Rice","2","Black","IGHGH");
-//        item1.setItemID("gff");
-//        Item item2= new Item("5","Chicken","6","Blue","jfjfd");
-//        item2.setItemID("Iggj");
-//
-//        ArrayList<Item> items=new ArrayList<>();
-//        items.add(item);
-//        items.add(item1);
-//        items.add(item2);
-//        Order order= new Order();
-//        order.setOrderID("-Jwh6593TmhGUXVJ2oMP");
-//        order.setUserID("5");
-
-        //dbHelper.addOrderToDB(order);
-
-
-        //dbHelper.getSellersOnSaleItems(order);
-       // Address address= new Address("560 east 242nd Stret", "Apt 64", "New York", "NY", "10040", "5");
-
-//        User user= new User("5","MadelynTav@Gmail.com","Madelyn Tavarez",address,"Photo","677-987-0564");
-
-
-       // dbHelper.addUserAddressToProfile(user.getAddress());
-
-       // dbHelper.getAllUsers();
+    public void sendData(View view) {
         //dbHelper.addUserProfileInfoToDB(user);
+        //dbHelper.addSellerProfileInfoToDB(seller);
+        //dbHelper.addSellerProfileInfoToDB(seller);
+        dbHelper.addActiveSellerToTable(seller);
 
-//        ArrayList<LatLng> arrayList=new ArrayList<>();
-//
-//        arrayList.addAll(dbHelper.updateUserList());
-
-        dbHelper.getUserListLatLng();
     }
+
+
     public void getData(View v){
-     dbHelper.getAddressFromDB("5");
-    }
+       // dbHelper.getSellerFromDB("101");
+        dbHelper.getSpecificActiveSeller(sellerID);
 
+    }
 
    public void saveImageToEncodedString(String fileName){
        InputStream inputStream = null;

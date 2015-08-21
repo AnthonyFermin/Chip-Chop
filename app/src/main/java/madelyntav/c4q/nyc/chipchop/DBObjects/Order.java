@@ -6,21 +6,30 @@ import java.util.ArrayList;
  */
 
 public class Order {
-    String userID;
+    String buyerID;
     String orderID;
+    Review review;
+    String sellerID;
     ArrayList<Item> itemsOrdered;
 
     public Order(){
-        //this.userID=userID;
+        //this.buyerID=buyerID;
     }
 
     public Order(ArrayList<Item> itemsOrdered){
         this.itemsOrdered=itemsOrdered;
-
     }
 
-    public Order(String userID, ArrayList<Item> itemsOrdered){
-        this.userID=userID;
+    public Order(String buyerID, ArrayList<Item> itemsOrdered,String sellerID,Review review){
+        this.buyerID = buyerID;
+        this.sellerID=sellerID;
+        this.itemsOrdered=itemsOrdered;
+        this.review=review;
+    }
+
+    public Order(String buyerID, ArrayList<Item> itemsOrdered,String sellerID){
+        this.buyerID = buyerID;
+        this.sellerID=sellerID;
         this.itemsOrdered=itemsOrdered;
     }
 
@@ -40,12 +49,28 @@ public class Order {
         this.itemsOrdered = itemsOrdered;
     }
 
-    public String getUserID() {
-        return userID;
+    public String getBuyerID() {
+        return buyerID;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public void setBuyerID(String buyerID) {
+        this.buyerID = buyerID;
+    }
+
+    public String getSellerID() {
+        return sellerID;
+    }
+
+    public void setSellerID(String sellerID) {
+        this.sellerID = sellerID;
+    }
+
+    public Review getReview() {
+        return review;
+    }
+
+    public void setReview(Review review) {
+        this.review = review;
     }
 
 

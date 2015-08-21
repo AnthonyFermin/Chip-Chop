@@ -4,11 +4,15 @@ package madelyntav.c4q.nyc.chipchop.DBObjects;
  * Created by c4q-madelyntavarez on 8/11/15.
  */
 public class Item {
-    String userID;
+    String buyerID;
+    String sellerID;
     String nameOfItem;
     int quantityAvailable;
     String descriptionOfItem;
     String imageLink;
+    Boolean vegan;
+    Boolean glutenFree;
+    Boolean containsPeanuts;
 
     public Item(){}
 
@@ -22,8 +26,8 @@ public class Item {
 
     String itemID;
 
-    public Item(String userID, String nameOfItem, int quantityAvailable, String descriptionOfItem, String imageLink){
-        this.userID=userID;
+    public Item(String buyerID,String sellerID, String nameOfItem, int quantityAvailable, String descriptionOfItem, String imageLink){
+        this.buyerID = buyerID;
         this.nameOfItem=nameOfItem;
         this.quantityAvailable=quantityAvailable;
         this.descriptionOfItem=descriptionOfItem;
@@ -38,12 +42,12 @@ public class Item {
         this.nameOfItem = nameOfItem;
     }
 
-    public String getUserID() {
-        return userID;
+    public String getBuyerID() {
+        return buyerID;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public void setBuyerID(String buyerID) {
+        this.buyerID = buyerID;
     }
 
     public int getQuantityAvailable() {
@@ -69,5 +73,35 @@ public class Item {
         this.imageLink = imageLink;
     }
 
+    public Boolean getVegan() {
+        return vegan;
+    }
 
+    public void setVegan(Boolean vegan) {
+        this.vegan = vegan;
+    }
+
+    public Boolean getContainsPeanuts() {
+        return containsPeanuts;
+    }
+
+    public void setContainsPeanuts(Boolean containsPeanuts) {
+        this.containsPeanuts = containsPeanuts;
+    }
+
+    public Boolean getGlutenFree() {
+        return glutenFree;
+    }
+
+    public void setGlutenFree(Boolean glutenFree) {
+        this.glutenFree = glutenFree;
+    }
+
+    public String getSellerID() {
+        return sellerID;
+    }
+
+    public void setSellerID(String sellerID) {
+        this.sellerID = sellerID;
+    }
 }

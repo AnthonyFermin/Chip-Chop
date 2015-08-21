@@ -66,7 +66,7 @@ public class SignupActivity2 extends AppCompatActivity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: CODE TO LINK TO CHECKOUT FRAGMENT + DO LAYOUT FOR CHECKOUT
+                //TODO: CODE TO LINK TO CHECKOUT FRAGMENT
                 //TODO: Uses google api to get geolocation of address, if successful, save profile info to DB
                 getGeoLocation();
 

@@ -2,6 +2,7 @@ package madelyntav.c4q.nyc.chipchop;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -93,8 +95,10 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
                         }else{
                             Intent signUpIntent = new Intent(getApplicationContext(), SignupActivity1.class);
                             startActivity(signUpIntent);
-                            finish();
                         }
+
+                        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
 
 

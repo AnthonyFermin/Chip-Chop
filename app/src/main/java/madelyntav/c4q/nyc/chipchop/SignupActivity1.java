@@ -13,7 +13,6 @@ public class SignupActivity1 extends AppCompatActivity {
 
     Button signInButton;
     Button newUserButton;
-    Button cancelButton;
     EditText emailET;
     EditText passET;
     DBHelper dbHelper;
@@ -38,8 +37,8 @@ public class SignupActivity1 extends AppCompatActivity {
                 email = emailET.getText().toString().trim();
                 password = passET.getText().toString();
 
-                    Intent sellActivityIntent = new Intent(getApplicationContext(), BuyActivity.class);
-                    dbHelper.logInUser(email,password,sellActivityIntent);
+                    Intent sellActivityIntent = new Intent(getApplicationContext(), SellActivity.class);
+                    dbHelper.logInUser(email, password, sellActivityIntent);
                 }
 
         });
@@ -52,18 +51,11 @@ public class SignupActivity1 extends AppCompatActivity {
                 password = passET.getText().toString();
 
                 Intent intent = new Intent(getApplicationContext(), SignupActivity2.class);
-                dbHelper.createUserAndLaunchIntent(email, password,intent);
+                dbHelper.createUserAndLaunchIntent(email, password, intent);
             }
         });
 
 
-        cancelButton = (Button) findViewById(R.id.cancel_button);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
     }
 
 

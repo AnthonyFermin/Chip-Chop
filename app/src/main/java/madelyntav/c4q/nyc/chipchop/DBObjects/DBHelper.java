@@ -501,6 +501,10 @@ public class DBHelper extends Firebase {
                 fRef1.child(itemID).child("DESCRIPTION").setValue(item.descriptionOfItem);
                 fRef1.child(itemID).child("QUANTITY").setValue(item.quantityAvailable);
                 fRef1.child(itemID).child("ImageLink").setValue(item.imageLink);
+                fRef.child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
+                fRef.child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
+                fRef.child(itemID).child("isVegan").setValue(item.getVegan());
+
             }
         }
     }
@@ -518,6 +522,10 @@ public class DBHelper extends Firebase {
         fRef.child(itemID).child("DESCRIPTION").setValue(item.getDescriptionOfItem());
         fRef.child(itemID).child("QUANTITY").setValue(item.getQuantityAvailable());
         fRef.child(itemID).child("ImageLink").setValue(item.getImageLink());
+        fRef.child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
+        fRef.child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
+        fRef.child(itemID).child("isVegan").setValue(item.getVegan());
+
 
         Log.d("ItemID", itemID);
     }
@@ -534,6 +542,9 @@ public class DBHelper extends Firebase {
         fRef.child(itemID).child("DESCRIPTION").setValue(item.getDescriptionOfItem());
         fRef.child(itemID).child("QUANTITY").setValue(item.getQuantityAvailable());
         fRef.child(itemID).child("ImageLink").setValue(item.getImageLink());
+        fRef.child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
+        fRef.child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
+        fRef.child(itemID).child("isVegan").setValue(item.getVegan());
 
         Log.d("ItemID", itemID);
     }
@@ -552,6 +563,9 @@ public class DBHelper extends Firebase {
             fRef.child(sellerID).child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
             fRef.child(sellerID).child(itemID).child("quantityAvailable").setValue(item.getQuantityAvailable());
             fRef.child(sellerID).child(itemID).child("imageLink").setValue(item.getImageLink());
+            fRef.child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
+            fRef.child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
+            fRef.child(itemID).child("isVegan").setValue(item.getVegan());
         }
     }
 
@@ -628,28 +642,34 @@ public class DBHelper extends Firebase {
     }
 
     public void moveItemToPreviouslySoldItems(Item item){
-        Firebase fRef = new Firebase(URL + "previouslySoldItems/"+item.getSellerID()+"/"+item.getBuyerID());
+        Firebase fRef = new Firebase(URL + "PreviouslySoldItems/"+item.getSellerID()+"/"+item.getBuyerID());
         String itemID=item.getItemID();
         fRef.child(item.getSellerID()).child(item.getBuyerID()).child(itemID).push();
         fRef.child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
         fRef.child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
         fRef.child(itemID).child("buyerID").setValue(item.getQuantityAvailable());
         fRef.child(itemID).child("imageLink").setValue(item.getImageLink());
+        fRef.child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
+        fRef.child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
+        fRef.child(itemID).child("isVegan").setValue(item.getVegan());
     }
 
     public void moveItemToPreviouslyBoughtItems(Item item){
-        Firebase fRef = new Firebase(URL + "previouslyBoughtItems/"+item.getBuyerID()+"/"+item.getSellerID());
+        Firebase fRef = new Firebase(URL + "PreviouslyBoughtItems/"+item.getBuyerID()+"/"+item.getSellerID());
         String itemID=item.getItemID();
         fRef.child(item.getBuyerID()).child(item.getSellerID()).child(itemID).push();
         fRef.child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
         fRef.child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
         fRef.child(itemID).child("buyerID").setValue(item.getQuantityAvailable());
         fRef.child(itemID).child("imageLink").setValue(item.getImageLink());
+        fRef.child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
+        fRef.child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
+        fRef.child(itemID).child("isVegan").setValue(item.getVegan());
     }
 
     public void sendSingleItemToCurrentlyOnSale(Item item) {
         sellerId = item.getSellerID();
-        Firebase fRef = new Firebase(URL + "sellerProfiles/" + sellerId+"/"+"itemsForSale/");
+        Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId+"/"+"ItemsForSale/");
 
         Firebase fire1 = fRef.child(sellerId).push();
         String itemID = fire1.getKey();
@@ -660,6 +680,9 @@ public class DBHelper extends Firebase {
         fRef.child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
         fRef.child(itemID).child("buyerID").setValue(item.getQuantityAvailable());
         fRef.child(itemID).child("imageLink").setValue(item.getImageLink());
+        fRef.child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
+        fRef.child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
+        fRef.child(itemID).child("isVegan").setValue(item.getVegan());
 
         Log.d("ItemID", itemID);
     }
@@ -668,7 +691,7 @@ public class DBHelper extends Firebase {
         UID = order.getBuyerID();
         sellerId=order.getSellerID();
 
-        Firebase fRef = new Firebase(URL + "ActiveSellers/" + sellerId+"/CurrentOrders/" + UID);
+        Firebase fRef = new Firebase(URL + "ActiveSellers/" + sellerId+"/Orders/" + UID);
         ArrayList<Item> itemsOrdered = order.getItemsOrdered();
 
         Firebase fire1 = fRef.child(sellerId).push();
@@ -683,6 +706,9 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
             fRef.child(orderID).child(itemID).child("quantityAvailable").setValue(item.getQuantityAvailable());
             fRef.child(orderID).child(itemID).child("imageLink").setValue(item.getImageLink());
+            fRef.child(orderID).child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
+            fRef.child(orderID).child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
+            fRef.child(orderID).child(itemID).child("isVegan").setValue(item.getVegan());
         }
     }
 
@@ -736,7 +762,7 @@ public class DBHelper extends Firebase {
 
     //TODO test review IDs
     public void sendReviewedOrderToSellerDB(Order order){
-        Firebase fRef = new Firebase(URL + "sellerProfiles/" +order.getSellerID() + "/reviews/" + order.getBuyerID());
+        Firebase fRef = new Firebase(URL + "sellerProfiles/" +order.getSellerID() + "/Reviews/" + order.getBuyerID());
         String orderID=order.getOrderID();
 
         fRef.child(order.getBuyerID()).child(order.getOrderID()).push();
@@ -748,8 +774,7 @@ public class DBHelper extends Firebase {
     }
 
     public void sendReviewedOrderToBuyerDB(Order order){
-
-        Firebase fRef = new Firebase(URL + "UserProfiles/" + order.getBuyerID()+ "reviews/"+order.getSellerID());
+        Firebase fRef = new Firebase(URL + "UserProfiles/" + order.getBuyerID()+ "Reviews/"+order.getSellerID());
         String orderID=order.getOrderID();
 
         fRef.child(order.getBuyerID()).child(order.getOrderID()).push();
@@ -855,48 +880,6 @@ public class DBHelper extends Firebase {
         return allSellersInDB;
     }
 
-    //gets Addresses from DB and can be modified further if needed
-    public void getUserAddressList(){
-        Firebase fRef = new Firebase(URL + "Addresses");
-
-        fRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                sizeofAddDBList = dataSnapshot.getChildrenCount();
-
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-
-                    Address address = dataSnapshot1.getValue(Address.class);
-                    //Log.d("Fin", String.valueOf(address.latLng.latitude));
-
-
-                    addressList.add(address);
-                }
-
-                updateAddressList();
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-
-        //Log.d("DBHelperLatsList", addressList.toString());
-    }
-    //returns list of addresses
-    public ArrayList<Address> updateAddressList(){
-        if(addressList.size()<=sizeofAddDBList){
-            getUserAddressList();
-        }
-
-        return addressList;
-    }
-
-    //returns a list of all sellers
-
-
     //gets a specific user from the DB
     public User getSpecificUser(String UID) {
         Firebase fRef = new Firebase(URL+"UserProfiles/"+ UID);
@@ -939,8 +922,6 @@ public class DBHelper extends Firebase {
 
         return user;
     }
-
-
 
     //signs out user and clears data
     public boolean signOutUser() {
@@ -1002,7 +983,7 @@ public class DBHelper extends Firebase {
         final int quantity=item.getQuantityAvailable();
         final String itemID=item.getItemID();
 
-        Firebase fRef = new Firebase(URL + "SellerProfiles/"+ "Orders/" + sellerId+"/"+UID);
+        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+ "/Orders/" + "/"+UID);
 
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -1027,7 +1008,7 @@ public class DBHelper extends Firebase {
 
     //Method that actually updates the number in the database
     public String subtractBoughtQuantityFromQuantityInDB(String UID, String itemID, int quantityAvailable){
-        Firebase fRef = new Firebase(URL + "OnSale/" + UID+"/"+itemID);
+        Firebase fRef = new Firebase(URL + "SellerProfiles/" + UID+"/ItemsOnSale/"+itemID);
 
         fRef.child(UID).push();
         fRef.child(UID).child(itemID);
@@ -1040,7 +1021,7 @@ public class DBHelper extends Firebase {
         this.UID = UID;
         this.sellerId=sellerId;
 
-        Firebase fRef = new Firebase(URL + "Orders/CurrentOrders/" + sellerId+"/"+UID);
+        Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId+"/Orders/"+UID);
 
         ArrayList<Item> itemsOrdered = order.getItemsOrdered();
 
@@ -1062,10 +1043,10 @@ public class DBHelper extends Firebase {
 
     //method which returns the right order to be sent to the seller when buyer places an order
     public Order getOrderToSendToSeller(String sellerID, final Order order, String buyerID){
-        UID=sellerID;
+        sellerId=sellerID;
         final String orderID=order.getOrderID();
 
-        Firebase fRef = new Firebase(URL + "Orders/CurrentOrders/" + UID+"/"+buyerID);
+        Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId+"/Orders/"+buyerID);
 
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -1079,6 +1060,7 @@ public class DBHelper extends Firebase {
                     }
                 }
             }
+
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 Toast.makeText(mContext, "Unable To Send Order To Seller, Please Try Again", Toast.LENGTH_SHORT).show();
@@ -1132,7 +1114,7 @@ public class DBHelper extends Firebase {
     public void getAllReviewsForCertainSeller(String sellerID){
         sellerId=sellerID;
 
-        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerID+"/Reviews/" );
+        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+"/Reviews/" );
 
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -1161,10 +1143,10 @@ public class DBHelper extends Firebase {
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                sizeofAddDBList=dataSnapshot.getChildrenCount();
+                sizeofAddDBList = dataSnapshot.getChildrenCount();
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    Review review=dataSnapshot1.getValue(Review.class);
+                    Review review = dataSnapshot1.getValue(Review.class);
                     reviewArrayList.add(review);
                 }
                 updateListOfReviews();
@@ -1191,15 +1173,28 @@ public class DBHelper extends Firebase {
         return reviewArrayList;
     }
 
-    public void updateNumOfReviewsForSeller(Seller seller){
-        int numOfReviews=seller.getNumOfReviews();
-        avgNumOfReviews(numOfReviews);
+    public int increaseNumOfTotalStarsAndCalculateAvg(Seller seller,Review review){
+        int numOfReviews= seller.getNumOfReviews();
+        numOfReviews=numOfReviews+1;
+        seller.setNumOfReviews(numOfReviews);
 
+        int numOfTotalStars=seller.getNumOfTotalStars();
+        int newStars=review.getNumOfStars();
+        int newNumofTotalstars=numOfTotalStars+newStars;
+        int newAvg= newNumofTotalstars/numOfReviews;
+
+        updateSellerProfileWithNewAvg(seller,newAvg);
+
+        return newAvg;
     }
 
-    public void avgNumOfReviews(int num){
+    public void updateSellerProfileWithNewAvg(Seller seller, int newAvg){
+        sellerId=seller.getUID();
 
-
+        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+"/Reviews/" );
+        fRef.child(sellerId).push();
+        fRef.child(sellerId).child(UID);
+        fRef.child(sellerId).child(UID).child("AvgNumOfStars").setValue(newAvg);
     }
 
     //May want to implement this later
@@ -1207,7 +1202,35 @@ public class DBHelper extends Firebase {
         this.sellerId=sellerId;
         this.UID=buyerID;
 
-        Firebase fRef = new Firebase(URL + "Orders/CurrentOrders/" + UID+"/"+buyerID);
+        Firebase fRef =  new Firebase(URL + "SellerProfiles/"+sellerId+ "/Orders/" + "/"+UID);
+
+
         fRef.child(UID).child(buyerID).removeValue();
+    }
+    public void sentToFullfilledOrdersTable(Order order){
+        sellerId=order.getSellerID();
+        UID=order.getBuyerID();
+
+        Firebase fRef =  new Firebase(URL + "FulfilledOrders/"+sellerId + "/"+UID);
+        ArrayList<Item> itemsOrdered = order.getItemsOrdered();
+
+        Firebase fire1 = fRef.child(sellerId).push();
+        String orderID = fire1.getKey();
+        for (Item item : itemsOrdered) {
+
+            String itemID = item.getItemID();
+            fRef.child(sellerId).child(UID).push();
+            fRef.child(UID).child(orderID);
+            fRef.child(orderID).child(itemID);
+            fRef.child(orderID).child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
+            fRef.child(orderID).child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
+            fRef.child(orderID).child(itemID).child("quantityAvailable").setValue(item.getQuantityAvailable());
+            fRef.child(orderID).child(itemID).child("imageLink").setValue(item.getImageLink());
+            fRef.child(orderID).child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
+            fRef.child(orderID).child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
+            fRef.child(orderID).child(itemID).child("isVegan").setValue(item.getVegan());
+
+        }
+
     }
 }

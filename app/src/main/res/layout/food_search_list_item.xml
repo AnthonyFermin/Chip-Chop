@@ -21,21 +21,11 @@
             android:id="@+id/food_image"
             android:layout_alignParentLeft="true"/>
 
-        <TextView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:gravity="center"
-            android:id="@+id/food_quantity_tv"/>
 
         <TextView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_below="@+id/food_quantity_tv"
-            android:gravity="center"
+            android:layout_alignParentEnd="true"
             android:id="@+id/food_price_tv"/>
 
 
@@ -43,19 +33,33 @@
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_alignParentTop="true"
-                android:layout_toRightOf="@id/food_image"
-                android:layout_toLeftOf="@id/food_price_tv"
+                android:layout_toEndOf="@id/food_image"
+                android:layout_toStartOf="@id/food_price_tv"
                 android:id="@+id/food_name_tv"
                 android:padding="8dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:layout_toRightOf="@id/food_image"
-                android:layout_toLeftOf="@id/food_quantity_tv"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/food_image"
+                android:layout_below="@+id/food_name_tv"
                 android:id="@+id/food_description_tv"
                 android:padding="8dp"/>
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/vegan"
+            android:id="@+id/vegan_icon"
+            android:layout_below="@+id/food_description_tv"
+            android:layout_toEndOf="@+id/food_image"/>
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/glutenfree"
+            android:layout_below="@+id/food_description_tv"
+            android:layout_toEndOf="@+id/vegan_icon" />
 
         </RelativeLayout>
 

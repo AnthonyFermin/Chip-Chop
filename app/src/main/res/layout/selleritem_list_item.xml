@@ -33,26 +33,26 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:id="@+id/food_name_tv"
-                    style="@style/text_design"
-                    android:gravity="center_vertical"
-                    android:textSize="17sp"
-                    android:padding="8dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/food_name_tv"
+            style="@style/text_design"
+            android:gravity="center_vertical"
+            android:textSize="17sp"
+            android:padding="8dp"/>
 
-                <TextView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:id="@+id/food_quantity_tv"/>
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:id="@+id/food_quantity_tv"/>
 
-                <TextView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:id="@+id/food_price_tv"/>
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:id="@+id/food_price_tv"/>
 
 
 

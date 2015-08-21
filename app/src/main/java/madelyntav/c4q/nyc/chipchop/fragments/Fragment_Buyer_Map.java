@@ -45,7 +45,8 @@ import java.util.ArrayList;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.R;
-import madelyntav.c4q.nyc.chipchop.adapters.SellersListAdapter;
+import madelyntav.c4q.nyc.chipchop.adapters.SellerItemsAdapter;
+import madelyntav.c4q.nyc.chipchop.adapters.SellerListAdapter;
 
 
 public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -106,7 +107,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         sellersList = (RecyclerView) root.findViewById(R.id.buyers_orders_list);
         sellersList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        SellersListAdapter sellersListAdapter = new SellersListAdapter(getActivity(), sellers);
+        SellerListAdapter sellersListAdapter = new SellerListAdapter(getActivity(), sellers);
         sellersList.setAdapter(sellersListAdapter);
 
         //getListForMarkers.execute();

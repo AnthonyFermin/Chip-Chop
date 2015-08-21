@@ -72,8 +72,7 @@ public class FoodListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         FoodItemViewHolder vh = (FoodItemViewHolder) viewHolder;
         vh.name.setText(foodItem.getNameOfItem());
         vh.description.setText(foodItem.getDescriptionOfItem());
-        vh.price.setText("$ N/A");
-        vh.quantity.setText(foodItem.getQuantityAvailable());
+        vh.price.setText("$ 1.00");
         Picasso.with(context).load(foodItem.getImageLink()).fit().into(vh.image);
 
 

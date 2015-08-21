@@ -48,24 +48,10 @@
                 android:gravity="center"
                 android:layout_weight="1"/>
 
-            <LinearLayout
+
+
+            <Button
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="10dp">
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="CHECKOUT"
-                android:textSize="14sp"
-                style="@style/button_design"
-                android:layout_weight="1"
-                android:layout_margin="5dp"
-                android:id="@+id/checkoutButton"/>
-
-            <Button
-                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="VIEW CART"
                 android:textSize="14sp"
@@ -74,7 +60,6 @@
                 android:layout_margin="5dp"
                 android:id="@+id/viewCartButton"/>
 
-            </LinearLayout>
 
         </LinearLayout>
 

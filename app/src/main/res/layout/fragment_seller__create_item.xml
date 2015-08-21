@@ -5,24 +5,18 @@
     android:orientation="vertical"
     android:padding="10dp">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="X"
-        style="@style/button_design"
-        android:id="@+id/cancel_item_button"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Dish Photos"
+        android:text="Dish Photo"
         android:textSize="20sp" />
 
 
     <ImageButton
         android:id="@+id/dish_image"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:src="@drawable/github"
         android:layout_gravity="center_horizontal"/>
 
@@ -34,7 +28,7 @@
         android:textSize="20sp" />
 
     <EditText
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="Number of Portions"
         android:inputType="number"

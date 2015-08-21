@@ -8,6 +8,7 @@
     android:orientation="vertical"
     android:gravity="center_horizontal">
 
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,6 +17,7 @@
         android:textSize="30sp"
         android:layout_margin="5dp"
         android:gravity="center_horizontal"/>
+
 
     <EditText
         android:id="@+id/eMail"
@@ -50,5 +52,14 @@
         style="@style/button_design"
         android:id="@+id/newUserButton"
         android:layout_margin="10dp"/>
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="X"
+        style="@style/text_design"
+        android:id="@+id/cancel_button"/>
+
 
 </LinearLayout>

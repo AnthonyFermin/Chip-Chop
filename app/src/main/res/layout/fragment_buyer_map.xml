@@ -15,23 +15,6 @@
         android:orientation="horizontal"
         android:id="@+id/search_bar">
 
-    <EditText
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Cuisine"
-        android:textColorHint="#D32F2F"
-        android:id="@+id/cuisine_search"
-        android:layout_weight="3"/>
-
-    <EditText
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Zipcode"
-        android:inputType="number"
-        android:maxLength="5"
-        android:textColorHint="#D32F2F"
-        android:id="@+id/address_search"
-        android:layout_weight="1"/>
 
     </LinearLayout>
 

@@ -70,7 +70,7 @@ public class CheckoutListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             Item checkoutItem = checkoutItems.get(position);
             CheckoutViewHolder vh = (CheckoutViewHolder) viewHolder;
             vh.name.setText(checkoutItem.getNameOfItem());
-            vh.price.setText("$ N/A");
+            vh.price.setText("$ 1.00");
             vh.quantity.setText(checkoutItem.getQuantityAvailable());
             Picasso.with(context).load(checkoutItem.getImageLink()).fit().into(vh.image);
 

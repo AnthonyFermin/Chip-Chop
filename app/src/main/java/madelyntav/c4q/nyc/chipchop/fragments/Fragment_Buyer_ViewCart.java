@@ -1,5 +1,8 @@
 package madelyntav.c4q.nyc.chipchop.fragments;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,8 +14,11 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 
+import madelyntav.c4q.nyc.chipchop.BuyActivity;
+import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.R;
+import madelyntav.c4q.nyc.chipchop.SignupActivity1;
 import madelyntav.c4q.nyc.chipchop.adapters.CartListAdapter;
 
 /**
@@ -20,13 +26,18 @@ import madelyntav.c4q.nyc.chipchop.adapters.CartListAdapter;
  */
 public class Fragment_Buyer_ViewCart extends Fragment {
 
+    Button checkoutButton;
     private ArrayList<Item> cartItems;
     private RecyclerView cartList;
+    private DBHelper dbHelper;
+    public static final String FROM_CHECKOUT = "FromCheckout";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_buyer__view_cart, container, false);
+
+        dbHelper = DBHelper.getDbHelper(getActivity());
 
 
         cartItems = new ArrayList<>();
@@ -37,6 +48,25 @@ public class Fragment_Buyer_ViewCart extends Fragment {
 
         CartListAdapter cartListAdapter = new CartListAdapter(getActivity(), cartItems);
         cartList.setAdapter(cartListAdapter);
+
+        checkoutButton = (Button) root.findViewById(R.id.checkoutButton);
+        checkoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (dbHelper.userIsLoggedIn()) {
+                    ((BuyActivity) getActivity()).replaceFragment(new Fragment_Buyer_Checkout());
+                } else {
+                    SharedPreferences preferences = getActivity().getSharedPreferences(FROM_CHECKOUT, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putBoolean(FROM_CHECKOUT, true);
+                    editor.apply();
+                    Intent signupIntent = new Intent(getActivity(), SignupActivity1.class);
+                    startActivity(signupIntent);
+                }
+            }
+        });
+
 
 
         return root;

@@ -3,6 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -10,6 +11,16 @@
         android:text="cart"
         android:textSize="40sp"
         android:gravity="center_horizontal"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CHECKOUT"
+        android:textSize="14sp"
+        style="@style/button_design"
+        android:layout_margin="5dp"
+        android:id="@+id/checkoutButton"/>
+
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"

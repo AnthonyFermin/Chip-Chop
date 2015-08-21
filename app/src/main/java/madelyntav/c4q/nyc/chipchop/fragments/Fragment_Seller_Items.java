@@ -14,10 +14,14 @@ import java.util.ArrayList;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.R;
+import madelyntav.c4q.nyc.chipchop.SellActivity;
+import madelyntav.c4q.nyc.chipchop.adapters.CartListAdapter;
 import madelyntav.c4q.nyc.chipchop.adapters.FoodListAdapter;
+import madelyntav.c4q.nyc.chipchop.adapters.SellerItemsAdapter;
 
 public class Fragment_Seller_Items extends Fragment {
 
+    Button addButton;
     OnHeadlineSelectedListener mCallback;
     private ArrayList<Item> foodItems;
     private RecyclerView foodList;
@@ -35,8 +39,17 @@ public class Fragment_Seller_Items extends Fragment {
         foodList = (RecyclerView) root.findViewById(R.id.seller_items_list);
         foodList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        FoodListAdapter foodListAdapter = new FoodListAdapter(getActivity(),foodItems);
-        foodList.setAdapter(foodListAdapter);
+        SellerItemsAdapter sellerItemsAdapter = new SellerItemsAdapter(getActivity(),foodItems);
+        foodList.setAdapter(sellerItemsAdapter);
+
+        addButton = (Button) root.findViewById(R.id.addButton);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SellActivity activity = (SellActivity) getActivity();
+                activity.replaceSellerFragment(new Fragment_Seller_CreateItem());
+            }
+        });
 
               return root;
     }

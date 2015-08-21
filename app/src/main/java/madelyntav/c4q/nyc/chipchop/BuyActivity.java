@@ -31,6 +31,7 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Checkout;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Orders;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_ViewCart;
 
 public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Orders.OnBuyerOrderSelectedListener, Fragment_Buyer_Map.OnBuyerMapFragmentInteractionListener {
 
@@ -110,13 +111,13 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        SharedPreferences sharedPreferences = getSharedPreferences(Fragment_Buyer_SellerProfile.FROM_CHECKOUT, MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(Fragment_Buyer_ViewCart.FROM_CHECKOUT, MODE_PRIVATE);
 
 
-        if(sharedPreferences.getBoolean(Fragment_Buyer_SellerProfile.FROM_CHECKOUT, false)) {
+        if(sharedPreferences.getBoolean(Fragment_Buyer_ViewCart.FROM_CHECKOUT, false)) {
             replaceFragment(new Fragment_Buyer_Checkout());
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean(Fragment_Buyer_SellerProfile.FROM_CHECKOUT, false);
+            editor.putBoolean(Fragment_Buyer_ViewCart.FROM_CHECKOUT, false);
             editor.commit();
         } else if (savedInstanceState == null) {
             selectItem(0);
@@ -128,7 +129,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(getApplicationContext())
-                        .setSmallIcon(R.drawable.cc_logo_red)
+                        .setSmallIcon(R.drawable.chipchop)
                         .setContentTitle("ChipChop")
                         .setContentText("Your order is ready!");
 
@@ -185,7 +186,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
     @Override
     protected void onStop () {
-        SharedPreferences sharedPreferences = getSharedPreferences(Fragment_Buyer_SellerProfile.FROM_CHECKOUT, MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(Fragment_Buyer_ViewCart.FROM_CHECKOUT, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         editor.commit();
@@ -240,7 +241,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
     @Override
     protected void onDestroy() {
-        SharedPreferences sharedPreferences = getSharedPreferences(Fragment_Buyer_SellerProfile.FROM_CHECKOUT, MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(Fragment_Buyer_ViewCart.FROM_CHECKOUT, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         editor.commit();

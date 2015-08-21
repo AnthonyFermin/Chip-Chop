@@ -1,7 +1,5 @@
 package madelyntav.c4q.nyc.chipchop.adapters;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -18,21 +16,20 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import madelyntav.c4q.nyc.chipchop.BuyActivity;
-import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile;
 
 /**
- * Created by c4q-anthonyf on 8/14/15.
+ * Created by alvin2 on 8/20/15.
  */
-public class SellersListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<User> sellers;
     private Context context;
     private int lastPosition = -1;
 
-    public SellersListAdapter(Context context, List<User> sellers) {
+    public SellerListAdapter(Context context, List<User> sellers) {
         this.context = context;
         this.sellers = sellers;
     }
@@ -102,5 +99,3 @@ public class SellersListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return sellers.size();
     }
 }
-
-

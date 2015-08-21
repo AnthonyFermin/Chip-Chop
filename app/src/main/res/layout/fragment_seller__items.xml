@@ -16,6 +16,17 @@
             android:textSize="40sp"
             android:gravity="center_horizontal"/>
 
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ADD ITEM"
+            android:textSize="14sp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="10dp"
+            android:id="@+id/addButton"
+            style="@style/button_design"/>
+
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="0dp"

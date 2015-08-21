@@ -26,11 +26,10 @@ import madelyntav.c4q.nyc.chipchop.adapters.FoodListAdapter;
 
 public class Fragment_Buyer_SellerProfile extends Fragment {
 
-    public static final String FROM_CHECKOUT = "FromCheckout";
-    Button checkoutButton, cartButton;
+
+    Button cartButton;
     private ArrayList<Item> foodItems;
     private RecyclerView foodList;
-    private DBHelper dbHelper;
 
 
     @Override
@@ -39,7 +38,6 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_buyer_seller_profile, container, false);
 
-        dbHelper = DBHelper.getDbHelper(getActivity());
 
         foodItems = new ArrayList<>();
         populateItems();
@@ -50,23 +48,6 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
         FoodListAdapter foodListAdapter = new FoodListAdapter(getActivity(),foodItems);
         foodList.setAdapter(foodListAdapter);
 
-        checkoutButton = (Button) root.findViewById(R.id.checkoutButton);
-        checkoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if(dbHelper.userIsLoggedIn()) {
-                    ((BuyActivity) getActivity()).replaceFragment(new Fragment_Buyer_Checkout());
-                }else{
-                    SharedPreferences preferences = getActivity().getSharedPreferences(FROM_CHECKOUT, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putBoolean(FROM_CHECKOUT, true);
-                    editor.apply();
-                    Intent signupIntent = new Intent(getActivity(), SignupActivity1.class);
-                    startActivity(signupIntent);
-                }
-            }
-        });
 
 
         cartButton = (Button) root.findViewById(R.id.viewCartButton);

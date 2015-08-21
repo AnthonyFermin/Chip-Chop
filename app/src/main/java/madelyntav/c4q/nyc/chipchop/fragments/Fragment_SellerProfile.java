@@ -21,10 +21,6 @@ import madelyntav.c4q.nyc.chipchop.adapters.FoodListAdapter;
 
 public class Fragment_SellerProfile extends Fragment {
 
-    private Context context;
-    Button addButton;
-    private ArrayList<Item> foodItems;
-    private RecyclerView itemsList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,33 +29,10 @@ public class Fragment_SellerProfile extends Fragment {
         View root = inflater.inflate(R.layout.fragment_seller_profile, container, false);
 
 
-        foodItems = new ArrayList<>();
-        populateItems();
-
-        itemsList = (RecyclerView) root.findViewById(R.id.seller_profile_items_list);
-        itemsList.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        FoodListAdapter foodListAdapter = new FoodListAdapter(getActivity(), foodItems);
-        itemsList.setAdapter(foodListAdapter);
-
-        addButton = (Button) root.findViewById(R.id.addButton);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SellActivity activity = (SellActivity) getActivity();
-                activity.replaceSellerFragment(new Fragment_Seller_CreateItem());
-            }
-        });
-
         return root;
     }
 
-    //test method to populate RecyclerView
-    private void populateItems(){
-        for(int i = 0; i < 10; i++) {
-            foodItems.add(new Item("test", "Something Fancy", "3", "The fanciest homemade meal you've ever had", "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg"));
-        }
-    }
+
 
 
     public interface OnFragmentInteractionListener {

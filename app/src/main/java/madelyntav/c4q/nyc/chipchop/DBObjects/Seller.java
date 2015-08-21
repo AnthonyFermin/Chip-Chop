@@ -20,6 +20,8 @@ public class Seller {
     Boolean isCooking;
     String storeName;
     int numOfReviews;
+    int numOfTotalStars;
+    int newReviewNumOfStars;
 
     public Seller(){}
 
@@ -138,6 +140,22 @@ public class Seller {
 
     public void setNumOfReviews(int numOfReviews) {
         this.numOfReviews = numOfReviews;
+    }
+
+    public int getNumOfTotalStars() {
+        return numOfTotalStars;
+    }
+
+    public void setNumOfTotalStars(int numOfTotalStars) {
+        this.numOfTotalStars = numOfTotalStars;
+    }
+
+    public int getNewReviewNumOfStars() {
+        return newReviewNumOfStars;
+    }
+
+    public void setNewReviewNumOfStars(int newReviewNumOfStars) {
+        this.newReviewNumOfStars = newReviewNumOfStars;
     }
 
     public void clearUser(){

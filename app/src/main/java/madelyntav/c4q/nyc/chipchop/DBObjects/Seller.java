@@ -19,6 +19,7 @@ public class Seller {
     String longitude;
     Boolean isCooking;
     String storeName;
+    int numOfReviews;
 
     public Seller(){}
 
@@ -129,6 +130,14 @@ public class Seller {
 
     public void setStoreName(String storeName) {
         this.storeName = storeName;
+    }
+
+    public int getNumOfReviews() {
+        return numOfReviews;
+    }
+
+    public void setNumOfReviews(int numOfReviews) {
+        this.numOfReviews = numOfReviews;
     }
 
     public void clearUser(){

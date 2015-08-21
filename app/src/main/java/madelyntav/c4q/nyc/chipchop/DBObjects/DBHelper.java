@@ -1191,6 +1191,17 @@ public class DBHelper extends Firebase {
         return reviewArrayList;
     }
 
+    public void updateNumOfReviewsForSeller(Seller seller){
+        int numOfReviews=seller.getNumOfReviews();
+        avgNumOfReviews(numOfReviews);
+
+    }
+
+    public void avgNumOfReviews(int num){
+
+
+    }
+
     //May want to implement this later
     public void moveOrderFromActiveToFulfilled(String sellerId,String orderID,String buyerID){
         this.sellerId=sellerId;

@@ -16,6 +16,7 @@ public class User {
     ArrayList<Item> userItems;
     String latitude;
     String longitude;
+    int numOfReviews;
 
     public User(){}
 
@@ -113,6 +114,14 @@ public class User {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public int getNumOfReviews() {
+        return numOfReviews;
+    }
+
+    public void setNumOfReviews(int numOfReviews) {
+        this.numOfReviews = numOfReviews;
     }
 
     public void clearUser(){

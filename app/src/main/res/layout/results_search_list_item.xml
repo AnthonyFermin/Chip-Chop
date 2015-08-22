@@ -20,11 +20,12 @@
         <de.hdodenhof.circleimageview.CircleImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/profile_image"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:src="@drawable/github"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/chipchop_med"
             app:border_width="2dp"
             app:border_color="#FFF"
+            android:layout_marginRight="10dp"
             android:layout_gravity="center"/>
 
 
@@ -58,13 +59,13 @@
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:layout_margin="3dp"
+                    android:layout_marginRight="3dp"
                     android:src="@drawable/vegan"/>
 
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:layout_margin="3dp"
+                    android:layout_marginRight="3dp"
                     android:src="@drawable/glutenfree"/>
 
             </LinearLayout>

@@ -174,6 +174,8 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
             fragment = new Fragment_Buyer_Orders();
         } else if (position == 2) {
           fragment = new Fragment_Buyer_ProfileSettings();
+        } else if (position == 3) {
+            // TODO: SIGN OUT CODE !
         }
 
             // Create fragment manager to begin interacting with the fragments and the container

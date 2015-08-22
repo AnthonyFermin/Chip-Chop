@@ -74,14 +74,14 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/vegan"
-                    android:layout_margin="3dp"
+                    android:layout_marginRight="3dp"
                     android:id="@+id/vegan_icon"/>
 
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/glutenfree"
-                    android:layout_margin="3dp"
+                    android:layout_marginRight="3dp"
                     android:layout_toEndOf="@+id/vegan_icon"/>
 
                 <Button

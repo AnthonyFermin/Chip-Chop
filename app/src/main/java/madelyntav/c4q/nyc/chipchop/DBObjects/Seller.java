@@ -1,13 +1,17 @@
 package madelyntav.c4q.nyc.chipchop.DBObjects;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.ArrayList;
 
 /**
  * Created by c4q-madelyntavarez on 8/20/15.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Seller {
 
-    ArrayList<Item> sellerItems;
+    ArrayList<Item> items;
+    Item itemsForSale;
     String eMail;
     String name;
     Address address;
@@ -33,15 +37,17 @@ public class Seller {
         this.UID=UID;
         this.eMail = eMail;
     }
-    public Seller(String UID, String eMail, String name, Address address, String phoneNumber){
+    public Seller(String UID, String eMail, String name, Address address,String storeName, String phoneNumber){
         this.UID=UID;
         this.eMail = eMail;
         this.name=name;
         this.address=address;
         this.phoneNumber=phoneNumber;
+        this.storeName=storeName;
+        this.photoLink=photoLink;
     }
 
-    public Seller(String UID, String eMail, String name, Address address, String photoLink, String phoneNumber){
+    public Seller(String UID, String eMail, String name, Address address, String photoLink,String storeName, String phoneNumber){
         this.UID=UID;
         this.eMail = eMail;
         this.name=name;
@@ -90,9 +96,9 @@ public class Seller {
         this.address = address;
     }
 
-    public ArrayList<Item> getSellerItems() { return sellerItems; }
+    public ArrayList<Item> getItems() { return items; }
 
-    public void setSellerItems(ArrayList<Item> sellerItems) { this.sellerItems = sellerItems; }
+    public void setItems(ArrayList<Item> items) { this.items = items; }
 
     public String getDescription() { return description; }
 
@@ -156,6 +162,14 @@ public class Seller {
 
     public void setNewReviewNumOfStars(int newReviewNumOfStars) {
         this.newReviewNumOfStars = newReviewNumOfStars;
+    }
+
+    public Item getItemsForSale() {
+        return itemsForSale;
+    }
+
+    public void setItemsForSale(Item itemsForSale) {
+        this.itemsForSale = itemsForSale;
     }
 
     public void clearUser(){

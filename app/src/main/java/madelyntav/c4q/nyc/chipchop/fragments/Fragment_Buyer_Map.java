@@ -43,6 +43,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.adapters.SellersListAdapter;
@@ -65,7 +66,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     private boolean gps_enabled = false;
     private GoogleApiClient googleApiClient;
     private DBHelper dbHelper;
-    private ArrayList<User> sellers;
+    private ArrayList<Seller> sellers;
     private RecyclerView sellersList;
     private View root;
     ArrayList<User> userList;
@@ -117,7 +118,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     //test method to populate RecyclerView
     private void populateItems(){
         for(int i = 0; i < 10; i++) {
-            sellers.add(new User("test", "Github Cat", "Github Cat", new madelyntav.c4q.nyc.chipchop.DBObjects.Address(), "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg", "ajs;djf;d"));
+            sellers.add(new Seller("test", "Github Cat", "Github Cat", new madelyntav.c4q.nyc.chipchop.DBObjects.Address(), "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg", "ajs;djf;d"));
 
         }
     }
@@ -281,12 +282,12 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     AsyncTask<Void, Void, Void> getListForMarkers = new AsyncTask<Void, Void, Void>() {
         @Override
         protected Void doInBackground(Void... voids) {
-            dbHelper.getUserAddressList();
+            dbHelper.getAllActiveSellers();
 
-            while(addressList.size()==0){
+            while(sellers.size()==0){
                 // thread cannot continue until dbHelper.getUserListLatLng returns an ArrayList
                 Log.d("LATSLIST", addressList.toString());
-                addressList.addAll(dbHelper.updateAddressList());
+                sellers.addAll(dbHelper.getAllActiveSellers());
             }
             //create markers list by sorting throught latsList
             return null;

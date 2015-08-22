@@ -3,6 +3,7 @@ package madelyntav.c4q.nyc.chipchop;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 
 import com.firebase.client.Firebase;
@@ -12,6 +13,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
@@ -47,15 +49,23 @@ public class MainActivity extends AppCompatActivity {
     String sellerState="NY";
     String sellerZipcode="10033";
     String sellerEmail="JackFinnish@gmail.com";
-
-
+    Seller seller2;
+    ArrayList<Seller> activeSellerList;
     private static DBHelper dbHelper = null;
+    Item item2;
+    Item item3;
+    ArrayList<Item> itemsForSale;
+    ArrayList<User> userList;
+    User user2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         dbHelper=DBHelper.getDbHelper(this);
+        activeSellerList=new ArrayList<>();
+        userList=new ArrayList<>();
+
 
 
         item=new Item();
@@ -63,7 +73,15 @@ public class MainActivity extends AppCompatActivity {
         address=new Address(streetAddress,apt,city,state,zipCode,userID);
         user=new User(userID,email,name,address,phoneNumber);
         sellerAddress= new Address(sellerStreet,sellerApt,sellerCity,sellerState,sellerZipcode,sellerID);
-        seller=new Seller(sellerID,sellerEmail,sellerName,sellerAddress,sellerPhone);
+        seller=new Seller(sellerID,sellerEmail,sellerName,sellerAddress,"Madey's Empanadas",sellerPhone);
+        seller2=new Seller("21","HYUGFHD@gmail.com","Alvin K",sellerAddress,"jfhdjkfh","212-740-9510");
+        item=new Item(sellerID,"Mashed Potatoes",10,"With Butter and Cheese","JFJJFDGHDF");
+        item2=new Item(sellerID,"Beans",20,"Red Beans","5yhhfuid");
+        item3= new Item(sellerID,"Flan",50,"Dominican Flan","fvhkzdhfjkbg");
+        itemsForSale=new ArrayList<>();
+        user2=new User("900",email,sellerName,address,sellerPhone);
+
+        dbHelper.getAllActiveSellers();
 
 
     }
@@ -76,14 +94,55 @@ public class MainActivity extends AppCompatActivity {
         //dbHelper.addUserProfileInfoToDB(user);
         //dbHelper.addSellerProfileInfoToDB(seller);
         //dbHelper.addSellerProfileInfoToDB(seller);
-        dbHelper.addActiveSellerToTable(seller);
+        //dbHelper.addActiveSellerToTable(seller);
+        //dbHelper.addItemToActiveSellerTable(item);
+        //dbHelper.addItemToSellerProfileDB(item);
+//        itemsForSale.add(item);
+//        itemsForSale.add(item2);
+//        itemsForSale.add(item3);
+//
+        itemsForSale.addAll(dbHelper.getSellersOnSaleItems("101"));
+        Log.d("ItemsInSellerPRofile", itemsForSale.toString());
 
+        //dbHelper.getSellersOnSaleItems("101");
+
+        if (itemsForSale.size() > 0) {
+
+            for (Item item : itemsForSale) {
+
+                Log.d("ItemID", item.getItemID() + "");
+            }
+        }     item3.setItemID("-JxLUXNIRIFT1PEeDAAn");
+        item3.setBuyerID(userID);
+        dbHelper.removeItemFromSale(item3);
     }
 
+// /
+
+        //itemsForSale.addAll(dbHelper.getSellersOnSaleItems("101"));
+    //    dbHelper.sendArrayListOfItemsToItemsForSale(itemsForSale,sellerID);
+        //dbHelper.removeSellersFromActiveSellers(seller);
+
+        //dbHelper.removeItemFromSale(item.getItemID(),item.getSellerID());
+
+//        dbHelper.addCurrentOrderToSellerDB(order);
 
     public void getData(View v){
        // dbHelper.getSellerFromDB("101");
-        dbHelper.getSpecificActiveSeller(sellerID);
+       // dbHelper.getSpecificActiveSeller(sellerID);
+       // dbHelper.getSellerFromDB("101");
+        //dbHelper.getUserFromDB("5");
+        //activeSellerList.addAll(dbHelper.getAllActiveSellers());
+        //dbHelper.getSpecificActiveSeller("21");
+        //dbHelper.sendSellerToActiveSellerTable(seller);
+        //Order order= new Order(user.getUID(),itemsForSale,sellerID);
+        //dbHelper.addCurrentOrderToSellerDB(order);
+
+        //itemsForSale.clear();
+
+        //itemsForSale.addAll(dbHelper.getSellersOnSaleItems(sellerID));
+        userList.addAll(dbHelper.getArrayListOfUsers());
+        Log.d("SUSERSItemsMain", userList.toString());
 
     }
 

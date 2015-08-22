@@ -15,11 +15,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
-import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.R;
-import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile;
 
 /**
  * Created by alvin2 on 8/16/15.
@@ -71,7 +68,7 @@ public class CheckoutListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             CheckoutViewHolder vh = (CheckoutViewHolder) viewHolder;
             vh.name.setText(checkoutItem.getNameOfItem());
             vh.price.setText("$ N/A");
-            vh.quantity.setText(checkoutItem.getQuantityAvailable());
+            vh.quantity.setText(checkoutItem.getQuantity());
             Picasso.with(context).load(checkoutItem.getImageLink()).fit().into(vh.image);
 
 

@@ -19,6 +19,7 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Review;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 
@@ -97,24 +98,16 @@ public class MainActivity extends AppCompatActivity {
         //dbHelper.addActiveSellerToTable(seller);
         //dbHelper.addItemToActiveSellerTable(item);
         //dbHelper.addItemToSellerProfileDB(item);
-//        itemsForSale.add(item);
-//        itemsForSale.add(item2);
-//        itemsForSale.add(item3);
-//
-        itemsForSale.addAll(dbHelper.getSellersOnSaleItems("101"));
-        Log.d("ItemsInSellerPRofile", itemsForSale.toString());
+        itemsForSale.add(item);
+        itemsForSale.add(item2);
+        itemsForSale.add(item3);
+        Order order= new Order("5",itemsForSale,"101");
+        order.setOrderID("-JxMPmoZCm8rUg8G_UEp");
+        Review review= new Review("101","5",4);
+        order.setReview(review);
+        dbHelper.sendReviewedOrderToSellerDB(order);
 
-        //dbHelper.getSellersOnSaleItems("101");
-
-        if (itemsForSale.size() > 0) {
-
-            for (Item item : itemsForSale) {
-
-                Log.d("ItemID", item.getItemID() + "");
-            }
-        }     item3.setItemID("-JxLUXNIRIFT1PEeDAAn");
-        item3.setBuyerID(userID);
-        dbHelper.removeItemFromSale(item3);
+        //dbHelper.addCurrentOrderToSellerDB(order);
     }
 
 // /

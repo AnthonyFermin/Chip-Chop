@@ -723,10 +723,10 @@ public class DBHelper extends Firebase {
 
     }
 
-    public void addItemToSellerProfile(Item item) {
+    public void addItemToActiveSellerProfile(Item item) {
         sellerId=item.getSellerID();
 
-        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+"/itemsForSale/" );
+        Firebase fRef = new Firebase(URL + "ActiveSellers/"+sellerId+"/itemsForSale/" );
 
         String itemID = item.getItemID();
 
@@ -739,6 +739,22 @@ public class DBHelper extends Firebase {
         fRef.child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
         fRef.child(itemID).child("isVegan").setValue(item.getVegan());
     }
+
+    public void editItemInActiveSellerProfile(Item item){
+        sellerId=item.getSellerID();
+        Firebase fRef = new Firebase(URL + "ActiveSellers/"+sellerId+"/itemsForSale/" );
+        fRef.child(itemID).push();
+        fRef.child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
+        fRef.child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
+        fRef.child(itemID).child("quantityOfItem").setValue(item.getQuantity());
+        fRef.child(itemID).child("imageLink").setValue(item.getImageLink());
+        fRef.child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
+        fRef.child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
+        fRef.child(itemID).child("isVegan").setValue(item.getVegan());
+
+        Log.d("ItemID", itemID);
+    }
+
 
     public void editItemInSellerProfile(Item item){
         sellerId=item.getSellerID();
@@ -755,6 +771,22 @@ public class DBHelper extends Firebase {
         Log.d("ItemID", itemID);
     }
 
+    public void addItemToSellersProfile(Item item){
+        sellerId=item.getSellerID();
+
+        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+"/itemsForSale/" );
+
+        String itemID = item.getItemID();
+
+        fRef.child(itemID).push();
+        fRef.child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
+        fRef.child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
+        fRef.child(itemID).child("buyerID").setValue(item.getQuantity());
+        fRef.child(itemID).child("imageLink").setValue(item.getImageLink());
+        fRef.child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
+        fRef.child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
+        fRef.child(itemID).child("isVegan").setValue(item.getVegan());
+    }
     public void moveItemToPreviouslySoldItems(Item item){
         Firebase fRef = new Firebase(URL + "PreviouslySoldItems/"+item.getSellerID()+"/"+item.getBuyerID());
 
@@ -902,7 +934,6 @@ public class DBHelper extends Firebase {
     }
 
 
-    //TODO test review IDs
     public void sendReviewedOrderToSellerDB(Order order){
         Firebase fRef = new Firebase(URL + "SellerProfiles/" +order.getSellerID() + "/Reviews/");
         String orderID=order.getOrderID();
@@ -945,10 +976,7 @@ public class DBHelper extends Firebase {
                     if (userList.size() < sizeofAddDBList) {
                         userList.add(user);
                     }
-
                     Log.d("AddressList", userList.toString());
-
-
                 }
             }
 
@@ -1060,8 +1088,6 @@ public class DBHelper extends Firebase {
             }
         });
 
-
-
         return allUsers;
     }
 
@@ -1171,24 +1197,27 @@ public class DBHelper extends Firebase {
     //into the database and subtracts the number that was bought from the quantity
     //the seller currently has available. So for this we can pass it for each item
     //in the order. You can run this in the background
-    public void updateSellerItemsWhenItemIsBought(Item item){
-        UID=item.getBuyerID();
+    public void updateSellerItemsWhenItemIsBought(final Item item1){
+        sellerId=item1.getSellerID();
+        final int quantity=item1.getQuantityWanted();
 
-        final int quantity=item.getQuantity();
-        final String itemID=item.getItemID();
+        Firebase fRef = new Firebase(URL + "ActiveSellers/"+sellerId+"/itemsForSale/");
 
-        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+ "/Orders/" +UID);
-
-        fRef.addValueEventListener(new ValueEventListener() {
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     Item item = dataSnapshot1.getValue(Item.class);
 
-                    if (item.getItemID() == itemID) {
-                        int updateQuantityAvailable = item.quantity - quantity;
-                        subtractBoughtQuantityFromQuantityInDB(item.getBuyerID(), item.getItemID(), updateQuantityAvailable);
+                    if (item1.getItemID().equals(dataSnapshot1.getKey())) {
+                        int oldQuantity = item.quantity;
+                        int updateQuantityAvailable = oldQuantity - quantity;
+
+                        item.setQuantity(updateQuantityAvailable);
+                        item.setItemID(item1.getItemID());
+                        item.setSellerID(item1.sellerID);
+                        subtractBoughtQuantityFromQuantityInDB(item.getSellerID(), item.getItemID(), updateQuantityAvailable);
                     }
                 }
             }
@@ -1201,12 +1230,11 @@ public class DBHelper extends Firebase {
     }
 
     //Method that actually updates the number in the database
-    public String subtractBoughtQuantityFromQuantityInDB(String UID, String itemID, int quantityAvailable){
-        Firebase fRef = new Firebase(URL + "SellerProfiles/" + UID+"/ItemsOnSale/"+itemID);
+    public void subtractBoughtQuantityFromQuantityInDB(String sellerId, String itemID, int quantityAvailable){
+        Firebase fRef = new Firebase(URL + "ActiveSellers/" + sellerId +"/itemsForSale/");
 
-        fRef.child(itemID).push();
+        fRef.child(itemID);
         fRef.child(itemID).child("quantity").setValue(quantityAvailable);
-        return UID;
     }
 
     //method to send an order to the sellers database and then send that order to the seller
@@ -1214,7 +1242,7 @@ public class DBHelper extends Firebase {
         this.UID = UID;
         this.sellerId=sellerId;
 
-        Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId+"/Orders/"+UID);
+        Firebase fRef = new Firebase(URL + "ActiveSellers/" + sellerId+"/Orders/"+UID);
 
         ArrayList<Item> itemsOrdered = order.getItemsOrdered();
 

@@ -3,7 +3,6 @@ package madelyntav.c4q.nyc.chipchop;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 
 import com.firebase.client.Firebase;
@@ -19,7 +18,6 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
-import madelyntav.c4q.nyc.chipchop.DBObjects.Review;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 
@@ -76,11 +74,19 @@ public class MainActivity extends AppCompatActivity {
         sellerAddress= new Address(sellerStreet,sellerApt,sellerCity,sellerState,sellerZipcode,sellerID);
         seller=new Seller(sellerID,sellerEmail,sellerName,sellerAddress,"Madey's Empanadas",sellerPhone);
         seller2=new Seller("21","HYUGFHD@gmail.com","Alvin K",sellerAddress,"jfhdjkfh","212-740-9510");
-        item=new Item(sellerID,"Mashed Potatoes",10,"With Butter and Cheese","JFJJFDGHDF");
-        item2=new Item(sellerID,"Beans",20,"Red Beans","5yhhfuid");
-        item3= new Item(sellerID,"Flan",50,"Dominican Flan","fvhkzdhfjkbg");
+        item=new Item(sellerID,userID,"Mashed Potatoes",10,"With Butter and Cheese","JFJJFDGHDF");
+        item.setQuantityWanted(5);
+        item.setItemID("-JxMXJyP0nlWajRkhq3i");
+        item2=new Item(sellerID,userID,"Beans",20,"Red Beans","5yhhfuid");
+        item2.setItemID("-JxMXJyWCY8AN_LQOOP2");
+        item2.setQuantityWanted(20);
+        item3= new Item(sellerID,userID,"Flan",50,"Dominican Flan","fvhkzdhfjkbg");
+        item3.setQuantityWanted(30);
         itemsForSale=new ArrayList<>();
         user2=new User("900",email,sellerName,address,sellerPhone);
+        itemsForSale.add(item);
+        itemsForSale.add(item2);
+        itemsForSale.add(item3);
 
         dbHelper.getAllActiveSellers();
 
@@ -98,14 +104,14 @@ public class MainActivity extends AppCompatActivity {
         //dbHelper.addActiveSellerToTable(seller);
         //dbHelper.addItemToActiveSellerTable(item);
         //dbHelper.addItemToSellerProfileDB(item);
-        itemsForSale.add(item);
-        itemsForSale.add(item2);
-        itemsForSale.add(item3);
-        Order order= new Order("5",itemsForSale,"101");
-        order.setOrderID("-JxMPmoZCm8rUg8G_UEp");
-        Review review= new Review("101","5",4);
-        order.setReview(review);
-        dbHelper.sendReviewedOrderToSellerDB(order);
+
+
+        //dbHelper.sendArrayListOfItemsToItemsForSale(itemsForSale,sellerID);
+//        Order order= new Order("5",itemsForSale,"101");
+//        order.setOrderID("-JxMPmoZCm8rUg8G_UEp");
+//        Review review= new Review("101","5",4);
+//        order.setReview(review);
+//        dbHelper.sendReviewedOrderToSellerDB(order);
 
         //dbHelper.addCurrentOrderToSellerDB(order);
     }
@@ -134,8 +140,11 @@ public class MainActivity extends AppCompatActivity {
         //itemsForSale.clear();
 
         //itemsForSale.addAll(dbHelper.getSellersOnSaleItems(sellerID));
-        userList.addAll(dbHelper.getArrayListOfUsers());
-        Log.d("SUSERSItemsMain", userList.toString());
+//        userList.addAll(dbHelper.getArrayListOfUsers());
+//        Log.d("SUSERSItemsMain", userList.toString());
+
+
+            dbHelper.updateSellerItemsWhenItemIsBought(item2);
 
     }
 

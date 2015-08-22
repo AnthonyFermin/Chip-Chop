@@ -18,6 +18,7 @@ public class Item {
     Boolean glutenFree;
     Boolean containsPeanuts;
     String itemID;
+    int quantityWanted;
 
     public Item(){}
 
@@ -99,6 +100,14 @@ public class Item {
 
     public void setContainsPeanuts(Boolean containsPeanuts) {
         this.containsPeanuts = containsPeanuts;
+    }
+
+    public int getQuantityWanted() {
+        return quantityWanted;
+    }
+
+    public void setQuantityWanted(int quantityWanted) {
+        this.quantityWanted = quantityWanted;
     }
 
     public Boolean getGlutenFree() {

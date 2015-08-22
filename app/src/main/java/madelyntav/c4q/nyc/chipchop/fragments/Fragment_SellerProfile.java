@@ -97,6 +97,8 @@ public class Fragment_SellerProfile extends Fragment {
         }else{
             user = activity.getUser();
             setEditTexts();
+            loadingPanel.setVisibility(View.GONE);
+            containingView.setVisibility(View.VISIBLE);
         }
 
         cookingStatus = (ToggleButton) root.findViewById(R.id.cooking_status);
@@ -166,7 +168,7 @@ public class Fragment_SellerProfile extends Fragment {
                 if (cookingStatus.getText().toString().equalsIgnoreCase("on")) {
                     //TODO: add confirmation dialog when changing cooking status mention to click save to commit changes
                     sellerItems = activity.getSellerItems();
-                    if (sellerItems != null & hasPositiveQuantity()){
+                    if (sellerItems != null && hasPositiveQuantity()){
                         dbHelper.addActiveSellerToTable(seller);
                         activity.setCookingStatus(true);
                     }else{
@@ -224,22 +226,24 @@ public class Fragment_SellerProfile extends Fragment {
                     activity.setUser(user);
                 }else{
                     //TODO:display cannot connect to internet error message
+                    Toast.makeText(activity,"Cannot Connect to Internet", Toast.LENGTH_SHORT).show();
+                    loadingPanel.setVisibility(View.GONE);
                 }
             }
         }.execute();
     }
 
     private void setEditTexts(){
-        Address address = user.getAddress();
-        sellerName.setText(user.getName());
-        storeNameET.setText("FOOD KITCHEN");
-        if(address != null) {
-            addressET.setText(address.getStreetAddress());
-            aptET.setText(address.getApartment());
-            cityET.setText(address.getCity());
-            zipcodeET.setText(address.getZipCode());
-        }
-        phoneNumberET.setText(user.getPhoneNumber());
+//        Address address = user.getAddress();
+//        sellerName.setText(user.getName());
+//        storeNameET.setText("FOOD KITCHEN");
+//        if(address != null) {
+//            addressET.setText(address.getStreetAddress());
+//            aptET.setText(address.getApartment());
+//            cityET.setText(address.getCity());
+//            zipcodeET.setText(address.getZipCode());
+//        }
+//        phoneNumberET.setText(user.getPhoneNumber());
     }
 
 

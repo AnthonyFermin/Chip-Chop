@@ -25,7 +25,6 @@ import madelyntav.c4q.nyc.chipchop.adapters.SellerItemsAdapter;
 public class Fragment_Seller_Items extends Fragment {
 
     private Button addButton;
-    private OnHeadlineSelectedListener mCallback;
     private RecyclerView foodList;
     private RelativeLayout loadingPanel;
     private LinearLayout containingView;
@@ -90,10 +89,10 @@ public class Fragment_Seller_Items extends Fragment {
 
 
         if(activity.isFromItemCreation()){
-            ArrayList<Item> unsavedItemsList = activity.getSellerItems();
+            ArrayList<Item> unsavedItemsTemp = (ArrayList<Item>) activity.getSellerItems().clone();
             itemsToAdd = activity.getItemsToAdd();
-            unsavedItemsList.addAll(itemsToAdd);
-            SellerItemsAdapter sellerItemsAdapter = new SellerItemsAdapter(getActivity(),unsavedItemsList);
+            unsavedItemsTemp.addAll(itemsToAdd);
+            SellerItemsAdapter sellerItemsAdapter = new SellerItemsAdapter(getActivity(),unsavedItemsTemp);
             foodList.setLayoutManager(new LinearLayoutManager(getActivity()));
             foodList.setAdapter(sellerItemsAdapter);
             activity.setFromItemCreation(false);
@@ -146,25 +145,6 @@ public class Fragment_Seller_Items extends Fragment {
                 containingView.setVisibility(View.VISIBLE);
             }
         }.execute();
-    }
-
-    // Container Activity must implement this interface
-    public interface OnHeadlineSelectedListener {
-        public void onSellerItemSelected(int position);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
-        try {
-            mCallback = (OnHeadlineSelectedListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnBuyerOrderSelectedListener");
-        }
     }
 
 

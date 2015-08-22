@@ -251,6 +251,4 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         super.onDestroy();
 
     }
-
-
 }

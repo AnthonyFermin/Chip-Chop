@@ -8,12 +8,13 @@ public class Item {
     String sellerID;
     String nameOfItem;
     int quantityAvailable;
-    int price;
+    double price;
     String descriptionOfItem;
     String imageLink;
     Boolean vegan;
     Boolean glutenFree;
     Boolean containsPeanuts;
+    String itemID;
 
     public Item(){}
 
@@ -25,9 +26,7 @@ public class Item {
         this.itemID = itemID;
     }
 
-    String itemID;
-
-    public Item(String buyerID,String sellerID, String nameOfItem, int quantityAvailable, int price, String descriptionOfItem, String imageLink){
+    public Item(String buyerID,String sellerID, String nameOfItem, int quantityAvailable, double price, String descriptionOfItem, String imageLink){
         this.buyerID = buyerID;
         this.sellerID = sellerID;
         this.nameOfItem=nameOfItem;
@@ -108,7 +107,7 @@ public class Item {
         this.sellerID = sellerID;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 

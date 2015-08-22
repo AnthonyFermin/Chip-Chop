@@ -56,16 +56,16 @@ public class Fragment_Seller_CreateItem extends Fragment {
                 // TODO: add item to sellers items in db and arraylist displayed in profile/items fragment recycler views
                 String dishName = dishNameET.getText().toString();
                 int portions = 0;
-                if(!portionsET.getText().toString().equals("")) {
+                if(!portionsET.getText().toString().isEmpty()) {
                     portions = Integer.parseInt(portionsET.getText().toString());
                 }
-                int price = 1;
-                if(!priceET.getText().toString().equals("")){
-                    price = Integer.parseInt(priceET.getText().toString());
+                double price = 1.00;
+                if(!priceET.getText().toString().isEmpty()){
+                    price = Double.parseDouble(priceET.getText().toString());
                 }
                 String description = descriptionET.getText().toString();
 
-                Item item = new Item("",dbHelper.getUserID(),dishName,portions,price,description, "");
+                Item item = new Item("",dbHelper.getUserID(),dishName,portions,price,description, "https://tahala.files.wordpress.com/2010/12/avocado-3.jpg");
                 itemsToAdd.add(item);
                 activity.setItemsToAdd(itemsToAdd);
                 activity.setFromItemCreation(true);

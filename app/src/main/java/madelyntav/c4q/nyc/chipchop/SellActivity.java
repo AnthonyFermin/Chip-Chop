@@ -32,7 +32,7 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_SellerProfile;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Items;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Orders;
 
-public class SellActivity extends AppCompatActivity implements Fragment_Seller_Orders.OnHeadlineSelectedListener, Fragment_Seller_Items.OnHeadlineSelectedListener {
+public class SellActivity extends AppCompatActivity implements Fragment_Seller_Orders.OnHeadlineSelectedListener {
 
     FrameLayout frameLayout;
     LinearLayout DrawerLinear;
@@ -111,14 +111,6 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
         if (savedInstanceState == null) {
             selectItem(2);
         }
-
-    }
-
-
-
-    // TODO: PUT CODE FOR INTERACTION WITH 'ITEMS' LIST HERE !!
-    @Override
-    public void onSellerItemSelected(int position) {
 
     }
 

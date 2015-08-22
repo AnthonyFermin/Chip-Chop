@@ -83,7 +83,8 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         vh.price.setText("$" + sellerItem.getPrice());
         vh.quantity.setText(sellerItem.getQuantityAvailable() + "");
         vh.description.setText(sellerItem.getDescriptionOfItem());
-        //Picasso.with(context).load(sellerItem.getImageLink()).fit().into(vh.image);
+        if(!sellerItem.getImageLink().isEmpty())
+        Picasso.with(context).load(sellerItem.getImageLink()).fit().into(vh.image);
 
 
 

@@ -22,8 +22,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_ViewCart;
-import madelyntav.c4q.nyc.chipchop.fragments.Fragment_SellerProfile;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_ProfileSettings;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Items;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Orders;
 
@@ -88,8 +87,6 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -139,7 +136,7 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
             // TODO: PROFILE SETTINGS
 //            Intent profileIntent = new Intent(getApplicationContext(), SignupActivity2.class);
 //            startActivity(profileIntent);
-            fragment = new Fragment_SellerProfile();
+            fragment = new Fragment_Seller_ProfileSettings();
         }
 
             // Create fragment manager to begin interacting with the fragments and the container

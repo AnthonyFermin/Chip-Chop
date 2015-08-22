@@ -47,13 +47,6 @@
             android:screenOrientation="portrait">
 
         </activity>
-        <activity
-            android:name=".SplashScreenActivity"
-            android:label="ChipChop"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
-
-        </activity>
 
     </application>
 

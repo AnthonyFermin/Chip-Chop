@@ -10,60 +10,37 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 
 import madelyntav.c4q.nyc.chipchop.R;
 
 /**
- * Created by alvin2 on 8/16/15.
+ * Created by alvin2 on 8/22/15.
  */
-public class Fragment_Seller_CreateItem extends Fragment {
+public class Fragment_Buyer_ProfileSettings extends Fragment {
 
-    EditText dollarPrice, centPrice;
-    ImageButton dishPhotoButton;
-    ImageView dishPhoto;
-    Button addButton;
+    ImageButton profilePhoto;
     public static final int RESULT_OK = -1;
     private Uri imageFileUri;
     Intent intent;
     private String stringVariable = "file:///sdcard/_pictureholder_id.jpg";
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View root = inflater.inflate(R.layout.fragment_seller__create_item, container, false);
+        View root = inflater.inflate(R.layout.fragment_buyer_profile_settings, container, false);
 
-        dollarPrice = (EditText) root.findViewById(R.id.price_dollar_amount);
-        centPrice = (EditText) root.findViewById(R.id.price_cents_amount);
-
-
-        dishPhoto = (ImageView) root.findViewById(R.id.dish_image);
-
-        dishPhotoButton = (ImageButton) root.findViewById(R.id.dish_image);
-        dishPhotoButton.setOnClickListener(new View.OnClickListener() {
+        profilePhoto = (ImageButton) root.findViewById(R.id.profile_image);
+        profilePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showListViewDialog();
             }
         });
 
-        addButton = (Button) root.findViewById(R.id.add_item_button);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // TODO: add item to sellers items in db and arraylist displayed in profile/items fragment recycler views
-                String price = dollarPrice + "." + centPrice;
-            }
-        });
-
-
         return root;
     }
-
-
 
     //This handles the activity for the intent: using the camera and choosing from a gallery.
     @Override
@@ -80,7 +57,7 @@ public class Fragment_Seller_CreateItem extends Fragment {
 
 
         if (imageFileUri != null) {
-            dishPhoto.setImageURI(imageFileUri);
+            profilePhoto.setImageURI(imageFileUri);
         }
     }
 
@@ -112,5 +89,11 @@ public class Fragment_Seller_CreateItem extends Fragment {
         });
         AlertDialog alertDialog = dialogBuilder.create();
         alertDialog.show();
+    }
+
+
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        public void onFragmentInteraction(Uri uri);
     }
 }

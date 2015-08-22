@@ -23,7 +23,9 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.FoodItemSelectDialogue;
 import madelyntav.c4q.nyc.chipchop.R;
+import madelyntav.c4q.nyc.chipchop.SellActivity;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_CreateItem;
 
 /**
  * Created by c4q-anthonyf on 8/14/15.
@@ -87,6 +89,14 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         vh.quantity.setText(sellerItem.getQuantityAvailable());
         vh.description.setText(sellerItem.getDescriptionOfItem());
         Picasso.with(context).load(sellerItem.getImageLink()).fit().into(vh.image);
+
+        vh.container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SellActivity activity = (SellActivity) context;
+                activity.replaceSellerFragment(new Fragment_Seller_CreateItem());
+            }
+        });
 
         setAnimation(vh.container, position);
 

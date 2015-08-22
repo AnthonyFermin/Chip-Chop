@@ -282,12 +282,12 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     AsyncTask<Void, Void, Void> getListForMarkers = new AsyncTask<Void, Void, Void>() {
         @Override
         protected Void doInBackground(Void... voids) {
-            dbHelper.getUserAddressList();
+            dbHelper.getAllActiveSellers();
 
             while(addressList.size()==0){
                 // thread cannot continue until dbHelper.getUserListLatLng returns an ArrayList
                 Log.d("LATSLIST", addressList.toString());
-                addressList.addAll(dbHelper.updateAddressList());
+                //addressList.addAll();
             }
             //create markers list by sorting throught latsList
             return null;

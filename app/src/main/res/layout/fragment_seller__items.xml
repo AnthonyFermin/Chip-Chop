@@ -3,10 +3,19 @@
     android:layout_height="match_parent"
     tools:context="madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Items">
 
+    <RelativeLayout
+        style="@style/GenericProgressBackground"
+        android:id="@+id/loadingPanel"
+        >
+        <ProgressBar
+            style="@style/GenericProgressIndicator"/>
+    </RelativeLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:id="@+id/container">
 
         <TextView
             android:layout_width="match_parent"
@@ -32,6 +41,13 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:id="@+id/seller_items_list"/>
+
+        <Button
+            android:layout_width="match_parent:"
+            android:layout_height="wrap_content"
+            android:text="Save Changes"
+            android:clickable="false"
+            android:id="@+id/save_button"/>
 
     </LinearLayout>
 

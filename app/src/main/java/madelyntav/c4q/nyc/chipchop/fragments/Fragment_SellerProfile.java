@@ -59,6 +59,8 @@ public class Fragment_SellerProfile extends Fragment {
     String phoneNumber;
 
     User user;
+    Address userAddress;
+    Seller seller;
 
 
     @Override
@@ -121,17 +123,23 @@ public class Fragment_SellerProfile extends Fragment {
                 city = city.replace('+',' ');
 
 
-                Address userAddress = new Address(address, apt, city,"NY", zipcode, uid);
+                userAddress = new Address(address, apt, city,"NY", zipcode, uid);
 
                 Log.i("RETROFIT: LatLng", "" + location.getLat() + ", " + location.getLng());
 
                 userAddress.setLatitude(location.getLat());
                 userAddress.setLongitude(location.getLng());
 
-                Seller seller = new Seller(uid,"temp@gmail.com",storeName,userAddress,phoneNumber);
+                seller = new Seller(uid,"temp@gmail.com",storeName,userAddress,phoneNumber);
 
                 dbHelper.addSellerProfileInfoToDB(seller);
 
+                if (cookingStatus.getText().toString().equalsIgnoreCase("on")) {
+                    //TODO: add confirmation dialog when changing cooking status
+                    dbHelper.addActiveSellerToTable(seller);
+                }else{
+                    dbHelper.removeSellersFromActiveSellers(seller);
+                }
 
                 ((SellActivity) getActivity()).replaceSellerFragment(new Fragment_Seller_Items());
             }

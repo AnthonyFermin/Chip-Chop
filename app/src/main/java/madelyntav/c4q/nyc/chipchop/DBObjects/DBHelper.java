@@ -14,6 +14,7 @@ import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 /**
  * Created by c4q-madelyntavarez on 8/12/15.
@@ -1075,40 +1076,39 @@ public class DBHelper extends Firebase {
         UID=buyer.getUID();
         Firebase fRef = new Firebase(URL + "UserProfiles/" + UID+"/Reviews/"+sellerId);
 
-        fRef.child(UID).push();
-        fRef.child(UID).child(sellerId);
-        fRef.child(UID).child(sellerId).child("numOfStars").setValue(numOfStars);
-        fRef.child(UID).child(sellerId).child("reviewDescription").setValue(details);
+        fRef.child(sellerId).push();
+        fRef.child(sellerId).child("numOfStars").setValue(numOfStars);
+        fRef.child(sellerId).child("reviewDescription").setValue(details);
     }
 
     public void addUserReviewToUserProfile(User buyer, User seller, int numOfStars) {
+
         sellerId=seller.getUID();
         UID=buyer.getUID();
-        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID+"/Reviews/"+sellerId);
-        fRef.child(UID).push();
-        fRef.child(UID).child(sellerId);
-        fRef.child(UID).child(sellerId).child("numOfStars").setValue(numOfStars);
+        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID+"/Reviews/");
+
+        fRef.child(sellerId).push();
+        fRef.child(sellerId).child("numOfStars").setValue(numOfStars);
 
     }
 
     public void addReviewToSellerProfile(User buyer, User seller, int numOfStars){
         sellerId=seller.getUID();
         UID=buyer.getUID();
-        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+"/Reviews/"+UID);
-        fRef.child(sellerId).push();
-        fRef.child(sellerId).child(UID);
-        fRef.child(sellerId).child(UID).child("numOfStars").setValue(numOfStars);
+        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+"/Reviews/");
+
+        fRef.child(UID).push();
+        fRef.child(UID).child("numOfStars").setValue(numOfStars);
     }
 
     public void addReviewToSellerProfile(User buyer, User seller, int numOfStars, String details){
         sellerId=seller.getUID();
         UID=buyer.getUID();
-        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+"/Reviews/"+UID);
+        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+"/Reviews/");
 
-        fRef.child(sellerId).push();
-        fRef.child(sellerId).child(UID);
-        fRef.child(sellerId).child(UID).child("numOfStars").setValue(numOfStars);
-        fRef.child(sellerId).child(UID).child("reviewDescription").setValue(details);
+        fRef.child(UID).push();
+        fRef.child(UID).child("numOfStars").setValue(numOfStars);
+        fRef.child(UID).child("reviewDescription").setValue(details);
     }
 
     public void getAllReviewsForCertainSeller(String sellerID){
@@ -1257,4 +1257,20 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child(itemID).child("reviewDescription").setValue(order.getReview().getReviewDescription());
         }
     }
+    public void addFoodAndImageHashmapToFoodAndImageTable(HashMap<String, String> foods){
+        Firebase fRef =  new Firebase(URL + "PreMadeFoodDatabase/");
+        for(Map.Entry<String, String> food:foods.entrySet()){
+            String name=food.getKey();
+            String photoLink=food.getValue();
+            fRef.child(name).setValue(photoLink);
+        }
+    }
+    //May want to allow users to add their own photos later?
+    public void addCustomMadeFoodItemToDatabase(String name, String linkToPhoto){
+        Firebase fRef =  new Firebase(URL + "CustomFoodDatabase/");
+
+        fRef.child(name).push().setValue(linkToPhoto);
+
+    }
+
 }

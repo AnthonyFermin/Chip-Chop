@@ -14,6 +14,7 @@ import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 /**
  * Created by c4q-madelyntavarez on 8/12/15.
@@ -265,7 +266,7 @@ public class DBHelper extends Firebase {
 
 
     public void addUserProfileInfoToDB(User user) {
-        Firebase fRef = new Firebase(URL + "UserProfiles");
+        Firebase fRef = new Firebase(URL + "UserProfiles/");
         UID = user.getUID();
 
         fRef.child(UID).push();
@@ -278,7 +279,7 @@ public class DBHelper extends Firebase {
     }
 
     public void addUserProfileInfoToDBAndLaunchIntent(User user, Intent intent) {
-        Firebase fRef = new Firebase(URL + "UserProfiles");
+        Firebase fRef = new Firebase(URL + "UserProfiles/");
         UID = user.getUID();
 
         fRef.child(UID).push();
@@ -292,7 +293,7 @@ public class DBHelper extends Firebase {
     }
 
     public void addSellerProfileInfoToDB(Seller user) {
-        Firebase fRef = new Firebase(URL + "SellerProfiles");
+        Firebase fRef = new Firebase(URL + "SellerProfiles/");
         UID = user.getUID();
 
         fRef.child(UID).push();
@@ -306,7 +307,7 @@ public class DBHelper extends Firebase {
     }
 
     public void addSellerProfileInfoToDB(User user,Intent intent) {
-        Firebase fRef = new Firebase(URL + "SellerProfiles");
+        Firebase fRef = new Firebase(URL + "SellerProfiles/");
         UID = user.getUID();
 
         fRef.child(UID).push();
@@ -476,7 +477,6 @@ public class DBHelper extends Firebase {
     //Method which adds a seller to the ActiveSellers table and updates their items for sale,
     //checks if quantity is greater than 0 for each item
     public void sendSellerToActiveSellerTable(Seller seller){
-
         this.sellerId=seller.getUID();
         Firebase fRef = new Firebase(URL + "ActiveSellers/"+sellerId);
         Seller sellerToSend= getSpecificActiveSeller(sellerId);
@@ -517,7 +517,7 @@ public class DBHelper extends Firebase {
         String itemID = fire1.getKey();
         item.setItemID(itemID);
 
-        fRef.child(sellerId).child(itemID).push();
+        fRef.child(itemID).push();
         fRef.child(itemID).child("NAME").setValue(item.getNameOfItem());
         fRef.child(itemID).child("DESCRIPTION").setValue(item.getDescriptionOfItem());
         fRef.child(itemID).child("QUANTITY").setValue(item.getQuantityAvailable());
@@ -525,7 +525,6 @@ public class DBHelper extends Firebase {
         fRef.child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
         fRef.child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
         fRef.child(itemID).child("isVegan").setValue(item.getVegan());
-
 
         Log.d("ItemID", itemID);
     }
@@ -537,7 +536,7 @@ public class DBHelper extends Firebase {
         String itemID = fire1.getKey();
         item.setItemID(itemID);
 
-        fRef.child(sellerId).child(itemID).push();
+        fRef.child(itemID).push();
         fRef.child(itemID).child("NAME").setValue(item.getNameOfItem());
         fRef.child(itemID).child("DESCRIPTION").setValue(item.getDescriptionOfItem());
         fRef.child(itemID).child("QUANTITY").setValue(item.getQuantityAvailable());
@@ -558,11 +557,11 @@ public class DBHelper extends Firebase {
         for (Item item : itemsforSale) {
             String itemID = item.getItemID();
 
-            fRef.child(sellerID).child(itemID);
-            fRef.child(sellerID).child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
-            fRef.child(sellerID).child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
-            fRef.child(sellerID).child(itemID).child("quantityAvailable").setValue(item.getQuantityAvailable());
-            fRef.child(sellerID).child(itemID).child("imageLink").setValue(item.getImageLink());
+            fRef.child(itemID);
+            fRef.child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
+            fRef.child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
+            fRef.child(itemID).child("quantityAvailable").setValue(item.getQuantityAvailable());
+            fRef.child(itemID).child("imageLink").setValue(item.getImageLink());
             fRef.child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
             fRef.child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
             fRef.child(itemID).child("isVegan").setValue(item.getVegan());
@@ -644,6 +643,7 @@ public class DBHelper extends Firebase {
     public void moveItemToPreviouslySoldItems(Item item){
         Firebase fRef = new Firebase(URL + "PreviouslySoldItems/"+item.getSellerID()+"/"+item.getBuyerID());
         String itemID=item.getItemID();
+
         fRef.child(item.getSellerID()).child(item.getBuyerID()).child(itemID).push();
         fRef.child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
         fRef.child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
@@ -657,6 +657,7 @@ public class DBHelper extends Firebase {
     public void moveItemToPreviouslyBoughtItems(Item item){
         Firebase fRef = new Firebase(URL + "PreviouslyBoughtItems/"+item.getBuyerID()+"/"+item.getSellerID());
         String itemID=item.getItemID();
+
         fRef.child(item.getBuyerID()).child(item.getSellerID()).child(itemID).push();
         fRef.child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
         fRef.child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
@@ -675,7 +676,7 @@ public class DBHelper extends Firebase {
         String itemID = fire1.getKey();
         item.setItemID(itemID);
 
-        fRef.child(sellerId).child(itemID).push();
+        fRef.child(itemID).push();
         fRef.child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
         fRef.child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
         fRef.child(itemID).child("buyerID").setValue(item.getQuantityAvailable());
@@ -699,7 +700,7 @@ public class DBHelper extends Firebase {
         for (Item item : itemsOrdered) {
 
             String itemID = item.getItemID();
-            fRef.child(sellerId).child(UID).push();
+            fRef.child(UID).push();
             fRef.child(UID).child(orderID);
             fRef.child(orderID).child(itemID);
             fRef.child(orderID).child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
@@ -777,7 +778,7 @@ public class DBHelper extends Firebase {
         Firebase fRef = new Firebase(URL + "UserProfiles/" + order.getBuyerID()+ "Reviews/"+order.getSellerID());
         String orderID=order.getOrderID();
 
-        fRef.child(order.getBuyerID()).child(order.getOrderID()).push();
+        fRef.child(order.getSellerID()).child(order.getOrderID()).push();
         fRef.child(orderID).child("nameOfItem").setValue(item.getNameOfItem());
         fRef.child(orderID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
         fRef.child(orderID).child("buyerID").setValue(item.getQuantityAvailable());
@@ -1010,9 +1011,8 @@ public class DBHelper extends Firebase {
     public String subtractBoughtQuantityFromQuantityInDB(String UID, String itemID, int quantityAvailable){
         Firebase fRef = new Firebase(URL + "SellerProfiles/" + UID+"/ItemsOnSale/"+itemID);
 
-        fRef.child(UID).push();
-        fRef.child(UID).child(itemID);
-        fRef.child(UID).child(itemID).child("quantityAvailable").setValue(quantityAvailable);
+        fRef.child(itemID).push();
+        fRef.child(itemID).child("quantityAvailable").setValue(quantityAvailable);
         return UID;
     }
 
@@ -1073,42 +1073,41 @@ public class DBHelper extends Firebase {
     public void addUserReviewToUserProfile(User buyer, User seller, int numOfStars, String details){
         sellerId=seller.getUID();
         UID=buyer.getUID();
-        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID+"/Reviews/"+sellerId);
+        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID+"/Reviews/");
 
-        fRef.child(UID).push();
-        fRef.child(UID).child(sellerId);
-        fRef.child(UID).child(sellerId).child("numOfStars").setValue(numOfStars);
-        fRef.child(UID).child(sellerId).child("reviewDescription").setValue(details);
+        fRef.child(sellerId).push();
+        fRef.child(sellerId).child("numOfStars").setValue(numOfStars);
+        fRef.child(sellerId).child("reviewDescription").setValue(details);
     }
 
     public void addUserReviewToUserProfile(User buyer, User seller, int numOfStars) {
+
         sellerId=seller.getUID();
         UID=buyer.getUID();
-        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID+"/Reviews/"+sellerId);
-        fRef.child(UID).push();
-        fRef.child(UID).child(sellerId);
-        fRef.child(UID).child(sellerId).child("numOfStars").setValue(numOfStars);
+        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID+"/Reviews/");
+
+        fRef.child(sellerId).push();
+        fRef.child(sellerId).child("numOfStars").setValue(numOfStars);
 
     }
 
     public void addReviewToSellerProfile(User buyer, User seller, int numOfStars){
         sellerId=seller.getUID();
         UID=buyer.getUID();
-        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+"/Reviews/"+UID);
-        fRef.child(sellerId).push();
-        fRef.child(sellerId).child(UID);
-        fRef.child(sellerId).child(UID).child("numOfStars").setValue(numOfStars);
+        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+"/Reviews/");
+
+        fRef.child(UID).push();
+        fRef.child(UID).child("numOfStars").setValue(numOfStars);
     }
 
     public void addReviewToSellerProfile(User buyer, User seller, int numOfStars, String details){
         sellerId=seller.getUID();
         UID=buyer.getUID();
-        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+"/Reviews/"+UID);
+        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+"/Reviews/");
 
-        fRef.child(sellerId).push();
-        fRef.child(sellerId).child(UID);
-        fRef.child(sellerId).child(UID).child("numOfStars").setValue(numOfStars);
-        fRef.child(sellerId).child(UID).child("reviewDescription").setValue(details);
+        fRef.child(UID).push();
+        fRef.child(UID).child("numOfStars").setValue(numOfStars);
+        fRef.child(UID).child("reviewDescription").setValue(details);
     }
 
     public void getAllReviewsForCertainSeller(String sellerID){
@@ -1192,9 +1191,8 @@ public class DBHelper extends Firebase {
         sellerId=seller.getUID();
 
         Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+"/Reviews/" );
-        fRef.child(sellerId).push();
-        fRef.child(sellerId).child(UID);
-        fRef.child(sellerId).child(UID).child("AvgNumOfStars").setValue(newAvg);
+        fRef.child(UID).push();
+        fRef.child(UID).child("AvgNumOfStars").setValue(newAvg);
     }
 
     //May want to implement this later
@@ -1204,14 +1202,13 @@ public class DBHelper extends Firebase {
 
         Firebase fRef =  new Firebase(URL + "SellerProfiles/"+sellerId+ "/Orders/" + "/"+UID);
 
-
-        fRef.child(UID).child(buyerID).removeValue();
+        fRef.child(buyerID).removeValue();
     }
     public void sentToFullfilledOrdersTable(Order order) {
         sellerId = order.getSellerID();
         UID = order.getBuyerID();
 
-        Firebase fRef = new Firebase(URL + "FulfilledOrders/" + sellerId + "/" + UID);
+        Firebase fRef = new Firebase(URL + "FulfilledOrders/");
         ArrayList<Item> itemsOrdered = order.getItemsOrdered();
 
         Firebase fire1 = fRef.child(sellerId).push();
@@ -1235,7 +1232,7 @@ public class DBHelper extends Firebase {
         sellerId=order.getSellerID();
         UID=order.getBuyerID();
 
-        Firebase fRef =  new Firebase(URL + "FulfilledOrders/"+sellerId + "/"+UID);
+        Firebase fRef =  new Firebase(URL + "FulfilledOrders/");
         ArrayList<Item> itemsOrdered = order.getItemsOrdered();
 
         Firebase fire1 = fRef.child(sellerId).push();
@@ -1257,4 +1254,20 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child(itemID).child("reviewDescription").setValue(order.getReview().getReviewDescription());
         }
     }
+    public void addFoodAndImageHashmapToFoodAndImageTable(HashMap<String, String> foods){
+        Firebase fRef =  new Firebase(URL + "PreMadeFoodDatabase/");
+        for(Map.Entry<String, String> food:foods.entrySet()){
+            String name=food.getKey();
+            String photoLink=food.getValue();
+            fRef.child(name).setValue(photoLink);
+        }
+    }
+    //May want to allow users to add their own photos later?
+    public void addCustomMadeFoodItemToDatabase(String name, String linkToPhoto){
+        Firebase fRef =  new Firebase(URL + "CustomFoodDatabase/");
+
+        fRef.child(name).push().setValue(linkToPhoto);
+
+    }
+
 }

@@ -205,7 +205,11 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
 
     @Override
     public void onBackPressed() {
-        getSupportFragmentManager().popBackStack();
+        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+
+        } else {
+            getSupportFragmentManager().popBackStack();
+        }
     }
 
     public void replaceSellerFragment(Fragment fragment) {

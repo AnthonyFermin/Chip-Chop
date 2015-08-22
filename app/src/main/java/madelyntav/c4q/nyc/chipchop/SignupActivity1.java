@@ -39,6 +39,7 @@ public class SignupActivity1 extends AppCompatActivity {
 
                     Intent sellActivityIntent = new Intent(getApplicationContext(), SellActivity.class);
                     dbHelper.logInUser(email, password, sellActivityIntent);
+                    finish();
                 }
 
         });

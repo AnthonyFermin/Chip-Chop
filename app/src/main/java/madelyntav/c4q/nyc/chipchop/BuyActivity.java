@@ -113,6 +113,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
 
         SharedPreferences sharedPreferences = getSharedPreferences(Fragment_Buyer_ViewCart.FROM_CHECKOUT, MODE_PRIVATE);
 

@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     card_view:cardCornerRadius="1dp"
-    android:orientation="horizontal"
-    android:padding="5dp">
+    android:orientation="horizontal">
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -18,8 +17,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/food_image"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_gravity="center"
             android:src="@drawable/food"
             app:border_color="#FFF"
@@ -31,18 +30,19 @@
             android:id="@+id/food_name_tv"
             style="@style/text_design"
             android:gravity="center_vertical"
-            android:textSize="20sp"/>
+            android:textSize="17sp"
+            android:padding="8dp"/>
 
         <TextView
             android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="3"
+            android:layout_height="50dp"
+            android:gravity="center"
             android:id="@+id/food_quantity_tv"/>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:gravity="center"
             android:id="@+id/food_price_tv"/>
 
     </LinearLayout>

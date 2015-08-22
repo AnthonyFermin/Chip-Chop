@@ -87,33 +87,12 @@
         android:visibility="gone" />
 
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="LOGIN"
-        android:gravity="center_horizontal"
-        android:textStyle="bold"
-        style="@style/text_design"/>
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Email Address"
-        android:textSize="20sp"/>
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Password"
-        android:textSize="20sp"/>
-
-    <TextView
+       <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="PROFILE"
         android:gravity="center_horizontal"
         android:textStyle="bold"
-        android:layout_marginTop="40dp"
         style="@style/text_design"/>
 
     <EditText

@@ -1,6 +1,5 @@
 package madelyntav.c4q.nyc.chipchop.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -18,9 +17,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
-import madelyntav.c4q.nyc.chipchop.FoodItemSelectDialogue;
+import madelyntav.c4q.nyc.chipchop.FoodItemSelectDialog;
 import madelyntav.c4q.nyc.chipchop.R;
 
 /**
@@ -82,7 +80,7 @@ public class FoodListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             public void onClick(View view) {
                 FragmentActivity activity = (FragmentActivity)(context);
                 FragmentManager fm = activity.getSupportFragmentManager();
-                FoodItemSelectDialogue alertDialog = new FoodItemSelectDialogue();
+                FoodItemSelectDialog alertDialog = new FoodItemSelectDialog();
                 alertDialog.show(fm, "fragment_alert");
             }
         });

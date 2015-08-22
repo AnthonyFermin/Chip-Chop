@@ -66,7 +66,7 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
     //This is for the dialog box: Camera or Gallery
     private void showListViewDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-        dialogBuilder.setTitle("Please Choose:");
+        dialogBuilder.setTitle("Set Profile Image");
         final String[] items = {"Camera", "Gallery"};
         dialogBuilder.setItems(items, new DialogInterface.OnClickListener() {
             @Override

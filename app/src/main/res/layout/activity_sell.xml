@@ -26,7 +26,7 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:src="@drawable/chipchop_med"
-            app:border_width="2dp"
+            app:border_width="3dp"
             android:padding="15dp"
             android:layout_marginTop="25dp"
             app:border_color="#FFF"
@@ -39,14 +39,14 @@
             android:textSize="30sp"
             android:padding="15dp"
             android:text="NAME HERE"
-            android:textColor="#FFF"
+            android:textColor="#E53934"
             android:gravity="center_horizontal"/>
 
         <ListView
             android:id="@+id/left_drawer"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_weight="4"
             android:choiceMode="singleChoice"
             android:divider="@android:color/transparent"
             android:dividerHeight="0dp" />
@@ -57,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="buy"
+            android:text="BUY"
             android:layout_margin="6dp"/>
 
     </LinearLayout>

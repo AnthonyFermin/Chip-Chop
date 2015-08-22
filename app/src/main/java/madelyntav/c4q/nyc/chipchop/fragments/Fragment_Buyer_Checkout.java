@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,8 +15,11 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 
+import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
+import madelyntav.c4q.nyc.chipchop.FoodItemSelectDialog;
 import madelyntav.c4q.nyc.chipchop.R;
+import madelyntav.c4q.nyc.chipchop.ReviewDialogFragment;
 import madelyntav.c4q.nyc.chipchop.SignupActivity1;
 import madelyntav.c4q.nyc.chipchop.adapters.CheckoutListAdapter;
 import madelyntav.c4q.nyc.chipchop.adapters.FoodListAdapter;
@@ -49,8 +54,13 @@ public class Fragment_Buyer_Checkout extends Fragment {
             public void onClick(View view) {
 
                 //TODO: check if signed in, if not then go to signupactivity
-                Intent signupIntent = new Intent(getActivity(), SignupActivity1.class);
-                startActivity(signupIntent);
+//                Intent signupIntent = new Intent(getActivity(), SignupActivity1.class);
+//                startActivity(signupIntent);
+
+                FragmentActivity activity = getActivity();
+                FragmentManager fm = activity.getSupportFragmentManager();
+                ReviewDialogFragment alertDialog = new ReviewDialogFragment();
+                alertDialog.show(fm, "fragment_alert");
             }
         });
 

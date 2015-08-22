@@ -22,6 +22,11 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
+import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
+import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_ViewCart;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_SellerProfile;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Items;
@@ -36,6 +41,15 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
     private String[] mListTitles;
     private Fragment fragment;
     private ActionBarDrawerToggle mDrawerToggle;
+
+    // for storing data between fragments in SellActivity
+
+    private ArrayList<Item> sellerItems = null;
+    private ArrayList<Item> itemsToAdd = null;
+    private boolean currentlyCooking = false;
+    private User user = null;
+    private Seller seller = null;
+    private boolean fromItemCreation = false;
 
 
     @Override
@@ -199,4 +213,55 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
         BuyFragmentManager.beginTransaction().replace(R.id.sellerFrameLayout, fragment).addToBackStack(null).commit();
 
     }
+
+    // for storing data between fragments in SellActivity
+
+    public ArrayList<Item> getSellerItems(){
+        return sellerItems;
+    }
+
+    public void setSellerItems(ArrayList<Item> sellerItems){
+        this.sellerItems = sellerItems;
+    }
+
+    public ArrayList<Item> getItemsToAdd(){
+        return itemsToAdd;
+    }
+
+    public void setItemsToAdd(ArrayList<Item> itemsToAdd){
+        this.itemsToAdd = itemsToAdd;
+    }
+
+    public void setCookingStatus(boolean condition){
+        currentlyCooking = condition;
+    }
+
+    public boolean isCurrentlyCooking(){
+        return currentlyCooking;
+    }
+
+    public void setSeller(Seller seller){
+        this.seller = seller;
+    }
+
+    public Seller getSeller(){
+        return seller;
+    }
+
+    public void setUser(User user){
+        this.user = user;
+    }
+
+    public User getUser(){
+        return user;
+    }
+
+    public boolean isFromItemCreation(){
+        return fromItemCreation;
+    }
+
+    public void setFromItemCreation(boolean condition){
+        fromItemCreation = condition;
+    }
+
 }

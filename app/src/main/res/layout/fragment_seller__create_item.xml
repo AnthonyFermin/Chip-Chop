@@ -25,14 +25,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Dish Name"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:id="@+id/dish_name"/>
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="Number of Portions"
         android:inputType="number"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:id="@+id/portions"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -50,7 +52,8 @@
             android:layout_height="wrap_content"
             android:hint="Price"
             android:inputType="numberDecimal"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:id="@+id/price"/>
 
     </LinearLayout>
 
@@ -59,7 +62,8 @@
         android:layout_height="0dp"
         android:layout_weight="2"
         android:hint="Dish Description"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:id="@+id/description"/>
 
 
     <Button

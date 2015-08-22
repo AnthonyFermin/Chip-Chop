@@ -43,11 +43,12 @@
             android:id="@+id/seller_items_list"/>
 
         <Button
-            android:layout_width="match_parent:"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Save Changes"
             android:clickable="false"
-            android:id="@+id/save_button"/>
+            android:id="@+id/save_button"
+            style="@style/button_design"/>
 
     </LinearLayout>
 

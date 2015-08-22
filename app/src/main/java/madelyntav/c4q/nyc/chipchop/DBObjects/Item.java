@@ -8,6 +8,7 @@ public class Item {
     String sellerID;
     String nameOfItem;
     int quantityAvailable;
+    int price;
     String descriptionOfItem;
     String imageLink;
     Boolean vegan;
@@ -26,12 +27,14 @@ public class Item {
 
     String itemID;
 
-    public Item(String buyerID,String sellerID, String nameOfItem, int quantityAvailable, String descriptionOfItem, String imageLink){
+    public Item(String buyerID,String sellerID, String nameOfItem, int quantityAvailable, int price, String descriptionOfItem, String imageLink){
         this.buyerID = buyerID;
+        this.sellerID = sellerID;
         this.nameOfItem=nameOfItem;
         this.quantityAvailable=quantityAvailable;
         this.descriptionOfItem=descriptionOfItem;
         this.imageLink=imageLink;
+        this.price = price;
     }
 
     public String getNameOfItem() {
@@ -103,5 +106,13 @@ public class Item {
 
     public void setSellerID(String sellerID) {
         this.sellerID = sellerID;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 }

@@ -80,10 +80,10 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         Item sellerItem = sellerItems.get(position);
         SellersViewHolder vh = (SellersViewHolder) viewHolder;
         vh.name.setText(sellerItem.getNameOfItem());
-        vh.price.setText("$ 1.00");
-        vh.quantity.setText(sellerItem.getQuantityAvailable());
+        vh.price.setText("$" + sellerItem.getPrice());
+        vh.quantity.setText(sellerItem.getQuantityAvailable() + "");
         vh.description.setText(sellerItem.getDescriptionOfItem());
-        Picasso.with(context).load(sellerItem.getImageLink()).fit().into(vh.image);
+        //Picasso.with(context).load(sellerItem.getImageLink()).fit().into(vh.image);
 
 
 

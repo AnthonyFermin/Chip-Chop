@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
@@ -25,17 +24,19 @@ import madelyntav.c4q.nyc.chipchop.adapters.SellerItemsAdapter;
 
 public class Fragment_Seller_Items extends Fragment {
 
-    Button addButton;
-    OnHeadlineSelectedListener mCallback;
-    private ArrayList<Item> foodItems;
+    private Button addButton;
+    private OnHeadlineSelectedListener mCallback;
     private RecyclerView foodList;
     private RelativeLayout loadingPanel;
     private LinearLayout containingView;
     private Button saveChanges;
 
-    DBHelper dbHelper;
+    private DBHelper dbHelper;
+    private SellActivity activity;
 
-    ArrayList<Item> sellerItems = null;
+    private ArrayList<Item> sellerItems = null;
+    private ArrayList<Item> itemsToAdd;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,6 +45,8 @@ public class Fragment_Seller_Items extends Fragment {
         View root = inflater.inflate(R.layout.fragment_seller__items, container, false);
 
         dbHelper = DBHelper.getDbHelper(getActivity());
+        activity = (SellActivity) getActivity();
+
         sellerItems = dbHelper.getSellerItems(dbHelper.getUserID());
 
         loadingPanel = (RelativeLayout) root.findViewById(R.id.loadingPanel);
@@ -57,7 +60,18 @@ public class Fragment_Seller_Items extends Fragment {
         saveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: store current sellerItems locally within SellActivity for use between fragments
+                sellerItems.addAll(itemsToAdd);
+                activity.setSellerItems(sellerItems);
+                for(Item item: itemsToAdd) {
+                    dbHelper.addItemToSellerProfileDB(item);
+                }
+                itemsToAdd = null;
+                activity.setItemsToAdd(null);
+
+                if(activity.isCurrentlyCooking()){
+                    dbHelper.sendArrayListOfItemsToItemsForSale(sellerItems,dbHelper.getUserID());
+                }
+
                 SellActivity activity = (SellActivity) getActivity();
                 activity.replaceSellerFragment(new Fragment_SellerProfile());
             }
@@ -75,8 +89,21 @@ public class Fragment_Seller_Items extends Fragment {
 
 
 
-        load();
+        if(activity.isFromItemCreation()){
+            ArrayList<Item> unsavedItemsList = activity.getSellerItems();
+            itemsToAdd = activity.getItemsToAdd();
+            unsavedItemsList.addAll(itemsToAdd);
+            SellerItemsAdapter sellerItemsAdapter = new SellerItemsAdapter(getActivity(),unsavedItemsList);
+            foodList.setLayoutManager(new LinearLayoutManager(getActivity()));
+            foodList.setAdapter(sellerItemsAdapter);
+            activity.setFromItemCreation(false);
 
+            loadingPanel.setVisibility(View.GONE);
+            containingView.setVisibility(View.VISIBLE);
+
+        }else {
+            load();
+        }
         return root;
     }
 
@@ -106,6 +133,9 @@ public class Fragment_Seller_Items extends Fragment {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
+
+                activity.setSellerItems(sellerItems);
+                itemsToAdd = activity.getItemsToAdd();
 
                 SellerItemsAdapter sellerItemsAdapter = new SellerItemsAdapter(getActivity(),sellerItems);
                 foodList.setLayoutManager(new LinearLayoutManager(getActivity()));

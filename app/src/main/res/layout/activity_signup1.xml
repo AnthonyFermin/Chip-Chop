@@ -37,6 +37,13 @@
         android:textSize="22sp"
         android:layout_margin="10dp"/>
 
+    <CheckBox
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Remember me"
+        android:id="@+id/remember_me"
+        />
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,7 +59,5 @@
         style="@style/button_design"
         android:id="@+id/newUserButton"
         android:layout_margin="10dp"/>
-
-
 
 </LinearLayout>

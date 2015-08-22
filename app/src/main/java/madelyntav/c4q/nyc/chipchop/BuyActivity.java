@@ -16,6 +16,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -53,6 +54,17 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         setContentView(R.layout.activity_buy);
 
         dbHelper = DBHelper.getDbHelper(this);
+
+        SharedPreferences sharedPreferences = getSharedPreferences(SignupActivity1.USER_INFO, MODE_PRIVATE);
+        String email = sharedPreferences.getString(SignupActivity1.EMAIL, null);
+        String pass = sharedPreferences.getString(SignupActivity1.PASS,null);
+        Log.d("AUTO LOG-IN",email + ", " + pass);
+
+        if(email != null && pass != null){
+            Log.d("AUTO LOG-IN",email + ", " + pass);
+            dbHelper.logInUser(email,pass);
+        }
+
 
 
         frameLayout = (FrameLayout) findViewById(R.id.sellerFrameLayout);
@@ -114,10 +126,9 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        SharedPreferences sharedPreferences = getSharedPreferences(Fragment_Buyer_ViewCart.FROM_CHECKOUT, MODE_PRIVATE);
+        SharedPreferences sharedPreferences1 = getSharedPreferences(Fragment_Buyer_ViewCart.FROM_CHECKOUT, MODE_PRIVATE);
 
-
-        if(sharedPreferences.getBoolean(Fragment_Buyer_ViewCart.FROM_CHECKOUT, false)) {
+        if(sharedPreferences1.getBoolean(Fragment_Buyer_ViewCart.FROM_CHECKOUT, false)) {
             replaceFragment(new Fragment_Buyer_Checkout());
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean(Fragment_Buyer_ViewCart.FROM_CHECKOUT, false);
@@ -125,8 +136,6 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         } else if (savedInstanceState == null) {
             selectItem(0);
         }
-
-
 
         // NOTIFICATION CODE
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);

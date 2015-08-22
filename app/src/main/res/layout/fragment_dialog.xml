@@ -2,14 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp">
+    android:padding="10dp">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="DISH NAME"
         style="@style/text_design"
-        android:textSize="25sp"
+        android:padding="20dp"
+        android:textSize="30sp"
         android:gravity="center_horizontal"/>
 
     <LinearLayout
@@ -17,11 +18,14 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-    <ImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:src="@drawable/github"/>
-
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/food_image"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:src="@drawable/food"
+            app:border_color="#FFF"
+            app:border_width="2dp" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,12 +35,13 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:id="@+id/upButton"
-        android:text="UP"
+        android:text="+"
+        style="@style/button_design"
         android:layout_weight="1"/>
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="50dp"
         android:text="0"
         android:gravity="center"
         android:id="@+id/quantity_tv"
@@ -46,17 +51,24 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:id="@+id/downButton"
-        android:text="DOWN"
+        android:text="-"
+        style="@style/button_design"
         android:layout_weight="1"/>
 
         </LinearLayout>
 
     </LinearLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION"/>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="ADD TO CART"
+        android:id="@+id/add_cart_button"
         style="@style/button_design"/>
 
 </LinearLayout>

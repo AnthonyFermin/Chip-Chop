@@ -1,6 +1,8 @@
 package madelyntav.c4q.nyc.chipchop.adapters;
 
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,6 +21,7 @@ import java.util.List;
 import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
+import madelyntav.c4q.nyc.chipchop.FoodItemSelectDialogue;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile;
 
@@ -84,8 +87,6 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         vh.quantity.setText(sellerItem.getQuantityAvailable());
         vh.description.setText(sellerItem.getDescriptionOfItem());
         Picasso.with(context).load(sellerItem.getImageLink()).fit().into(vh.image);
-
-
 
         setAnimation(vh.container, position);
 

@@ -17,10 +17,10 @@
         android:id="@+id/dish_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:scaleType="centerCrop"
+        android:scaleType="centerInside"
         android:adjustViewBounds="true"
         android:src="@drawable/addphoto"
-        android:background="#80000000"
+        android:background="#FFF"
         android:layout_gravity="center_horizontal"/>
 
 

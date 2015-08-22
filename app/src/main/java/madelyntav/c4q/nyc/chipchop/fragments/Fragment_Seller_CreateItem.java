@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
@@ -21,6 +22,7 @@ import madelyntav.c4q.nyc.chipchop.R;
  */
 public class Fragment_Seller_CreateItem extends Fragment {
 
+    EditText dollarPrice, centPrice;
     public static final int RESULT_OK = -1;
     private Uri imageFileUri;
     Intent intent;
@@ -33,6 +35,10 @@ public class Fragment_Seller_CreateItem extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_seller__create_item, container, false);
+
+        dollarPrice = (EditText) root.findViewById(R.id.price_dollar_amount);
+        centPrice = (EditText) root.findViewById(R.id.price_cents_amount);
+
 
         dishPhoto = (ImageView) root.findViewById(R.id.dish_image);
 
@@ -49,6 +55,7 @@ public class Fragment_Seller_CreateItem extends Fragment {
             @Override
             public void onClick(View view) {
                 // TODO: add item to sellers items in db and arraylist displayed in profile/items fragment recycler views
+                String price = dollarPrice + "." + centPrice;
             }
         });
 

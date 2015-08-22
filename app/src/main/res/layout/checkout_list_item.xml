@@ -15,10 +15,15 @@
 
 
 
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:id="@+id/food_image"/>
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/food_image"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:src="@drawable/food"
+            app:border_color="#FFF"
+            app:border_width="2dp"
+            android:layout_margin="4dp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -26,19 +31,24 @@
             android:id="@+id/food_name_tv"
             style="@style/text_design"
             android:gravity="center_vertical"
-            android:textSize="17sp"
-            android:padding="8dp"/>
+            android:textSize="20sp"
+            android:padding="4dp"/>
 
         <TextView
             android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="3"
+            android:padding="4dp"
             android:id="@+id/food_quantity_tv"/>
 
         <TextView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:textSize="20sp"
+            android:text="4.00"
+            android:padding="4dp"
             android:id="@+id/food_price_tv"/>
 
     </LinearLayout>

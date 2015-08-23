@@ -15,7 +15,10 @@ public class Item {
     double price;
     String descriptionOfItem;
     String imageLink;
-    Boolean vegan;
+    boolean isVegetarian;
+    boolean containsEggs;
+    boolean containsShellfish;
+    boolean containsDairy;
     Boolean glutenFree;
     Boolean containsPeanuts;
     String itemID;
@@ -89,12 +92,12 @@ public class Item {
         this.imageLink = imageLink;
     }
 
-    public Boolean getVegan() {
-        return vegan;
+    public Boolean getVegetarian() {
+        return isVegetarian;
     }
 
-    public void setVegan(Boolean vegan) {
-        this.vegan = vegan;
+    public void setVegetarian(Boolean vegetarian) {
+        this.isVegetarian = vegetarian;
     }
 
     public Boolean getContainsPeanuts() {
@@ -135,5 +138,37 @@ public class Item {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public boolean isVegan() {
+        return isVegetarian;
+    }
+
+    public void setIsVegan(boolean isVegan) {
+        this.isVegetarian = isVegan;
+    }
+
+    public boolean isContainsShellfish() {
+        return containsShellfish;
+    }
+
+    public void setContainsShellfish(boolean containsShellfish) {
+        this.containsShellfish = containsShellfish;
+    }
+
+    public boolean isContainsEggs() {
+        return containsEggs;
+    }
+
+    public void setContainsEggs(boolean containsEggs) {
+        this.containsEggs = containsEggs;
+    }
+
+    public boolean isContainsDairy() {
+        return containsDairy;
+    }
+
+    public void setContainsDairy(boolean containsDairy) {
+        this.containsDairy = containsDairy;
     }
 }

@@ -5,9 +5,10 @@
     android:padding="8dp">
 
     <ImageView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/cc_logo_red"
+        android:layout_gravity="center_horizontal"
         android:paddingBottom="5dp"/>
 
     <LinearLayout

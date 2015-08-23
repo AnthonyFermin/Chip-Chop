@@ -68,6 +68,31 @@
                     android:layout_marginRight="3dp"
                     android:src="@drawable/glutenfree"/>
 
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginRight="3dp"
+                    android:src="@drawable/dairy"/>
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginRight="3dp"
+                    android:src="@drawable/nut"/>
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginRight="3dp"
+                    android:src="@drawable/egg"/>
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginRight="3dp"
+                    android:src="@drawable/shellfish"/>
+
+
             </LinearLayout>
 
         </LinearLayout>

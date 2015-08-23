@@ -18,7 +18,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
-import madelyntav.c4q.nyc.chipchop.FoodItemSelectDialogue;
+import madelyntav.c4q.nyc.chipchop.FoodItemSelectDialog;
 import madelyntav.c4q.nyc.chipchop.R;
 
 /**
@@ -81,7 +81,7 @@ public class FoodListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             public void onClick(View view) {
                 FragmentActivity activity = (FragmentActivity)(context);
                 FragmentManager fm = activity.getSupportFragmentManager();
-                FoodItemSelectDialogue alertDialog = new FoodItemSelectDialogue();
+                FoodItemSelectDialog alertDialog = new FoodItemSelectDialog();
                 alertDialog.show(fm, "fragment_alert");
             }
         });

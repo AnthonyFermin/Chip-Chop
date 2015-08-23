@@ -134,7 +134,7 @@ public class Fragment_Seller_CreateItem extends Fragment {
     //This is for the dialog box: Camera or Gallery
     private void showListViewDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-        dialogBuilder.setTitle("Please Choose:");
+        dialogBuilder.setTitle("Set Dish Image");
         final String[] items = {"Camera", "Gallery"};
         dialogBuilder.setItems(items, new DialogInterface.OnClickListener() {
             @Override

@@ -13,7 +13,7 @@
     </style>
     
     <style name="text_design">
-        <item name="android:textColor">#CE5051</item>
+        <item name="android:textColor">#E53934</item>
     </style>
 
     <style name="GenericProgressBackground" parent="android:Theme">

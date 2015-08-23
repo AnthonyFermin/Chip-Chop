@@ -25,7 +25,7 @@
             android:id="@+id/profile_image"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:src="@drawable/chipchop_med"
+            android:src="@drawable/chipchop"
             app:border_width="3dp"
             android:padding="15dp"
             android:layout_marginTop="25dp"

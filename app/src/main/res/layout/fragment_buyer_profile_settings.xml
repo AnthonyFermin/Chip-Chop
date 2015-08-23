@@ -30,7 +30,7 @@
             <!--android:layout_width="90dp"-->
             <!--android:layout_height="90dp"-->
             <!--android:layout_gravity="center"-->
-            <!--android:src="@drawable/chipchop_med"-->
+            <!--android:src="@drawable/chipchop"-->
             <!--app:border_color="#FFF"-->
             <!--app:border_width="2dp" />-->
 
@@ -40,7 +40,7 @@
             android:layout_height="90dp"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            android:src="@drawable/chipchop_med"
+            android:src="@drawable/chipchop"
             android:background="@android:color/transparent"
             android:layout_gravity="center_horizontal"/>
 

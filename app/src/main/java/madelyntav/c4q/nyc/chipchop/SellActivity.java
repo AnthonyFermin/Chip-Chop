@@ -57,10 +57,6 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
 
     private DBHelper dbHelper;
 
-    LinearLayout containingView;
-    RelativeLayout loadingPanel;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,15 +64,7 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
 
         dbHelper = DBHelper.getDbHelper(this);
 
-        loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
-        containingView = (LinearLayout) findViewById(R.id.container);
-
-        containingView.setVisibility(View.INVISIBLE);
-
-        SharedPreferences sp = getSharedPreferences(SignupActivity1.USER_INFO, MODE_PRIVATE);
-        String email = sp.getString(SignupActivity1.EMAIL,"");
-        user = new User(dbHelper.getUserID(), email);
-        user.setName(sp.getString(BuyActivity.USER_NAME, "User Name"));
+        initializeUser();
 
         frameLayout = (FrameLayout) findViewById(R.id.sellerFrameLayout);
         DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
@@ -237,6 +225,13 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
         FragmentManager BuyFragmentManager = getSupportFragmentManager();
         BuyFragmentManager.beginTransaction().replace(R.id.sellerFrameLayout, fragment).addToBackStack(null).commit();
 
+    }
+
+    private void initializeUser(){
+        SharedPreferences sp = getSharedPreferences(SignupActivity1.USER_INFO, MODE_PRIVATE);
+        String email = sp.getString(SignupActivity1.EMAIL,"");
+        user = new User(dbHelper.getUserID(), email);
+        user.setName(sp.getString(BuyActivity.USER_NAME, "User Name"));
     }
 
     // for storing data between fragments in SellActivity

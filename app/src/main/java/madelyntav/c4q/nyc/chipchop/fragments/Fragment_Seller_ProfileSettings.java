@@ -62,14 +62,12 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
     Button saveButton;
 
-    String sellerName;
     String storeName;
     String address;
     String apt;
     String city;
     String zipcode;
     String phoneNumber;
-    String email;
 
     Seller seller = null;
     User user = null;
@@ -98,8 +96,6 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         activity = (SellActivity) getActivity();
 
         user = activity.getUser();
-        email = user.geteMail();
-        sellerName = user.getName();
 
         profilePhoto = (ImageButton) root.findViewById(R.id.profile_image);
         profilePhoto.setOnClickListener(new View.OnClickListener() {
@@ -182,7 +178,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
                 userAddress.setLatitude(location.getLat());
                 userAddress.setLongitude(location.getLng());
-                Seller sellerTemp = new Seller(uid, email, sellerName, userAddress, storeName, phoneNumber);
+                Seller sellerTemp = new Seller(uid, user.geteMail(), user.getName(), userAddress, storeName, phoneNumber);
 
 
                 dbHelper.addSellerProfileInfoToDB(sellerTemp);

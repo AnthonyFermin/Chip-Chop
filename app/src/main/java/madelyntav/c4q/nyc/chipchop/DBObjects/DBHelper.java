@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.SignupActivity1;
 
 /**
@@ -272,6 +273,44 @@ public class DBHelper extends Firebase {
                                 // handle other errors
                                 break;
                         }
+                    }
+                });
+        return mSuccess;
+    }
+
+    public boolean logInUser(String email, String password, final DBCallback callback) {
+        UID="";
+        mSuccess = false;
+        fireBaseRef.authWithPassword(email, password,
+                new Firebase.AuthResultHandler() {
+                    @Override
+                    public void onAuthenticated(AuthData authData) { /* ... */
+                        mSuccess = true;
+                        String timeUID = authData.getUid();
+
+                        for (int i = 12; i < timeUID.length(); i++) {
+                            UID += timeUID.charAt(i);
+                        }
+                        callback.runOnSuccess(mContext);
+                    }
+
+                    @Override
+                    public void onAuthenticationError(FirebaseError error) {
+                        // Something went wrong :(
+                        switch (error.getCode()) {
+                            case FirebaseError.USER_DOES_NOT_EXIST:
+                                Toast.makeText(mContext, "E-mail or Password Invalid", Toast.LENGTH_LONG).show();
+                                mSuccess = false;
+                                break;
+                            case FirebaseError.INVALID_PASSWORD:
+                                Toast.makeText(mContext, "Invalid Password", Toast.LENGTH_LONG).show();
+                                mSuccess = false;
+                                break;
+                            default:
+                                // handle other errors
+                                break;
+                        }
+                        callback.runOnFail(mContext);
                     }
                 });
         return mSuccess;

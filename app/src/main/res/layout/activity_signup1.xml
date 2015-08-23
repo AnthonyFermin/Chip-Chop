@@ -9,63 +9,79 @@
     android:gravity="center_horizontal">
 
 
-    <TextView
+    <RelativeLayout
+        style="@style/GenericProgressBackground"
+        android:id="@+id/loadingPanel"
+        >
+        <ProgressBar
+            style="@style/GenericProgressIndicator"/>
+    </RelativeLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/text_design"
-        android:text="● ○"
-        android:textSize="30sp"
-        android:layout_margin="5dp"
-        android:gravity="center_horizontal"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/container">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/text_design"
+            android:text="● ○"
+            android:textSize="30sp"
+            android:layout_margin="5dp"
+            android:gravity="center_horizontal"/>
 
 
-    <EditText
-        android:id="@+id/eMail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Email"
-        android:textSize="22sp"
-        android:layout_margin="10dp" />
+        <EditText
+            android:id="@+id/eMail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            android:textSize="22sp"
+            android:layout_margin="10dp" />
 
 
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:textSize="22sp"
-        android:layout_margin="10dp"/>
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:textSize="22sp"
+            android:layout_margin="10dp"/>
 
-    <CheckBox
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Remember me"
-        android:id="@+id/remember_me"
-        />
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Remember me"
+            android:id="@+id/remember_me"
+            />
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sign In"
-        style="@style/button_design"
-        android:id="@+id/signInButton"
-        android:layout_margin="10dp"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sign In"
+            style="@style/button_design"
+            android:id="@+id/signInButton"
+            android:layout_margin="10dp"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="New User"
-        style="@style/button_design"
-        android:id="@+id/newUserButton"
-        android:layout_margin="10dp"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="New User"
+            style="@style/button_design"
+            android:id="@+id/newUserButton"
+            android:layout_margin="10dp"/>
 
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/cc_logo_red"
-        android:layout_marginTop="60dp"/>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/cc_logo_red"
+            android:layout_marginTop="60dp"/>
+
+        </LinearLayout>
 
 
 

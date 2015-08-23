@@ -72,6 +72,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
         if(email != null && pass != null){
             Log.d("AUTO LOG-IN",email + ", " + pass);
+            //AUTO LOG IN SHOULD INITIALIZE USER OBJECT
             dbHelper.logInUser(email,pass);
         }
 
@@ -157,7 +158,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         Notification notification = mBuilder.build();
         notificationManager.notify(1234, notification);
 
-        if(dbHelper.userIsLoggedIn()){
+        if(dbHelper.userIsLoggedIn() && user != null){
             load();
         }
 
@@ -287,14 +288,14 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
                 int i = 0;
                 do{
-                    Log.d("LOAD USER PROFILE", "Attempt #" + i);
+                    Log.d("Buy - Load User", "Attempt #" + i);
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                     if (i > 10){
-                        Log.d("LOAD USER PROFILE", "DIDN'T LOAD");
+                        Log.d("Buy - Load User", "DIDN'T LOAD");
                         break;
                     }
                     i++;
@@ -309,7 +310,8 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
                 if(user != null){
                     SharedPreferences.Editor editor = userInfoSP.edit();
-                    editor.putString(USER_NAME,user.getName());
+                    editor.putString(SignupActivity1.NAME,user.getName());
+                    editor.commit();
                 }
 
 

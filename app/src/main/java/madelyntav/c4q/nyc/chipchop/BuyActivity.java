@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -122,8 +123,9 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(false);
         mDrawerToggle.setDrawerIndicatorEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.navdrawer);
 
         SharedPreferences sharedPreferences1 = getSharedPreferences(Fragment_Buyer_ViewCart.FROM_CHECKOUT, MODE_PRIVATE);
 

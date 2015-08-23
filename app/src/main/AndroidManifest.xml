@@ -18,13 +18,14 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
-
+            android:screenOrientation="portrait"
+            android:logo="@drawable/chipchop">
         </activity>
         <activity
             android:name=".BuyActivity"
             android:label="ChipChop"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

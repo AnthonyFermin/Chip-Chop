@@ -318,6 +318,8 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
         fRef.child(UID).child(sLatitude).setValue(user.getAddress().getLatitude());
         fRef.child(UID).child(sLongitude).setValue(user.getAddress().getLongitude());
+
+        mContext.startActivity(intent);
     }
 
     public Seller getSellerFromDB(final String sellerID) {
@@ -788,11 +790,12 @@ public class DBHelper extends Firebase {
         fRef.child(itemID).child("isVegan").setValue(item.getVegan());
     }
     public void moveItemToPreviouslySoldItems(Item item){
-        Firebase fRef = new Firebase(URL + "PreviouslySoldItems/"+item.getSellerID()+"/"+item.getBuyerID());
+        Firebase fRef = new Firebase(URL + "PreviouslySoldItems/"+item.getSellerID()+"/");
 
         String itemID=item.getItemID();
 
-        fRef.child(item.getBuyerID()).child(itemID).push();
+        fRef.child(itemID);
+        fRef.child(itemID).child("buyerID").child(item.getBuyerID());
         fRef.child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
         fRef.child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
         fRef.child(itemID).child("buyerID").setValue(item.getQuantity());
@@ -803,10 +806,11 @@ public class DBHelper extends Firebase {
     }
 
     public void moveItemToPreviouslyBoughtItems(Item item){
-        Firebase fRef = new Firebase(URL + "PreviouslyBoughtItems/"+item.getBuyerID()+"/"+item.getSellerID());
+        Firebase fRef = new Firebase(URL + "PreviouslyBoughtItems/"+item.getBuyerID()+"/");
         String itemID=item.getItemID();
 
-        fRef.child(item.getSellerID()).child(itemID).push();
+        fRef.child(itemID);
+        fRef.child(itemID).child("sellerID").child(item.getSellerID());
         fRef.child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
         fRef.child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
         fRef.child(itemID).child("buyerID").setValue(item.getQuantity());
@@ -1167,13 +1171,15 @@ public class DBHelper extends Firebase {
 
         fRef.child(inviteeID).push();
         fRef.child(inviteeID).child("invited").setValue(newUserInviteEmail);
+
+        mContext.startActivity(intent);
     }
 
     //Returns a list of emails of users invited by a specific user
     public ArrayList<String> getInviteListForSpecificUser(){
         final ArrayList<String> invitesSent=new ArrayList<>();
 
-        Firebase fRef = new Firebase(URL+"InviteTree/"+UID);
+        Firebase fRef = new Firebase(URL + "InviteTree/" + UID);
 
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -1183,6 +1189,7 @@ public class DBHelper extends Firebase {
                     String email = (String) dataSnapshot1.getValue();
                     invitesSent.add(email);
                 }
+
             }
 
             @Override
@@ -1190,6 +1197,7 @@ public class DBHelper extends Firebase {
 
             }
         });
+
      return invitesSent;
     }
 

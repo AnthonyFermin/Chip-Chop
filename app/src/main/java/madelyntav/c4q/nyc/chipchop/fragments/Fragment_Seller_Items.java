@@ -101,6 +101,7 @@ public class Fragment_Seller_Items extends Fragment {
 
         }else {
             load();
+
         }
         return root;
     }

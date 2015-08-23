@@ -13,10 +13,11 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import madelyntav.c4q.nyc.chipchop.BuyActivity;
-import madelyntav.c4q.nyc.chipchop.DBObjects.User;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile;
 
@@ -25,11 +26,12 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile;
  */
 public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<User> sellers;
+    private List<Seller> sellers;
     private Context context;
     private int lastPosition = -1;
 
-    public SellerListAdapter(Context context, List<User> sellers) {
+
+    public SellerListAdapter(Context context, ArrayList<Seller> sellers) {
         this.context = context;
         this.sellers = sellers;
     }
@@ -63,7 +65,7 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
 
-        User seller = sellers.get(position);
+        Seller seller = sellers.get(position);
         SellersViewHolder vh = (SellersViewHolder) viewHolder;
         vh.name.setText(seller.getName());
         //TODO: CHANGE TO DESCRIPTION !!

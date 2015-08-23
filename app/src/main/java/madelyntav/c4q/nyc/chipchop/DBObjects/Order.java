@@ -1,12 +1,16 @@
 package madelyntav.c4q.nyc.chipchop.DBObjects;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.ArrayList;
 
 /**
  * Created by c4q-madelyntavarez on 8/11/15.
  */
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Order {
     String buyerID;
+    double price;
     String orderID;
     Review review;
     String sellerID;
@@ -73,5 +77,11 @@ public class Order {
         this.review = review;
     }
 
+    public double getPrice() {
+        return price;
+    }
 
+    public void setPrice(double price) {
+        this.price = price;
+    }
 }

@@ -1,13 +1,17 @@
 package madelyntav.c4q.nyc.chipchop.DBObjects;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by c4q-madelyntavarez on 8/11/15.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Item {
     String buyerID;
     String sellerID;
     String nameOfItem;
-    int quantityAvailable;
+
+    int quantity;
     double price;
     String descriptionOfItem;
     String imageLink;
@@ -15,6 +19,8 @@ public class Item {
     Boolean glutenFree;
     Boolean containsPeanuts;
     String itemID;
+
+    int quantityWanted;
 
     public Item(){}
 
@@ -26,14 +32,22 @@ public class Item {
         this.itemID = itemID;
     }
 
-    public Item(String buyerID,String sellerID, String nameOfItem, int quantityAvailable, double price, String descriptionOfItem, String imageLink){
+
+    public Item(String sellerID,String buyerID, String nameOfItem, int quantity, String descriptionOfItem, String imageLink){
         this.buyerID = buyerID;
-        this.sellerID = sellerID;
+        this.sellerID=sellerID;
         this.nameOfItem=nameOfItem;
-        this.quantityAvailable=quantityAvailable;
+        this.quantity = quantity;
         this.descriptionOfItem=descriptionOfItem;
         this.imageLink=imageLink;
-        this.price = price;
+    }
+
+    public Item(String sellerID, String nameOfItem, int quantity, String descriptionOfItem, String imageLink){
+        this.sellerID=sellerID;
+        this.nameOfItem=nameOfItem;
+        this.quantity = quantity;
+        this.descriptionOfItem=descriptionOfItem;
+        this.imageLink=imageLink;
     }
 
     public String getNameOfItem() {
@@ -52,12 +66,12 @@ public class Item {
         this.buyerID = buyerID;
     }
 
-    public int getQuantityAvailable() {
-        return quantityAvailable;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setQuantityAvailable(int quantityAvailable) {
-        this.quantityAvailable = quantityAvailable;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public String getDescriptionOfItem() {
@@ -91,6 +105,14 @@ public class Item {
         this.containsPeanuts = containsPeanuts;
     }
 
+    public int getQuantityWanted() {
+        return quantityWanted;
+    }
+
+    public void setQuantityWanted(int quantityWanted) {
+        this.quantityWanted = quantityWanted;
+    }
+
     public Boolean getGlutenFree() {
         return glutenFree;
     }
@@ -111,7 +133,7 @@ public class Item {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 }

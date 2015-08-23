@@ -1,6 +1,5 @@
 package madelyntav.c4q.nyc.chipchop.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -18,7 +17,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.FoodItemSelectDialogue;
 import madelyntav.c4q.nyc.chipchop.R;
@@ -73,7 +71,8 @@ public class FoodListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         FoodItemViewHolder vh = (FoodItemViewHolder) viewHolder;
         vh.name.setText(foodItem.getNameOfItem());
         vh.description.setText(foodItem.getDescriptionOfItem());
-        vh.price.setText("$ 1.00");
+        vh.price.setText(foodItem.getPrice() + "");
+        vh.quantity.setText(foodItem.getQuantity());
         Picasso.with(context).load(foodItem.getImageLink()).fit().into(vh.image);
 
 

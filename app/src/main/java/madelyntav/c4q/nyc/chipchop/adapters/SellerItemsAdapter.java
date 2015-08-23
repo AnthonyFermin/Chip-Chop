@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import madelyntav.c4q.nyc.chipchop.BuyActivity;
@@ -85,8 +86,10 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         Item sellerItem = sellerItems.get(position);
         SellersViewHolder vh = (SellersViewHolder) viewHolder;
         vh.name.setText(sellerItem.getNameOfItem());
-        vh.price.setText("$" + sellerItem.getPrice());
-        vh.quantity.setText(sellerItem.getQuantityAvailable() + "");
+        DecimalFormat df = new DecimalFormat("#.00");
+        String price = df.format(sellerItem.getPrice());
+        vh.price.setText("$" + price);
+        vh.quantity.setText(sellerItem.getQuantity() + "");
         vh.description.setText(sellerItem.getDescriptionOfItem());
         if(!sellerItem.getImageLink().isEmpty())
         Picasso.with(context).load(sellerItem.getImageLink()).fit().into(vh.image);

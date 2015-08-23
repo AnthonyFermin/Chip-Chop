@@ -1,7 +1,6 @@
 package madelyntav.c4q.nyc.chipchop.adapters;
 
 import android.content.Context;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,7 +18,6 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
-import madelyntav.c4q.nyc.chipchop.FoodItemSelectDialogue;
 import madelyntav.c4q.nyc.chipchop.R;
 
 /**
@@ -81,8 +79,8 @@ public class CartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         final Item checkoutItem = cartItems.get(position);
         CheckoutViewHolder vh = (CheckoutViewHolder) viewHolder;
         vh.name.setText(checkoutItem.getNameOfItem());
-        vh.price.setText("$ 3.00");
-        vh.quantity.setText(checkoutItem.getQuantityAvailable());
+        vh.price.setText(checkoutItem.getPrice() + "");
+        vh.quantity.setText(checkoutItem.getQuantity());
         Picasso.with(context).load(checkoutItem.getImageLink()).fit().into(vh.image);
 
 

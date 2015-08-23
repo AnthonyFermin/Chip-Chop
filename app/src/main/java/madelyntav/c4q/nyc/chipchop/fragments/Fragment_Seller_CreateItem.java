@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
@@ -92,7 +93,8 @@ public class Fragment_Seller_CreateItem extends Fragment {
                 }
                 String description = descriptionET.getText().toString();
 
-                Item item = new Item("",dbHelper.getUserID(),dishName,portions,decimalPrice,description, "https://tahala.files.wordpress.com/2010/12/avocado-3.jpg");
+                Item item = new Item(dbHelper.getUserID(), "",dishName,portions,description, "https://tahala.files.wordpress.com/2010/12/avocado-3.jpg");
+                item.setPrice(decimalPrice);
                 itemsToAdd.add(item);
                 activity.setItemsToAdd(itemsToAdd);
                 activity.setFromItemCreation(true);

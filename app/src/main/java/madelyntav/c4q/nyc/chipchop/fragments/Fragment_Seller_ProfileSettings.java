@@ -178,8 +178,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
                 userAddress.setLatitude(location.getLat());
                 userAddress.setLongitude(location.getLng());
-
-                seller = new Seller(uid, "temp@gmail.com", storeName, userAddress, phoneNumber);
+                seller = new Seller(uid, "temp@gmail.com", "seller name", userAddress, storeName, phoneNumber);
 
                 dbHelper.addSellerProfileInfoToDB(seller);
 
@@ -268,7 +267,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     private boolean hasPositiveQuantity(){
 
         for(Item item: sellerItems){
-            if(item.getQuantityAvailable() > 0)
+            if(item.getQuantity() > 0)
                 return true;
 
         }

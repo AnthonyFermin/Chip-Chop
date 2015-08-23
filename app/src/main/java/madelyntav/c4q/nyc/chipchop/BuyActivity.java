@@ -27,6 +27,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
@@ -79,7 +80,6 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 new Toolbar(this), R.string.drawer_open,
                 R.string.drawer_close) {
@@ -103,9 +103,6 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
                     @Override
                     public void onClick(View view) {
 
-                        // TODO:
-                        //launch sellactivity
-                        //else launch signUpActivity1
                         if(dbHelper.userIsLoggedIn()){
                             Intent sellIntent = new Intent(getApplicationContext(), SellActivity.class);
                             startActivity(sellIntent);
@@ -185,6 +182,8 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
           fragment = new Fragment_Buyer_ProfileSettings();
         } else if (position == 3) {
             // TODO: SIGN OUT CODE !
+            dbHelper.signOutUser();
+            Toast.makeText(this,"Sign out successful",Toast.LENGTH_SHORT).show();
         }
 
             // Create fragment manager to begin interacting with the fragments and the container
@@ -260,6 +259,5 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         editor.clear();
         editor.commit();
         super.onDestroy();
-
     }
 }

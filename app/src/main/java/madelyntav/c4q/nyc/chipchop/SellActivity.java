@@ -1,6 +1,7 @@
 package madelyntav.c4q.nyc.chipchop;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.Intent;
@@ -21,9 +22,11 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
@@ -51,11 +54,15 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
     private Seller seller = null;
     private boolean fromItemCreation = false;
 
+    private DBHelper dbHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sell);
+
+        dbHelper = DBHelper.getDbHelper(this);
 
         frameLayout = (FrameLayout) findViewById(R.id.sellerFrameLayout);
         DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
@@ -142,7 +149,12 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
         } else if (position == 2) {
             fragment = new Fragment_Seller_ProfileSettings();
         } else if (position == 3) {
-            // TODO: SIGN OUT CODE !
+            dbHelper.signOutUser();
+
+            Intent intent = new Intent(this,BuyActivity.class);
+            startActivity(intent);
+            Toast.makeText(this,"Sign out successful",Toast.LENGTH_SHORT).show();
+            finish();
         }
 
             // Create fragment manager to begin interacting with the fragments and the container

@@ -251,16 +251,16 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     }
 
     private void setEditTexts(){
-//        Address address = user.getAddress();
-//        sellerName.setText(user.getName());
-//        storeNameET.setText("FOOD KITCHEN");
-//        if(address != null) {
-//            addressET.setText(address.getStreetAddress());
-//            aptET.setText(address.getApartment());
-//            cityET.setText(address.getCity());
-//            zipcodeET.setText(address.getZipCode());
-//        }
-//        phoneNumberET.setText(user.getPhoneNumber());
+        Address address = user.getAddress();
+        sellerName.setText(user.getName());
+        storeNameET.setText("FOOD KITCHEN");
+        if(address != null) {
+            addressET.setText(address.getStreetAddress());
+            aptET.setText(address.getApartment());
+            cityET.setText(address.getCity());
+            zipcodeET.setText(address.getZipCode());
+        }
+        phoneNumberET.setText(user.getPhoneNumber());
     }
 
 

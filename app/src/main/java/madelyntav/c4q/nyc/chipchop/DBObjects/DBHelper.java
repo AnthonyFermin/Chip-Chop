@@ -650,7 +650,7 @@ public class DBHelper extends Firebase {
             Item item2=new Item();
             item2.setItemID(itemID);
             item2.setNameOfItem(item1.getNameOfItem());
-            item2.setVegetarian(item1.vegan);
+            item2.setVegetarian(item1.getVegetarian());
             item2.setImageLink(item1.imageLink);
             item2.setBuyerID(item1.buyerID);
             item2.setDescriptionOfItem(item1.descriptionOfItem);
@@ -725,7 +725,7 @@ public class DBHelper extends Firebase {
                         item.setGlutenFree(item1.glutenFree);
                         item.setImageLink(item1.imageLink);
                         item.setNameOfItem(item1.nameOfItem);
-                        item.setVegetarian(item1.vegan);
+                        item.setVegetarian(item1.isVegetarian);
                         item.setQuantity(item1.quantity);
                         moveItemToPreviouslySoldItems(item);
                         moveItemToPreviouslyBoughtItems(item);
@@ -765,7 +765,7 @@ public class DBHelper extends Firebase {
                         item.setGlutenFree(item1.glutenFree);
                         item.setImageLink(item1.imageLink);
                         item.setNameOfItem(item1.nameOfItem);
-                        item.setVegetarian(item1.vegan);
+                        item.setVegetarian(item1.isVegetarian);
                         item.setQuantity(item1.quantity);
                         fRef.child(dataSnapshot1.getKey()).removeValue();
                     }

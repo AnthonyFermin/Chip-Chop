@@ -63,6 +63,11 @@ public class DBHelper extends Firebase {
     public static ArrayList<Seller> allSellersInDB;
     public static ArrayList<Review> reviewArrayList;
     public static ArrayList<Seller> allActiveSellers;
+    public static ArrayList<Review> sellersReviewArrayList;
+    public static ArrayList<Order> previouslyBought;
+    public static ArrayList<Order> previouslySold;
+
+
 
     public DBHelper() {
         super(URL);
@@ -80,6 +85,9 @@ public class DBHelper extends Firebase {
         }
         userList = new ArrayList<>();
         items = new ArrayList<>();
+        sellersReviewArrayList=new ArrayList<>();
+        previouslyBought= new ArrayList<>();
+        previouslySold= new ArrayList<>();
         allUsers = new ArrayList<>();
         user = new User();
         latLngList = new ArrayList<>();
@@ -125,6 +133,7 @@ public class DBHelper extends Firebase {
 
 
                 String userIDOne = String.valueOf(stringObjectMap.get("uid"));
+
                 for (int i = 12; i < userIDOne.length(); i++) {
                     UID += userIDOne.charAt(i);
                 }
@@ -196,13 +205,18 @@ public class DBHelper extends Firebase {
     }
     //logsInUser without launching an intent
     public boolean logInUser(String email, String password) {
+        UID="";
         mSuccess = false;
         fireBaseRef.authWithPassword(email, password,
                 new Firebase.AuthResultHandler() {
                     @Override
                     public void onAuthenticated(AuthData authData) { /* ... */
                         mSuccess = true;
-                        UID = authData.getUid();
+                        String timeUID = authData.getUid();
+
+                        for (int i = 12; i < timeUID.length(); i++) {
+                            UID += timeUID.charAt(i);
+                        }
                     }
 
                     @Override
@@ -227,13 +241,18 @@ public class DBHelper extends Firebase {
     }
     //logs in user and launches an intent
     public boolean logInUser(String email, String password, final Intent intent) {
+        UID="";
         mSuccess = false;
         fireBaseRef.authWithPassword(email, password,
                 new Firebase.AuthResultHandler() {
                     @Override
                     public void onAuthenticated(AuthData authData) { /* ... */
                         mSuccess = true;
-                        UID = authData.getUid();
+                        String timeUID = authData.getUid();
+
+                        for (int i = 12; i < timeUID.length(); i++) {
+                            UID += timeUID.charAt(i);
+                        }
                         mContext.startActivity(intent);
                     }
 
@@ -270,6 +289,7 @@ public class DBHelper extends Firebase {
 
     public void addUserProfileInfoToDB(User user) {
         Firebase fRef = new Firebase(URL + "UserProfiles/");
+
         UID = user.getUID();
 
         fRef.child(UID).push();
@@ -321,6 +341,8 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
         fRef.child(UID).child(sLatitude).setValue(user.getAddress().getLatitude());
         fRef.child(UID).child(sLongitude).setValue(user.getAddress().getLongitude());
+
+        mContext.startActivity(intent);
     }
 
     public Seller getSellerFromDB(final String sellerID) {
@@ -791,11 +813,11 @@ public class DBHelper extends Firebase {
         fRef.child(itemID).child("isVegan").setValue(item.getVegan());
     }
     public void moveItemToPreviouslySoldItems(Item item){
-        Firebase fRef = new Firebase(URL + "PreviouslySoldItems/"+item.getSellerID()+"/"+item.getBuyerID());
-
+        Firebase fRef = new Firebase(URL +"SellerProfiles/"+item.getSellerID()+"/PreviouslySold/");
         String itemID=item.getItemID();
 
-        fRef.child(item.getBuyerID()).child(itemID).push();
+        fRef.child(itemID);
+        fRef.child(itemID).child("buyerID").child(item.getBuyerID());
         fRef.child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
         fRef.child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
         fRef.child(itemID).child("buyerID").setValue(item.getQuantity());
@@ -806,10 +828,12 @@ public class DBHelper extends Firebase {
     }
 
     public void moveItemToPreviouslyBoughtItems(Item item){
-        Firebase fRef = new Firebase(URL + "PreviouslyBoughtItems/"+item.getBuyerID()+"/"+item.getSellerID());
+        Firebase fRef = new Firebase(URL + "UserProfiles/"+item.getBuyerID()+"/PreviouslyBought/");
+
         String itemID=item.getItemID();
 
-        fRef.child(item.getSellerID()).child(itemID).push();
+        fRef.child(itemID);
+        fRef.child(itemID).child("sellerID").child(item.getSellerID());
         fRef.child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
         fRef.child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
         fRef.child(itemID).child("buyerID").setValue(item.getQuantity());
@@ -817,6 +841,82 @@ public class DBHelper extends Firebase {
         fRef.child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
         fRef.child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
         fRef.child(itemID).child("isVegan").setValue(item.getVegan());
+    }
+
+    public void getAllPreviouslyBoughtItems(String userID){
+        UID=userID;
+
+        Firebase fRef = new Firebase(URL + "UserProfiles/"+UID+"/PreviouslyBought/");
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                sizeofAddDBList = dataSnapshot.getChildrenCount();
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Order order = dataSnapshot1.getValue(Order.class);
+                    if (previouslyBought.size() < sizeofAddDBList) {
+                        previouslyBought.add(order);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Toast.makeText(mContext, "Unable To Retrieve Orders Please Try Again", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        if (previouslyBought.size() == sizeofAddDBList) {
+            updatePreviouslyBoughtList();
+        }
+
+    }
+
+    public void getAllPreviouslySoldItems(String sellerId){
+        this.sellerId=sellerId;
+
+        Firebase fRef = new Firebase(URL +"SellerProfiles/"+sellerId+"/PreviouslySold/");
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                sizeofAddDBList = dataSnapshot.getChildrenCount();
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Order order = dataSnapshot1.getValue(Order.class);
+                    if (previouslySold.size() < sizeofAddDBList) {
+                        previouslySold.add(order);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Toast.makeText(mContext, "Unable To Retrieve Orders Please Try Again", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        if (previouslySold.size() == sizeofAddDBList) {
+            updatePreviouslySoldList();
+        }
+
+    }
+    public ArrayList<Order> updatePreviouslySoldList(){
+
+        if(previouslySold.size()<sizeofAddDBList){
+            getAllPreviouslySoldItems(sellerId);
+        }
+
+        return previouslySold;
+    }
+
+    public ArrayList<Order> updatePreviouslyBoughtList(){
+
+        if(previouslyBought.size()<sizeofAddDBList){
+            getAllPreviouslyBoughtItems(UID);
+        }
+
+        return previouslyBought;
     }
 
     public void addCurrentOrderToSellerDB(Order order) {
@@ -1170,13 +1270,15 @@ public class DBHelper extends Firebase {
 
         fRef.child(inviteeID).push();
         fRef.child(inviteeID).child("invited").setValue(newUserInviteEmail);
+
+        mContext.startActivity(intent);
     }
 
     //Returns a list of emails of users invited by a specific user
     public ArrayList<String> getInviteListForSpecificUser(){
         final ArrayList<String> invitesSent=new ArrayList<>();
 
-        Firebase fRef = new Firebase(URL+"InviteTree/"+UID);
+        Firebase fRef = new Firebase(URL + "InviteTree/" + UID);
 
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -1186,6 +1288,7 @@ public class DBHelper extends Firebase {
                     String email = (String) dataSnapshot1.getValue();
                     invitesSent.add(email);
                 }
+
             }
 
             @Override
@@ -1193,6 +1296,7 @@ public class DBHelper extends Firebase {
 
             }
         });
+
      return invitesSent;
     }
 
@@ -1227,7 +1331,6 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
             }
         });
     }
@@ -1346,9 +1449,10 @@ public class DBHelper extends Firebase {
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     Review review = dataSnapshot1.getValue(Review.class);
-                    reviewArrayList.add(review);
+                    if (sellersReviewArrayList.size() < sizeofAddDBList) {
+                        sellersReviewArrayList.add(review);
+                    }
                 }
-                updateListOfReviewsForSeller();
             }
 
             @Override
@@ -1356,6 +1460,10 @@ public class DBHelper extends Firebase {
                 Toast.makeText(mContext, "Unable To Retrieve Reviews Please Try Again", Toast.LENGTH_SHORT).show();
             }
         });
+
+        if (sellersReviewArrayList.size() == sizeofAddDBList) {
+            updateListOfReviewsForSeller();
+        }
 
     }
 
@@ -1370,9 +1478,10 @@ public class DBHelper extends Firebase {
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     Review review = dataSnapshot1.getValue(Review.class);
-                    reviewArrayList.add(review);
+                    if (reviewArrayList.size() < sizeofAddDBList) {
+                        reviewArrayList.add(review);
+                    }
                 }
-                updateListOfReviews();
             }
 
             @Override
@@ -1380,20 +1489,25 @@ public class DBHelper extends Firebase {
                 Toast.makeText(mContext, "Unable To Retrieve Reviews Please Try Again", Toast.LENGTH_SHORT).show();
             }
         });
+
+        if (reviewArrayList.size() == sizeofAddDBList) {
+            updateAllSellersList();
+        }
     }
 
     public ArrayList<Review> updateListOfReviews() {
         if (reviewArrayList.size() < sizeofAddDBList) {
+
             getListOfReviewsForCertainUser(UID);
         }
         return reviewArrayList;
     }
 
     public ArrayList<Review> updateListOfReviewsForSeller() {
-        if (reviewArrayList.size() < sizeofAddDBList) {
+        if (sellersReviewArrayList.size() < sizeofAddDBList) {
             getAllReviewsForCertainSeller(sellerId);
         }
-        return reviewArrayList;
+        return sellersReviewArrayList;
     }
 
     public int increaseNumOfTotalStarsAndCalculateAvg(Seller seller,Review review){

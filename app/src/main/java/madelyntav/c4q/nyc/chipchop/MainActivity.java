@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     Seller seller;
     Address address;
     Address sellerAddress;
-    String sellerName="Jack";
+    String sellerName="BRailyn Torres";
     String sellerPhone="646-777-9087";
     String sellerStreet="256 Wadsworth Avenue";
     String sellerApt="2A";
@@ -98,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void sendData(View view) {
+
+        dbHelper.addSellerProfileInfoToDB(seller);
         //dbHelper.addUserProfileInfoToDB(user);
         //dbHelper.addSellerProfileInfoToDB(seller);
         //dbHelper.addSellerProfileInfoToDB(seller);

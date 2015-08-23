@@ -323,6 +323,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             }
         });
         AlertDialog alertDialog = dialogBuilder.create();
+//        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         alertDialog.show();
     }
 

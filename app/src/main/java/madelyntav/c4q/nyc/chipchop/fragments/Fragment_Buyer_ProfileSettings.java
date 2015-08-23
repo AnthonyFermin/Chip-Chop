@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageButton;
 
 import madelyntav.c4q.nyc.chipchop.R;
@@ -88,7 +89,10 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
             }
         });
         AlertDialog alertDialog = dialogBuilder.create();
+//        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         alertDialog.show();
+
+
     }
 
 

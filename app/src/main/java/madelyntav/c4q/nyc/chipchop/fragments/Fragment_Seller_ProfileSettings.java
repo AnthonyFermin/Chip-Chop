@@ -218,14 +218,14 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
                 int i = 0;
                 do{
-                    Log.d("LOAD SELLER PROFILE", "Attempt #" + i);
+                    Log.d("SellerP - load seller", "Attempt #" + i);
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                     if (i > 10){
-                        Log.d("LOAD SELLER PROFILE", "DIDN'T LOAD");
+                        Log.d("SellerP - load seller", "DIDN'T LOAD");
                         break;
                     }
                     i++;

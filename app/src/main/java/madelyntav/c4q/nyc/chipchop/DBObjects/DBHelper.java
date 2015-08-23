@@ -1313,7 +1313,7 @@ public class DBHelper extends Firebase {
     //signs out user and clears data
     public boolean signOutUser() {
         fireBaseRef.unauth();
-        userID=null;
+        UID=null;
         user.clearUser();
 //        address.clearAddress();
 //        userList.clear();

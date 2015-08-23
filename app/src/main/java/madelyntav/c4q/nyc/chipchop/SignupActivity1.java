@@ -32,6 +32,11 @@ public class SignupActivity1 extends AppCompatActivity {
     public static final String EMAIL = "email";
     public static final String PASS = "pass";
     public static final String NAME = "name";
+    public static final String ADDRESS = "address";
+    public static final String APT = "apt";
+    public static final String CITY = "city";
+    public static final String ZIPCODE = "zipcode";
+    public static final String PHONE_NUMBER = "phone_number";
 
     String email;
     String password;
@@ -67,7 +72,7 @@ public class SignupActivity1 extends AppCompatActivity {
 
                 dbHelper.logInUser(email, password, new DBCallback() {
                     @Override
-                    public void runOnSuccess(Context context) {
+                    public void runOnSuccess() {
                         user = dbHelper.getUserFromDB(dbHelper.getUserID());
                         loadingPanel.setVisibility(View.VISIBLE);
                         containingView.setVisibility(View.GONE);
@@ -75,11 +80,11 @@ public class SignupActivity1 extends AppCompatActivity {
                     }
 
                     @Override
-                    public void runOnFail(Context context) {
+                    public void runOnFail() {
                     }
                 });
 
-                }
+            }
 
         });
 
@@ -90,8 +95,21 @@ public class SignupActivity1 extends AppCompatActivity {
                 email = emailET.getText().toString().trim();
                 password = passET.getText().toString();
 
-                dbHelper.createUserAndLaunchIntent(email, password, intent);
-                checkRememberMe();
+                dbHelper.createUserAndCallback(email, password, new DBCallback() {
+                    @Override
+                    public void runOnSuccess() {
+                        checkRememberMe();
+                        Intent intent1 = new Intent(SignupActivity1.this,SignupActivity2.class);
+                        intent1.putExtra("email",email);
+                        startActivity(intent1);
+                        finish();
+                    }
+
+                    @Override
+                    public void runOnFail() {
+
+                    }
+                });
             }
         });
 
@@ -100,7 +118,6 @@ public class SignupActivity1 extends AppCompatActivity {
 
     private void checkRememberMe(){
 
-        Address address = user.getAddress();
 
         SharedPreferences sharedPreferences = getSharedPreferences(USER_INFO,MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -108,7 +125,17 @@ public class SignupActivity1 extends AppCompatActivity {
         if(rememberMe.isChecked()){
             editor.putString(PASS, password);
         }
-        editor.putString(NAME, user.getName());
+
+        // when user clicks sign in
+        if(user != null){
+            Address address = user.getAddress();
+            editor.putString(NAME, user.getName());
+            editor.putString(ADDRESS, address.getStreetAddress());
+            editor.putString(APT, address.getApartment());
+            editor.putString(CITY, address.getCity());
+            editor.putString(ZIPCODE, address.getZipCode());
+            editor.putString(PHONE_NUMBER, user.getPhoneNumber());
+        }
         editor.commit();
 
     }

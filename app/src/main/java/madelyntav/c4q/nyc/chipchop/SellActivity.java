@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
@@ -229,8 +230,16 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
 
     private void initializeUser(){
         SharedPreferences sp = getSharedPreferences(SignupActivity1.USER_INFO, MODE_PRIVATE);
-        String email = sp.getString(SignupActivity1.EMAIL,"");
-        user = new User(dbHelper.getUserID(), email);
+        String email = sp.getString(SignupActivity1.EMAIL, "");
+        String name = sp.getString(SignupActivity1.NAME, "");
+        String address = sp.getString(SignupActivity1.ADDRESS,"");
+        String apt = sp.getString(SignupActivity1.APT, "");
+        String city = sp.getString(SignupActivity1.CITY, "");
+        String zip = sp.getString(SignupActivity1.ZIPCODE, "");
+        String phoneNumber = sp.getString(SignupActivity1.PHONE_NUMBER, "");
+
+        Address userAddress = new Address(address, apt, city, "NY", zip, dbHelper.getUserID());
+        user = new User(dbHelper.getUserID(), email, name, userAddress, phoneNumber);
         user.setName(sp.getString(BuyActivity.USER_NAME, "User Name"));
     }
 

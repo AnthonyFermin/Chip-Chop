@@ -204,6 +204,50 @@ public class DBHelper extends Firebase {
 
         return mSuccess;
     }
+
+    public Boolean createUserAndCallback(final String email, final String password, final DBCallback callback) {
+        UID = "";
+
+        fireBaseRef.createUser(email, password, new ValueResultHandler<Map<String, Object>>() {
+            @Override
+            public void onSuccess(Map<String, Object> stringObjectMap) {
+                Toast.makeText(mContext, "Account Created", Toast.LENGTH_SHORT).show();
+                mSuccess = true;
+
+                String userIDOne = String.valueOf(stringObjectMap.get("uid"));
+                for (int i = 12; i < userIDOne.length(); i++) {
+                    UID += userIDOne.charAt(i);
+                }
+
+                SharedPreferences sharedPreferences = mContext.getSharedPreferences("New User", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("id", UID);
+                editor.putString("eMail", email);
+                editor.putString("password", password);
+                editor.apply();
+
+                user = new User(UID, email);
+
+                Firebase fRef = new Firebase(URL + "UserProfiles");
+                fRef.child(UID);
+                fRef.child(UID).child(sEmailAddress).setValue(email);
+
+                callback.runOnSuccess();
+            }
+
+            @Override
+            public void onError(FirebaseError firebaseError) {
+                Toast.makeText(mContext, "Please set Email and Password", Toast.LENGTH_SHORT).show();
+                Log.d("Firebase", firebaseError.toString());
+                mSuccess = false;
+                callback.runOnFail();
+            }
+        });
+
+
+        return mSuccess;
+    }
+
     //logsInUser without launching an intent
     public boolean logInUser(String email, String password) {
         UID="";
@@ -291,7 +335,7 @@ public class DBHelper extends Firebase {
                         for (int i = 12; i < timeUID.length(); i++) {
                             UID += timeUID.charAt(i);
                         }
-                        callback.runOnSuccess(mContext);
+                        callback.runOnSuccess();
                     }
 
                     @Override
@@ -310,7 +354,7 @@ public class DBHelper extends Firebase {
                                 // handle other errors
                                 break;
                         }
-                        callback.runOnFail(mContext);
+                        callback.runOnFail();
                     }
                 });
         return mSuccess;

@@ -4,7 +4,7 @@ import android.content.Context;
 
 public interface DBCallback{
 
-    public void runOnSuccess(Context context);
-    public void runOnFail(Context context);
+    public void runOnSuccess();
+    public void runOnFail();
 
 }

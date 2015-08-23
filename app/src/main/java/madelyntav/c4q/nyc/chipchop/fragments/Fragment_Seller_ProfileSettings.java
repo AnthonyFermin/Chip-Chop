@@ -1,14 +1,15 @@
 package madelyntav.c4q.nyc.chipchop.fragments;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,8 +25,6 @@ import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
@@ -36,7 +35,7 @@ import madelyntav.c4q.nyc.chipchop.GeolocationAPI.GeolocationAPI;
 import madelyntav.c4q.nyc.chipchop.GeolocationAPI.Location;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.SellActivity;
-import madelyntav.c4q.nyc.chipchop.adapters.SellerItemsAdapter;
+import madelyntav.c4q.nyc.chipchop.SignupActivity1;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -52,7 +51,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
     ToggleButton cookingStatus;
     ImageButton profileImage;
-    TextView sellerName;
+    TextView sellerNameTV;
 
     EditText storeNameET;
     EditText addressET;
@@ -63,14 +62,16 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
     Button saveButton;
 
+    String sellerName;
     String storeName;
     String address;
     String apt;
     String city;
     String zipcode;
     String phoneNumber;
+    String email;
 
-    Seller seller;
+    Seller seller = null;
     User user = null;
     Address userAddress;
     ArrayList<Item> sellerItems;
@@ -96,6 +97,10 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         dbHelper = DBHelper.getDbHelper(getActivity());
         activity = (SellActivity) getActivity();
 
+        user = activity.getUser();
+        email = user.geteMail();
+        sellerName = user.getName();
+
         profilePhoto = (ImageButton) root.findViewById(R.id.profile_image);
         profilePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,11 +114,11 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         loadingPanel = (RelativeLayout) root.findViewById(R.id.loadingPanel);
         loadingPanel.setVisibility(View.VISIBLE);
 
-        if(activity.getUser() == null) {
-            user = dbHelper.getUserFromDB(dbHelper.getUserID());
+        if(activity.getSeller() == null) {
+            seller = dbHelper.getSpecificSeller(dbHelper.getUserID());
             load();
         }else{
-            user = activity.getUser();
+            seller = activity.getSeller();
             setEditTexts();
             loadingPanel.setVisibility(View.GONE);
             containingView.setVisibility(View.VISIBLE);
@@ -123,7 +128,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         cookingStatus.setChecked(activity.isCurrentlyCooking());
 
         profileImage = (ImageButton) root.findViewById(R.id.profile_image);
-        sellerName = (TextView) root.findViewById(R.id.seller_name_tv);
+        sellerNameTV = (TextView) root.findViewById(R.id.seller_name_tv);
         storeNameET = (EditText) root.findViewById(R.id.store_name);
         addressET = (EditText) root.findViewById(R.id.address);
         aptET = (EditText) root.findViewById(R.id.apt);
@@ -155,9 +160,8 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         address = address.trim().replace(" ", "+");
         storeName = storeNameET.getText().toString().trim();
         apt = aptET.getText().toString();
-        city = cityET.getText().toString().trim().replace(' ','+');
-        phoneNumber = phoneNumberET.getText().toString().replace("-","");
-
+        city = cityET.getText().toString().trim().replace(' ', '+');
+        phoneNumber = phoneNumberET.getText().toString().replace("-", "");
 
         String queryString = address + ",+" + city + ",+NY";// + "&key=" + APIKEY;
         Log.i("RETROFIT- Geocode Query", queryString);
@@ -178,9 +182,11 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
                 userAddress.setLatitude(location.getLat());
                 userAddress.setLongitude(location.getLng());
-                seller = new Seller(uid, "temp@gmail.com", "seller name", userAddress, storeName, phoneNumber);
+                Seller sellerTemp = new Seller(uid, email, sellerName, userAddress, storeName, phoneNumber);
 
-                dbHelper.addSellerProfileInfoToDB(seller);
+
+                dbHelper.addSellerProfileInfoToDB(sellerTemp);
+                activity.setSeller(sellerTemp);
 
                 if (cookingStatus.getText().toString().equalsIgnoreCase("on")) {
                     //TODO: add confirmation dialog when changing cooking status mention to click save to commit changes
@@ -227,7 +233,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                         break;
                     }
                     i++;
-                }while(user == null);
+                }while(seller == null);
 
                 return null;
             }
@@ -236,11 +242,11 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
 
-                if(user != null) {
+                if(seller != null) {
                     loadingPanel.setVisibility(View.GONE);
                     containingView.setVisibility(View.VISIBLE);
                     setEditTexts();
-                    activity.setUser(user);
+                    activity.setSeller(seller);
                 }else{
                     //TODO:display cannot connect to internet error message
                     Toast.makeText(activity,"Cannot Connect to Internet", Toast.LENGTH_SHORT).show();
@@ -251,16 +257,16 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     }
 
     private void setEditTexts(){
-        Address address = user.getAddress();
-        sellerName.setText(user.getName());
-        storeNameET.setText("FOOD KITCHEN");
+        Address address = seller.getAddress();
+        sellerNameTV.setText(user.getName());
+        storeNameET.setText(seller.getStoreName());
         if(address != null) {
             addressET.setText(address.getStreetAddress());
             aptET.setText(address.getApartment());
             cityET.setText(address.getCity());
             zipcodeET.setText(address.getZipCode());
         }
-        phoneNumberET.setText(user.getPhoneNumber());
+        phoneNumberET.setText(seller.getPhoneNumber());
     }
 
 

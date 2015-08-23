@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.Intent;
@@ -32,6 +33,7 @@ import android.widget.Toast;
 
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
+import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Checkout;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Orders;
@@ -50,6 +52,11 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
     private ActionBarDrawerToggle mDrawerToggle;
     private DBHelper dbHelper;
 
+    private User user = null;
+
+    SharedPreferences userInfoSP;
+    public static final String USER_NAME = "name";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,9 +65,9 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
         dbHelper = DBHelper.getDbHelper(this);
 
-        SharedPreferences sharedPreferences = getSharedPreferences(SignupActivity1.USER_INFO, MODE_PRIVATE);
-        String email = sharedPreferences.getString(SignupActivity1.EMAIL, null);
-        String pass = sharedPreferences.getString(SignupActivity1.PASS,null);
+        userInfoSP = getSharedPreferences(SignupActivity1.USER_INFO, MODE_PRIVATE);
+        String email = userInfoSP.getString(SignupActivity1.EMAIL, null);
+        String pass = userInfoSP.getString(SignupActivity1.PASS,null);
         Log.d("AUTO LOG-IN",email + ", " + pass);
 
         if(email != null && pass != null){
@@ -131,7 +138,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
         if(sharedPreferences1.getBoolean(Fragment_Buyer_ViewCart.FROM_CHECKOUT, false)) {
             replaceFragment(new Fragment_Buyer_Checkout());
-            SharedPreferences.Editor editor = sharedPreferences.edit();
+            SharedPreferences.Editor editor = sharedPreferences1.edit();
             editor.putBoolean(Fragment_Buyer_ViewCart.FROM_CHECKOUT, false);
             editor.commit();
         } else if (savedInstanceState == null) {
@@ -150,6 +157,9 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         Notification notification = mBuilder.build();
         notificationManager.notify(1234, notification);
 
+        if(dbHelper.userIsLoggedIn()){
+            load();
+        }
 
     }
 
@@ -186,6 +196,13 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
             // TODO: SIGN OUT CODE !
             dbHelper.signOutUser();
             Toast.makeText(this,"Sign out successful",Toast.LENGTH_SHORT).show();
+            SharedPreferences sharedPreferences= getSharedPreferences(SignupActivity1.USER_INFO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor=sharedPreferences.edit();
+            editor.clear();
+            editor.commit();
+
+            //if not currently in fragment_buyer_map, replace currently fragment
+            replaceFragment(new Fragment_Buyer_Map());
         }
 
             // Create fragment manager to begin interacting with the fragments and the container
@@ -261,5 +278,42 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         editor.clear();
         editor.commit();
         super.onDestroy();
+    }
+
+    private void load(){
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                int i = 0;
+                do{
+                    Log.d("LOAD USER PROFILE", "Attempt #" + i);
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if (i > 10){
+                        Log.d("LOAD USER PROFILE", "DIDN'T LOAD");
+                        break;
+                    }
+                    i++;
+                }while(user == null);
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+
+                if(user != null){
+                    SharedPreferences.Editor editor = userInfoSP.edit();
+                    editor.putString(USER_NAME,user.getName());
+                }
+
+
+            }
+        }.execute();
     }
 }

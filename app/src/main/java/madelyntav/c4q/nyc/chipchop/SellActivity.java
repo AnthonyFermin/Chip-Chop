@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -56,6 +57,9 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
 
     private DBHelper dbHelper;
 
+    LinearLayout containingView;
+    RelativeLayout loadingPanel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +67,16 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
         setContentView(R.layout.activity_sell);
 
         dbHelper = DBHelper.getDbHelper(this);
+
+        loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
+        containingView = (LinearLayout) findViewById(R.id.container);
+
+        containingView.setVisibility(View.INVISIBLE);
+
+        SharedPreferences sp = getSharedPreferences(SignupActivity1.USER_INFO, MODE_PRIVATE);
+        String email = sp.getString(SignupActivity1.EMAIL,"");
+        user = new User(dbHelper.getUserID(), email);
+        user.setName(sp.getString(BuyActivity.USER_NAME, "User Name"));
 
         frameLayout = (FrameLayout) findViewById(R.id.sellerFrameLayout);
         DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
@@ -151,6 +165,11 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
             fragment = new Fragment_Seller_ProfileSettings();
         } else if (position == 3) {
             dbHelper.signOutUser();
+
+            SharedPreferences sharedPreferences= getSharedPreferences(SignupActivity1.USER_INFO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor=sharedPreferences.edit();
+            editor.clear();
+            editor.commit();
 
             Intent intent = new Intent(this,BuyActivity.class);
             startActivity(intent);

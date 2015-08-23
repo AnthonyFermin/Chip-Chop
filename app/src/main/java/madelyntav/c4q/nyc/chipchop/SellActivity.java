@@ -89,6 +89,7 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.navdrawer);
 
 
         if (savedInstanceState == null) {

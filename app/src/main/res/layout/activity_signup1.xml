@@ -60,4 +60,13 @@
         android:id="@+id/newUserButton"
         android:layout_margin="10dp"/>
 
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/cc_logo_red"
+        android:layout_marginTop="60dp"/>
+
+
+
 </LinearLayout>

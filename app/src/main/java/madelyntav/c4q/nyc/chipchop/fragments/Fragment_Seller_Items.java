@@ -1,6 +1,5 @@
 package madelyntav.c4q.nyc.chipchop.fragments;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -72,7 +71,7 @@ public class Fragment_Seller_Items extends Fragment {
                 }
 
                 SellActivity activity = (SellActivity) getActivity();
-                activity.replaceSellerFragment(new Fragment_SellerProfile());
+                activity.replaceSellerFragment(new Fragment_Seller_ProfileSettings());
             }
         });
 

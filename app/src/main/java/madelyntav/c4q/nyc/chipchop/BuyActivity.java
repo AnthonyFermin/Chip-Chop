@@ -33,6 +33,7 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Checkout;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Orders;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_ProfileSettings;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_ViewCart;
 
@@ -89,8 +90,13 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
             }
 
             public void onDrawerOpened(View drawerView) {
+
+                InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.hideSoftInputFromWindow(drawerView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
                 getSupportActionBar().setTitle(R.string.app_name);
                 ActivityCompat.invalidateOptionsMenu(BuyActivity.this);
+
 
                 Button sellButton = (Button) findViewById(R.id.sellButton);
                 sellButton.setOnClickListener(new View.OnClickListener() {
@@ -108,9 +114,6 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
                             startActivity(signUpIntent);
                         }
 
-                        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-
 
 
                     }
@@ -121,10 +124,9 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
 
         SharedPreferences sharedPreferences1 = getSharedPreferences(Fragment_Buyer_ViewCart.FROM_CHECKOUT, MODE_PRIVATE);
 
@@ -141,7 +143,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(getApplicationContext())
-                        .setSmallIcon(R.drawable.chipchop)
+                        .setSmallIcon(R.drawable.chipchop_small)
                         .setContentTitle("ChipChop")
                         .setContentText("Your order is ready!");
 
@@ -180,9 +182,9 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         } else if (position == 1) {
             fragment = new Fragment_Buyer_Orders();
         } else if (position == 2) {
-//            Intent editProfileIntent = new Intent(getApplicationContext(), SignupActivity2.class);
-//            startActivity(editProfileIntent);
-//            finish();
+          fragment = new Fragment_Buyer_ProfileSettings();
+        } else if (position == 3) {
+            // TODO: SIGN OUT CODE !
         }
 
             // Create fragment manager to begin interacting with the fragments and the container

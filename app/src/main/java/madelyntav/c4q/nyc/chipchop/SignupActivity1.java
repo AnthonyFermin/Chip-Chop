@@ -45,10 +45,12 @@ public class SignupActivity1 extends AppCompatActivity {
                 email = emailET.getText().toString().trim();
                 password = passET.getText().toString();
 
+
                 Intent sellActivityIntent = new Intent(getApplicationContext(), SellActivity.class);
                 dbHelper.logInUser(email, password, sellActivityIntent);
                 checkRememberMe();
                 finish();
+
                 }
 
         });

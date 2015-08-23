@@ -118,7 +118,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     //test method to populate RecyclerView
     private void populateItems(){
         for(int i = 0; i < 10; i++) {
-            sellers.add(new User("test", "Github Cat", "Github Cat", new madelyntav.c4q.nyc.chipchop.DBObjects.Address(), "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg", "ajs;djf;d"));
+            sellers.add(new User("test", "Chip Chopper", "Chip Chopper", new madelyntav.c4q.nyc.chipchop.DBObjects.Address(), "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg", "ajs;djf;d"));
 
         }
     }

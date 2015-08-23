@@ -1,6 +1,8 @@
 package madelyntav.c4q.nyc.chipchop.adapters;
 
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,8 +21,11 @@ import java.util.List;
 import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
+import madelyntav.c4q.nyc.chipchop.FoodItemSelectDialogue;
 import madelyntav.c4q.nyc.chipchop.R;
+import madelyntav.c4q.nyc.chipchop.SellActivity;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_CreateItem;
 
 /**
  * Created by c4q-anthonyf on 8/14/15.
@@ -86,7 +91,13 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if(!sellerItem.getImageLink().isEmpty())
         Picasso.with(context).load(sellerItem.getImageLink()).fit().into(vh.image);
 
-
+        vh.container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SellActivity activity = (SellActivity) context;
+                activity.replaceSellerFragment(new Fragment_Seller_CreateItem());
+            }
+        });
 
         setAnimation(vh.container, position);
 

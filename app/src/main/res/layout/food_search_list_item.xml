@@ -5,59 +5,68 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     card_view:cardCornerRadius="1dp"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:padding="5dp">
 
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="5dp"
         >
-        
 
 
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/food_image"
-            android:layout_alignParentLeft="true"/>
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:gravity="center"
+            android:src="@drawable/food"
+            app:border_color="#FFF"
+            app:border_width="2dp"
+            android:layout_margin="4dp"/>
 
 
         <TextView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:text="4.00"
             android:id="@+id/food_price_tv"/>
 
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_toEndOf="@id/food_image"
                 android:layout_toStartOf="@id/food_price_tv"
-                android:id="@+id/food_name_tv"
-                android:padding="8dp"/>
+                android:textSize="20sp"
+                style="@style/text_design"
+                android:id="@+id/food_name_tv"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/food_image"
                 android:layout_below="@+id/food_name_tv"
-                android:id="@+id/food_description_tv"
-                android:padding="8dp"/>
+                android:id="@+id/food_description_tv"/>
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:src="@drawable/vegan"
             android:id="@+id/vegan_icon"
+            android:layout_marginRight="3dp"
             android:layout_below="@+id/food_description_tv"
             android:layout_toEndOf="@+id/food_image"/>
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:src="@drawable/glutenfree"
+            android:layout_marginRight="3dp"
             android:layout_below="@+id/food_description_tv"
             android:layout_toEndOf="@+id/vegan_icon" />
 

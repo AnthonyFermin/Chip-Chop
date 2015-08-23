@@ -2,6 +2,7 @@ package madelyntav.c4q.nyc.chipchop.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -79,9 +80,10 @@ public class FoodListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         vh.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FoodItemSelectDialogue dialog = new FoodItemSelectDialogue();
-//                dialog.show(null, "foodItemDialog");
-
+                FragmentActivity activity = (FragmentActivity)(context);
+                FragmentManager fm = activity.getSupportFragmentManager();
+                FoodItemSelectDialogue alertDialog = new FoodItemSelectDialogue();
+                alertDialog.show(fm, "fragment_alert");
             }
         });
 

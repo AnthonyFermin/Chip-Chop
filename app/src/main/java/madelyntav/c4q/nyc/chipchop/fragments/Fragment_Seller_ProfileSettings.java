@@ -1,10 +1,8 @@
 package madelyntav.c4q.nyc.chipchop.fragments;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -35,7 +33,6 @@ import madelyntav.c4q.nyc.chipchop.GeolocationAPI.GeolocationAPI;
 import madelyntav.c4q.nyc.chipchop.GeolocationAPI.Location;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.SellActivity;
-import madelyntav.c4q.nyc.chipchop.SignupActivity1;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -51,7 +48,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
     ToggleButton cookingStatus;
     ImageButton profileImage;
-    TextView sellerNameTV;
+    TextView sellerNameTV, cookingStatusTV;
 
     EditText storeNameET;
     EditText addressET;
@@ -83,6 +80,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     public static final int RESULT_OK = -1;
     private Uri imageFileUri;
     Intent intent;
+    private boolean isNotCooking = true;
     private String stringVariable = "file:///sdcard/_pictureholder_id.jpg";
 
 
@@ -120,7 +118,20 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             containingView.setVisibility(View.VISIBLE);
         }
 
+        cookingStatusTV = (TextView) root.findViewById(R.id.cooking_status_text);
         cookingStatus = (ToggleButton) root.findViewById(R.id.cooking_status);
+        cookingStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isNotCooking) {
+                    cookingStatusTV.setVisibility(View.VISIBLE);
+                    isNotCooking = false;
+                } else if (!isNotCooking){
+                    isNotCooking = true;
+                    cookingStatusTV.setVisibility(View.GONE);
+                }
+            }
+        });
         cookingStatus.setChecked(activity.isCurrentlyCooking());
 
         profileImage = (ImageButton) root.findViewById(R.id.profile_image);

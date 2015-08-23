@@ -19,7 +19,6 @@ public class ReviewDialogFragment extends android.support.v4.app.DialogFragment 
 
     Button submitButton;
     RatingBar ratingBar;
-    EditText textReview;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

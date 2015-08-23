@@ -39,6 +39,7 @@
             android:textSize="30sp"
             android:padding="15dp"
             android:text="NAME HERE"
+            android:textStyle="bold"
             android:textColor="#E53934"
             android:gravity="center_horizontal"/>
 
@@ -57,7 +58,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="BUY"
+            android:text="Buy"
+            android:textStyle="bold"
             android:layout_margin="6dp"/>
 
     </LinearLayout>

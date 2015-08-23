@@ -39,6 +39,7 @@
             android:padding="15dp"
             android:text="NAME HERE"
             android:textColor="#E53934"
+            android:textStyle="bold"
             android:gravity="center_horizontal"/>
 
         <ListView
@@ -57,7 +58,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="SELL"
+            android:text="Sell"
+            android:textStyle="bold"
             android:layout_margin="6dp"/>
 
     </LinearLayout>

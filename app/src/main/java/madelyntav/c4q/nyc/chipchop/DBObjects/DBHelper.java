@@ -504,6 +504,43 @@ public class DBHelper extends Firebase {
 
         return seller;
     }
+
+    public Seller getSpecificSeller(final String sellerID){
+        Firebase fRef = new Firebase(URL + "ActiveSellers/");
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("Number2", dataSnapshot.getChildrenCount() + "");
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+                    Seller seller1 = dataSnapshot1.getValue(Seller.class);
+
+                    if (dataSnapshot1.getKey().equals(sellerID)) {
+                        seller.setName(seller1.name);
+                        seller.setAddress(seller1.address);
+                        seller.setDescription(seller1.description);
+                        seller.seteMail(seller1.eMail);
+                        seller.setUID(seller1.UID);
+                        seller.setPhoneNumber(seller1.phoneNumber);
+                        seller.setItems(seller1.items);
+                        seller.setLongitude(seller1.latitude);
+                        seller.setLatitude(seller1.longitude);
+                    }
+                    Log.d("SellerOne", seller.name + "");
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Toast.makeText(mContext, "Error: Seller not found", Toast.LENGTH_SHORT).show();
+                seller = null;
+            }
+        });
+
+        return seller;
+    }
     //Method which adds a seller to the ActiveSellers table and updates their items for sale,
     //checks if quantity is greater than 0 for each item
     public void sendSellerToActiveSellerTable(Seller seller){
@@ -1224,28 +1261,6 @@ public class DBHelper extends Firebase {
 
         return user;
     }
-    //gets a specific user from the DB
-    public Seller getSpecificSeller(String sellerID) {
-        Firebase fRef = new Firebase(URL+"SellerProfiles/"+ sellerID);
-
-        fRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    seller = dataSnapshot1.getValue(Seller.class);
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-
-        return seller;
-    }
-
     //signs out user and clears data
     public boolean signOutUser() {
         fireBaseRef.unauth();

@@ -60,6 +60,11 @@ public class DBHelper extends Firebase {
     public static ArrayList<Seller> allSellersInDB;
     public static ArrayList<Review> reviewArrayList;
     public static ArrayList<Seller> allActiveSellers;
+    public static ArrayList<Review> sellersReviewArrayList;
+    public static ArrayList<Order> previouslyBought;
+    public static ArrayList<Order> previouslySold;
+
+
 
     public DBHelper() {
         super(URL);
@@ -77,6 +82,9 @@ public class DBHelper extends Firebase {
         }
         userList = new ArrayList<>();
         items = new ArrayList<>();
+        sellersReviewArrayList=new ArrayList<>();
+        previouslyBought= new ArrayList<>();
+        previouslySold= new ArrayList<>();
         allUsers = new ArrayList<>();
         user = new User();
         latLngList = new ArrayList<>();
@@ -790,8 +798,7 @@ public class DBHelper extends Firebase {
         fRef.child(itemID).child("isVegan").setValue(item.getVegan());
     }
     public void moveItemToPreviouslySoldItems(Item item){
-        Firebase fRef = new Firebase(URL + "PreviouslySoldItems/"+item.getSellerID()+"/");
-
+        Firebase fRef = new Firebase(URL +"SellerProfiles/"+item.getSellerID()+"/PreviouslySold/");
         String itemID=item.getItemID();
 
         fRef.child(itemID);
@@ -806,7 +813,8 @@ public class DBHelper extends Firebase {
     }
 
     public void moveItemToPreviouslyBoughtItems(Item item){
-        Firebase fRef = new Firebase(URL + "PreviouslyBoughtItems/"+item.getBuyerID()+"/");
+        Firebase fRef = new Firebase(URL + "UserProfiles/"+item.getBuyerID()+"/PreviouslyBought/");
+
         String itemID=item.getItemID();
 
         fRef.child(itemID);
@@ -818,6 +826,82 @@ public class DBHelper extends Firebase {
         fRef.child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
         fRef.child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
         fRef.child(itemID).child("isVegan").setValue(item.getVegan());
+    }
+
+    public void getAllPreviouslyBoughtItems(String userID){
+        UID=userID;
+
+        Firebase fRef = new Firebase(URL + "UserProfiles/"+UID+"/PreviouslyBought/");
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                sizeofAddDBList = dataSnapshot.getChildrenCount();
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Order order = dataSnapshot1.getValue(Order.class);
+                    if (previouslyBought.size() < sizeofAddDBList) {
+                        previouslyBought.add(order);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Toast.makeText(mContext, "Unable To Retrieve Orders Please Try Again", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        if (previouslyBought.size() == sizeofAddDBList) {
+            updatePreviouslyBoughtList();
+        }
+
+    }
+
+    public void getAllPreviouslySoldItems(String sellerId){
+        this.sellerId=sellerId;
+
+        Firebase fRef = new Firebase(URL +"SellerProfiles/"+sellerId+"/PreviouslySold/");
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                sizeofAddDBList = dataSnapshot.getChildrenCount();
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Order order = dataSnapshot1.getValue(Order.class);
+                    if (previouslySold.size() < sizeofAddDBList) {
+                        previouslySold.add(order);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Toast.makeText(mContext, "Unable To Retrieve Orders Please Try Again", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        if (previouslySold.size() == sizeofAddDBList) {
+            updatePreviouslySoldList();
+        }
+
+    }
+    public ArrayList<Order> updatePreviouslySoldList(){
+
+        if(previouslySold.size()<sizeofAddDBList){
+            getAllPreviouslySoldItems(sellerId);
+        }
+
+        return previouslySold;
+    }
+
+    public ArrayList<Order> updatePreviouslyBoughtList(){
+
+        if(previouslyBought.size()<sizeofAddDBList){
+            getAllPreviouslyBoughtItems(UID);
+        }
+
+        return previouslyBought;
     }
 
     public void addCurrentOrderToSellerDB(Order order) {
@@ -1232,7 +1316,6 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
             }
         });
     }
@@ -1351,9 +1434,10 @@ public class DBHelper extends Firebase {
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     Review review = dataSnapshot1.getValue(Review.class);
-                    reviewArrayList.add(review);
+                    if (sellersReviewArrayList.size() < sizeofAddDBList) {
+                        sellersReviewArrayList.add(review);
+                    }
                 }
-                updateListOfReviewsForSeller();
             }
 
             @Override
@@ -1361,6 +1445,10 @@ public class DBHelper extends Firebase {
                 Toast.makeText(mContext, "Unable To Retrieve Reviews Please Try Again", Toast.LENGTH_SHORT).show();
             }
         });
+
+        if (sellersReviewArrayList.size() == sizeofAddDBList) {
+            updateListOfReviewsForSeller();
+        }
 
     }
 
@@ -1375,9 +1463,10 @@ public class DBHelper extends Firebase {
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     Review review = dataSnapshot1.getValue(Review.class);
-                    reviewArrayList.add(review);
+                    if (reviewArrayList.size() < sizeofAddDBList) {
+                        reviewArrayList.add(review);
+                    }
                 }
-                updateListOfReviews();
             }
 
             @Override
@@ -1385,20 +1474,25 @@ public class DBHelper extends Firebase {
                 Toast.makeText(mContext, "Unable To Retrieve Reviews Please Try Again", Toast.LENGTH_SHORT).show();
             }
         });
+
+        if (reviewArrayList.size() == sizeofAddDBList) {
+            updateAllSellersList();
+        }
     }
 
     public ArrayList<Review> updateListOfReviews() {
         if (reviewArrayList.size() < sizeofAddDBList) {
+
             getListOfReviewsForCertainUser(UID);
         }
         return reviewArrayList;
     }
 
     public ArrayList<Review> updateListOfReviewsForSeller() {
-        if (reviewArrayList.size() < sizeofAddDBList) {
+        if (sellersReviewArrayList.size() < sizeofAddDBList) {
             getAllReviewsForCertainSeller(sellerId);
         }
-        return reviewArrayList;
+        return sellersReviewArrayList;
     }
 
     public int increaseNumOfTotalStarsAndCalculateAvg(Seller seller,Review review){

@@ -130,6 +130,7 @@ public class DBHelper extends Firebase {
 
 
                 String userIDOne = String.valueOf(stringObjectMap.get("uid"));
+
                 for (int i = 12; i < userIDOne.length(); i++) {
                     UID += userIDOne.charAt(i);
                 }
@@ -201,13 +202,18 @@ public class DBHelper extends Firebase {
     }
     //logsInUser without launching an intent
     public boolean logInUser(String email, String password) {
+        UID="";
         mSuccess = false;
         fireBaseRef.authWithPassword(email, password,
                 new Firebase.AuthResultHandler() {
                     @Override
                     public void onAuthenticated(AuthData authData) { /* ... */
                         mSuccess = true;
-                        UID = authData.getUid();
+                        String timeUID = authData.getUid();
+
+                        for (int i = 12; i < timeUID.length(); i++) {
+                            UID += timeUID.charAt(i);
+                        }
                     }
 
                     @Override
@@ -232,13 +238,18 @@ public class DBHelper extends Firebase {
     }
     //logs in user and launches an intent
     public boolean logInUser(String email, String password, final Intent intent) {
+        UID="";
         mSuccess = false;
         fireBaseRef.authWithPassword(email, password,
                 new Firebase.AuthResultHandler() {
                     @Override
                     public void onAuthenticated(AuthData authData) { /* ... */
                         mSuccess = true;
-                        UID = authData.getUid();
+                        String timeUID = authData.getUid();
+
+                        for (int i = 12; i < timeUID.length(); i++) {
+                            UID += timeUID.charAt(i);
+                        }
                         mContext.startActivity(intent);
                     }
 
@@ -275,6 +286,7 @@ public class DBHelper extends Firebase {
 
     public void addUserProfileInfoToDB(User user) {
         Firebase fRef = new Firebase(URL + "UserProfiles/");
+
         UID = user.getUID();
 
         fRef.child(UID).push();

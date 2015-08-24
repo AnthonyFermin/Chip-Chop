@@ -45,7 +45,7 @@ public class DBHelper extends Firebase {
     private static final String sName = "name";
     private static final String sEmailAddress = "eMail";
     private static final String sPhoneNumber = "phoneNumber";
-    private static final String sAddress = "address";
+    private static final String sAddress = "addressString";
     private static final String sPhotoLink = "photoLink";
     public static User user;
     public static final String sLatitude = "latitude";
@@ -375,7 +375,7 @@ public class DBHelper extends Firebase {
 
         UID = user.getUID();
 
-        fRef.child(UID).push();
+        fRef.child(UID);
         fRef.child(UID).child(sName).setValue(user.getName());
         fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
         fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
@@ -404,6 +404,7 @@ public class DBHelper extends Firebase {
 
         fRef.child(UID).push();
         fRef.child(UID).child(sName).setValue(user.getName());
+        fRef.child(UID).child("storeName").setValue(user.getStoreName());
         fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
         fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
         fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
@@ -412,12 +413,13 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sLongitude).setValue(user.getAddress().getLongitude());
     }
 
-    public void addSellerProfileInfoToDB(User user,Intent intent) {
+    public void addSellerProfileInfoToDB(Seller user,Intent intent) {
         Firebase fRef = new Firebase(URL + "SellerProfiles/");
         UID = user.getUID();
 
         fRef.child(UID).push();
         fRef.child(UID).child(sName).setValue(user.getName());
+        fRef.child(UID).child("storeName").setValue(user.getStoreName());
         fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
         fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
         fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
@@ -442,6 +444,7 @@ public class DBHelper extends Firebase {
 
                     if (dataSnapshot1.getKey().equals(sellerID)) {
                         seller.setName(seller1.name);
+                        seller.setStoreName(seller1.storeName);
                         seller.setAddress(seller1.address);
                         seller.setDescription(seller1.description);
                         seller.seteMail(seller1.eMail);
@@ -482,7 +485,7 @@ public class DBHelper extends Firebase {
 
                     if (dataSnapshot1.getKey().equals(UID)) {
                         user.setName(user1.name);
-                        user.setAddress(user1.address);
+                        user.setAddressString(user1.addressString);
                         user.seteMail(user1.eMail);
                         user.setUID(user1.UID);
                         user.setPhoneNumber(user1.phoneNumber);

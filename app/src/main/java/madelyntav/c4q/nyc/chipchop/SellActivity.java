@@ -240,7 +240,6 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
 
         Address userAddress = new Address(address, apt, city, "NY", zip, dbHelper.getUserID());
         user = new User(dbHelper.getUserID(), email, name, userAddress, phoneNumber);
-        user.setName(sp.getString(BuyActivity.USER_NAME, "User Name"));
     }
 
     // for storing data between fragments in SellActivity

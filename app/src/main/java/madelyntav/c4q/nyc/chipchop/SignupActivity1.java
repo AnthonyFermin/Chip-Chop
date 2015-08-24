@@ -99,8 +99,8 @@ public class SignupActivity1 extends AppCompatActivity {
                     @Override
                     public void runOnSuccess() {
                         checkRememberMe();
-                        Intent intent1 = new Intent(SignupActivity1.this,SignupActivity2.class);
-                        intent1.putExtra("email",email);
+                        Intent intent1 = new Intent(SignupActivity1.this, SignupActivity2.class);
+                        intent1.putExtra("email", email);
                         startActivity(intent1);
                         finish();
                     }
@@ -118,7 +118,6 @@ public class SignupActivity1 extends AppCompatActivity {
 
     private void checkRememberMe(){
 
-
         SharedPreferences sharedPreferences = getSharedPreferences(USER_INFO,MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(EMAIL, email);
@@ -128,7 +127,8 @@ public class SignupActivity1 extends AppCompatActivity {
 
         // when user clicks sign in
         if(user != null){
-            Address address = user.getAddress();
+            String addressString = user.getAddressString();
+            Address address = HelperMethods.parseAddressString(addressString, dbHelper.getUserID());
             editor.putString(NAME, user.getName());
             editor.putString(ADDRESS, address.getStreetAddress());
             editor.putString(APT, address.getApartment());

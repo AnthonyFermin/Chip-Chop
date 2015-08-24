@@ -230,7 +230,6 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         for(Item item: sellerItems){
             if(item.getQuantity() > 0)
                 return true;
-
         }
         return false;
     }

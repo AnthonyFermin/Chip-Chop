@@ -335,6 +335,22 @@ public class DBHelper extends Firebase {
 
     }
 
+    public void loginUserThroughFacebook(DBCallback dbCallback){
+        Firebase ref = new Firebase(URL);
+        ref.authWithOAuthToken("google", "<OAuth Token>", new Firebase.AuthResultHandler() {
+            @Override
+            public void onAuthenticated(AuthData authData) {
+                // the Google user is now authenticated with your Firebase app
+            }
+
+            @Override
+            public void onAuthenticationError(FirebaseError firebaseError) {
+                // there was an error
+            }
+        });
+
+    }
+
 
     public void addUserProfileInfoToDB(User user) {
         Firebase fRef = new Firebase(URL + "UserProfiles/");

@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         itemsForSale.add(item2);
         itemsForSale.add(item3);
 
-        dbHelper.getAllActiveSellers();
+      // dbHelper.getAllActiveSellers();
 
 
     }
@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
 //        Log.d("SUSERSItemsMain", userList.toString());
 
 
-            dbHelper.updateSellerItemsWhenItemIsBought(item2);
+           // dbHelper.updateSellerItemsWhenItemIsBought(item2);
 
     }
 

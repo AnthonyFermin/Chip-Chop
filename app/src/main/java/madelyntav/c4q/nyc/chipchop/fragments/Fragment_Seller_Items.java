@@ -163,16 +163,20 @@ public class Fragment_Seller_Items extends Fragment {
                     }
                     activity.setItemsToAdd(null);
 
-                    if (activity.isCurrentlyCooking()) {
-                        for (Item item : sellerItems) {
-                            dbHelper.addItemToActiveSellerProfile(item, emptyCallback);
-                        }
-                        for(Item item : itemsToRemove){
-                            dbHelper.removeItemFromSale(item, emptyCallback);
-                        }
-                    }
+//                    if (activity.isCurrentlyCooking()) {
+//                        for (Item item : sellerItems) {
+//                            dbHelper.addItemToActiveSellerProfile(item, emptyCallback);
+//                        }
+//                    }
 
                 }
+
+                for(Item item : itemsToRemove){
+                    dbHelper.removeItemFromSale(item, emptyCallback);
+                }
+                sellerItems.removeAll(itemsToRemove);
+
+                activity.setItemsToRemove(null);
                 activity.setSellerItems(sellerItems);
                 activity.replaceSellerFragment(new Fragment_Seller_ProfileSettings());
 

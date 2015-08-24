@@ -64,7 +64,7 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 public void onClick(View view) {
                     //TODO: add popup dialog asking user to confirm deletion
                     itemsToRemove.add(sellerItems.get(getAdapterPosition()));
-                    sellerItems.remove(sellerItems.get(getAdapterPosition()));
+                    sellerItems.remove(getAdapterPosition());
                     notifyItemRemoved(getAdapterPosition());
                     Toast.makeText(context,"Save changes to confirm deletion", Toast.LENGTH_SHORT).show();
                 }

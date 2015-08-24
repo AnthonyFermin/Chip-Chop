@@ -51,6 +51,7 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
 
     private ArrayList<Item> sellerItems = null;
     private ArrayList<Item> itemsToAdd = null;
+    private ArrayList<Item> itemsToRemove = null;
     private boolean currentlyCooking = false;
     private User user = null;
     private Seller seller = null;
@@ -58,12 +59,26 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
 
     private DBHelper dbHelper;
 
+    DBCallback emptyCallback;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sell);
 
         dbHelper = DBHelper.getDbHelper(this);
+
+        emptyCallback = new DBCallback() {
+            @Override
+            public void runOnSuccess() {
+
+            }
+
+            @Override
+            public void runOnFail() {
+
+            }
+        };
 
         initializeUser();
 
@@ -153,7 +168,7 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
         } else if (position == 2) {
             fragment = new Fragment_Seller_ProfileSettings();
         } else if (position == 3) {
-            dbHelper.signOutUser();
+            dbHelper.signOutUser(emptyCallback);
 
             SharedPreferences sharedPreferences= getSharedPreferences(SignupActivity1.USER_INFO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor=sharedPreferences.edit();
@@ -292,4 +307,11 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
         fromItemCreation = condition;
     }
 
+    public ArrayList<Item> getItemsToRemove() {
+        return itemsToRemove;
+    }
+
+    public void setItemsToRemove(ArrayList<Item> itemsToRemove) {
+        this.itemsToRemove = itemsToRemove;
+    }
 }

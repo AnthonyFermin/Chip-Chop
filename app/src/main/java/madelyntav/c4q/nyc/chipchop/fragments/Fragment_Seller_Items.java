@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 
+import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.R;
@@ -34,6 +35,9 @@ public class Fragment_Seller_Items extends Fragment {
 
     private ArrayList<Item> sellerItems = null;
     private ArrayList<Item> itemsToAdd;
+    private ArrayList<Item> itemsToRemove;
+
+    DBCallback emptyCallback;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,22 +45,37 @@ public class Fragment_Seller_Items extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_seller__items, container, false);
 
-        dbHelper = DBHelper.getDbHelper(getActivity());
-        activity = (SellActivity) getActivity();
-
+        initializeData();
         initializeViews(root);
         setListeners();
 
         getListSetAdapter();
 
-        sellerItems = dbHelper.getSellerItems(dbHelper.getUserID());
-
-
-
-
-
+        sellerItems = dbHelper.getSellerItems(dbHelper.getUserID(), emptyCallback);
 
         return root;
+    }
+
+    private void initializeData(){
+        emptyCallback = new DBCallback() {
+            @Override
+            public void runOnSuccess() {
+
+            }
+
+            @Override
+            public void runOnFail() {
+
+            }
+        };
+
+        dbHelper = DBHelper.getDbHelper(getActivity());
+        activity = (SellActivity) getActivity();
+        if(activity.getItemsToRemove() == null) {
+            itemsToRemove = new ArrayList<>();
+        }else{
+            itemsToRemove = activity.getItemsToRemove();
+        }
     }
 
     private void getListSetAdapter() {
@@ -64,7 +83,7 @@ public class Fragment_Seller_Items extends Fragment {
             ArrayList<Item> unsavedItemsTemp = (ArrayList<Item>) activity.getSellerItems().clone();
             itemsToAdd = activity.getItemsToAdd();
             unsavedItemsTemp.addAll(itemsToAdd);
-            SellerItemsAdapter sellerItemsAdapter = new SellerItemsAdapter(getActivity(),unsavedItemsTemp);
+            SellerItemsAdapter sellerItemsAdapter = new SellerItemsAdapter(getActivity(),unsavedItemsTemp, itemsToRemove);
             foodList.setLayoutManager(new LinearLayoutManager(getActivity()));
             foodList.setAdapter(sellerItemsAdapter);
             activity.setFromItemCreation(false);
@@ -107,7 +126,7 @@ public class Fragment_Seller_Items extends Fragment {
                 activity.setSellerItems(sellerItems);
                 itemsToAdd = activity.getItemsToAdd();
 
-                SellerItemsAdapter sellerItemsAdapter = new SellerItemsAdapter(getActivity(),sellerItems);
+                SellerItemsAdapter sellerItemsAdapter = new SellerItemsAdapter(getActivity(),sellerItems, itemsToRemove);
                 foodList.setLayoutManager(new LinearLayoutManager(getActivity()));
                 foodList.setAdapter(sellerItemsAdapter);
                 Log.d("LOAD SELLER ITEMS LIST", sellerItems.toString());
@@ -140,13 +159,16 @@ public class Fragment_Seller_Items extends Fragment {
                 if(itemsToAdd != null) {
                     sellerItems.addAll(itemsToAdd);
                     for (Item item : itemsToAdd) {
-                        dbHelper.addItemToSellerProfileDB(item);
+                        dbHelper.addItemToSellerProfileDB(item, emptyCallback);
                     }
                     activity.setItemsToAdd(null);
 
                     if (activity.isCurrentlyCooking()) {
                         for (Item item : sellerItems) {
-                            dbHelper.addItemToActiveSellerProfile(item);
+                            dbHelper.addItemToActiveSellerProfile(item, emptyCallback);
+                        }
+                        for(Item item : itemsToRemove){
+                            dbHelper.removeItemFromSale(item, emptyCallback);
                         }
                     }
 

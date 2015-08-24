@@ -25,6 +25,7 @@ import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 
+import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
@@ -85,12 +86,26 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     Intent intent;
     private String stringVariable = "file:///sdcard/_pictureholder_id.jpg";
 
+    DBCallback emptyCallback;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_seller_profile, container, false);
+
+        emptyCallback = new DBCallback() {
+            @Override
+            public void runOnSuccess() {
+
+            }
+
+            @Override
+            public void runOnFail() {
+
+            }
+        };
 
         dbHelper = DBHelper.getDbHelper(getActivity());
         activity = (SellActivity) getActivity();
@@ -329,7 +344,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                     }
 
                 } else {
-                    dbHelper.removeSellersFromActiveSellers(seller);
+                    dbHelper.removeSellersFromActiveSellers(seller, emptyCallback);
                     activity.setCookingStatus(false);
                     Toast.makeText(activity,"Cooking Status Deactivated", Toast.LENGTH_SHORT).show();
                 }

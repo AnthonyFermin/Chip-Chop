@@ -26,6 +26,8 @@ import madelyntav.c4q.nyc.chipchop.adapters.CartListAdapter;
  */
 public class Fragment_Buyer_ViewCart extends Fragment {
 
+    public static final String TAG = "fragment_buyer_view_cart";
+
     Button checkoutButton;
     private ArrayList<Item> cartItems;
     private RecyclerView cartList;

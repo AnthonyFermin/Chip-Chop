@@ -5,20 +5,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.model.LatLng;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.SignupActivity1;
+
 
 /**
  * Created by c4q-madelyntavarez on 8/12/15.
@@ -60,6 +58,7 @@ public class DBHelper extends Firebase {
     public static Order returnOrder;
     public ArrayList<Item> listOfItemsSellingForSeller;
     public String sellerId;
+    public static DBCallback callback;
     public static Seller seller;
     public static ArrayList<Seller> allSellersInDB;
     public static ArrayList<Review> reviewArrayList;
@@ -102,6 +101,17 @@ public class DBHelper extends Firebase {
         seller=new Seller();
         item=new Item();
         allSellersInDB=new ArrayList<>();
+        callback= new DBCallback() {
+            @Override
+            public void runOnSuccess() {
+
+            }
+
+            @Override
+            public void runOnFail() {
+
+            }
+        };
         return fireBaseRef;
     }
 
@@ -384,7 +394,7 @@ public class DBHelper extends Firebase {
 
     }
 
-    public void addUserProfileInfoToDBAndLaunchIntent(User user, Intent intent) {
+    public void addUserProfileInfoToDBAndLaunchIntent(User user, final DBCallback callback) {
         Firebase fRef = new Firebase(URL + "UserProfiles/");
         UID = user.getUID();
 
@@ -395,7 +405,7 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
         fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
 
-        mContext.startActivity(intent);
+        callback.runOnSuccess();
     }
 
     public void addSellerProfileInfoToDB(Seller user) {
@@ -413,7 +423,7 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sLongitude).setValue(user.getAddress().getLongitude());
     }
 
-    public void addSellerProfileInfoToDB(Seller user,Intent intent) {
+    public void addSellerProfileInfoToDB(Seller user,final DBCallback callback) {
         Firebase fRef = new Firebase(URL + "SellerProfiles/");
         UID = user.getUID();
 
@@ -427,7 +437,7 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sLatitude).setValue(user.getAddress().getLatitude());
         fRef.child(UID).child(sLongitude).setValue(user.getAddress().getLongitude());
 
-        mContext.startActivity(intent);
+        callback.runOnSuccess();
     }
 
     public Seller getSellerFromDB(final String sellerID) {
@@ -522,7 +532,7 @@ public class DBHelper extends Firebase {
         fRef.child(sellerId).child(sLongitude).setValue(seller.getAddress().getLatitude());
     }
 
-    public ArrayList<Seller> getAllActiveSellers(){
+    public ArrayList<Seller> getAllActiveSellers(DBCallback dbCallback){
 
         Firebase fRef = new Firebase(URL + "ActiveSellers/");
 
@@ -547,14 +557,14 @@ public class DBHelper extends Firebase {
         });
 
         if (allActiveSellers.size() == sizeofAddDBList) {
-            updateAllSellersList();
+            updateAllSellersList(dbCallback);
         }
 
         return allActiveSellers;
     }
 
 
-    public Seller getSpecificActiveSeller(final String sellerID){
+    public Seller getSpecificActiveSeller(final String sellerID, final DBCallback callback){
         Firebase fRef = new Firebase(URL + "ActiveSellers/");
 
         fRef.addValueEventListener(new ValueEventListener() {
@@ -579,19 +589,21 @@ public class DBHelper extends Firebase {
                     }
                     Log.d("SellerOne", seller.name + "");
                 }
+                callback.runOnSuccess();
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 Toast.makeText(mContext, "Error: Seller not found", Toast.LENGTH_SHORT).show();
                 seller = null;
+                callback.runOnFail();
             }
         });
 
         return seller;
     }
 
-    public Seller getSpecificSeller(final String sellerID){
+    public Seller getSpecificSeller(final String sellerID,final DBCallback callback){
         Firebase fRef = new Firebase(URL + "ActiveSellers/");
 
         fRef.addValueEventListener(new ValueEventListener() {
@@ -616,12 +628,14 @@ public class DBHelper extends Firebase {
                     }
                     Log.d("SellerOne", seller.name + "");
                 }
+                callback.runOnSuccess();
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 Toast.makeText(mContext, "Error: Seller not found", Toast.LENGTH_SHORT).show();
                 seller = null;
+                callback.runOnFail();
             }
         });
 
@@ -629,43 +643,45 @@ public class DBHelper extends Firebase {
     }
     //Method which adds a seller to the ActiveSellers table and updates their items for sale,
     //checks if quantity is greater than 0 for each item
-    public void sendSellerToActiveSellerTable(Seller seller){
-        this.sellerId=seller.getUID();
+    public void sendSellerToActiveSellerTable(Seller seller) {
+        this.sellerId = seller.getUID();
         Firebase fRef = new Firebase(URL + "ActiveSellers/");
-        Seller sellerToSend= getSpecificActiveSeller(sellerId);
+        Seller sellerToSend = getSpecificActiveSeller(sellerId, callback); {
 
-        fRef.child(sellerId).push();
-        fRef.child(sellerId).child(sName).setValue(seller.getName());
-        fRef.child(sellerId).child(sEmailAddress).setValue(seller.geteMail());
-        fRef.child(sellerId).child(sPhoneNumber).setValue(seller.getPhoneNumber());
-        fRef.child(sellerId).child(sPhotoLink).setValue(seller.getPhotoLink());
-        fRef.child(sellerId).child(sAddress).setValue(seller.getAddress().toString());
-        fRef.child(sellerId).child(sLatitude).setValue(seller.getAddress().getLatitude());
-        fRef.child(sellerId).child(sLongitude).setValue(seller.getAddress().getLatitude());
 
-        ArrayList<Item> itemsSellerHas= sellerToSend.getItems();
-        if(itemsSellerHas!=null) {
+            fRef.child(sellerId).push();
+            fRef.child(sellerId).child(sName).setValue(seller.getName());
+            fRef.child(sellerId).child(sEmailAddress).setValue(seller.geteMail());
+            fRef.child(sellerId).child(sPhoneNumber).setValue(seller.getPhoneNumber());
+            fRef.child(sellerId).child(sPhotoLink).setValue(seller.getPhotoLink());
+            fRef.child(sellerId).child(sAddress).setValue(seller.getAddress().toString());
+            fRef.child(sellerId).child(sLatitude).setValue(seller.getAddress().getLatitude());
+            fRef.child(sellerId).child(sLongitude).setValue(seller.getAddress().getLatitude());
 
-            for (Item item : itemsSellerHas) {
-                if (item.quantity > 0) {
+            ArrayList<Item> itemsSellerHas = sellerToSend.getItems();
+            if (itemsSellerHas != null) {
 
-                    Firebase fRef1 = new Firebase(URL + "ActiveSellers" + sellerId + "/itemsForSale/");
+                for (Item item : itemsSellerHas) {
+                    if (item.quantity > 0) {
 
-                    fRef1.child(sellerId).child(item.nameOfItem).push();
-                    fRef1.child(itemID).child("DESCRIPTION").setValue(item.descriptionOfItem);
-                    fRef1.child(itemID).child("QUANTITY").setValue(item.quantity);
-                    fRef1.child(itemID).child("ImageLink").setValue(item.imageLink);
-                    fRef.child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
-                    fRef.child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
-                    fRef.child(itemID).child("isVegetarian").setValue(item.getVegetarian());
+                        Firebase fRef1 = new Firebase(URL + "ActiveSellers" + sellerId + "/itemsForSale/");
 
+                        fRef1.child(sellerId).child(item.nameOfItem).push();
+                        fRef1.child(itemID).child("DESCRIPTION").setValue(item.descriptionOfItem);
+                        fRef1.child(itemID).child("QUANTITY").setValue(item.quantity);
+                        fRef1.child(itemID).child("ImageLink").setValue(item.imageLink);
+                        fRef.child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
+                        fRef.child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
+                        fRef.child(itemID).child("isVegetarian").setValue(item.getVegetarian());
+
+                    }
                 }
             }
         }
     }
 
     //Method that adds one item to the sellers onSale Items
-    public void addItemToActiveSellerTable(Item item) {
+    public void addItemToActiveSellerTable(Item item, DBCallback dbCallback) {
 
         sellerId = item.getSellerID();
 
@@ -684,10 +700,10 @@ public class DBHelper extends Firebase {
         fRef.child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
         fRef.child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
         fRef.child(itemID).child("isVegetarian").setValue(item.getVegetarian());
+        dbCallback.runOnSuccess();
 
-        Log.d("ItemID", itemID);
     }
-    public void updateItemInSellerTable(Item item) {
+    public void updateItemInSellerTable(Item item, DBCallback dbCallback) {
         sellerId = item.getSellerID();
         String itemID=item.getItemID();
 
@@ -700,12 +716,13 @@ public class DBHelper extends Firebase {
         fRef.child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
         fRef.child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
         fRef.child(itemID).child("isVegetarian").setValue(item.getVegetarian());
+        dbCallback.runOnSuccess();
 
         Log.d("ItemID", itemID);
     }
 
 
-    public void addItemToSellerProfileDB(Item item) {
+    public void addItemToSellerProfileDB(Item item,DBCallback dbCallback) {
         sellerId = item.getSellerID();
 
         Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+"/itemsForSale/" );
@@ -722,7 +739,7 @@ public class DBHelper extends Firebase {
         fRef.child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
         fRef.child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
         fRef.child(itemID).child("isVegetarian").setValue(item.getVegetarian());
-
+        dbCallback.runOnSuccess();
         Log.d("ItemID", itemID);
     }
 
@@ -762,7 +779,7 @@ public class DBHelper extends Firebase {
         return items;
     }
 
-    public void removeSellersFromActiveSellers(Seller seller1){
+    public void removeSellersFromActiveSellers(Seller seller1, final DBCallback dbCallback){
         final Firebase fRef = new Firebase(URL + "ActiveSellers");
         final String sellerID=seller1.getUID();
         fRef.addValueEventListener(new ValueEventListener() {
@@ -781,18 +798,20 @@ public class DBHelper extends Firebase {
                     }
 
                 }
+                dbCallback.runOnSuccess();
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 Toast.makeText(mContext, "Error: Seller not found", Toast.LENGTH_SHORT).show();
                 seller = null;
+                dbCallback.runOnFail();
             }
         });
 
     }
 
-    public Item removeItemFromSale(final Item item){
+    public Item removeItemFromSale(final Item item, final DBCallback dbCallback){
         sellerId = item.getSellerID();
         final String itemid1=item.getItemID();
 
@@ -816,25 +835,27 @@ public class DBHelper extends Firebase {
                         item.setNameOfItem(item1.nameOfItem);
                         item.setVegetarian(item1.isVegetarian);
                         item.setQuantity(item1.quantity);
-                        moveItemToPreviouslySoldItems(item);
-                        moveItemToPreviouslyBoughtItems(item);
-                        addItemToSellerProfileDB(item);
+                        moveItemToPreviouslySoldItems(item, dbCallback);
+                        moveItemToPreviouslyBoughtItems(item, dbCallback);
+                        addItemToSellerProfileDB(item, callback);
 
                         fRef.child(dataSnapshot1.getKey()).removeValue();
                     }
                 }
+                dbCallback.runOnSuccess();
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 Toast.makeText(mContext, "Error: Seller not found", Toast.LENGTH_SHORT).show();
                 seller = null;
+                dbCallback.runOnFail();
             }
         });
         return item;
     }
 
-    public Item getItemFromSellerProfile(final Item item12){
+    public Item getItemFromSellerProfile(final Item item12, final DBCallback dbCallback){
         final String itemid1=item12.getItemID();
 
         final Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+"/itemsForSale/" );
@@ -859,19 +880,21 @@ public class DBHelper extends Firebase {
                         fRef.child(dataSnapshot1.getKey()).removeValue();
                     }
                 }
+                dbCallback.runOnSuccess();
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 Toast.makeText(mContext, "Error: Seller not found", Toast.LENGTH_SHORT).show();
                 seller = null;
+                dbCallback.runOnFail();
             }
         });
         return item;
 
     }
 
-    public void addItemToActiveSellerProfile(Item item) {
+    public void addItemToActiveSellerProfile(Item item, DBCallback dbCallback) {
         sellerId=item.getSellerID();
 
         Firebase fRef = new Firebase(URL + "ActiveSellers/"+sellerId+"/itemsForSale/" );
@@ -886,9 +909,10 @@ public class DBHelper extends Firebase {
         fRef.child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
         fRef.child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
         fRef.child(itemID).child("isVegetarian").setValue(item.getVegetarian());
+        dbCallback.runOnSuccess();
     }
 
-    public void editItemInActiveSellerProfile(Item item){
+    public void editItemInActiveSellerProfile(Item item,DBCallback dbCallback){
         sellerId=item.getSellerID();
         Firebase fRef = new Firebase(URL + "ActiveSellers/"+sellerId+"/itemsForSale/" );
         fRef.child(itemID).push();
@@ -899,12 +923,13 @@ public class DBHelper extends Firebase {
         fRef.child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
         fRef.child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
         fRef.child(itemID).child("isVegetarian").setValue(item.getVegetarian());
+        dbCallback.runOnSuccess();
 
         Log.d("ItemID", itemID);
     }
 
 
-    public void editItemInSellerProfile(Item item){
+    public void editItemInSellerProfile(Item item, DBCallback dbCallback){
         sellerId=item.getSellerID();
         Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+"/itemsForSale/" );
         fRef.child(itemID).push();
@@ -915,11 +940,12 @@ public class DBHelper extends Firebase {
         fRef.child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
         fRef.child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
         fRef.child(itemID).child("isVegetarian").setValue(item.getVegetarian());
+        dbCallback.runOnSuccess();
 
         Log.d("ItemID", itemID);
     }
 
-    public void addItemToSellersProfile(Item item){
+    public void addItemToSellersProfile(Item item,DBCallback dbCallback){
         sellerId=item.getSellerID();
 
         Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+"/itemsForSale/" );
@@ -934,8 +960,9 @@ public class DBHelper extends Firebase {
         fRef.child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
         fRef.child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
         fRef.child(itemID).child("isVegetarian").setValue(item.getVegetarian());
+        dbCallback.runOnSuccess();
     }
-    public void moveItemToPreviouslySoldItems(Item item){
+    public void moveItemToPreviouslySoldItems(Item item,DBCallback dbCallback){
         Firebase fRef = new Firebase(URL +"SellerProfiles/"+item.getSellerID()+"/PreviouslySold/");
         String itemID=item.getItemID();
 
@@ -948,9 +975,11 @@ public class DBHelper extends Firebase {
         fRef.child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
         fRef.child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
         fRef.child(itemID).child("isVegetarian").setValue(item.getVegetarian());
+        dbCallback.runOnSuccess();
+
     }
 
-    public void moveItemToPreviouslyBoughtItems(Item item){
+    public void moveItemToPreviouslyBoughtItems(Item item,DBCallback dbCallback){
         Firebase fRef = new Firebase(URL + "UserProfiles/"+item.getBuyerID()+"/PreviouslyBought/");
 
         String itemID=item.getItemID();
@@ -964,9 +993,10 @@ public class DBHelper extends Firebase {
         fRef.child(itemID).child("containsPeanuts").setValue(item.getContainsPeanuts());
         fRef.child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
         fRef.child(itemID).child("isVegetarian").setValue(item.getVegetarian());
+        dbCallback.runOnSuccess();
     }
 
-    public void getAllPreviouslyBoughtItems(String userID){
+    public void getAllPreviouslyBoughtItems(String userID, final DBCallback dbCallback){
         UID=userID;
 
         Firebase fRef = new Firebase(URL + "UserProfiles/"+UID+"/PreviouslyBought/");
@@ -982,21 +1012,23 @@ public class DBHelper extends Firebase {
                         previouslyBought.add(order);
                     }
                 }
+                dbCallback.runOnSuccess();
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 Toast.makeText(mContext, "Unable To Retrieve Orders Please Try Again", Toast.LENGTH_SHORT).show();
+                dbCallback.runOnFail();
             }
         });
 
         if (previouslyBought.size() == sizeofAddDBList) {
-            updatePreviouslyBoughtList();
+            updatePreviouslyBoughtList(dbCallback);
         }
 
     }
 
-    public void getAllPreviouslySoldItems(String sellerId){
+    public void getAllPreviouslySoldItems(String sellerId, final DBCallback dbCallback){
         this.sellerId=sellerId;
 
         Firebase fRef = new Firebase(URL +"SellerProfiles/"+sellerId+"/PreviouslySold/");
@@ -1016,33 +1048,36 @@ public class DBHelper extends Firebase {
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 Toast.makeText(mContext, "Unable To Retrieve Orders Please Try Again", Toast.LENGTH_SHORT).show();
+                dbCallback.runOnFail();
             }
         });
 
         if (previouslySold.size() == sizeofAddDBList) {
-            updatePreviouslySoldList();
+            updatePreviouslySoldList(dbCallback);
         }
 
     }
-    public ArrayList<Order> updatePreviouslySoldList(){
+    public ArrayList<Order> updatePreviouslySoldList(DBCallback dbCallback){
 
         if(previouslySold.size()<sizeofAddDBList){
-            getAllPreviouslySoldItems(sellerId);
+            getAllPreviouslySoldItems(sellerId, callback);
         }
+        dbCallback.runOnSuccess();
+
 
         return previouslySold;
     }
 
-    public ArrayList<Order> updatePreviouslyBoughtList(){
+    public ArrayList<Order> updatePreviouslyBoughtList(DBCallback dbCallback){
 
         if(previouslyBought.size()<sizeofAddDBList){
-            getAllPreviouslyBoughtItems(UID);
+            getAllPreviouslyBoughtItems(UID, callback);
         }
-
+        dbCallback.runOnSuccess();
         return previouslyBought;
     }
 
-    public void addCurrentOrderToSellerDB(Order order) {
+    public void addCurrentOrderToSellerDB(Order order, DBCallback dbCallback) {
 
         UID = order.getBuyerID();
         sellerId=order.getSellerID();
@@ -1073,6 +1108,9 @@ public class DBHelper extends Firebase {
 
             copyOrderToBuyerProfile(order,item);
         }
+        dbCallback.runOnSuccess();
+
+
     }
 
     public void copyOrderToBuyerProfile(Order order,Item item){
@@ -1096,7 +1134,7 @@ public class DBHelper extends Firebase {
     }
 
 
-    public ArrayList<Item> getSellersOnSaleItems(String sellerId) {
+    public ArrayList<Item> getSellersOnSaleItems(String sellerId, DBCallback dbCallback) {
         this.sellerId=sellerId;
 
         Firebase fRef = new Firebase(URL + "ActiveSellers/"+sellerId + "/itemsForSale/");
@@ -1144,23 +1182,25 @@ public class DBHelper extends Firebase {
 
 
         if (arrayListOfSellerItems.size() == sizeofAddDBList) {
-            updateItemsList();
+            updateItemsList(dbCallback);
         }
 
         return arrayListOfSellerItems;
+
     }
 
-    public ArrayList<Item> updateItemsList(){
+    public ArrayList<Item> updateItemsList(DBCallback dbCallback){
 
         if(arrayListOfSellerItems.size()<sizeofAddDBList){
-            getSellersOnSaleItems(sellerId);
+            getSellersOnSaleItems(sellerId,dbCallback);
         }
 
+        dbCallback.runOnSuccess();
         return arrayListOfSellerItems;
     }
 
 
-    public void sendReviewedOrderToSellerDB(Order order){
+    public void sendReviewedOrderToSellerDB(Order order, DBCallback dbCallback){
         Firebase fRef = new Firebase(URL + "SellerProfiles/" +order.getSellerID() + "/Reviews/");
         String orderID=order.getOrderID();
 
@@ -1169,11 +1209,11 @@ public class DBHelper extends Firebase {
         fRef.child(orderID).child("numOfStars").setValue(order.getReview().getNumOfStars());
         fRef.child(orderID).child("description").setValue(order.getReview().getReviewDescription());
 
-        sendReviewedOrderToBuyerDB(order);
+        sendReviewedOrderToBuyerDB(order, dbCallback);
 
     }
 
-    private void sendReviewedOrderToBuyerDB(Order order){
+    private void sendReviewedOrderToBuyerDB(Order order, DBCallback dbCallback){
         Firebase fRef = new Firebase(URL + "UserProfiles/" + order.getBuyerID()+ "/Reviews/");
         String orderID=order.getOrderID();
 
@@ -1181,10 +1221,11 @@ public class DBHelper extends Firebase {
         fRef.child(orderID).child("sellerID").setValue(order.getSellerID());
         fRef.child(orderID).child("numOfStars").setValue(order.getReview().getNumOfStars());
         fRef.child(orderID).child("description").setValue(order.getReview().getReviewDescription());
+        dbCallback.runOnSuccess();
     }
 
 
-    public ArrayList<User> getArrayListOfUsers() {
+    public ArrayList<User> getArrayListOfUsers(final DBCallback dbCallback) {
         //TOOD come back to this method and rethink the proccess
 
         Firebase fRef = new Firebase(URL + "UserProfiles/");
@@ -1208,27 +1249,27 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
+            dbCallback.runOnFail();
             }
         });
 
         if (userList.size() == sizeofAddDBList) {
-            updateUserList();
+            updateUserList(dbCallback);
         }
 
         return userList;
     }
 
-    public ArrayList<User> updateUserList(){
+    public ArrayList<User> updateUserList(DBCallback dbCallback){
 
         if(userList.size()<sizeofAddDBList){
-            getArrayListOfUsers();
+            getArrayListOfUsers(dbCallback);
         }
 
         return userList;
     }
 
-    public ArrayList<Item> getSellerItems(String sellerId) {
+    public ArrayList<Item> getSellerItems(String sellerId, final DBCallback dbCallback) {
         this.sellerId = sellerId;
 
         Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId+"/itemsForSale");
@@ -1267,20 +1308,20 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
+            dbCallback.runOnFail();
             }
         });
 
         if (items.size() == sizeofAddDBList) {
-            updateItemsList();
+            updateItemsList(dbCallback);
         }
         return items;
     }
 
-    public ArrayList<Item> updateItemsList2(){
+    public ArrayList<Item> updateItemsList2(DBCallback dbCallback){
 
         if(items.size()<sizeofAddDBList){
-            getSellersOnSaleItems(sellerId);
+            getSellersOnSaleItems(sellerId, dbCallback);
         }
 
         return items;
@@ -1288,7 +1329,7 @@ public class DBHelper extends Firebase {
 
 
 
-    public ArrayList<User> getAllSellers() {
+    public ArrayList<User> getAllSellers(final DBCallback dbCallback) {
         Firebase fRef = new Firebase(URL + "SellerProfiles/");
 
         fRef.addValueEventListener(new ValueEventListener() {
@@ -1305,12 +1346,12 @@ public class DBHelper extends Firebase {
 
 
                 }
-                updateAllSellersList();
+                updateAllSellersList(dbCallback);
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
+            dbCallback.runOnFail();
             }
         });
 
@@ -1318,16 +1359,16 @@ public class DBHelper extends Firebase {
     }
 
     //Returns list of all users
-    public ArrayList<Seller> updateAllSellersList(){
+    public ArrayList<Seller> updateAllSellersList(DBCallback dbCallback){
 
         if(allSellersInDB.size()<sizeofAddDBList){
-            getAllSellers();
+            getAllSellers(dbCallback);
         }
         return allSellersInDB;
     }
 
     //gets a specific user from the DB
-    public User getSpecificUser(final String UID) {
+    public User getSpecificUser(final String UID, final DBCallback dbCallback) {
         Firebase fRef = new Firebase(URL+"UserProfiles/"+ UID);
 
         fRef.addValueEventListener(new ValueEventListener() {
@@ -1347,18 +1388,19 @@ public class DBHelper extends Firebase {
                         user.setLatitude(user1.longitude);
                     }
                 }
+                dbCallback.runOnSuccess();
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
+                dbCallback.runOnFail();
             }
         });
 
         return user;
     }
     //signs out user and clears data
-    public boolean signOutUser() {
+    public boolean signOutUser(DBCallback dbCallback) {
         fireBaseRef.unauth();
         UID=null;
         user.clearUser();
@@ -1371,22 +1413,24 @@ public class DBHelper extends Firebase {
         editor.clear();
         editor.commit();
 
+        dbCallback.runOnSuccess();
+
         return true;
     }
 
 
     //adds an email/potential user to a users invite tree and sends an e-mail to the invited person
-    public void addToInviteTree(String newUserInviteEmail,String inviteeID, Intent intent){
+    public void addToInviteTree(String newUserInviteEmail,String inviteeID, DBCallback dbCallback){
         Firebase fRef =  new Firebase(URL+"InviteTree");
 
         fRef.child(inviteeID).push();
         fRef.child(inviteeID).child("invited").setValue(newUserInviteEmail);
 
-        mContext.startActivity(intent);
+        dbCallback.runOnSuccess();
     }
 
     //Returns a list of emails of users invited by a specific user
-    public ArrayList<String> getInviteListForSpecificUser(){
+    public ArrayList<String> getInviteListForSpecificUser(final DBCallback dbCallback){
         final ArrayList<String> invitesSent=new ArrayList<>();
 
         Firebase fRef = new Firebase(URL + "InviteTree/" + UID);
@@ -1394,17 +1438,24 @@ public class DBHelper extends Firebase {
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                sizeofAddDBList=dataSnapshot.getChildrenCount();
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     String email = (String) dataSnapshot1.getValue();
-                    invitesSent.add(email);
-                }
 
+                    if(invitesSent.size()<sizeofAddDBList) {
+                        invitesSent.add(email);
+                    }
+
+                    if(invitesSent.size()==sizeofAddDBList){
+                        dbCallback.runOnSuccess();
+                    }
+                }
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
+            dbCallback.runOnFail();
             }
         });
 
@@ -1415,7 +1466,7 @@ public class DBHelper extends Firebase {
     //into the database and subtracts the number that was bought from the quantity
     //the seller currently has available. So for this we can pass it for each item
     //in the order. You can run this in the background
-    public void updateSellerItemsWhenItemIsBought(final Item item1){
+    public void updateSellerItemsWhenItemIsBought(final Item item1, final DBCallback dbCallback){
         sellerId=item1.getSellerID();
         final int quantity=item1.getQuantityWanted();
 
@@ -1435,27 +1486,31 @@ public class DBHelper extends Firebase {
                         item.setQuantity(updateQuantityAvailable);
                         item.setItemID(item1.getItemID());
                         item.setSellerID(item1.sellerID);
-                        subtractBoughtQuantityFromQuantityInDB(item.getSellerID(), item.getItemID(), updateQuantityAvailable);
+                        subtractBoughtQuantityFromQuantityInDB(item.getSellerID(), item.getItemID(), updateQuantityAvailable, dbCallback);
                     }
                 }
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                dbCallback.runOnFail();
             }
         });
     }
 
     //Method that actually updates the number in the database
-    public void subtractBoughtQuantityFromQuantityInDB(String sellerId, String itemID, int quantityAvailable){
+    public void subtractBoughtQuantityFromQuantityInDB(String sellerId, String itemID, int quantityAvailable, DBCallback dbCallback){
         Firebase fRef = new Firebase(URL + "ActiveSellers/" + sellerId +"/itemsForSale/");
 
         fRef.child(itemID);
         fRef.child(itemID).child("quantity").setValue(quantityAvailable);
+        dbCallback.runOnSuccess();
+
+
     }
 
     //method to send an order to the sellers database and then send that order to the seller
-    public void sendOrderToSeller(String sellerId,Order order, String UID){
+    public void sendOrderToSeller(String sellerId,Order order, String UID, DBCallback dbCallback){
         this.UID = UID;
         this.sellerId=sellerId;
 
@@ -1476,11 +1531,11 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child(itemID).child("quantity").setValue(item.getQuantity());
             fRef.child(orderID).child(itemID).child("imageLink").setValue(item.getImageLink());
         }
-        getOrderToSendToSeller(UID, order, UID);
+        getOrderToSendToSeller(UID, order, UID, dbCallback);
     }
 
     //method which returns the right order to be sent to the seller when buyer places an order
-    public Order getOrderToSendToSeller(String sellerID, final Order order, String buyerID){
+    public Order getOrderToSendToSeller(String sellerID, final Order order, String buyerID, final DBCallback dbCallback){
         sellerId=sellerID;
         final String orderID=order.getOrderID();
 
@@ -1497,18 +1552,20 @@ public class DBHelper extends Firebase {
                         returnOrder = order1;
                     }
                 }
+                dbCallback.runOnSuccess();
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 Toast.makeText(mContext, "Unable To Send Order To Seller, Please Try Again", Toast.LENGTH_SHORT).show();
+                dbCallback.runOnFail();
 
             }
         });
         return returnOrder;
     }
 
-    public void addUserReviewToUserProfile(User buyer, User seller, int numOfStars, String details){
+    public void addUserReviewToUserProfile(User buyer, User seller, int numOfStars, String details, DBCallback dbCallback){
         sellerId=seller.getUID();
         UID=buyer.getUID();
         Firebase fRef = new Firebase(URL + "UserProfiles/" + UID+"/Reviews/");
@@ -1516,9 +1573,10 @@ public class DBHelper extends Firebase {
         fRef.child(sellerId).push();
         fRef.child(sellerId).child("numOfStars").setValue(numOfStars);
         fRef.child(sellerId).child("reviewDescription").setValue(details);
+        dbCallback.runOnSuccess();
     }
 
-    public void addUserReviewToUserProfile(User buyer, User seller, int numOfStars) {
+    public void addUserReviewToUserProfile(User buyer, User seller, int numOfStars, DBCallback dbCallback) {
 
         sellerId=seller.getUID();
         UID=buyer.getUID();
@@ -1526,19 +1584,21 @@ public class DBHelper extends Firebase {
 
         fRef.child(sellerId).push();
         fRef.child(sellerId).child("numOfStars").setValue(numOfStars);
+        dbCallback.runOnSuccess();
 
     }
 
-    public void addReviewToSellerProfile(User buyer, User seller, int numOfStars){
+    public void addReviewToSellerProfile(User buyer, User seller, int numOfStars,DBCallback dbCallback){
         sellerId=seller.getUID();
         UID=buyer.getUID();
         Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+"/Reviews/");
 
         fRef.child(UID).push();
         fRef.child(UID).child("numOfStars").setValue(numOfStars);
+        dbCallback.runOnSuccess();
     }
 
-    public void addReviewToSellerProfile(User buyer, User seller, int numOfStars, String details){
+    public void addReviewToSellerProfile(User buyer, User seller, int numOfStars, String details, DBCallback dbCallback){
         sellerId=seller.getUID();
         UID=buyer.getUID();
         Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+"/Reviews/");
@@ -1546,9 +1606,10 @@ public class DBHelper extends Firebase {
         fRef.child(UID).push();
         fRef.child(UID).child("numOfStars").setValue(numOfStars);
         fRef.child(UID).child("reviewDescription").setValue(details);
+        dbCallback.runOnSuccess();
     }
 
-    public void getAllReviewsForCertainSeller(String sellerID){
+    public void getAllReviewsForCertainSeller(String sellerID, final DBCallback dbCallback){
         sellerId=sellerID;
 
         Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+"/Reviews/" );
@@ -1569,16 +1630,17 @@ public class DBHelper extends Firebase {
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 Toast.makeText(mContext, "Unable To Retrieve Reviews Please Try Again", Toast.LENGTH_SHORT).show();
+                dbCallback.runOnFail();
             }
         });
 
         if (sellersReviewArrayList.size() == sizeofAddDBList) {
-            updateListOfReviewsForSeller();
+            updateListOfReviewsForSeller(dbCallback);
         }
 
     }
 
-    public void getListOfReviewsForCertainUser(String UID){
+    public void getListOfReviewsForCertainUser(String UID, DBCallback dbCallback){
         this.UID=UID;
         Firebase fRef = new Firebase(URL + "UserProfiles/"+ UID+"/Reviews/");
 
@@ -1602,26 +1664,27 @@ public class DBHelper extends Firebase {
         });
 
         if (reviewArrayList.size() == sizeofAddDBList) {
-            updateAllSellersList();
+            updateListOfReviews(dbCallback);
         }
     }
 
-    public ArrayList<Review> updateListOfReviews() {
+    public ArrayList<Review> updateListOfReviews(DBCallback dbCallback) {
         if (reviewArrayList.size() < sizeofAddDBList) {
 
-            getListOfReviewsForCertainUser(UID);
+            getListOfReviewsForCertainUser(UID, dbCallback);
         }
+        dbCallback.runOnSuccess();
         return reviewArrayList;
     }
 
-    public ArrayList<Review> updateListOfReviewsForSeller() {
+    public ArrayList<Review> updateListOfReviewsForSeller(DBCallback dbCallback) {
         if (sellersReviewArrayList.size() < sizeofAddDBList) {
-            getAllReviewsForCertainSeller(sellerId);
+            getAllReviewsForCertainSeller(sellerId,dbCallback);
         }
         return sellersReviewArrayList;
     }
 
-    public int increaseNumOfTotalStarsAndCalculateAvg(Seller seller,Review review){
+    public int increaseNumOfTotalStarsAndCalculateAvg(Seller seller,Review review, DBCallback dbCallback){
         int numOfReviews= seller.getNumOfReviews();
         numOfReviews=numOfReviews+1;
         seller.setNumOfReviews(numOfReviews);
@@ -1631,12 +1694,12 @@ public class DBHelper extends Firebase {
         int newNumofTotalstars=numOfTotalStars+newStars;
         int newAvg= newNumofTotalstars/numOfReviews;
 
-        updateSellerProfileWithNewAvg(seller,newAvg);
+        updateSellerProfileWithNewAvg(seller,newAvg, dbCallback);
 
         return newAvg;
     }
 
-    public void updateSellerProfileWithNewAvg(Seller seller, int newAvg){
+    public void updateSellerProfileWithNewAvg(Seller seller, int newAvg, DBCallback dbCallback){
         sellerId=seller.getUID();
 
         Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+"/Reviews/" );
@@ -1645,15 +1708,16 @@ public class DBHelper extends Firebase {
     }
 
     //May want to implement this later
-    public void moveOrderFromActiveToFulfilled(String sellerId,String orderID,String buyerID){
+    public void moveOrderFromActiveToFulfilled(String sellerId,String orderID,String buyerID, DBCallback dbCallback){
         this.sellerId=sellerId;
         this.UID=buyerID;
 
         Firebase fRef =  new Firebase(URL + "SellerProfiles/"+sellerId+ "/Orders/" + "/"+UID);
 
         fRef.child(buyerID).removeValue();
+        dbCallback.runOnSuccess();
     }
-    public void sentToFullfilledOrdersTable(Order order) {
+    public void sentToFullfilledOrdersTable(Order order, DBCallback dbCallback) {
         sellerId = order.getSellerID();
         UID = order.getBuyerID();
 
@@ -1676,8 +1740,10 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child(itemID).child("isGluttenFree").setValue(item.getGlutenFree());
             fRef.child(orderID).child(itemID).child("isVegetarian").setValue(item.getVegetarian());
         }
+
+        dbCallback.runOnSuccess();
     }
-    public void sentToFullfilledOrdersTableWithReview(Order order){
+    public void sentToFullfilledOrdersTableWithReview(Order order, DBCallback dbCallback){
         sellerId=order.getSellerID();
         UID=order.getBuyerID();
 
@@ -1702,20 +1768,23 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child(itemID).child("numOfStars").setValue(order.getReview().getNumOfStars());
             fRef.child(orderID).child(itemID).child("reviewDescription").setValue(order.getReview().getReviewDescription());
         }
+        dbCallback.runOnSuccess();
     }
-    public void addFoodAndImageHashmapToFoodAndImageTable(HashMap<String, String> foods){
+    public void addFoodAndImageHashmapToFoodAndImageTable(HashMap<String, String> foods, DBCallback dbCallback){
         Firebase fRef =  new Firebase(URL + "PreMadeFoodDatabase/");
         for(Map.Entry<String, String> food:foods.entrySet()){
             String name=food.getKey();
             String photoLink=food.getValue();
             fRef.child(name).setValue(photoLink);
         }
+        dbCallback.runOnSuccess();
     }
     //May want to allow users to add their own photos later?
-    public void addCustomMadeFoodItemToDatabase(String name, String linkToPhoto){
+    public void addCustomMadeFoodItemToDatabase(String name, String linkToPhoto, DBCallback dbCallback){
         Firebase fRef =  new Firebase(URL + "CustomFoodDatabase/");
 
         fRef.child(name).push().setValue(linkToPhoto);
+        dbCallback.runOnSuccess();
 
     }
 

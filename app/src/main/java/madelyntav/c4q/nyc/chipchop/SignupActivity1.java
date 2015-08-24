@@ -46,12 +46,26 @@ public class SignupActivity1 extends AppCompatActivity {
     private User user;
     Intent intent;
 
+    DBCallback emptyCallback;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup1);
 
         dbHelper = DBHelper.getDbHelper(this);
+
+        emptyCallback = new DBCallback() {
+            @Override
+            public void runOnSuccess() {
+
+            }
+
+            @Override
+            public void runOnFail() {
+
+            }
+        };
 
         containingView = (LinearLayout) findViewById(R.id.container);
         loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
@@ -177,7 +191,7 @@ public class SignupActivity1 extends AppCompatActivity {
                     Toast.makeText(SignupActivity1.this, "Cannot Connect to Internet", Toast.LENGTH_SHORT).show();
                     loadingPanel.setVisibility(View.GONE);
                     containingView.setVisibility(View.VISIBLE);
-                    dbHelper.signOutUser();
+                    dbHelper.signOutUser(emptyCallback);
                 }
             }
         }.execute();

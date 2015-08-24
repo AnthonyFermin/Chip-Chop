@@ -302,6 +302,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
         cookingStatus = (ToggleButton) root.findViewById(R.id.cooking_status);
         cookingStatusTV = (TextView) root.findViewById(R.id.cooking_status_text);
+        
         if(activity.isCurrentlyCooking()){
             cookingStatus.setChecked(false);
             cookingStatusTV.setVisibility(View.GONE);

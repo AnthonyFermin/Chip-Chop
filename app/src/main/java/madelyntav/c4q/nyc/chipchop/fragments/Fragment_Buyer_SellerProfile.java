@@ -25,6 +25,7 @@ import madelyntav.c4q.nyc.chipchop.adapters.FoodListAdapter;
 
 public class Fragment_Buyer_SellerProfile extends Fragment {
 
+    public static final String TAG = "fragment_buyer_seller_profile";
 
     Button cartButton;
     private ArrayList<Item> foodItems;

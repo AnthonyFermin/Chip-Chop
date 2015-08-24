@@ -3,9 +3,11 @@ package madelyntav.c4q.nyc.chipchop.fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -23,6 +25,7 @@ import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 
+import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
@@ -31,6 +34,7 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.GeolocationAPI.Geolocation;
 import madelyntav.c4q.nyc.chipchop.GeolocationAPI.GeolocationAPI;
 import madelyntav.c4q.nyc.chipchop.GeolocationAPI.Location;
+import madelyntav.c4q.nyc.chipchop.HelperMethods;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.SellActivity;
 import retrofit.Callback;
@@ -42,13 +46,14 @@ import retrofit.client.Response;
 public class Fragment_Seller_ProfileSettings extends Fragment {
 
 
-    private final String ENDPOINT = "https://maps.googleapis.com/maps/api/geocode";
+    private static final String ENDPOINT = "https://maps.googleapis.com/maps/api/geocode";
 
     DBHelper dbHelper;
 
     ToggleButton cookingStatus;
-    ImageButton profileImage;
-    TextView sellerNameTV, cookingStatusTV;
+    TextView cookingStatusTV;
+
+    TextView sellerNameTV;
 
     EditText storeNameET;
     EditText addressET;
@@ -67,7 +72,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     String phoneNumber;
 
     Seller seller = null;
-    User user = null;
+    User user;
     Address userAddress;
     ArrayList<Item> sellerItems;
 
@@ -81,7 +86,9 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     private Uri imageFileUri;
     Intent intent;
     private boolean isNotCooking = true;
-    private String stringVariable = "file:///sdcard/_pictureholder_id.jpg";
+    private String stringVariable;
+
+    DBCallback emptyCallback;
 
 
     @Override
@@ -90,26 +97,21 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_seller_profile, container, false);
 
-        dbHelper = DBHelper.getDbHelper(getActivity());
-        activity = (SellActivity) getActivity();
+        initializeData();
 
-        user = activity.getUser();
+        initializeViews(root);
 
-        profilePhoto = (ImageButton) root.findViewById(R.id.profile_image);
-        profilePhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showListViewDialog();
-            }
-        });
+        loadSellerInfo();
 
-        containingView = (LinearLayout) root.findViewById(R.id.container);
-        containingView.setVisibility(View.INVISIBLE);
-        loadingPanel = (RelativeLayout) root.findViewById(R.id.loadingPanel);
-        loadingPanel.setVisibility(View.VISIBLE);
+        setListeners();
+
+        return root;
+    }
+
+    private void loadSellerInfo(){
 
         if(activity.getSeller() == null) {
-            seller = dbHelper.getSpecificSeller(dbHelper.getUserID());
+            seller = dbHelper.getSellerFromDB(dbHelper.getUserID());
             load();
         }else{
             seller = activity.getSeller();
@@ -118,42 +120,6 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             containingView.setVisibility(View.VISIBLE);
         }
 
-        cookingStatusTV = (TextView) root.findViewById(R.id.cooking_status_text);
-        cookingStatus = (ToggleButton) root.findViewById(R.id.cooking_status);
-        cookingStatus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isNotCooking) {
-                    cookingStatusTV.setVisibility(View.VISIBLE);
-                    isNotCooking = false;
-                } else if (!isNotCooking){
-                    isNotCooking = true;
-                    cookingStatusTV.setVisibility(View.GONE);
-                }
-            }
-        });
-        cookingStatus.setChecked(activity.isCurrentlyCooking());
-
-        profileImage = (ImageButton) root.findViewById(R.id.profile_image);
-        sellerNameTV = (TextView) root.findViewById(R.id.seller_name_tv);
-        storeNameET = (EditText) root.findViewById(R.id.store_name);
-        addressET = (EditText) root.findViewById(R.id.address);
-        aptET = (EditText) root.findViewById(R.id.apt);
-        cityET = (EditText) root.findViewById(R.id.city);
-        zipcodeET = (EditText) root.findViewById(R.id.zipcode);
-        phoneNumberET = (EditText) root.findViewById(R.id.phone_number);
-
-        saveButton = (Button) root.findViewById(R.id.save_button);
-
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // TODO: check if all EditTexts are filled in correctly ie: phone number has correct format
-                getGeoLocation();
-            }
-        });
-
-        return root;
     }
 
     private void getGeoLocation(){
@@ -182,7 +148,6 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 address = address.replace('+', ' ');
                 city = city.replace('+', ' ');
 
-
                 userAddress = new Address(address, apt, city, "NY", zipcode, uid);
 
                 Log.i("RETROFIT: LatLng", "" + location.getLat() + ", " + location.getLng());
@@ -195,22 +160,10 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 dbHelper.addSellerProfileInfoToDB(sellerTemp);
                 activity.setSeller(sellerTemp);
 
-                if (cookingStatus.getText().toString().equalsIgnoreCase("on")) {
-                    //TODO: add confirmation dialog when changing cooking status mention to click save to commit changes
-                    sellerItems = activity.getSellerItems();
-                    if (sellerItems != null && hasPositiveQuantity()){
-                        dbHelper.addActiveSellerToTable(seller);
-                        activity.setCookingStatus(true);
-                    }else{
-                        Toast.makeText(activity,"Please add items for sale",Toast.LENGTH_SHORT).show();
-                    }
+                Toast.makeText(getActivity(), "Changes Saved", Toast.LENGTH_SHORT).show();
 
-                } else {
-                    dbHelper.removeSellersFromActiveSellers(seller);
-                    activity.setCookingStatus(false);
-                }
-
-                activity.replaceSellerFragment(new Fragment_Seller_Items());
+                setReadOnlyAll(true);
+                saveButton.setText("Edit Profile");
             }
 
             @Override
@@ -264,7 +217,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     }
 
     private void setEditTexts(){
-        Address address = seller.getAddress();
+        Address address = user.getAddress();
         sellerNameTV.setText(user.getName());
         storeNameET.setText(seller.getStoreName());
         if(address != null) {
@@ -273,18 +226,15 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             cityET.setText(address.getCity());
             zipcodeET.setText(address.getZipCode());
         }
-        phoneNumberET.setText(seller.getPhoneNumber());
+        phoneNumberET.setText(user.getPhoneNumber());
     }
-
 
     private boolean hasPositiveQuantity(){
 
         for(Item item: sellerItems){
             if(item.getQuantity() > 0)
                 return true;
-
         }
-
         return false;
     }
 
@@ -336,6 +286,138 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         AlertDialog alertDialog = dialogBuilder.create();
 //        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         alertDialog.show();
+    }
+
+    private void initializeViews(View root){
+        sellerNameTV = (TextView) root.findViewById(R.id.seller_name_tv);
+
+        storeNameET = (EditText) root.findViewById(R.id.store_name);
+        addressET = (EditText) root.findViewById(R.id.address);
+        aptET = (EditText) root.findViewById(R.id.apt);
+        cityET = (EditText) root.findViewById(R.id.city);
+        zipcodeET = (EditText) root.findViewById(R.id.zipcode);
+        phoneNumberET = (EditText) root.findViewById(R.id.phone_number);
+        setReadOnlyAll(true);
+
+
+        cookingStatus = (ToggleButton) root.findViewById(R.id.cooking_status);
+        cookingStatusTV = (TextView) root.findViewById(R.id.cooking_status_text);
+        if(activity.isCurrentlyCooking()){
+            cookingStatus.setChecked(true);
+            cookingStatusTV.setVisibility(View.VISIBLE);
+        }else{
+            cookingStatus.setChecked(false);
+            cookingStatusTV.setVisibility(View.INVISIBLE);
+        }
+
+        saveButton = (Button) root.findViewById(R.id.save_button);
+
+        profilePhoto = (ImageButton) root.findViewById(R.id.profile_image);
+
+        //view initialization for loading progress bar spinner
+        loadingPanel = (RelativeLayout) root.findViewById(R.id.loadingPanel);
+        containingView = (LinearLayout) root.findViewById(R.id.container);
+        containingView.setVisibility(View.INVISIBLE);
+        loadingPanel.setVisibility(View.VISIBLE);
+
+    }
+
+    private void setListeners(){
+
+        cookingStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(saveButton.getText().toString().equalsIgnoreCase("save changes")) {
+                    Toast.makeText(activity,"Please save changes before continuing",Toast.LENGTH_SHORT).show();
+                    cookingStatus.setChecked(!cookingStatus.isChecked());
+                }else if (cookingStatus.getText().toString().equalsIgnoreCase("on")) {
+                    //TODO: add confirmation dialog when changing cooking status mention to click save to commit changes
+                    sellerItems = activity.getSellerItems();
+                    if (sellerItems != null && hasPositiveQuantity()) {
+                        dbHelper.addActiveSellerToTable(seller);
+                        activity.setCookingStatus(true);
+                        cookingStatusTV.setVisibility(View.VISIBLE);
+                        Toast.makeText(activity, "Cooking Status Active", Toast.LENGTH_SHORT).show();
+                    } else {
+                        cookingStatusTV.setVisibility(View.INVISIBLE);
+                        Toast.makeText(activity, "Please add an item with positive quantity", Toast.LENGTH_LONG).show();
+                        activity.replaceSellerFragment(new Fragment_Seller_Items());
+                    }
+
+                } else {
+                    cookingStatusTV.setVisibility(View.INVISIBLE);
+                    dbHelper.removeSellersFromActiveSellers(seller, emptyCallback);
+                    activity.setCookingStatus(false);
+                    Toast.makeText(activity,"Cooking Status Deactivated", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: check if all EditTexts are filled in correctly ie: phone number has correct format
+                if(saveButton.getText().toString().equalsIgnoreCase("save changes")) {
+                    getGeoLocation();
+                }else{
+                    saveButton.setText("Save Changes");
+                    setReadOnlyAll(false);
+                }
+            }
+        });
+
+        profilePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showListViewDialog();
+            }
+        });
+
+    }
+
+    private void initializeData(){
+
+        emptyCallback = new DBCallback() {
+            @Override
+            public void runOnSuccess() {
+
+            }
+
+            @Override
+            public void runOnFail() {
+
+            }
+        };
+
+        dbHelper = DBHelper.getDbHelper(getActivity());
+        activity = (SellActivity) getActivity();
+
+        user = activity.getUser();
+
+        stringVariable = Environment.getExternalStorageDirectory().getPath() + "_pictureholder_id.jpg";
+
+    }
+
+    private void setReadOnlyAll(boolean readOnly){
+        setReadOnly(storeNameET, readOnly);
+        setReadOnly(addressET, readOnly);
+        setReadOnly(aptET, readOnly);
+        setReadOnly(cityET, readOnly);
+        setReadOnly(zipcodeET, readOnly);
+        setReadOnly(phoneNumberET, readOnly);
+    }
+
+    private void setReadOnly(EditText view, boolean readOnly) {
+        view.setFocusable(!readOnly);
+        view.setFocusableInTouchMode(!readOnly);
+        view.setClickable(!readOnly);
+        view.setLongClickable(!readOnly);
+        view.setCursorVisible(!readOnly);
+        if(readOnly){
+            view.setTextColor(Color.BLACK);
+        }else{
+            view.setTextColor(Color.argb(255,0,100,255));
+        }
     }
 
 }

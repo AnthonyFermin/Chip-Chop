@@ -32,6 +32,11 @@ public class SignupActivity1 extends AppCompatActivity {
     public static final String EMAIL = "email";
     public static final String PASS = "pass";
     public static final String NAME = "name";
+    public static final String ADDRESS = "address";
+    public static final String APT = "apt";
+    public static final String CITY = "city";
+    public static final String ZIPCODE = "zipcode";
+    public static final String PHONE_NUMBER = "phone_number";
 
     String email;
     String password;
@@ -41,12 +46,26 @@ public class SignupActivity1 extends AppCompatActivity {
     private User user;
     Intent intent;
 
+    DBCallback emptyCallback;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup1);
 
         dbHelper = DBHelper.getDbHelper(this);
+
+        emptyCallback = new DBCallback() {
+            @Override
+            public void runOnSuccess() {
+
+            }
+
+            @Override
+            public void runOnFail() {
+
+            }
+        };
 
         containingView = (LinearLayout) findViewById(R.id.container);
         loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
@@ -67,7 +86,7 @@ public class SignupActivity1 extends AppCompatActivity {
 
                 dbHelper.logInUser(email, password, new DBCallback() {
                     @Override
-                    public void runOnSuccess(Context context) {
+                    public void runOnSuccess() {
                         user = dbHelper.getUserFromDB(dbHelper.getUserID());
                         loadingPanel.setVisibility(View.VISIBLE);
                         containingView.setVisibility(View.GONE);
@@ -75,11 +94,11 @@ public class SignupActivity1 extends AppCompatActivity {
                     }
 
                     @Override
-                    public void runOnFail(Context context) {
+                    public void runOnFail() {
                     }
                 });
 
-                }
+            }
 
         });
 
@@ -90,8 +109,21 @@ public class SignupActivity1 extends AppCompatActivity {
                 email = emailET.getText().toString().trim();
                 password = passET.getText().toString();
 
-                dbHelper.createUserAndLaunchIntent(email, password, intent);
-                checkRememberMe();
+                dbHelper.createUserAndCallback(email, password, new DBCallback() {
+                    @Override
+                    public void runOnSuccess() {
+                        checkRememberMe();
+                        Intent intent1 = new Intent(SignupActivity1.this, SignupActivity2.class);
+                        intent1.putExtra("email", email);
+                        startActivity(intent1);
+                        finish();
+                    }
+
+                    @Override
+                    public void runOnFail() {
+
+                    }
+                });
             }
         });
 
@@ -100,15 +132,24 @@ public class SignupActivity1 extends AppCompatActivity {
 
     private void checkRememberMe(){
 
-        Address address = user.getAddress();
-
         SharedPreferences sharedPreferences = getSharedPreferences(USER_INFO,MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(EMAIL, email);
         if(rememberMe.isChecked()){
             editor.putString(PASS, password);
         }
-        editor.putString(NAME, user.getName());
+
+        // when user clicks sign in
+        if(user != null){
+            String addressString = user.getAddressString();
+            Address address = HelperMethods.parseAddressString(addressString, dbHelper.getUserID());
+            editor.putString(NAME, user.getName());
+            editor.putString(ADDRESS, address.getStreetAddress());
+            editor.putString(APT, address.getApartment());
+            editor.putString(CITY, address.getCity());
+            editor.putString(ZIPCODE, address.getZipCode());
+            editor.putString(PHONE_NUMBER, user.getPhoneNumber());
+        }
         editor.commit();
 
     }
@@ -150,7 +191,7 @@ public class SignupActivity1 extends AppCompatActivity {
                     Toast.makeText(SignupActivity1.this, "Cannot Connect to Internet", Toast.LENGTH_SHORT).show();
                     loadingPanel.setVisibility(View.GONE);
                     containingView.setVisibility(View.VISIBLE);
-                    dbHelper.signOutUser();
+                    dbHelper.signOutUser(emptyCallback);
                 }
             }
         }.execute();

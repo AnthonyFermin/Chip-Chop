@@ -20,6 +20,9 @@ import madelyntav.c4q.nyc.chipchop.R;
  */
 public class Fragment_Buyer_ProfileSettings extends Fragment {
 
+    public static final String TAG = "fragment_buyer_profile_settings";
+
+
     ImageButton profilePhoto;
     public static final int RESULT_OK = -1;
     private Uri imageFileUri;

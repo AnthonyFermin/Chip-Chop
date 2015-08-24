@@ -1,6 +1,7 @@
 package madelyntav.c4q.nyc.chipchop;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -32,11 +33,14 @@ public class SignupActivity2 extends AppCompatActivity {
     private EditText aptET;
     private EditText cityET;
     private EditText zipET;
+    private EditText phoneNumberET;
 
     private String address;
     private String apt;
     private String city;
     private String zipcode;
+
+    private String email;
 
     private String name;
     private String phoneNumber;
@@ -54,12 +58,15 @@ public class SignupActivity2 extends AppCompatActivity {
         //TODO: onclick circleImageview allows user to upload a profile image
 
         dbHelper = DBHelper.getDbHelper(this);
+        Intent intent = getIntent();
+        email = intent.getStringExtra("email");
 
         nameET = (EditText) findViewById(R.id.name);
         addressET = (EditText) findViewById(R.id.address);
         aptET = (EditText) findViewById(R.id.apt);
         cityET = (EditText) findViewById(R.id.city);
         zipET = (EditText) findViewById(R.id.zipcode);
+        phoneNumberET = (EditText) findViewById(R.id.phone_number);
 
 
         startButton = (Button) findViewById(R.id.createUserButton);
@@ -85,8 +92,9 @@ public class SignupActivity2 extends AppCompatActivity {
         address = addressET.getText().toString();
         address = address.trim().replace(" ", "+");
         name = nameET.getText().toString().trim();
-        apt = aptET.getText().toString();
+        apt = aptET.getText().toString().trim();
         city = cityET.getText().toString().trim().replace(' ','+');
+        phoneNumber = phoneNumberET.getText().toString();
 
 
         String queryString = address + ",+" + city + ",+NY";// + "&key=" + APIKEY;
@@ -97,11 +105,12 @@ public class SignupActivity2 extends AppCompatActivity {
             public void success(Geolocation geolocation, Response response) {
                 String uid = dbHelper.getUserID();
                 Location location = geolocation.getResults().get(0).getGeometry().getLocation();
+                zipcode = geolocation.getResults().get(0).getAddressComponents().get(7).getLongName();
 
-                address = address.replace('+',' ');
-                city = city.replace('+',' ');
+                address = address.replace('+', ' ');
+                city = city.replace('+', ' ');
 
-                userAddress = new Address(address,apt,city,"NY",zipcode, uid);
+                userAddress = new Address(address, apt, city, "NY", zipcode, uid);
 
                 Log.i("RETROFIT: LatLng", "" + location.getLat() + ", " + location.getLng());
 
@@ -111,9 +120,12 @@ public class SignupActivity2 extends AppCompatActivity {
                 user.setAddress(userAddress);
                 user.setName(name);
                 user.setUID(uid);
+                user.seteMail(email);
+                user.setPhoneNumber(phoneNumber);
 
                 dbHelper.addUserProfileInfoToDB(user);
 
+                saveToSharedPrefs();
 
                 Intent buyActivity = new Intent(getApplicationContext(), BuyActivity.class);
                 startActivity(buyActivity);
@@ -128,6 +140,17 @@ public class SignupActivity2 extends AppCompatActivity {
 
 
 
+    }
+
+    private void saveToSharedPrefs(){
+        SharedPreferences sp = getSharedPreferences(SignupActivity1.USER_INFO, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(SignupActivity1.ADDRESS, address)
+                .putString(SignupActivity1.APT, apt)
+                .putString(SignupActivity1.CITY,city)
+                .putString(SignupActivity1.ZIPCODE, zipcode)
+                .putString(SignupActivity1.PHONE_NUMBER, phoneNumber)
+                .commit();
     }
 
 

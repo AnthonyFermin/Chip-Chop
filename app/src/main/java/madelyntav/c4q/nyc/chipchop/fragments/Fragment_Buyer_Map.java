@@ -42,6 +42,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
+import madelyntav.c4q.nyc.chipchop.BuyActivity;
+import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
@@ -75,6 +77,12 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     User user1;
     ArrayList<LatLng> latsList;
 
+    DBCallback emptyCallback;
+
+    public static final String TAG = "fragment_buyer_map";
+
+    BuyActivity activity;
+
 
     @Nullable
     @Override
@@ -82,6 +90,23 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
         root = inflater.inflate(R.layout.fragment_buyer_map, container, false);
         dbHelper = DBHelper.getDbHelper(getActivity());
+
+        activity = (BuyActivity) getActivity();
+
+        activity.setCurrentFragment(Fragment_Buyer_Map.TAG);
+
+
+        emptyCallback = new DBCallback() {
+            @Override
+            public void runOnSuccess() {
+
+            }
+
+            @Override
+            public void runOnFail() {
+
+            }
+        };
 
         latsList= new ArrayList<>();
         addressList=new ArrayList<>();
@@ -284,13 +309,13 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     AsyncTask<Void, Void, Void> getListForMarkers = new AsyncTask<Void, Void, Void>() {
         @Override
         protected Void doInBackground(Void... voids) {
-            dbHelper.getAllActiveSellers();
+            dbHelper.getAllActiveSellers(emptyCallback);
 
             while(sellers.size()==0){
                 // thread cannot continue until dbHelper.getUserListLatLng returns an ArrayList
                 Log.d("LATSLIST", addressList.toString());
 
-                sellers.addAll(dbHelper.getAllActiveSellers());
+                sellers.addAll(dbHelper.getAllActiveSellers(emptyCallback));
             }
             //create markers list by sorting throught latsList
             return null;
@@ -303,4 +328,9 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         }
     };
 
+    @Override
+    public void onDetach() {
+        activity.setCurrentFragment("");
+        super.onDetach();
+    }
 }

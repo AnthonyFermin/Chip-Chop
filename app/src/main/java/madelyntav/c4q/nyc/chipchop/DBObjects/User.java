@@ -20,6 +20,7 @@ public class User {
     String latitude;
     String longitude;
     int numOfReviews;
+    String addressString;
 
     public User(){}
 
@@ -136,4 +137,11 @@ public class User {
         photoLink=null;
     }
 
+    public String getAddressString() {
+        return addressString;
+    }
+
+    public void setAddressString(String addressString) {
+        this.addressString = addressString;
+    }
 }

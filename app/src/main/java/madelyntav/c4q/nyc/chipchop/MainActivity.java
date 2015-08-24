@@ -57,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<User> userList;
     User user2;
 
+    DBCallback emptyCallback;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +66,18 @@ public class MainActivity extends AppCompatActivity {
         dbHelper=DBHelper.getDbHelper(this);
         activeSellerList=new ArrayList<>();
         userList=new ArrayList<>();
+
+        emptyCallback = new DBCallback() {
+            @Override
+            public void runOnSuccess() {
+
+            }
+
+            @Override
+            public void runOnFail() {
+
+            }
+        };
 
 
 
@@ -88,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         itemsForSale.add(item2);
         itemsForSale.add(item3);
 
-        dbHelper.getAllActiveSellers();
+        dbHelper.getAllActiveSellers(emptyCallback);
 
 
     }
@@ -146,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
 //        Log.d("SUSERSItemsMain", userList.toString());
 
 
-            dbHelper.updateSellerItemsWhenItemIsBought(item2);
+            dbHelper.updateSellerItemsWhenItemIsBought(item2, emptyCallback);
 
     }
 

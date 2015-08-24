@@ -128,6 +128,6 @@ public class Address {
 
     @Override
     public String toString() {
-        return streetAddress+", APT:"+apartment+", "+city+", "+state.toUpperCase()+" "+zipCode;
+        return streetAddress+", " + apartment+", "+city+", "+state.toUpperCase()+" "+zipCode;
     }
 }

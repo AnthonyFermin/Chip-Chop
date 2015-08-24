@@ -57,6 +57,10 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
     SharedPreferences userInfoSP;
     public static final String USER_NAME = "name";
 
+    DBCallback emptyCallback;
+
+    private String currentFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +69,18 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
         dbHelper = DBHelper.getDbHelper(this);
 
+        emptyCallback = new DBCallback() {
+            @Override
+            public void runOnSuccess() {
+
+            }
+
+            @Override
+            public void runOnFail() {
+
+            }
+        };
+
         userInfoSP = getSharedPreferences(SignupActivity1.USER_INFO, MODE_PRIVATE);
         String email = userInfoSP.getString(SignupActivity1.EMAIL, null);
         String pass = userInfoSP.getString(SignupActivity1.PASS,null);
@@ -72,7 +88,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
         if(email != null && pass != null){
             Log.d("AUTO LOG-IN",email + ", " + pass);
-            //AUTO LOG IN SHOULD INITIALIZE USER OBJECT
+            //TODO: AUTO LOG IN SHOULD INITIALIZE USER OBJECT FOR DRAWER
             dbHelper.logInUser(email,pass);
         }
 
@@ -192,18 +208,20 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         } else if (position == 1) {
             fragment = new Fragment_Buyer_Orders();
         } else if (position == 2) {
-          fragment = new Fragment_Buyer_ProfileSettings();
+            fragment = new Fragment_Buyer_ProfileSettings();
         } else if (position == 3) {
             // TODO: SIGN OUT CODE !
-            dbHelper.signOutUser();
-            Toast.makeText(this,"Sign out successful",Toast.LENGTH_SHORT).show();
-            SharedPreferences sharedPreferences= getSharedPreferences(SignupActivity1.USER_INFO, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor=sharedPreferences.edit();
+            dbHelper.signOutUser(emptyCallback);
+            Toast.makeText(this, "Sign out successful", Toast.LENGTH_SHORT).show();
+            SharedPreferences sharedPreferences = getSharedPreferences(SignupActivity1.USER_INFO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.clear();
             editor.commit();
 
-            //if not currently in fragment_buyer_map, replace currently fragment
-            replaceFragment(new Fragment_Buyer_Map());
+            //if not currently in fragment_buyer_map, replace current fragment with buyer_map fragment
+            if (!getCurrentFragment().equals(Fragment_Buyer_Map.TAG)) {
+                replaceFragment(new Fragment_Buyer_Map());
+            }
         }
 
             // Create fragment manager to begin interacting with the fragments and the container
@@ -317,5 +335,13 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
             }
         }.execute();
+    }
+
+    public String getCurrentFragment() {
+        return currentFragment;
+    }
+
+    public void setCurrentFragment(String currentFragment) {
+        this.currentFragment = currentFragment;
     }
 }

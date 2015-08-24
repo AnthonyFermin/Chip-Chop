@@ -19,8 +19,8 @@ public class Item {
     boolean containsEggs;
     boolean containsShellfish;
     boolean containsDairy;
-    Boolean glutenFree;
-    Boolean containsPeanuts;
+    boolean glutenFree;
+    boolean containsPeanuts;
     String itemID;
 
     int quantityWanted;

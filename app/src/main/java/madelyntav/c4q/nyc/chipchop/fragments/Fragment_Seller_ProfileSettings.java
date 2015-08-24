@@ -338,6 +338,9 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                     sellerItems = activity.getSellerItems();
                     if (sellerItems != null && hasPositiveQuantity()) {
                         dbHelper.addActiveSellerToTable(seller);
+                        for(Item item: sellerItems) {
+                            dbHelper.addItemToActiveSellerProfile(item, emptyCallback);
+                        }
                         activity.setCookingStatus(true);
                         cookingStatusTV.setVisibility(View.VISIBLE);
                         Toast.makeText(activity, "Cooking Status Active", Toast.LENGTH_SHORT).show();
@@ -348,6 +351,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                     }
 
                 } else {
+
                     cookingStatusTV.setVisibility(View.INVISIBLE);
                     dbHelper.removeSellersFromActiveSellers(seller, emptyCallback);
                     activity.setCookingStatus(false);

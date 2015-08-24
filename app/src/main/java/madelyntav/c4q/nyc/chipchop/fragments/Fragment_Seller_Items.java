@@ -51,12 +51,14 @@ public class Fragment_Seller_Items extends Fragment {
 
         getListSetAdapter();
 
-        sellerItems = dbHelper.getSellerItems(dbHelper.getUserID(), emptyCallback);
 
         return root;
     }
 
     private void initializeData(){
+        dbHelper = DBHelper.getDbHelper(getActivity());
+        activity = (SellActivity) getActivity();
+
         emptyCallback = new DBCallback() {
             @Override
             public void runOnSuccess() {
@@ -69,12 +71,18 @@ public class Fragment_Seller_Items extends Fragment {
             }
         };
 
-        dbHelper = DBHelper.getDbHelper(getActivity());
-        activity = (SellActivity) getActivity();
         if(activity.getItemsToRemove() == null) {
             itemsToRemove = new ArrayList<>();
         }else{
             itemsToRemove = activity.getItemsToRemove();
+        }
+
+        //seller items
+        if(activity.isCurrentlyCooking()) {
+            sellerItems = dbHelper.getSellersOnSaleItems(dbHelper.getUserID(),emptyCallback);
+        }else{
+            sellerItems = dbHelper.getSellerItems(dbHelper.getUserID(), emptyCallback);
+
         }
     }
 

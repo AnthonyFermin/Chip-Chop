@@ -338,4 +338,6 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         activity.setCurrentFragment("");
         super.onDetach();
     }
+
+
 }

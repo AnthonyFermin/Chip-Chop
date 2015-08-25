@@ -20,6 +20,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,11 +87,20 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     BuyActivity activity;
 
 
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        root = inflater.inflate(R.layout.fragment_buyer_map, container, false);
+        if (root != null) {
+            ViewGroup parent = (ViewGroup) root.getParent();
+            if (parent != null)
+                parent.removeView(root);
+        }
+        try {
+            root = inflater.inflate(R.layout.fragment_buyer_map, container, false);
+        } catch (InflateException e) {
+        /* map is already there, just return view as it is */
+        }
+
         dbHelper = DBHelper.getDbHelper(getActivity());
 
         activity = (BuyActivity) getActivity();

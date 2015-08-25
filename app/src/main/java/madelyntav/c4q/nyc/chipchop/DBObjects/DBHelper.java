@@ -5,15 +5,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.facebook.AccessToken;
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
 import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.SignupActivity1;
 
@@ -378,50 +382,41 @@ public class DBHelper extends Firebase {
 
     }
 
-    public void createUserAccountWithFacebook(final DBCallback dbCallback){
-        Firebase ref = new Firebase(URL);
-        ref.authWithOAuthToken("google", "<OAuth Token>", new Firebase.AuthResultHandler() {
-            @Override
-            public void onAuthenticated(AuthData authData) {
-               UID= authData.getUid();
-                Firebase fRef = new Firebase(URL + "UserProfiles/");
-                fRef.child(UID);
-                fRef.child(UID).child(sEmailAddress).setValue(authData.getProviderData().get("email"));
-                fRef.child(UID).child(imageLink).setValue(authData.getProviderData().get("profileImageURL"));
-                fRef.child(UID).child(sName).setValue(authData.getProviderData().get("displayName"));
-                dbCallback.runOnSuccess();
-            }
+    public void onFacebookAccessTokenChange(final AccessToken token, final DBCallback dbCallback) {
+            Firebase ref = new Firebase(URL);
+            Log.d("Tok In DB preAuth","Token");
 
-            @Override
-            public void onAuthenticationError(FirebaseError firebaseError) {
-                // there was an error
-                dbCallback.runOnFail();
-            }
-        });
+        Log.d("Token Is:",token.toString());
 
-    }
-    public void createSellerAccountWithFacebook(final DBCallback dbCallback){
-        Firebase ref = new Firebase(URL);
-        ref.authWithOAuthToken("google", "<OAuth Token>", new Firebase.AuthResultHandler() {
-            @Override
-            public void onAuthenticated(AuthData authData) {
-                UID= authData.getUid();
-                Firebase fRef = new Firebase(URL + "SellerProfiles/");
+        if (token != null) {
+            ref.authWithOAuthToken("facebook", token.getToken(), new Firebase.AuthResultHandler() {
+                @Override
+                public void onAuthenticated(AuthData authData) {
+                    // The Facebook user is now authenticated with your Firebase app
+                    Log.d("Tok In DB after Auth", "Token");
+                    //Create user Profile with user email
+                    createUserAndCallback(String.valueOf(authData.getProviderData().get("email")), AccessToken.getCurrentAccessToken().getToken(), dbCallback);
+                    Log.d("email",authData.getProviderData().get("email").toString());
 
-                fRef.child(UID);
-                fRef.child(UID).child(sEmailAddress).setValue(authData.getProviderData().get("email"));
-                fRef.child(UID).child(imageLink).setValue(authData.getProviderData().get("profileImageURL"));
-                fRef.child(UID).child(sName).setValue(authData.getProviderData().get("displayName"));
-                dbCallback.runOnSuccess();
-            }
+                    UID = authData.getUid();
+                    Firebase fRef = new Firebase(URL + "UserProfiles/");
+                    fRef.child(UID);
+                    fRef.child(UID).child(sEmailAddress).setValue(authData.getProviderData().get("email"));
+                    fRef.child(UID).child(imageLink).setValue(authData.getProviderData().get("profileImageURL"));
+                    fRef.child(UID).child(sName).setValue(authData.getProviderData().get("displayName"));
+                    dbCallback.runOnSuccess();
+                }
 
-            @Override
-            public void onAuthenticationError(FirebaseError firebaseError) {
-                // there was an error
-                dbCallback.runOnFail();
-            }
-        });
-
+                @Override
+                public void onAuthenticationError(FirebaseError firebaseError) {
+                    // there was an error
+                    dbCallback.runOnFail();
+                }
+            });
+        } else {
+        /* Logged out of Facebook so do a logout from the Firebase app */
+            ref.unauth();
+        }
     }
 
 

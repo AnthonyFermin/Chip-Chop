@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -21,6 +22,9 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.firebase.client.Firebase;
+
+import java.util.Arrays;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
@@ -44,26 +48,22 @@ public class SignupActivity1 extends AppCompatActivity {
     public static final String CITY = "city";
     public static final String ZIPCODE = "zipcode";
     public static final String PHONE_NUMBER = "phone_number";
-
     String email;
     String password;
-
     LinearLayout containingView;
     RelativeLayout loadingPanel;
     private User user;
     Intent intent;
     CallbackManager callbackManager;
+    AccessTokenTracker mFacebookAccessTokenTracker;
     DBCallback emptyCallback;
+    Firebase.AuthStateListener mAuthStateListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         setContentView(R.layout.activity_signup1);
-
-
-
-        callbackManager = CallbackManager.Factory.create();
 
         dbHelper = DBHelper.getDbHelper(this);
 
@@ -83,7 +83,7 @@ public class SignupActivity1 extends AppCompatActivity {
         loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
         loadingPanel.setVisibility(View.GONE);
         intent = new Intent(getApplicationContext(), BuyActivity.class);
-
+        loginButton=(LoginButton) findViewById(R.id.login_button);
 
         emailET = (EditText) findViewById(R.id.eMail);
         passET = (EditText) findViewById(R.id.password);
@@ -114,34 +114,6 @@ public class SignupActivity1 extends AppCompatActivity {
 
         });
 
-        loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions("user_friends");
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dbHelper.createUserAccountWithFacebook(emptyCallback);
-            }
-        });
-
-        LoginManager.getInstance().registerCallback(callbackManager,
-                new FacebookCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(LoginResult loginResult) {
-                        // App code
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        // App code
-                    }
-
-                    @Override
-                    public void onError(FacebookException exception) {
-                        // App code
-                    }
-                });
-
-
         newUserButton = (Button)
 
                 findViewById(R.id.newUserButton);
@@ -169,80 +141,130 @@ public class SignupActivity1 extends AppCompatActivity {
                 });
             }
         });
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loginWithFacebook();
+            }
+        });
+
     }
 
+    public void loginWithFacebook() {
 
+        loginButton.setReadPermissions(Arrays.asList("public_profile", "user_friends", "email"));
 
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends", "email"));
+        callbackManager = CallbackManager.Factory.create();
 
-        private void checkRememberMe() {
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
 
-            SharedPreferences sharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString(EMAIL, email);
-            if (rememberMe.isChecked()) {
-                editor.putString(PASS, password);
+                Log.d("Token send To DB","Token");
+                dbHelper.onFacebookAccessTokenChange(loginResult.getAccessToken(), emptyCallback);
+
             }
 
-            // when user clicks sign in
-            if (user != null) {
-                String addressString = user.getAddressString();
-                Address address = HelperMethods.parseAddressString(addressString, dbHelper.getUserID());
-                editor.putString(NAME, user.getName());
-                editor.putString(ADDRESS, address.getStreetAddress());
-                editor.putString(APT, address.getApartment());
-                editor.putString(CITY, address.getCity());
-                editor.putString(ZIPCODE, address.getZipCode());
-                editor.putString(PHONE_NUMBER, user.getPhoneNumber());
-            }
-            editor.commit();
+            @Override
+            public void onCancel() {
 
+            }
+
+            @Override
+            public void onError(FacebookException e) {
+
+            }
+        });
+
+    }
+
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // if user logged in with Facebook, stop tracking their token
+        if (mFacebookAccessTokenTracker != null) {
+            mFacebookAccessTokenTracker.stopTracking();
         }
+        // if changing configurations, stop tracking firebase session.
+        dbHelper.removeAuthStateListener(mAuthStateListener);
+    }
 
-        private void load() {
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... voids) {
+            private void checkRememberMe() {
 
-                    int i = 0;
-                    do {
-                        Log.d("Signup - LOAD USER", "Attempt #" + i);
-                        try {
-                            Thread.sleep(500);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        if (i > 10) {
-                            Log.d("Signup - LOAD USER", "DIDN'T LOAD");
-                            break;
-                        }
-                        i++;
-                    } while (user == null);
-
-                    return null;
+                SharedPreferences sharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(EMAIL, email);
+                if (rememberMe.isChecked()) {
+                    editor.putString(PASS, password);
                 }
+                // when user clicks sign in
+                if (user != null) {
+                    String addressString = user.getAddressString();
+                    Address address = HelperMethods.parseAddressString(addressString, dbHelper.getUserID());
+                    editor.putString(NAME, user.getName());
+                    editor.putString(ADDRESS, address.getStreetAddress());
+                    editor.putString(APT, address.getApartment());
+                    editor.putString(CITY, address.getCity());
+                    editor.putString(ZIPCODE, address.getZipCode());
+                    editor.putString(PHONE_NUMBER, user.getPhoneNumber());
+                }
+                editor.commit();
 
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    super.onPostExecute(aVoid);
+            }
 
-                    if (user != null) {
-                        checkRememberMe();
-                        Log.d("SIGNUPACTIVITY1", "USER LOG IN SUCCESSFUL");
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        //TODO:display cannot connect to internet error message
-                        Toast.makeText(SignupActivity1.this, "Cannot Connect to Internet", Toast.LENGTH_SHORT).show();
-                        loadingPanel.setVisibility(View.GONE);
-                        containingView.setVisibility(View.VISIBLE);
-                        dbHelper.signOutUser(emptyCallback);
+            private void load() {
+                new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... voids) {
+
+                        int i = 0;
+                        do {
+                            Log.d("Signup - LOAD USER", "Attempt #" + i);
+                            try {
+                                Thread.sleep(500);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            if (i > 10) {
+                                Log.d("Signup - LOAD USER", "DIDN'T LOAD");
+                                break;
+                            }
+                            i++;
+                        } while (user == null);
+
+                        return null;
                     }
-                }
-            }.execute();
-        }
+
+                    @Override
+                    protected void onPostExecute(Void aVoid) {
+                        super.onPostExecute(aVoid);
+
+                        if (user != null) {
+                            checkRememberMe();
+                            Log.d("SIGNUPACTIVITY1", "USER LOG IN SUCCESSFUL");
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            //TODO:display cannot connect to internet error message
+                            Toast.makeText(SignupActivity1.this, "Cannot Connect to Internet", Toast.LENGTH_SHORT).show();
+                            loadingPanel.setVisibility(View.GONE);
+                            containingView.setVisibility(View.VISIBLE);
+                            dbHelper.signOutUser(emptyCallback);
+                        }
+                    }
+                }.execute();
+            }
 
 
-    }
+        };
 
 
 

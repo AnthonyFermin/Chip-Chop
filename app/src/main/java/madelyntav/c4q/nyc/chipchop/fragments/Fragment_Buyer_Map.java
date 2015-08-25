@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -132,7 +133,11 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
 
         sellersList = (RecyclerView) root.findViewById(R.id.buyers_orders_list);
-        sellersList.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        sellersList.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        sellersList.addItemDecoration(new MarginDe(this));
+        sellersList.setHasFixedSize(true);
+        sellersList.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+//        sellersList.setAdapter(new NumberedAdapter(30));
 
         SellerListAdapter sellersListAdapter = new SellerListAdapter(getActivity(), sellers);
         sellersList.setAdapter(sellersListAdapter);
@@ -339,4 +344,6 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         activity.setCurrentFragment("");
         super.onDetach();
     }
+
+
 }

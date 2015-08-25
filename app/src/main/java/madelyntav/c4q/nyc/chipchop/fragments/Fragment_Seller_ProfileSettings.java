@@ -425,7 +425,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         if(readOnly){
             view.setTextColor(Color.BLACK);
         }else{
-            view.setTextColor(Color.argb(255,0,100,255));
+            view.setTextColor(Color.parseColor("#D51F27"));
         }
     }
 

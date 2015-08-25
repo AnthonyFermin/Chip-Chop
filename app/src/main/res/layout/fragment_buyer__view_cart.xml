@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 
@@ -12,14 +14,17 @@
         android:textSize="40sp"
         android:gravity="center_horizontal"/>
 
-    <Button
-        android:layout_width="match_parent"
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/checkoutButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CHECKOUT"
-        android:textSize="14sp"
-        style="@style/button_design"
-        android:layout_margin="5dp"
-        android:id="@+id/checkoutButton"/>
+        android:layout_gravity="end"
+        android:src="@drawable/checkout"
+        android:layout_marginEnd="5dp"
+        app:backgroundTint="#D42028"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"/>
 
 
     <android.support.v7.widget.RecyclerView

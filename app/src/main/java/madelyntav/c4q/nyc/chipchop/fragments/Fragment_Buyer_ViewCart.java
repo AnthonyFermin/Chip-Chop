@@ -28,7 +28,7 @@ public class Fragment_Buyer_ViewCart extends Fragment {
 
     public static final String TAG = "fragment_buyer_view_cart";
 
-    Button checkoutButton;
+    android.support.design.widget.FloatingActionButton checkoutButton;
     private ArrayList<Item> cartItems;
     private RecyclerView cartList;
     private DBHelper dbHelper;
@@ -51,7 +51,7 @@ public class Fragment_Buyer_ViewCart extends Fragment {
         CartListAdapter cartListAdapter = new CartListAdapter(getActivity(), cartItems);
         cartList.setAdapter(cartListAdapter);
 
-        checkoutButton = (Button) root.findViewById(R.id.checkoutButton);
+        checkoutButton = (android.support.design.widget.FloatingActionButton) root.findViewById(R.id.checkoutButton);
         checkoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

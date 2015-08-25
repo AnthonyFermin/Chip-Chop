@@ -32,6 +32,9 @@
             android:layout_margin="5dp"
             android:gravity="center_horizontal"/>
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
         <EditText
             android:id="@+id/eMail"
@@ -40,7 +43,12 @@
             android:hint="Email"
             android:textSize="22sp"
             android:layout_margin="10dp" />
+</android.support.design.widget.TextInputLayout>
 
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
         <EditText
             android:id="@+id/password"
@@ -50,6 +58,8 @@
             android:inputType="textPassword"
             android:textSize="22sp"
             android:layout_margin="10dp"/>
+
+        </android.support.design.widget.TextInputLayout>
 
         <CheckBox
             android:layout_width="match_parent"

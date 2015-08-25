@@ -3,13 +3,21 @@ package madelyntav.c4q.nyc.chipchop;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
+
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.support.v4.widget.DrawerLayout;
+
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -156,6 +164,8 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         getSupportActionBar().setHomeButtonEnabled(false);
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.navdrawer);
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
+        getSupportActionBar().setBackgroundDrawable(colorDrawable);
 
     }
 
@@ -387,4 +397,6 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
     public void setCurrentFragment(String currentFragment) {
         this.currentFragment = currentFragment;
     }
+
+
 }

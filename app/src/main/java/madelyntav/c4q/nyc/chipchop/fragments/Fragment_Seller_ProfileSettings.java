@@ -86,7 +86,6 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     public static final int RESULT_OK = -1;
     private Uri imageFileUri;
     Intent intent;
-    private boolean isNotCooking = true;
     private String stringVariable;
 
     DBCallback emptyCallback;
@@ -157,12 +156,8 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 userAddress.setLongitude(location.getLng());
                 Seller sellerTemp = new Seller(uid, user.geteMail(), user.getName(), userAddress, storeName, phoneNumber);
 
-
                 dbHelper.addSellerProfileInfoToDB(sellerTemp);
                 activity.setSeller(sellerTemp);
-
-                dbHelper.addSellerProfileInfoToDB(sellerTemp);
-
 
                 Toast.makeText(getActivity(), "Changes Saved", Toast.LENGTH_SHORT).show();
 
@@ -305,16 +300,17 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
         cookingStatus = (ToggleButton) root.findViewById(R.id.cooking_status);
         cookingStatusTV = (TextView) root.findViewById(R.id.cooking_status_text);
-        
+        saveButton = (Button) root.findViewById(R.id.save_button);
+
         if(activity.isCurrentlyCooking()){
             cookingStatus.setChecked(true);
             cookingStatusTV.setVisibility(View.VISIBLE);
+            saveButton.setEnabled(false);
         }else{
             cookingStatus.setChecked(false);
             cookingStatusTV.setVisibility(View.INVISIBLE);
+            saveButton.setEnabled(true);
         }
-
-        saveButton = (Button) root.findViewById(R.id.save_button);
 
         profilePhoto = (ImageButton) root.findViewById(R.id.profile_image);
 
@@ -343,6 +339,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                             dbHelper.addItemToActiveSellerProfile(item, emptyCallback);
                         }
                         activity.setCookingStatus(true);
+                        saveButton.setEnabled(false);
                         cookingStatusTV.setVisibility(View.VISIBLE);
                         Toast.makeText(activity, "Cooking Status Active", Toast.LENGTH_SHORT).show();
                     } else {
@@ -352,7 +349,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                     }
 
                 } else {
-
+                    saveButton.setEnabled(true);
                     cookingStatusTV.setVisibility(View.INVISIBLE);
                     dbHelper.removeSellersFromActiveSellers(seller, emptyCallback);
                     activity.setCookingStatus(false);

@@ -3,13 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <RelativeLayout
+        style="@style/GenericProgressBackground"
+        android:id="@+id/loadingPanel"
+        >
+        <ProgressBar
+            style="@style/GenericProgressIndicator"/>
+    </RelativeLayout>
 
     <!-- The container for fragments -->
     <FrameLayout
         android:id="@+id/sellerFrameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
 
     <!-- The navigation drawer -->
 
@@ -41,7 +47,8 @@
             android:text="NAME HERE"
             android:textColor="#E53934"
             android:textStyle="bold"
-            android:gravity="center_horizontal"/>
+            android:gravity="center_horizontal"
+            android:id="@+id/drawer_user_nameTV"/>
 
         <ListView
             android:id="@+id/left_drawer"
@@ -64,6 +71,5 @@
             android:layout_margin="6dp"/>
 
     </LinearLayout>
-
 
 </android.support.v4.widget.DrawerLayout>

@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -203,8 +204,13 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         googleMap.getUiSettings().setRotateGesturesEnabled(true);
         googleMap.setMyLocationEnabled(true);
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        if(location != null)
-            handleNewLocation(location);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (location != null)
+                    handleNewLocation(location);
+            }
+        }, 2000);
     }
 
     @Override

@@ -146,6 +146,7 @@ public class SignupActivity2 extends AppCompatActivity {
         SharedPreferences sp = getSharedPreferences(SignupActivity1.USER_INFO, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(SignupActivity1.ADDRESS, address)
+                .putString(SignupActivity1.NAME, name)
                 .putString(SignupActivity1.APT, apt)
                 .putString(SignupActivity1.CITY,city)
                 .putString(SignupActivity1.ZIPCODE, zipcode)

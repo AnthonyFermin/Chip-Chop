@@ -1,19 +1,15 @@
 package madelyntav.c4q.nyc.chipchop;
 
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,6 +25,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -38,26 +36,27 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Checkout;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Orders;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_ProfileSettings;
-import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_ViewCart;
 
 public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Orders.OnBuyerOrderSelectedListener, Fragment_Buyer_Map.OnBuyerMapFragmentInteractionListener {
 
-    FrameLayout frameLayout;
-    LinearLayout DrawerLinear;
+    private FrameLayout frameLayout;
+    private LinearLayout DrawerLinear;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private String[] mListTitles;
     private Fragment fragment;
     private ActionBarDrawerToggle mDrawerToggle;
+    private TextView drawerUserNameTV;
+    private RelativeLayout loadingPanel;
+
     private DBHelper dbHelper;
 
     private User user = null;
 
-    SharedPreferences userInfoSP;
-    public static final String USER_NAME = "name";
+    private SharedPreferences userInfoSP;
 
-    DBCallback emptyCallback;
+    private DBCallback emptyCallback;
 
     private String currentFragment;
 
@@ -67,39 +66,46 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buy);
 
-        dbHelper = DBHelper.getDbHelper(this);
+        bindViews();
+        initializeData();
+        setUpDrawer();
+        checkAutoLogIn();
+        selectFragmentToLoad(savedInstanceState);
 
-        emptyCallback = new DBCallback() {
-            @Override
-            public void runOnSuccess() {
+        // NOTIFICATION CODE
+//        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//        NotificationCompat.Builder mBuilder =
+//                new NotificationCompat.Builder(getApplicationContext())
+//                        .setSmallIcon(R.drawable.chipchop_small)
+//                        .setContentTitle("ChipChop")
+//                        .setContentText("Your order is ready!");
+//
+//        mBuilder.setAutoCancel(true);
+//        Notification notification = mBuilder.build();
+//        notificationManager.notify(1234, notification);
 
-            }
+    }
 
-            @Override
-            public void runOnFail() {
-
-            }
-        };
-
-        userInfoSP = getSharedPreferences(SignupActivity1.USER_INFO, MODE_PRIVATE);
-        String email = userInfoSP.getString(SignupActivity1.EMAIL, null);
-        String pass = userInfoSP.getString(SignupActivity1.PASS,null);
-        Log.d("AUTO LOG-IN",email + ", " + pass);
-
-        if(email != null && pass != null){
-            Log.d("AUTO LOG-IN",email + ", " + pass);
-            //TODO: AUTO LOG IN SHOULD INITIALIZE USER OBJECT FOR DRAWER
-            dbHelper.logInUser(email,pass);
+    private void checkAutoLogIn() {
+        if(dbHelper.userIsLoggedIn() && user != null){
+            load();
         }
+    }
 
+    private void selectFragmentToLoad(Bundle savedInstanceState) {
+        SharedPreferences sharedPreferences1 = getSharedPreferences(Fragment_Buyer_ViewCart.FROM_CHECKOUT, MODE_PRIVATE);
 
+        if(sharedPreferences1.getBoolean(Fragment_Buyer_ViewCart.FROM_CHECKOUT, false)) {
+            replaceFragment(new Fragment_Buyer_Checkout());
+            SharedPreferences.Editor editor = sharedPreferences1.edit();
+            editor.putBoolean(Fragment_Buyer_ViewCart.FROM_CHECKOUT, false);
+            editor.commit();
+        } else if (savedInstanceState == null) {
+            selectItem(0);
+        }
+    }
 
-        frameLayout = (FrameLayout) findViewById(R.id.sellerFrameLayout);
-        DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        mListTitles = getResources().getStringArray(R.array.BUYER_nav_drawer_titles);
-
+    private void setUpDrawer() {
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.navdrawer_list_item, mListTitles));
 
@@ -151,33 +157,65 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.navdrawer);
 
-        SharedPreferences sharedPreferences1 = getSharedPreferences(Fragment_Buyer_ViewCart.FROM_CHECKOUT, MODE_PRIVATE);
+    }
 
-        if(sharedPreferences1.getBoolean(Fragment_Buyer_ViewCart.FROM_CHECKOUT, false)) {
-            replaceFragment(new Fragment_Buyer_Checkout());
-            SharedPreferences.Editor editor = sharedPreferences1.edit();
-            editor.putBoolean(Fragment_Buyer_ViewCart.FROM_CHECKOUT, false);
-            editor.commit();
-        } else if (savedInstanceState == null) {
-            selectItem(0);
+    private void bindViews(){
+        loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
+
+        drawerUserNameTV = (TextView) findViewById(R.id.drawer_user_nameTV);
+        frameLayout = (FrameLayout) findViewById(R.id.sellerFrameLayout);
+        DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+    }
+
+    private void initializeData() {
+        dbHelper = DBHelper.getDbHelper(this);
+
+        mListTitles = getResources().getStringArray(R.array.BUYER_nav_drawer_titles);
+
+        emptyCallback = new DBCallback() {
+            @Override
+            public void runOnSuccess() {
+
+            }
+
+            @Override
+            public void runOnFail() {
+
+            }
+        };
+
+        /*
+            checks if user info is saved for auto log in
+         */
+
+        userInfoSP = getSharedPreferences(SignupActivity1.USER_INFO, MODE_PRIVATE);
+        String email = userInfoSP.getString(SignupActivity1.EMAIL, null);
+        String pass = userInfoSP.getString(SignupActivity1.PASS, null);
+
+        if(email != null && pass != null){
+            Log.d("AUTO LOG-IN",email + ", " + pass);
+            loadingPanel.setVisibility(View.VISIBLE);
+            frameLayout.setVisibility(View.INVISIBLE);
+            DrawerLinear.setVisibility(View.INVISIBLE);
+            //TODO: AUTO LOG IN SHOULD INITIALIZE USER OBJECT FOR DRAWER
+            dbHelper.logInUser(email,pass, new DBCallback() {
+                @Override
+                public void runOnSuccess() {
+                    load();
+                }
+
+                @Override
+                public void runOnFail() {
+                    // clears user login info if login authentication failed
+                    userInfoSP.edit().clear().commit();
+                    loadingPanel.setVisibility(View.GONE);
+                    frameLayout.setVisibility(View.VISIBLE);
+                    DrawerLinear.setVisibility(View.VISIBLE);
+                }
+            });
         }
-
-        // NOTIFICATION CODE
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(getApplicationContext())
-                        .setSmallIcon(R.drawable.chipchop_small)
-                        .setContentTitle("ChipChop")
-                        .setContentText("Your order is ready!");
-
-        mBuilder.setAutoCancel(true);
-        Notification notification = mBuilder.build();
-        notificationManager.notify(1234, notification);
-
-        if(dbHelper.userIsLoggedIn() && user != null){
-            load();
-        }
-
     }
 
     // TODO: PUT CODE FOR INTERACTION WITH LIST HERE !!
@@ -303,7 +341,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-
+                user = dbHelper.getUserFromDB(dbHelper.getUserID());
                 int i = 0;
                 do{
                     Log.d("Buy - Load User", "Attempt #" + i);
@@ -328,10 +366,15 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
                 if(user != null){
                     SharedPreferences.Editor editor = userInfoSP.edit();
-                    editor.putString(SignupActivity1.NAME,user.getName());
+                    editor.putString(SignupActivity1.NAME, user.getName());
                     editor.commit();
+
+                    drawerUserNameTV.setText(user.getName());
                 }
 
+                loadingPanel.setVisibility(View.GONE);
+                frameLayout.setVisibility(View.VISIBLE);
+                DrawerLinear.setVisibility(View.VISIBLE);
 
             }
         }.execute();

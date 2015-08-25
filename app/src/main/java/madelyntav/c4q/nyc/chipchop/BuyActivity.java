@@ -4,7 +4,10 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.Intent;
@@ -13,6 +16,7 @@ import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -51,6 +55,8 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
     private Fragment fragment;
     private ActionBarDrawerToggle mDrawerToggle;
     private DBHelper dbHelper;
+    private SwipeRefreshLayout swipeLayout;
+
 
     private User user = null;
 
@@ -92,6 +98,24 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
             dbHelper.logInUser(email,pass);
         }
 
+
+//        swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+//        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                // TODO: add code to refresh the gridview?
+//                // below toast is for test !
+//
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        swipeLayout.setRefreshing(false);
+//                    }
+//                }, 5000);
+//
+//                Toast.makeText(getApplicationContext(), "HELLO HELLO", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
 
         frameLayout = (FrameLayout) findViewById(R.id.sellerFrameLayout);
@@ -150,6 +174,8 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         getSupportActionBar().setHomeButtonEnabled(false);
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.navdrawer);
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
+        getSupportActionBar().setBackgroundDrawable(colorDrawable);
 
         SharedPreferences sharedPreferences1 = getSharedPreferences(Fragment_Buyer_ViewCart.FROM_CHECKOUT, MODE_PRIVATE);
 

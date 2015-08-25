@@ -39,7 +39,6 @@
             style="@style/text_design"
             android:textSize="30sp"
             android:padding="15dp"
-            android:text="NAME HERE"
             android:textStyle="bold"
             android:textColor="#E53934"
             android:gravity="center_horizontal"/>

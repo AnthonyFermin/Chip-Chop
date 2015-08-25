@@ -171,11 +171,11 @@ public class Fragment_Seller_Items extends Fragment {
                     }
                     activity.setItemsToAdd(null);
 
-//                    if (activity.isCurrentlyCooking()) {
-//                        for (Item item : sellerItems) {
-//                            dbHelper.addItemToActiveSellerProfile(item, emptyCallback);
-//                        }
-//                    }
+                    if (activity.isCurrentlyCooking()) {
+                        for (Item item : sellerItems) {
+                            dbHelper.addItemToActiveSellerProfile(item, emptyCallback);
+                        }
+                    }
 
                 }
 

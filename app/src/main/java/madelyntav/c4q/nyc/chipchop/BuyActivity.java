@@ -125,8 +125,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
                 R.string.drawer_close) {
 
             public void onDrawerClosed(View view) {
-                getSupportActionBar().setTitle(R.string.app_name);
-                ActivityCompat.invalidateOptionsMenu(BuyActivity.this);
+//
             }
 
             public void onDrawerOpened(View drawerView) {
@@ -134,9 +133,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
                 InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputManager.hideSoftInputFromWindow(drawerView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
-                getSupportActionBar().setTitle(R.string.app_name);
-                ActivityCompat.invalidateOptionsMenu(BuyActivity.this);
-
+//
 
                 Button sellButton = (Button) findViewById(R.id.sellButton);
                 sellButton.setOnClickListener(new View.OnClickListener() {

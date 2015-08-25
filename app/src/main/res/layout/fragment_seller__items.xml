@@ -1,6 +1,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Items"
     android:layout_margin="10dp">
 
@@ -27,14 +29,6 @@
             android:gravity="center_horizontal"/>
 
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="ADD ITEM"
-            android:textSize="14sp"
-            android:layout_gravity="center_horizontal"
-            android:id="@+id/addButton"
-            style="@style/button_design"/>
 
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
@@ -42,13 +36,23 @@
             android:layout_weight="1"
             android:id="@+id/seller_items_list"/>
 
-        <Button
-            android:layout_width="match_parent"
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/addButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save Changes"
-            android:clickable="false"
-            android:id="@+id/save_button"
-            style="@style/button_design"/>
+            android:layout_gravity="bottom|end"
+            android:src="@drawable/plus"
+            app:backgroundTint="#D42028"
+            app:elevation="6dp"
+            app:pressedTranslationZ="12dp"/>
+
+        <!--<Button-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Save Changes"-->
+            <!--android:clickable="false"-->
+            <!--android:id="@+id/save_button"-->
+            <!--style="@style/button_design"/>-->
 
     </LinearLayout>
 

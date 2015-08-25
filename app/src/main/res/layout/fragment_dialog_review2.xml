@@ -13,12 +13,17 @@
         android:textSize="40sp"
         android:gravity="center_horizontal"/>
 
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:hint="Enter Review Here (Optional)"
         android:id="@+id/text_review"/>
+
+    </android.support.design.widget.TextInputLayout>
 
 
     <Button

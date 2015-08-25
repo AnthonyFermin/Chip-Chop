@@ -24,7 +24,7 @@ import madelyntav.c4q.nyc.chipchop.adapters.SellerItemsAdapter;
 
 public class Fragment_Seller_Items extends Fragment {
 
-    private Button addButton;
+    private android.support.design.widget.FloatingActionButton addButton;
     private RecyclerView foodList;
     private RelativeLayout loadingPanel;
     private LinearLayout containingView;
@@ -51,12 +51,14 @@ public class Fragment_Seller_Items extends Fragment {
 
         getListSetAdapter();
 
-        sellerItems = dbHelper.getSellerItems(dbHelper.getUserID(), emptyCallback);
 
         return root;
     }
 
     private void initializeData(){
+        dbHelper = DBHelper.getDbHelper(getActivity());
+        activity = (SellActivity) getActivity();
+
         emptyCallback = new DBCallback() {
             @Override
             public void runOnSuccess() {
@@ -69,12 +71,18 @@ public class Fragment_Seller_Items extends Fragment {
             }
         };
 
-        dbHelper = DBHelper.getDbHelper(getActivity());
-        activity = (SellActivity) getActivity();
         if(activity.getItemsToRemove() == null) {
             itemsToRemove = new ArrayList<>();
         }else{
             itemsToRemove = activity.getItemsToRemove();
+        }
+
+        //seller items
+        if(activity.isCurrentlyCooking()) {
+            sellerItems = dbHelper.getSellersOnSaleItems(dbHelper.getUserID(),emptyCallback);
+        }else{
+            sellerItems = dbHelper.getSellerItems(dbHelper.getUserID(), emptyCallback);
+
         }
     }
 
@@ -147,7 +155,7 @@ public class Fragment_Seller_Items extends Fragment {
         foodList = (RecyclerView) root.findViewById(R.id.seller_items_list);
 
         saveChanges = (Button) root.findViewById(R.id.save_button);
-        addButton = (Button) root.findViewById(R.id.addButton);
+        addButton = (android.support.design.widget.FloatingActionButton) root.findViewById(R.id.addButton);
 
     }
 
@@ -163,11 +171,11 @@ public class Fragment_Seller_Items extends Fragment {
                     }
                     activity.setItemsToAdd(null);
 
-//                    if (activity.isCurrentlyCooking()) {
-//                        for (Item item : sellerItems) {
-//                            dbHelper.addItemToActiveSellerProfile(item, emptyCallback);
-//                        }
-//                    }
+                    if (activity.isCurrentlyCooking()) {
+                        for (Item item : sellerItems) {
+                            dbHelper.addItemToActiveSellerProfile(item, emptyCallback);
+                        }
+                    }
 
                 }
 

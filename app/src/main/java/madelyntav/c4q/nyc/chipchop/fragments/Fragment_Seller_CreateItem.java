@@ -51,6 +51,25 @@ public class Fragment_Seller_CreateItem extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_seller__create_item, container, false);
 
+        initializeData();
+        initializeViews(root);
+        setListeners();
+
+        return root;
+    }
+
+    private void editItem(){
+        Item itemToEdit = activity.getItemToEdit();
+        dishNameET.setText(itemToEdit.getNameOfItem());
+        portionsET.setText(itemToEdit.getQuantity());
+        descriptionET.setText(itemToEdit.getDescriptionOfItem());
+        String[] price = (itemToEdit.getPrice() + "").split(".");
+        dollarPriceET.setText(price[0]);
+        centPriceET.setText(price[1]);
+    }
+
+    private void initializeData(){
+
         dbHelper = DBHelper.getDbHelper(getActivity());
         activity = (SellActivity) getActivity();
 
@@ -59,16 +78,13 @@ public class Fragment_Seller_CreateItem extends Fragment {
             itemsToAdd = new ArrayList<>();
         }
 
-        dishNameET = (EditText) root.findViewById(R.id.dish_name);
-        portionsET = (EditText) root.findViewById(R.id.portions);
-        descriptionET = (EditText) root.findViewById(R.id.description);
-        dollarPriceET = (EditText) root.findViewById(R.id.price_dollar_amount);
-        centPriceET = (EditText) root.findViewById(R.id.price_cents_amount);
+        if(activity.getItemToEdit() != null){
+            editItem();
+        }
 
+    }
 
-        dishPhoto = (ImageView) root.findViewById(R.id.dish_image);
-
-        dishPhotoButton = (ImageButton) root.findViewById(R.id.dish_image);
+    private void setListeners(){
         dishPhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,7 +92,6 @@ public class Fragment_Seller_CreateItem extends Fragment {
             }
         });
 
-        addButton = (Button) root.findViewById(R.id.add_item_button);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -103,12 +118,26 @@ public class Fragment_Seller_CreateItem extends Fragment {
 
             }
         });
-
-
-        return root;
     }
 
+    private void initializeViews(View root){
 
+
+        addButton = (Button) root.findViewById(R.id.add_item_button);
+
+        dishNameET = (EditText) root.findViewById(R.id.dish_name);
+        portionsET = (EditText) root.findViewById(R.id.portions);
+        descriptionET = (EditText) root.findViewById(R.id.description);
+        dollarPriceET = (EditText) root.findViewById(R.id.price_dollar_amount);
+        centPriceET = (EditText) root.findViewById(R.id.price_cents_amount);
+
+
+        dishPhoto = (ImageView) root.findViewById(R.id.dish_image);
+
+        dishPhotoButton = (ImageButton) root.findViewById(R.id.dish_image);
+
+
+    }
 
     //This handles the activity for the intent: using the camera and choosing from a gallery.
     @Override

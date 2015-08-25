@@ -25,6 +25,7 @@ import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 
+import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
@@ -211,6 +212,8 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                     //TODO:display cannot connect to internet error message
                     Toast.makeText(activity,"Cannot Connect to Internet", Toast.LENGTH_SHORT).show();
                     loadingPanel.setVisibility(View.GONE);
+                    startActivity(new Intent(activity, BuyActivity.class));
+                    activity.finish();
                 }
             }
         }.execute();
@@ -299,16 +302,15 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         phoneNumberET = (EditText) root.findViewById(R.id.phone_number);
         setReadOnlyAll(true);
 
-
         cookingStatus = (ToggleButton) root.findViewById(R.id.cooking_status);
         cookingStatusTV = (TextView) root.findViewById(R.id.cooking_status_text);
         
         if(activity.isCurrentlyCooking()){
-            cookingStatus.setChecked(false);
-            cookingStatusTV.setVisibility(View.GONE);
-        }else{
             cookingStatus.setChecked(true);
             cookingStatusTV.setVisibility(View.VISIBLE);
+        }else{
+            cookingStatus.setChecked(false);
+            cookingStatusTV.setVisibility(View.INVISIBLE);
         }
 
         saveButton = (Button) root.findViewById(R.id.save_button);
@@ -336,6 +338,9 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                     sellerItems = activity.getSellerItems();
                     if (sellerItems != null && hasPositiveQuantity()) {
                         dbHelper.addActiveSellerToTable(seller);
+                        for(Item item: sellerItems) {
+                            dbHelper.addItemToActiveSellerProfile(item, emptyCallback);
+                        }
                         activity.setCookingStatus(true);
                         cookingStatusTV.setVisibility(View.VISIBLE);
                         Toast.makeText(activity, "Cooking Status Active", Toast.LENGTH_SHORT).show();
@@ -346,6 +351,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                     }
 
                 } else {
+
                     cookingStatusTV.setVisibility(View.INVISIBLE);
                     dbHelper.removeSellersFromActiveSellers(seller, emptyCallback);
                     activity.setCookingStatus(false);

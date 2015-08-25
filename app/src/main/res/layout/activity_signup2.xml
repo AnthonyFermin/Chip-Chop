@@ -22,7 +22,7 @@
         android:id="@+id/profile_image"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:src="@drawable/chipchop_med"
+        android:src="@drawable/chipchop"
         app:border_width="2dp"
         app:border_color="#FFF"
         android:layout_gravity="center_horizontal"/>
@@ -86,6 +86,16 @@
         android:textSize="20sp"
         android:layout_margin="5dp"
         android:layout_weight="1"/>
+
+    <EditText
+        android:id="@+id/phone_number"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:hint="Phone Number"
+        android:textSize="20sp"
+        android:layout_margin="5dp"
+        android:layout_weight="1"
+        android:inputType="number"/>
 
     <Button
         android:layout_width="match_parent"

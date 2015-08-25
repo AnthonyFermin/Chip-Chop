@@ -3,20 +3,19 @@ package madelyntav.c4q.nyc.chipchop;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -30,15 +29,12 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
-
-
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Checkout;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Orders;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_ProfileSettings;
-import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_ViewCart;
 
 public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Orders.OnBuyerOrderSelectedListener, Fragment_Buyer_Map.OnBuyerMapFragmentInteractionListener {
@@ -52,10 +48,15 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
     private ActionBarDrawerToggle mDrawerToggle;
     private DBHelper dbHelper;
 
+
     private User user = null;
 
     SharedPreferences userInfoSP;
     public static final String USER_NAME = "name";
+
+    DBCallback emptyCallback;
+
+    private String currentFragment;
 
 
     @Override
@@ -65,6 +66,18 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
         dbHelper = DBHelper.getDbHelper(this);
 
+        emptyCallback = new DBCallback() {
+            @Override
+            public void runOnSuccess() {
+
+            }
+
+            @Override
+            public void runOnFail() {
+
+            }
+        };
+
         userInfoSP = getSharedPreferences(SignupActivity1.USER_INFO, MODE_PRIVATE);
         String email = userInfoSP.getString(SignupActivity1.EMAIL, null);
         String pass = userInfoSP.getString(SignupActivity1.PASS,null);
@@ -72,7 +85,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
         if(email != null && pass != null){
             Log.d("AUTO LOG-IN",email + ", " + pass);
-            //AUTO LOG IN SHOULD INITIALIZE USER OBJECT
+            //TODO: AUTO LOG IN SHOULD INITIALIZE USER OBJECT FOR DRAWER
             dbHelper.logInUser(email,pass);
         }
 
@@ -192,18 +205,20 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         } else if (position == 1) {
             fragment = new Fragment_Buyer_Orders();
         } else if (position == 2) {
-          fragment = new Fragment_Buyer_ProfileSettings();
+            fragment = new Fragment_Buyer_ProfileSettings();
         } else if (position == 3) {
             // TODO: SIGN OUT CODE !
-            dbHelper.signOutUser();
-            Toast.makeText(this,"Sign out successful",Toast.LENGTH_SHORT).show();
-            SharedPreferences sharedPreferences= getSharedPreferences(SignupActivity1.USER_INFO, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor=sharedPreferences.edit();
+            dbHelper.signOutUser(emptyCallback);
+            Toast.makeText(this, "Sign out successful", Toast.LENGTH_SHORT).show();
+            SharedPreferences sharedPreferences = getSharedPreferences(SignupActivity1.USER_INFO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.clear();
             editor.commit();
 
-            //if not currently in fragment_buyer_map, replace currently fragment
-            replaceFragment(new Fragment_Buyer_Map());
+            //if not currently in fragment_buyer_map, replace current fragment with buyer_map fragment
+            if (!getCurrentFragment().equals(Fragment_Buyer_Map.TAG)) {
+                replaceFragment(new Fragment_Buyer_Map());
+            }
         }
 
             // Create fragment manager to begin interacting with the fragments and the container
@@ -317,5 +332,13 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
             }
         }.execute();
+    }
+
+    public String getCurrentFragment() {
+        return currentFragment;
+    }
+
+    public void setCurrentFragment(String currentFragment) {
+        this.currentFragment = currentFragment;
     }
 }

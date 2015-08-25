@@ -25,6 +25,7 @@ import madelyntav.c4q.nyc.chipchop.adapters.FoodListAdapter;
 
 public class Fragment_Buyer_SellerProfile extends Fragment {
 
+    public static final String TAG = "fragment_buyer_seller_profile";
 
     Button cartButton;
     private ArrayList<Item> foodItems;
@@ -65,7 +66,7 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
     private void populateItems(){
         for(int i = 0; i < 10; i++) {
 
-            //foodItems.add(new Item("test", "Something Fancy", 3, "The fanciest homemade meal you've ever had", "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg"));
+//            foodItems.add(new Item("test", "Something Fancy", 3, "The fanciest homemade meal you've ever had", "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg"));
         }
     }
 

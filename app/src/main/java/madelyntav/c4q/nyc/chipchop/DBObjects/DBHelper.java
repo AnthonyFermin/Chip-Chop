@@ -17,7 +17,6 @@ import java.util.Map;
 import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.SignupActivity1;
 
-
 /**
  * Created by c4q-madelyntavarez on 8/12/15.
  */
@@ -43,7 +42,7 @@ public class DBHelper extends Firebase {
     private static final String sName = "name";
     private static final String sEmailAddress = "eMail";
     private static final String sPhoneNumber = "phoneNumber";
-    private static final String sAddress = "address";
+    private static final String sAddress = "addressString";
     private static final String sPhotoLink = "photoLink";
     public static User user;
     public static final String sLatitude = "latitude";
@@ -214,6 +213,50 @@ public class DBHelper extends Firebase {
 
         return mSuccess;
     }
+
+    public Boolean createUserAndCallback(final String email, final String password, final DBCallback callback) {
+        UID = "";
+
+        fireBaseRef.createUser(email, password, new ValueResultHandler<Map<String, Object>>() {
+            @Override
+            public void onSuccess(Map<String, Object> stringObjectMap) {
+                Toast.makeText(mContext, "Account Created", Toast.LENGTH_SHORT).show();
+                mSuccess = true;
+
+                String userIDOne = String.valueOf(stringObjectMap.get("uid"));
+                for (int i = 12; i < userIDOne.length(); i++) {
+                    UID += userIDOne.charAt(i);
+                }
+
+                SharedPreferences sharedPreferences = mContext.getSharedPreferences("New User", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("id", UID);
+                editor.putString("eMail", email);
+                editor.putString("password", password);
+                editor.apply();
+
+                user = new User(UID, email);
+
+                Firebase fRef = new Firebase(URL + "UserProfiles");
+                fRef.child(UID);
+                fRef.child(UID).child(sEmailAddress).setValue(email);
+
+                callback.runOnSuccess();
+            }
+
+            @Override
+            public void onError(FirebaseError firebaseError) {
+                Toast.makeText(mContext, "Please set Email and Password", Toast.LENGTH_SHORT).show();
+                Log.d("Firebase", firebaseError.toString());
+                mSuccess = false;
+                callback.runOnFail();
+            }
+        });
+
+
+        return mSuccess;
+    }
+
     //logsInUser without launching an intent
     public boolean logInUser(String email, String password) {
         UID="";
@@ -335,17 +378,47 @@ public class DBHelper extends Firebase {
 
     }
 
-    public void loginUserThroughFacebook(DBCallback dbCallback){
+    public void createUserAccountWithFacebook(final DBCallback dbCallback){
         Firebase ref = new Firebase(URL);
         ref.authWithOAuthToken("google", "<OAuth Token>", new Firebase.AuthResultHandler() {
             @Override
             public void onAuthenticated(AuthData authData) {
-                // the Google user is now authenticated with your Firebase app
+               UID= authData.getUid();
+                Firebase fRef = new Firebase(URL + "UserProfiles/");
+                fRef.child(UID);
+                fRef.child(UID).child(sEmailAddress).setValue(authData.getProviderData().get("email"));
+                fRef.child(UID).child(imageLink).setValue(authData.getProviderData().get("profileImageURL"));
+                fRef.child(UID).child(sName).setValue(authData.getProviderData().get("displayName"));
+                dbCallback.runOnSuccess();
             }
 
             @Override
             public void onAuthenticationError(FirebaseError firebaseError) {
                 // there was an error
+                dbCallback.runOnFail();
+            }
+        });
+
+    }
+    public void createSellerAccountWithFacebook(final DBCallback dbCallback){
+        Firebase ref = new Firebase(URL);
+        ref.authWithOAuthToken("google", "<OAuth Token>", new Firebase.AuthResultHandler() {
+            @Override
+            public void onAuthenticated(AuthData authData) {
+                UID= authData.getUid();
+                Firebase fRef = new Firebase(URL + "SellerProfiles/");
+
+                fRef.child(UID);
+                fRef.child(UID).child(sEmailAddress).setValue(authData.getProviderData().get("email"));
+                fRef.child(UID).child(imageLink).setValue(authData.getProviderData().get("profileImageURL"));
+                fRef.child(UID).child(sName).setValue(authData.getProviderData().get("displayName"));
+                dbCallback.runOnSuccess();
+            }
+
+            @Override
+            public void onAuthenticationError(FirebaseError firebaseError) {
+                // there was an error
+                dbCallback.runOnFail();
             }
         });
 
@@ -357,7 +430,7 @@ public class DBHelper extends Firebase {
 
         UID = user.getUID();
 
-        fRef.child(UID).push();
+        fRef.child(UID);
         fRef.child(UID).child(sName).setValue(user.getName());
         fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
         fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
@@ -386,6 +459,7 @@ public class DBHelper extends Firebase {
 
         fRef.child(UID).push();
         fRef.child(UID).child(sName).setValue(user.getName());
+        fRef.child(UID).child("storeName").setValue(user.getStoreName());
         fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
         fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
         fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
@@ -394,12 +468,13 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sLongitude).setValue(user.getAddress().getLongitude());
     }
 
-    public void addSellerProfileInfoToDB(User user,final DBCallback callback) {
+    public void addSellerProfileInfoToDB(Seller user,final DBCallback callback) {
         Firebase fRef = new Firebase(URL + "SellerProfiles/");
         UID = user.getUID();
 
         fRef.child(UID).push();
         fRef.child(UID).child(sName).setValue(user.getName());
+        fRef.child(UID).child("storeName").setValue(user.getStoreName());
         fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
         fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
         fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
@@ -424,6 +499,7 @@ public class DBHelper extends Firebase {
 
                     if (dataSnapshot1.getKey().equals(sellerID)) {
                         seller.setName(seller1.name);
+                        seller.setStoreName(seller1.storeName);
                         seller.setAddress(seller1.address);
                         seller.setDescription(seller1.description);
                         seller.seteMail(seller1.eMail);
@@ -464,7 +540,7 @@ public class DBHelper extends Firebase {
 
                     if (dataSnapshot1.getKey().equals(UID)) {
                         user.setName(user1.name);
-                        user.setAddress(user1.address);
+                        user.setAddressString(user1.addressString);
                         user.seteMail(user1.eMail);
                         user.setUID(user1.UID);
                         user.setPhoneNumber(user1.phoneNumber);
@@ -1440,7 +1516,7 @@ public class DBHelper extends Firebase {
     //signs out user and clears data
     public boolean signOutUser(DBCallback dbCallback) {
         fireBaseRef.unauth();
-        userID=null;
+        UID=null;
         user.clearUser();
 //        address.clearAddress();
 //        userList.clear();

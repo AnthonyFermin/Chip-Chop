@@ -15,6 +15,13 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAZ6ZNk_DPZN2A_0dpHb0MpWdGpEPLxom4" />
 
+        <provider android:authorities="com.facebook.app.FacebookContentProvider809448892505053"
+            android:name="com.facebook.FacebookContentProvider"
+            android:exported="true" />
+
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -32,6 +39,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:label="@string/app_name" />
+
         <activity
             android:name=".SignupActivity1"
             android:label="ChipChop"

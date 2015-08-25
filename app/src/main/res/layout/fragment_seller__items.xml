@@ -1,7 +1,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Items">
+    tools:context="madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Items"
+    android:layout_margin="10dp">
 
     <RelativeLayout
         style="@style/GenericProgressBackground"
@@ -32,7 +33,6 @@
             android:text="ADD ITEM"
             android:textSize="14sp"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="10dp"
             android:id="@+id/addButton"
             style="@style/button_design"/>
 

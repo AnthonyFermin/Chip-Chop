@@ -22,6 +22,9 @@ public class Fragment_Buyer_Orders extends Fragment {
     private ArrayList<Item> foodItems;
     private RecyclerView foodList;
 
+    public static final String TAG = "fragment_buyer_orders";
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

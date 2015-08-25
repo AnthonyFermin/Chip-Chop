@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageButton;
 
 import madelyntav.c4q.nyc.chipchop.R;
@@ -18,6 +19,9 @@ import madelyntav.c4q.nyc.chipchop.R;
  * Created by alvin2 on 8/22/15.
  */
 public class Fragment_Buyer_ProfileSettings extends Fragment {
+
+    public static final String TAG = "fragment_buyer_profile_settings";
+
 
     ImageButton profilePhoto;
     public static final int RESULT_OK = -1;
@@ -88,7 +92,10 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
             }
         });
         AlertDialog alertDialog = dialogBuilder.create();
+//        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         alertDialog.show();
+
+
     }
 
 

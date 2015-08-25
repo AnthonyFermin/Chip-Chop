@@ -88,7 +88,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:text="X"
-                    android:background="#FFF"
+                    android:background="@android:color/transparent"
                     android:textColor="#D32F2F"
                     android:id="@+id/remove_item_button"
                     android:layout_alignParentEnd="true"/>

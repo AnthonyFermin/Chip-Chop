@@ -76,6 +76,7 @@
                             android:padding="2dp"
                             android:text="● Currently Cooking"
                             android:textColor="#8bc34a"
+                            android:visibility="gone"
                             android:textSize="18sp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -151,7 +152,7 @@
             style="@style/button_design"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="SAVE CHANGES"
+            android:text="EDIT PROFILE"
             android:id="@+id/save_button"/>
 
     </LinearLayout>

@@ -11,6 +11,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -28,12 +29,14 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_CreateItem;
 public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Item> sellerItems;
+    private List<Item> itemsToRemove;
     private Context context;
     private int lastPosition = -1;
 
-    public SellerItemsAdapter(Context context, List<Item> sellerItems) {
+    public SellerItemsAdapter(Context context, List<Item> sellerItems, List<Item> itemsToRemove) {
         this.context = context;
         this.sellerItems = sellerItems;
+        this.itemsToRemove = itemsToRemove;
     }
 
     private class SellersViewHolder extends RecyclerView.ViewHolder {
@@ -59,8 +62,11 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             removeItemButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    sellerItems.remove(sellerItems.get(getAdapterPosition()));
+                    //TODO: add popup dialog asking user to confirm deletion
+                    itemsToRemove.add(sellerItems.get(getAdapterPosition()));
+                    sellerItems.remove(getAdapterPosition());
                     notifyItemRemoved(getAdapterPosition());
+                    Toast.makeText(context,"Save changes to confirm deletion", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -86,7 +92,7 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         vh.quantity.setText(sellerItem.getQuantity() + "");
         vh.description.setText(sellerItem.getDescriptionOfItem());
         if(!sellerItem.getImageLink().isEmpty())
-        Picasso.with(context).load(sellerItem.getImageLink()).fit().into(vh.image);
+            Picasso.with(context).load(sellerItem.getImageLink()).fit().into(vh.image);
 
         vh.container.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,8 +103,6 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         });
 
         setAnimation(vh.container, position);
-
-
 
     }
 

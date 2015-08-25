@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
@@ -50,6 +51,7 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
 
     private ArrayList<Item> sellerItems = null;
     private ArrayList<Item> itemsToAdd = null;
+    private ArrayList<Item> itemsToRemove = null;
     private boolean currentlyCooking = false;
     private User user = null;
     private Seller seller = null;
@@ -57,12 +59,26 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
 
     private DBHelper dbHelper;
 
+    DBCallback emptyCallback;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sell);
 
         dbHelper = DBHelper.getDbHelper(this);
+
+        emptyCallback = new DBCallback() {
+            @Override
+            public void runOnSuccess() {
+
+            }
+
+            @Override
+            public void runOnFail() {
+
+            }
+        };
 
         initializeUser();
 
@@ -152,7 +168,7 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
         } else if (position == 2) {
             fragment = new Fragment_Seller_ProfileSettings();
         } else if (position == 3) {
-            dbHelper.signOutUser();
+            dbHelper.signOutUser(emptyCallback);
 
             SharedPreferences sharedPreferences= getSharedPreferences(SignupActivity1.USER_INFO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor=sharedPreferences.edit();
@@ -229,9 +245,16 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
 
     private void initializeUser(){
         SharedPreferences sp = getSharedPreferences(SignupActivity1.USER_INFO, MODE_PRIVATE);
-        String email = sp.getString(SignupActivity1.EMAIL,"");
-        user = new User(dbHelper.getUserID(), email);
-        user.setName(sp.getString(BuyActivity.USER_NAME, "User Name"));
+        String email = sp.getString(SignupActivity1.EMAIL, "");
+        String name = sp.getString(SignupActivity1.NAME, "");
+        String address = sp.getString(SignupActivity1.ADDRESS,"");
+        String apt = sp.getString(SignupActivity1.APT, "");
+        String city = sp.getString(SignupActivity1.CITY, "");
+        String zip = sp.getString(SignupActivity1.ZIPCODE, "");
+        String phoneNumber = sp.getString(SignupActivity1.PHONE_NUMBER, "");
+
+        Address userAddress = new Address(address, apt, city, "NY", zip, dbHelper.getUserID());
+        user = new User(dbHelper.getUserID(), email, name, userAddress, phoneNumber);
     }
 
     // for storing data between fragments in SellActivity
@@ -284,4 +307,11 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
         fromItemCreation = condition;
     }
 
+    public ArrayList<Item> getItemsToRemove() {
+        return itemsToRemove;
+    }
+
+    public void setItemsToRemove(ArrayList<Item> itemsToRemove) {
+        this.itemsToRemove = itemsToRemove;
+    }
 }

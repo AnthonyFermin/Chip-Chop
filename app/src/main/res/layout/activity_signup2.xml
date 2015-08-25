@@ -120,7 +120,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter Phone Number"
+            android:hint="Phone Number"
             android:inputType="phone"
             android:textSize="20sp"
             android:id="@+id/phone_number"/>

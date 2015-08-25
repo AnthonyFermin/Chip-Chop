@@ -110,12 +110,13 @@
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    >
                 <EditText
                     android:id="@+id/address"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
                     android:hint="Street Address"
                     android:textSize="20sp" />
 
@@ -187,9 +188,10 @@
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Enter Phone Number"
+                        android:hint="Phone Number"
                         android:inputType="phone"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:id="@+id/phone_number"/>
 
                 </android.support.design.widget.TextInputLayout>
 

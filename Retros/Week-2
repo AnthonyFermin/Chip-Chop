@@ -1,0 +1,63 @@
+
+Goals for last Sprint:
+Succesfully link the back-end cloud database with the front-end UI
+
+Goals for this Sprint: 
+- Front and back end SEAMLESSLY connected
+- Reviews system up and running and connected to DB
+- CartFlow working (Seller and Buyer side testing)
+- Notifications for orders(When order is ready and when seller receives a new order) 
+- Getting pictures from Gallery methods and displaying it
+- Saving photos to DB as a String
+- Methods to clear sharedPrefs when user logs Out (?)
+- Due: Wednesday 9:30pm (Google Hangouts to report progress and regroup)
+
+- **** Implement cardPayments and FB Authentication !!!
+
+Guiding Questions (consider before the meeting):
+
+What went well?
+Both ends of the project are 90% completed and just require linking up and connecting.
+
+What should we do differently next time?
+Now that we have the general foundation of the app completed, we can focus on adding enhancements to create a more seamless flow!
+
+What did we learn?
+Working in separate classes and branches for distinct features will most easily prevent difficult merge conflicts when it comes time to merge the code together
+
+
+What still puzzles us?
+Map fragment crashes code sometimes, possibly due to retrieving the user's location within a specific period of time?
+
+Team Member Analysis: If you did not meet your goals, how will this affect the progression of the product? What will you do differently to meet your goals this week?
+
+Team Member Alvin
+Goals/Responsibilities Last Week: Build out all the screens necessary for buyer + seller flow and have them connected to one another
+Did you meet your goals/responsibilities last week? Why or why not? Yes
+
+
+Team Member #2 Anthony
+Goals/Responsibilities Last Week: 
+Did you meet your goals/responsibilities last week? Why or why not? 
+
+
+Team Member #3 Madelyn
+Goals/Responsibilities Last Week: 
+Did you meet your goals/responsibilities last week? Why or why not?
+
+
+Roles, Goals and Resposibility: 
+
+[Visit ToDoist!](https://en.todoist.com/app?v=402#project%2F149091349)
+
+
+
+Compare your work planned with what your work completed.
+
+Is the divison of roles within your team working? YES! Great division of work
+How is communication and collaboration between team members? Communication is very good as we are all responsive and update each other when any features are completed and ready/pushed to master to be pulled by other group members
+Are you getting adequate support? How are you reviewing code? Yes, our mentor, Tony, has been extremely helpful in contributing tips and suggestions on how to modify our user flows to be efficient and intuitive, while also providing recommendations to how to structure our database
+How can you improve productivity and get the most work done within the next week? List out the enhancements that are still remaining, and prioritize them by what is more crucial for the app to be considered functional from a user's POV, user test to see which enhancements we should actually spend time implementing to improve function of the app!
+
+Mentor Comments:
+

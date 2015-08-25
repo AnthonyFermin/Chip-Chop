@@ -56,6 +56,7 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
     private User user = null;
     private Seller seller = null;
     private boolean fromItemCreation = false;
+    private Item itemToEdit = null;
 
     private DBHelper dbHelper;
 
@@ -313,5 +314,13 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
 
     public void setItemsToRemove(ArrayList<Item> itemsToRemove) {
         this.itemsToRemove = itemsToRemove;
+    }
+
+    public Item getItemToEdit() {
+        return itemToEdit;
+    }
+
+    public void setItemToEdit(Item itemToEdit) {
+        this.itemToEdit = itemToEdit;
     }
 }

@@ -161,6 +161,9 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 dbHelper.addSellerProfileInfoToDB(sellerTemp);
                 activity.setSeller(sellerTemp);
 
+                dbHelper.addSellerProfileInfoToDB(sellerTemp);
+
+
                 Toast.makeText(getActivity(), "Changes Saved", Toast.LENGTH_SHORT).show();
 
                 setReadOnlyAll(true);
@@ -204,17 +207,15 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 super.onPostExecute(aVoid);
 
                 if(seller != null) {
-                    loadingPanel.setVisibility(View.GONE);
-                    containingView.setVisibility(View.VISIBLE);
                     setEditTexts();
                     activity.setSeller(seller);
                 }else{
                     //TODO:display cannot connect to internet error message
-                    Toast.makeText(activity,"Cannot Connect to Internet", Toast.LENGTH_SHORT).show();
-                    loadingPanel.setVisibility(View.GONE);
-                    startActivity(new Intent(activity, BuyActivity.class));
-                    activity.finish();
+                    Toast.makeText(activity,"New Seller Profile Created", Toast.LENGTH_SHORT).show();
+                    seller = new Seller(dbHelper.getUserID(),user.geteMail(),user.getName(),user.getAddress(),"",user.getPhoneNumber());
                 }
+                loadingPanel.setVisibility(View.GONE);
+                containingView.setVisibility(View.VISIBLE);
             }
         }.execute();
     }
@@ -367,8 +368,12 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 if(saveButton.getText().toString().equalsIgnoreCase("save changes")) {
                     getGeoLocation();
                 }else{
-                    saveButton.setText("Save Changes");
-                    setReadOnlyAll(false);
+                    if(activity.isCurrentlyCooking()){
+                        Toast.makeText(activity,"Cannot edit seller profile while actively cooking",Toast.LENGTH_SHORT).show();
+                    }else {
+                        saveButton.setText("Save Changes");
+                        setReadOnlyAll(false);
+                    }
                 }
             }
         });

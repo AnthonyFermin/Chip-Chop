@@ -203,7 +203,7 @@ public class SignupActivity1 extends AppCompatActivity {
             mFacebookAccessTokenTracker.stopTracking();
         }
         // if changing configurations, stop tracking firebase session.
-        dbHelper.removeAuthStateListener(mAuthStateListener);
+//        dbHelper.removeAuthStateListener(mAuthStateListener);
         accessTokenTracker.stopTracking();
         mFacebookAccessTokenTracker.stopTracking();
     }

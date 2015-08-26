@@ -29,6 +29,10 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
+
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Checkout;
@@ -63,6 +67,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buy);
+        FacebookSdk.sdkInitialize(this.getApplicationContext());
 
         dbHelper = DBHelper.getDbHelper(this);
 
@@ -209,6 +214,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         } else if (position == 3) {
             // TODO: SIGN OUT CODE !
             dbHelper.signOutUser(emptyCallback);
+            LoginManager.getInstance().logOut();
             Toast.makeText(this, "Sign out successful", Toast.LENGTH_SHORT).show();
             SharedPreferences sharedPreferences = getSharedPreferences(SignupActivity1.USER_INFO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();

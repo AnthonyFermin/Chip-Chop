@@ -319,7 +319,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
         // Set initial view to current location
         map.moveCamera(CameraUpdateFactory.newLatLng(locationLatLng));
-        map.animateCamera(CameraUpdateFactory.zoomTo(20));
+        map.animateCamera(CameraUpdateFactory.zoomTo(15));
 
     }
 

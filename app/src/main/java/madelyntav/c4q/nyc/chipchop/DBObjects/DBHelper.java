@@ -220,7 +220,6 @@ public class DBHelper extends Firebase {
 
     public Boolean createUserAndCallback(final String email, final String password, final DBCallback callback) {
         UID = "";
-
         fireBaseRef.createUser(email, password, new ValueResultHandler<Map<String, Object>>() {
             @Override
             public void onSuccess(Map<String, Object> stringObjectMap) {
@@ -375,9 +374,7 @@ public class DBHelper extends Firebase {
 
     public Boolean changeUserEmail(String oldEmail, String newEmail, String password) {
         fireBaseRef.changeUserEmail(oldEmail, newEmail, password);
-
         //TODO check if successful or not and dispay toast
-
         return mSuccess;
 
     }
@@ -386,7 +383,7 @@ public class DBHelper extends Firebase {
             Firebase ref = new Firebase(URL);
             Log.d("Tok In DB preAuth","Token");
 
-        Log.d("Token Is:",token.toString());
+        Log.d("Token Is:", token.toString());
 
         if (token != null) {
             ref.authWithOAuthToken("facebook", token.getToken(), new Firebase.AuthResultHandler() {
@@ -395,10 +392,18 @@ public class DBHelper extends Firebase {
                     // The Facebook user is now authenticated with your Firebase app
                     Log.d("Tok In DB after Auth", "Token");
                     //Create user Profile with user email
-                    createUserAndCallback(String.valueOf(authData.getProviderData().get("email")), AccessToken.getCurrentAccessToken().getToken(), dbCallback);
-                    Log.d("email",authData.getProviderData().get("email").toString());
+                    createUserFromFBAuthLogin(String.valueOf(authData.getProviderData().get("email")), AccessToken.getCurrentAccessToken().getToken(), dbCallback);
+                    Log.d("email", authData.getProviderData().get("email").toString());
+                    UID="";
+                    String linkUID = authData.getUid();
 
-                    UID = authData.getUid();
+                    for (int i = 9; i < linkUID.length(); i++) {
+
+                        UID += linkUID.charAt(i);
+                    }
+
+                    Log.d("UID", UID+"");
+
                     Firebase fRef = new Firebase(URL + "UserProfiles/");
                     fRef.child(UID);
                     fRef.child(UID).child(sEmailAddress).setValue(authData.getProviderData().get("email"));
@@ -418,7 +423,68 @@ public class DBHelper extends Firebase {
             ref.unauth();
         }
     }
+    private void createUserFromFBAuthLogin(final String email, final String password, final DBCallback dbCallback){
+        fireBaseRef.createUser(email, password, new ValueResultHandler<Map<String, Object>>() {
+            @Override
+            public void onSuccess(Map<String, Object> stringObjectMap) {
+                mSuccess = true;
 
+                SharedPreferences sharedPreferences = mContext.getSharedPreferences("New User", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("id", UID);
+                editor.putString("eMail", email);
+                editor.putString("password", password);
+                editor.apply();
+
+                user = new User(UID, email);
+
+                Firebase fRef = new Firebase(URL + "UserProfiles");
+                fRef.child(UID);
+                fRef.child(UID).child(sEmailAddress).setValue(email);
+
+                callback.runOnSuccess();
+            }
+
+            @Override
+            public void onError(FirebaseError firebaseError) {
+                loginUserThroughFacebookAuth(email, password, dbCallback);
+
+            }
+        });
+    }
+
+    private void loginUserThroughFacebookAuth(String email, String password, final DBCallback dbCallback){
+        fireBaseRef.authWithPassword(email, password,
+                new Firebase.AuthResultHandler() {
+                    @Override
+                    public void onAuthenticated(AuthData authData) { /* ... */
+                        mSuccess = true;
+                        String timeUID = authData.getUid();
+
+                        for (int i = 12; i < timeUID.length(); i++) {
+                            UID += timeUID.charAt(i);
+                        }
+                        dbCallback.runOnSuccess();
+                    }
+
+                    @Override
+                    public void onAuthenticationError(FirebaseError error) {
+                        // Something went wrong :(
+                        switch (error.getCode()) {
+                            case FirebaseError.USER_DOES_NOT_EXIST:
+                                Toast.makeText(mContext, "E-mail or Password Invalid", Toast.LENGTH_LONG).show();
+                                break;
+                            case FirebaseError.INVALID_PASSWORD:
+                                break;
+                            default:
+                                // handle other errors
+                                break;
+                        }
+                        dbCallback.runOnFail();
+                    }
+                });
+
+    }
 
     public void addUserProfileInfoToDB(User user) {
         Firebase fRef = new Firebase(URL + "UserProfiles/");
@@ -1660,8 +1726,8 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child(itemID).child("containsEggs").setValue(item.isContainsEggs());
             fRef.child(orderID).child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
             fRef.child(orderID).child(itemID).child("containsDairy").setValue(item.isContainsDairy());
-
         }
+
         getOrderToSendToSeller(UID, order, UID, dbCallback);
     }
 

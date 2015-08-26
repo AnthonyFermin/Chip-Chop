@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -57,7 +58,9 @@ public class SignupActivity1 extends AppCompatActivity {
     CallbackManager callbackManager;
     AccessTokenTracker mFacebookAccessTokenTracker;
     DBCallback emptyCallback;
+    AccessTokenTracker accessTokenTracker;
     Firebase.AuthStateListener mAuthStateListener;
+    AccessToken accessToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,9 @@ public class SignupActivity1 extends AppCompatActivity {
         setContentView(R.layout.activity_signup1);
 
         dbHelper = DBHelper.getDbHelper(this);
+        callbackManager = CallbackManager.Factory.create();
+
+
 
         emptyCallback = new DBCallback() {
             @Override
@@ -141,49 +147,52 @@ public class SignupActivity1 extends AppCompatActivity {
                 });
             }
         });
+        loginButton.setReadPermissions(Arrays.asList("public_profile", "user_friends", "email"));
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginWithFacebook();
-            }
+
+                loginWithFacebook();            }
         });
 
     }
 
     public void loginWithFacebook() {
 
-        loginButton.setReadPermissions(Arrays.asList("public_profile", "user_friends", "email"));
+        LoginManager.getInstance().registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        // App code
+                    }
 
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends", "email"));
-        callbackManager = CallbackManager.Factory.create();
+                    @Override
+                    public void onCancel() {
+                        // App code
+                    }
 
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-
-                Log.d("Token send To DB","Token");
-                dbHelper.onFacebookAccessTokenChange(loginResult.getAccessToken(), emptyCallback);
-
-            }
-
-            @Override
-            public void onCancel() {
-
-            }
-
-            @Override
-            public void onError(FacebookException e) {
-
-            }
-        });
-
+                    @Override
+                    public void onError(FacebookException exception) {
+                        // App code
+                    }
+                });
     }
 
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
+        if(resultCode== RESULT_OK) {
+            dbHelper.onFacebookAccessTokenChange(AccessToken.getCurrentAccessToken(), emptyCallback);
+            Log.d("request Code", String.valueOf(resultCode));
+            Intent intent1 = new Intent(SignupActivity1.this, SignupActivity2.class);
+            startActivity(intent1);
+        }
+        else{
+            Toast.makeText(this,"Login Failed",Toast.LENGTH_LONG).show();
+
+        }
     }
 
     @Override
@@ -195,6 +204,9 @@ public class SignupActivity1 extends AppCompatActivity {
         }
         // if changing configurations, stop tracking firebase session.
         dbHelper.removeAuthStateListener(mAuthStateListener);
+        accessTokenTracker.stopTracking();
+        loginButton.callOnClick();
+
     }
 
             private void checkRememberMe() {

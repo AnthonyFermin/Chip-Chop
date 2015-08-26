@@ -6,15 +6,16 @@ Goals for this Sprint:
 - Front and back end SEAMLESSLY connected
 - Reviews system up and running and connected to DB
 - CartFlow working (Seller and Buyer side testing)
-- Notifications for orders(When order is ready and when seller receives a new order) 
-- Getting pictures from Gallery methods and displaying it
-- Saving photos to DB as a String
+- Getting pictures from Gallery methods and displaying it and save to DB as string
 - Methods to clear sharedPrefs when user logs Out (?)
-- Due: Wednesday 9:30pm (Google Hangouts to report progress and regroup)
+- FB Authentication
 
-- **** Implement cardPayments and FB Authentication !!!
+Following Sprint
+- Saving photos to DB as a String
+- Notifications for orders(When order is ready and when seller receives a new order) 
+- Implement cardPayments
+- Services for notifications
 
-Guiding Questions (consider before the meeting):
 
 What went well?
 Both ends of the project are 90% completed and just require linking up and connecting.

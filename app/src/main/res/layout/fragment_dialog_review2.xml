@@ -20,7 +20,8 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:hint="Enter Review Here (Optional)"
+        android:hint="Enter Review (Optional)"
+        android:textSize="15sp"
         android:id="@+id/text_review"/>
 
     </android.support.design.widget.TextInputLayout>

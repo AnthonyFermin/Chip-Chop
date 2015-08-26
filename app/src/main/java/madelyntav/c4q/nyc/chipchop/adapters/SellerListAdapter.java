@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -38,7 +39,7 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private class SellersViewHolder extends RecyclerView.ViewHolder {
 
-        CardView container;
+        RelativeLayout container;
         ImageView image;
         TextView name;
         TextView description;
@@ -46,7 +47,7 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         public SellersViewHolder(View itemView) {
             super(itemView);
 
-            container = (CardView) itemView.findViewById(R.id.card_view);
+            container = (RelativeLayout) itemView.findViewById(R.id.card_view);
             image = (ImageView) itemView.findViewById(R.id.profile_image);
             name = (TextView) itemView.findViewById(R.id.seller_name);
             description = (TextView) itemView.findViewById(R.id.seller_description);
@@ -70,7 +71,7 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         vh.name.setText(seller.getName());
         //TODO: CHANGE TO DESCRIPTION !!
         vh.description.setText("I LOVE TO COOK !");
-        Picasso.with(context).load(R.drawable.food).fit().into(vh.image);
+//        Picasso.with(context).load(R.drawable.food2).fit().into(vh.image);
 
         vh.container.setOnClickListener(new View.OnClickListener() {
             @Override

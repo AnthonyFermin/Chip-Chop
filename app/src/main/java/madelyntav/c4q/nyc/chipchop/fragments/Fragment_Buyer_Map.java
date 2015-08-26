@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -42,6 +43,7 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
 
@@ -57,6 +59,8 @@ import madelyntav.c4q.nyc.chipchop.adapters.SellerListAdapter;
 
 public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
+    ImageView arrowImage;
+    SlidingUpPanelLayout slidingPanel;
     public final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     public final static String PREF_NAME = "Settings";
     public static final String LASTLONGITUDE = "LastLongitude";
@@ -120,6 +124,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             }
         };
 
+
         latsList= new ArrayList<>();
         addressList=new ArrayList<>();
         userList= new ArrayList<>();
@@ -141,12 +146,42 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         sellers = new ArrayList<>();
         populateItems();
 
+        arrowImage = (ImageView) root.findViewById(R.id.arrow_image);
+
+        slidingPanel = (SlidingUpPanelLayout) root.findViewById(R.id.slidinglayout);
+        slidingPanel.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View view, float v) {
+
+            }
+
+            @Override
+            public void onPanelCollapsed(View view) {
+                arrowImage.setImageDrawable(getResources().getDrawable(R.drawable.up));
+
+            }
+
+            @Override
+            public void onPanelExpanded(View view) {
+                arrowImage.setImageDrawable(getResources().getDrawable(R.drawable.down));
+            }
+
+            @Override
+            public void onPanelAnchored(View view) {
+
+            }
+
+            @Override
+            public void onPanelHidden(View view) {
+
+            }
+        });
 
         sellersList = (RecyclerView) root.findViewById(R.id.buyers_orders_list);
-//        sellersList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        sellersList.setLayoutManager(new LinearLayoutManager(getActivity()));
 //        sellersList.addItemDecoration(new MarginDe(this));
         sellersList.setHasFixedSize(true);
-        sellersList.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+//        sellersList.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 //        sellersList.setAdapter(new NumberedAdapter(30));
 
         SellerListAdapter sellersListAdapter = new SellerListAdapter(getActivity(), sellers);

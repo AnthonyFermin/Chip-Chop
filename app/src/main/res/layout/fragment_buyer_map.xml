@@ -40,12 +40,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
+            android:id="@+id/arrow_image"
             android:src="@drawable/up"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/buyers_orders_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true"
+            android:background="#CCC"
+            />
 
     </LinearLayout>
 

@@ -38,6 +38,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.android.gms.plus.Plus;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
@@ -263,6 +264,11 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.clear();
             editor.commit();
+
+            if (SignupActivity1.mGoogleApiClient.isConnected()) {
+                Plus.AccountApi.clearDefaultAccount(SignupActivity1.mGoogleApiClient);
+                SignupActivity1.mGoogleApiClient.disconnect();
+            }
 
             //if not currently in fragment_buyer_map, replace current fragment with buyer_map fragment
             if (!getCurrentFragment().equals(Fragment_Buyer_Map.TAG)) {

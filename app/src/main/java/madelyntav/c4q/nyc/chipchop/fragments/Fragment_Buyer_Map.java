@@ -164,6 +164,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             @Override
             public void onPanelExpanded(View view) {
                 arrowImage.setImageDrawable(getResources().getDrawable(R.drawable.down));
+                sellersList.setFocusable(true);
             }
 
             @Override

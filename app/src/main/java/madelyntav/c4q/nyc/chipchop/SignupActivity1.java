@@ -2,6 +2,7 @@ package madelyntav.c4q.nyc.chipchop;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -15,11 +16,24 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.Scopes;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.plus.Plus;
+
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 
-public class SignupActivity1 extends AppCompatActivity {
+public class SignupActivity1 extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
+
+    /* Request code used to invoke sign in user interactions. */
+    private static final int RC_SIGN_IN = 0;
+
+    /* Client used to interact with Google APIs. */
+    static GoogleApiClient mGoogleApiClient;
 
     Button signInButton;
     Button newUserButton;
@@ -28,6 +42,7 @@ public class SignupActivity1 extends AppCompatActivity {
     DBHelper dbHelper;
     CheckBox rememberMe;
 
+    public static final String TAG = "1";
     public static final String USER_INFO = "userinfo";
     public static final String EMAIL = "email";
     public static final String PASS = "pass";
@@ -37,6 +52,12 @@ public class SignupActivity1 extends AppCompatActivity {
     public static final String CITY = "city";
     public static final String ZIPCODE = "zipcode";
     public static final String PHONE_NUMBER = "phone_number";
+
+    /* Is there a ConnectionResult resolution in progress? */
+    private boolean mIsResolving = false;
+
+    /* Should we automatically resolve ConnectionResults when possible? */
+    private boolean mShouldResolve = false;
 
     String email;
     String password;
@@ -66,6 +87,14 @@ public class SignupActivity1 extends AppCompatActivity {
 
             }
         };
+
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Plus.API)
+                .addScope(new Scope(Scopes.PROFILE))
+                .build();
 
         containingView = (LinearLayout) findViewById(R.id.container);
         loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
@@ -128,7 +157,64 @@ public class SignupActivity1 extends AppCompatActivity {
         });
 
 
+        findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+
     }
+
+
+
+
+    private void onSignInClicked() {
+        // User clicked the sign-in button, so begin the sign-in process and automatically
+        // attempt to resolve any errors that occur.
+        mShouldResolve = true;
+        mGoogleApiClient.connect();
+
+        // Show a message to the user that we are signing in.
+//        mStatusTextView.setText(R.string.signing_in);
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult:" + requestCode + ":" + resultCode + ":" + data);
+
+        if (requestCode == RC_SIGN_IN) {
+            // If the error resolution was not successful we should not resolve further.
+            if (resultCode != RESULT_OK) {
+                mShouldResolve = false;
+            }
+
+            mIsResolving = false;
+            mGoogleApiClient.connect();
+        }
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        // onConnected indicates that an account was selected on the device, that the selected
+        // account has granted any requested permissions to our app and that we were able to
+        // establish a service connection to Google Play services.
+        Log.d(TAG, "onConnected:" + bundle);
+        mShouldResolve = false;
+
+        // Show the signed-in UI
+        Toast.makeText(getApplicationContext(), "Signed In", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
 
     private void checkRememberMe(){
 
@@ -198,4 +284,44 @@ public class SignupActivity1 extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        // Could not connect to Google Play Services.  The user needs to select an account,
+        // grant permissions or resolve an error in order to sign in. Refer to the javadoc for
+        // ConnectionResult to see possible error codes.
+        Log.d(TAG, "onConnectionFailed:" + connectionResult);
+
+        if (!mIsResolving && mShouldResolve) {
+            if (connectionResult.hasResolution()) {
+                try {
+                    connectionResult.startResolutionForResult(this, RC_SIGN_IN);
+                    mIsResolving = true;
+                } catch (IntentSender.SendIntentException e) {
+                    Log.e(TAG, "Could not resolve ConnectionResult.", e);
+                    mIsResolving = false;
+                    mGoogleApiClient.connect();
+                }
+            } else {
+                // Could not resolve the connection result, show the user an
+                // error dialog.
+                Toast.makeText(getApplicationContext(), "Error with connection", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            // Show the signed-out UI
+            Toast.makeText(getApplicationContext(), "Signed Out", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mGoogleApiClient.disconnect();
+    }
 }

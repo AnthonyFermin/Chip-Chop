@@ -160,6 +160,9 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (view.getId() == R.id.sign_in_button) {
+                    onSignInClicked();
+                }
 
             }
         });

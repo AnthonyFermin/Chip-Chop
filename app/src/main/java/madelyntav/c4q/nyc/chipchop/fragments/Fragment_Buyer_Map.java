@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -59,6 +60,7 @@ import madelyntav.c4q.nyc.chipchop.adapters.SellerListAdapter;
 
 public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
+    FloatingActionButton refreshButton;
     ImageView arrowImage;
     SlidingUpPanelLayout slidingPanel;
     public final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
@@ -190,6 +192,15 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
         //getListForMarkers.execute();
 
+        refreshButton = (FloatingActionButton) root.findViewById(R.id.refresh_button);
+        refreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: WRITE CODE TO REFRESH RECYCLERVIEW !!
+            }
+        });
+
+
         return root;
     }
 
@@ -308,7 +319,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
         // Set initial view to current location
         map.moveCamera(CameraUpdateFactory.newLatLng(locationLatLng));
-        map.animateCamera(CameraUpdateFactory.zoomTo(13));
+        map.animateCamera(CameraUpdateFactory.zoomTo(20));
 
     }
 

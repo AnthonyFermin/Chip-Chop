@@ -28,8 +28,6 @@
             android:textSize="40sp"
             android:gravity="center_horizontal"/>
 
-
-
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -46,13 +44,13 @@
             app:elevation="6dp"
             app:pressedTranslationZ="12dp"/>
 
-        <!--<Button-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="Save Changes"-->
-            <!--android:clickable="false"-->
-            <!--android:id="@+id/save_button"-->
-            <!--style="@style/button_design"/>-->
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save Changes"
+            android:clickable="false"
+            android:id="@+id/save_button"
+            style="@style/button_design"/>
 
     </LinearLayout>
 

@@ -58,7 +58,6 @@ public class SignupActivity1 extends AppCompatActivity {
     CallbackManager callbackManager;
     AccessTokenTracker mFacebookAccessTokenTracker;
     DBCallback emptyCallback;
-    AccessTokenTracker accessTokenTracker;
     Firebase.AuthStateListener mAuthStateListener;
     AccessToken accessToken;
 
@@ -204,7 +203,6 @@ public class SignupActivity1 extends AppCompatActivity {
         }
         // if changing configurations, stop tracking firebase session.
 //        dbHelper.removeAuthStateListener(mAuthStateListener);
-        accessTokenTracker.stopTracking();
         mFacebookAccessTokenTracker.stopTracking();
     }
 

@@ -7,20 +7,15 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 
-import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.support.v4.widget.DrawerLayout;
 
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -37,6 +32,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
 
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
@@ -61,6 +58,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
     private DBHelper dbHelper;
 
+
     private User user = null;
 
     private SharedPreferences userInfoSP;
@@ -74,6 +72,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buy);
+        FacebookSdk.sdkInitialize(this.getApplicationContext());
 
         bindViews();
         initializeData();
@@ -258,6 +257,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         } else if (position == 3) {
             // TODO: SIGN OUT CODE !
             dbHelper.signOutUser(emptyCallback);
+            LoginManager.getInstance().logOut();
             Toast.makeText(this, "Sign out successful", Toast.LENGTH_SHORT).show();
             SharedPreferences sharedPreferences = getSharedPreferences(SignupActivity1.USER_INFO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();

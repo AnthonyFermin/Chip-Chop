@@ -4,16 +4,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.View;
-
 import com.firebase.client.Firebase;
-
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
@@ -22,7 +19,6 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 
 public class MainActivity extends AppCompatActivity {
-
     Firebase firebaseRef;
     String userID="5";
     String sellerID="101";
@@ -56,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Item> itemsForSale;
     ArrayList<User> userList;
     User user2;
-
     DBCallback emptyCallback;
 
     @Override
@@ -78,8 +73,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         };
-
-
 
         item=new Item();
         order=new Order();
@@ -103,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
         itemsForSale.add(item3);
 
         dbHelper.getAllActiveSellers(emptyCallback);
-
 
     }
 
@@ -131,9 +123,6 @@ public class MainActivity extends AppCompatActivity {
 
         //dbHelper.addCurrentOrderToSellerDB(order);
     }
-
-// /
-
         //itemsForSale.addAll(dbHelper.getSellersOnSaleItems("101"));
     //    dbHelper.sendArrayListOfItemsToItemsForSale(itemsForSale,sellerID);
         //dbHelper.removeSellersFromActiveSellers(seller);
@@ -160,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
 //        Log.d("SUSERSItemsMain", userList.toString());
 
 
+           // dbHelper.updateSellerItemsWhenItemIsBought(item2);
             dbHelper.updateSellerItemsWhenItemIsBought(item2, emptyCallback);
 
     }

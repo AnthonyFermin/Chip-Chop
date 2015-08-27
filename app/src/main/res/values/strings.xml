@@ -18,6 +18,7 @@
 
 
     <string name="app_name">ChipChop</string>
+    <string name='facebook_app_id'>809448892505053</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

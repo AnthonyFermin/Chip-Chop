@@ -44,14 +44,6 @@
             app:elevation="6dp"
             app:pressedTranslationZ="12dp"/>
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Save Changes"
-            android:clickable="false"
-            android:id="@+id/save_button"
-            style="@style/button_design"/>
-
     </LinearLayout>
 
 </FrameLayout>

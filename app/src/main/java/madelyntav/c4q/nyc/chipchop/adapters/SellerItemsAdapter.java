@@ -18,6 +18,8 @@ import com.squareup.picasso.Picasso;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import madelyntav.c4q.nyc.chipchop.DBCallback;
+import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.SellActivity;
@@ -28,15 +30,18 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_CreateItem;
  */
 public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private DBCallback itemRemovalCallback;
     private List<Item> sellerItems;
-    private List<Item> itemsToRemove;
     private Context context;
     private int lastPosition = -1;
+    private DBHelper dbHelper;
+    private SellActivity activity;
 
-    public SellerItemsAdapter(Context context, List<Item> sellerItems, List<Item> itemsToRemove) {
+    public SellerItemsAdapter(final Context context, final List<Item> sellerItems) {
         this.context = context;
         this.sellerItems = sellerItems;
-        this.itemsToRemove = itemsToRemove;
+        dbHelper = DBHelper.getDbHelper(context);
+        activity = (SellActivity) context;
     }
 
     private class SellersViewHolder extends RecyclerView.ViewHolder {
@@ -58,15 +63,32 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             price = (TextView) itemView.findViewById(R.id.food_price_tv);
             quantity = (TextView) itemView.findViewById(R.id.food_quantity_tv);
             description = (TextView) itemView.findViewById(R.id.food_description_tv);
+
+            itemRemovalCallback = new DBCallback() {
+                @Override
+                public void runOnSuccess() {
+                    Toast.makeText(context,"Item removed successfully", Toast.LENGTH_SHORT).show();
+                    sellerItems.remove(getAdapterPosition());
+                    notifyItemRemoved(getAdapterPosition());
+                }
+
+                @Override
+                public void runOnFail() {
+                    Toast.makeText(context,"Unable to remove item", Toast.LENGTH_SHORT).show();
+                }
+            };
+
             removeItemButton = (Button) itemView.findViewById(R.id.remove_item_button);
             removeItemButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     //TODO: add popup dialog asking user to confirm deletion
-                    itemsToRemove.add(sellerItems.get(getAdapterPosition()));
-                    sellerItems.remove(getAdapterPosition());
-                    notifyItemRemoved(getAdapterPosition());
-                    Toast.makeText(context,"Save changes to confirm deletion", Toast.LENGTH_SHORT).show();
+                    if(activity.isCurrentlyCooking()) {
+                        dbHelper.removeItemFromSale(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
+                    }else {
+                        //TODO: Madelyn:
+                        dbHelper.removeItemFromSellerProfile(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
+                    }
                 }
             });
 
@@ -76,7 +98,6 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                     Item itemToEdit = sellerItems.get(getAdapterPosition());
 
-                    SellActivity activity = (SellActivity) context;
                     activity.setItemToEdit(itemToEdit);
                     activity.replaceSellerFragment(new Fragment_Seller_CreateItem());
                 }

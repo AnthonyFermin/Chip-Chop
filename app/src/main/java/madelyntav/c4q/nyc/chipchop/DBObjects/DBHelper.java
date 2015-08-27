@@ -5,18 +5,21 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.facebook.AccessToken;
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
 import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.SignupActivity1;
-
 
 /**
  * Created by c4q-madelyntavarez on 8/12/15.
@@ -217,7 +220,6 @@ public class DBHelper extends Firebase {
 
     public Boolean createUserAndCallback(final String email, final String password, final DBCallback callback) {
         UID = "";
-
         fireBaseRef.createUser(email, password, new ValueResultHandler<Map<String, Object>>() {
             @Override
             public void onSuccess(Map<String, Object> stringObjectMap) {
@@ -372,13 +374,117 @@ public class DBHelper extends Firebase {
 
     public Boolean changeUserEmail(String oldEmail, String newEmail, String password) {
         fireBaseRef.changeUserEmail(oldEmail, newEmail, password);
-
         //TODO check if successful or not and dispay toast
-
         return mSuccess;
 
     }
 
+    public void onFacebookAccessTokenChange(final AccessToken token, final DBCallback dbCallback) {
+            Firebase ref = new Firebase(URL);
+            Log.d("Tok In DB preAuth","Token");
+
+        Log.d("Token Is:", token.toString());
+
+        if (token != null) {
+            ref.authWithOAuthToken("facebook", token.getToken(), new Firebase.AuthResultHandler() {
+                @Override
+                public void onAuthenticated(AuthData authData) {
+                    // The Facebook user is now authenticated with your Firebase app
+                    Log.d("Tok In DB after Auth", "Token");
+                    //Create user Profile with user email
+                    createUserFromFBAuthLogin(String.valueOf(authData.getProviderData().get("email")), AccessToken.getCurrentAccessToken().getToken(), dbCallback);
+                    Log.d("email", authData.getProviderData().get("email").toString());
+                    UID="";
+                    String linkUID = authData.getUid();
+
+                    for (int i = 9; i < linkUID.length(); i++) {
+
+                        UID += linkUID.charAt(i);
+                    }
+
+                    Log.d("UID", UID+"");
+
+                    Firebase fRef = new Firebase(URL + "UserProfiles/");
+                    fRef.child(UID);
+                    fRef.child(UID).child(sEmailAddress).setValue(authData.getProviderData().get("email"));
+                    fRef.child(UID).child(imageLink).setValue(authData.getProviderData().get("profileImageURL"));
+                    fRef.child(UID).child(sName).setValue(authData.getProviderData().get("displayName"));
+                    dbCallback.runOnSuccess();
+                }
+
+                @Override
+                public void onAuthenticationError(FirebaseError firebaseError) {
+                    // there was an error
+                    dbCallback.runOnFail();
+                }
+            });
+        } else {
+        /* Logged out of Facebook so do a logout from the Firebase app */
+            ref.unauth();
+        }
+    }
+    private void createUserFromFBAuthLogin(final String email, final String password, final DBCallback dbCallback){
+        fireBaseRef.createUser(email, password, new ValueResultHandler<Map<String, Object>>() {
+            @Override
+            public void onSuccess(Map<String, Object> stringObjectMap) {
+                mSuccess = true;
+
+                SharedPreferences sharedPreferences = mContext.getSharedPreferences("New User", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("id", UID);
+                editor.putString("eMail", email);
+                editor.putString("password", password);
+                editor.apply();
+
+                user = new User(UID, email);
+
+                Firebase fRef = new Firebase(URL + "UserProfiles");
+                fRef.child(UID);
+                fRef.child(UID).child(sEmailAddress).setValue(email);
+
+                callback.runOnSuccess();
+            }
+
+            @Override
+            public void onError(FirebaseError firebaseError) {
+                loginUserThroughFacebookAuth(email, password, dbCallback);
+
+            }
+        });
+    }
+
+    private void loginUserThroughFacebookAuth(String email, String password, final DBCallback dbCallback){
+        fireBaseRef.authWithPassword(email, password,
+                new Firebase.AuthResultHandler() {
+                    @Override
+                    public void onAuthenticated(AuthData authData) { /* ... */
+                        mSuccess = true;
+                        String timeUID = authData.getUid();
+
+                        for (int i = 12; i < timeUID.length(); i++) {
+                            UID += timeUID.charAt(i);
+                        }
+                        dbCallback.runOnSuccess();
+                    }
+
+                    @Override
+                    public void onAuthenticationError(FirebaseError error) {
+                        // Something went wrong :(
+                        switch (error.getCode()) {
+                            case FirebaseError.USER_DOES_NOT_EXIST:
+                                Toast.makeText(mContext, "E-mail or Password Invalid", Toast.LENGTH_LONG).show();
+                                break;
+                            case FirebaseError.INVALID_PASSWORD:
+                                break;
+                            default:
+                                // handle other errors
+                                break;
+                        }
+                        dbCallback.runOnFail();
+                    }
+                });
+
+    }
 
     public void addUserProfileInfoToDB(User user) {
         Firebase fRef = new Firebase(URL + "UserProfiles/");
@@ -837,6 +943,54 @@ public class DBHelper extends Firebase {
         final String itemid1=item.getItemID();
 
         final Firebase fRef = new Firebase(URL + "ActiveSellers/" + sellerId+ "/itemsForSale/");
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("Number2", dataSnapshot.getChildrenCount() + "");
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+                    Item item1 = dataSnapshot1.getValue(Item.class);
+
+                    if (dataSnapshot1.getKey().equals(itemid1)) {
+                        item.setItemID(dataSnapshot1.getKey());
+                        item.setContainsPeanuts(item1.containsPeanuts);
+                        item.setDescriptionOfItem(item1.descriptionOfItem);
+                        item.setGlutenFree(item1.glutenFree);
+                        item.setPrice(item.price);
+                        item.setImageLink(item1.imageLink);
+                        item.setNameOfItem(item1.nameOfItem);
+                        item.setVegetarian(item1.isVegetarian);
+                        item.setQuantity(item1.quantity);
+                        moveItemToPreviouslySoldItems(item, dbCallback);
+
+                        if(item.getBuyerID()!=null) {
+                            moveItemToPreviouslyBoughtItems(item, dbCallback);
+                        }
+                        addItemToSellerProfileDB(item, callback);
+
+                        fRef.child(dataSnapshot1.getKey()).removeValue();
+                    }
+                }
+                dbCallback.runOnSuccess();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Toast.makeText(mContext, "Error: Seller not found", Toast.LENGTH_SHORT).show();
+                seller = null;
+                dbCallback.runOnFail();
+            }
+        });
+        return item;
+    }
+
+    public Item removeItemFromSellerProfile(final Item item, final DBCallback dbCallback){
+        sellerId = item.getSellerID();
+        final String itemid1=item.getItemID();
+
+        final Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId+ "/itemsForSale/");
 
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -1620,8 +1774,8 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child(itemID).child("containsEggs").setValue(item.isContainsEggs());
             fRef.child(orderID).child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
             fRef.child(orderID).child(itemID).child("containsDairy").setValue(item.isContainsDairy());
-
         }
+
         getOrderToSendToSeller(UID, order, UID, dbCallback);
     }
 

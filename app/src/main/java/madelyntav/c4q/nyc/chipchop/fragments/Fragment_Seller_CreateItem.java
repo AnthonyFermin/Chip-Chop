@@ -14,10 +14,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-
+import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.R;
@@ -39,12 +38,11 @@ public class Fragment_Seller_CreateItem extends Fragment {
     DBHelper dbHelper;
     SellActivity activity;
 
-    ArrayList<Item> itemsToAdd;
-
     public static final int RESULT_OK = -1;
     private Uri imageFileUri;
     Intent intent;
     private String stringVariable = "file:///sdcard/_pictureholder_id.jpg";
+    private DBCallback itemAddCallback;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,15 +71,24 @@ public class Fragment_Seller_CreateItem extends Fragment {
         dbHelper = DBHelper.getDbHelper(getActivity());
         activity = (SellActivity) getActivity();
 
-        itemsToAdd = activity.getItemsToAdd();
-        if(itemsToAdd == null) {
-            itemsToAdd = new ArrayList<>();
-        }
-
         if(activity.getItemToEdit() != null){
             editItem();
         }
 
+        itemAddCallback = new DBCallback() {
+            @Override
+            public void runOnSuccess() {
+                Toast.makeText(activity,"Item added", Toast.LENGTH_SHORT).show();
+                activity.replaceSellerFragment(new Fragment_Seller_Items());
+
+            }
+
+            @Override
+            public void runOnFail() {
+                Toast.makeText(activity,"Failed to add item", Toast.LENGTH_SHORT).show();
+                activity.replaceSellerFragment(new Fragment_Seller_Items());
+            }
+        };
     }
 
     private void setListeners(){
@@ -110,12 +117,20 @@ public class Fragment_Seller_CreateItem extends Fragment {
 
                 Item item = new Item(dbHelper.getUserID(), "",dishName,portions,description, "https://tahala.files.wordpress.com/2010/12/avocado-3.jpg");
                 item.setPrice(decimalPrice);
-                itemsToAdd.add(item);
-                activity.setItemsToAdd(itemsToAdd);
-                activity.setFromItemCreation(true);
 
-                activity.replaceSellerFragment(new Fragment_Seller_Items());
-
+                if(activity.getItemToEdit() == null) {
+                    if (activity.isCurrentlyCooking()) {
+                        dbHelper.addItemToActiveSellerProfile(item, itemAddCallback);
+                    } else {
+                        dbHelper.addItemToSellerProfileDB(item, itemAddCallback);
+                    }
+                }else{
+                    if (activity.isCurrentlyCooking()) {
+                        dbHelper.editItemInActiveSellerProfile(item, itemAddCallback);
+                    } else {
+                        dbHelper.editItemInSellerProfile(item, itemAddCallback);
+                    }
+                }
             }
         });
     }
@@ -186,5 +201,11 @@ public class Fragment_Seller_CreateItem extends Fragment {
         });
         AlertDialog alertDialog = dialogBuilder.create();
         alertDialog.show();
+    }
+
+    @Override
+    public void onDetach() {
+        activity.setItemToEdit(null);
+        super.onDetach();
     }
 }

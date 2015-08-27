@@ -28,14 +28,11 @@ public class Fragment_Seller_Items extends Fragment {
     private RecyclerView foodList;
     private RelativeLayout loadingPanel;
     private LinearLayout containingView;
-    private Button saveChanges;
 
     private DBHelper dbHelper;
     private SellActivity activity;
 
     private ArrayList<Item> sellerItems = null;
-    private ArrayList<Item> itemsToAdd;
-    private ArrayList<Item> itemsToRemove;
 
     DBCallback emptyCallback;
 
@@ -48,9 +45,7 @@ public class Fragment_Seller_Items extends Fragment {
         initializeData();
         initializeViews(root);
         setListeners();
-
-        getListSetAdapter();
-
+        loadList();
 
         return root;
     }
@@ -71,40 +66,15 @@ public class Fragment_Seller_Items extends Fragment {
             }
         };
 
-        if(activity.getItemsToRemove() == null) {
-            itemsToRemove = new ArrayList<>();
-        }else{
-            itemsToRemove = activity.getItemsToRemove();
-        }
-
         //seller items
         if(activity.isCurrentlyCooking()) {
             sellerItems = dbHelper.getSellersOnSaleItems(dbHelper.getUserID(),emptyCallback);
         }else{
             sellerItems = dbHelper.getSellerItems(dbHelper.getUserID(), emptyCallback);
-
         }
     }
 
-    private void getListSetAdapter() {
-        if(activity.isFromItemCreation()){
-            ArrayList<Item> unsavedItemsTemp = (ArrayList<Item>) activity.getSellerItems().clone();
-            itemsToAdd = activity.getItemsToAdd();
-            unsavedItemsTemp.addAll(itemsToAdd);
-            SellerItemsAdapter sellerItemsAdapter = new SellerItemsAdapter(getActivity(),unsavedItemsTemp, itemsToRemove);
-            foodList.setLayoutManager(new LinearLayoutManager(getActivity()));
-            foodList.setAdapter(sellerItemsAdapter);
-            activity.setFromItemCreation(false);
-
-            loadingPanel.setVisibility(View.GONE);
-            containingView.setVisibility(View.VISIBLE);
-
-        }else {
-            load();
-        }
-    }
-
-    private void load(){
+    private void loadList(){
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -132,9 +102,8 @@ public class Fragment_Seller_Items extends Fragment {
                 super.onPostExecute(aVoid);
 
                 activity.setSellerItems(sellerItems);
-                itemsToAdd = activity.getItemsToAdd();
 
-                SellerItemsAdapter sellerItemsAdapter = new SellerItemsAdapter(getActivity(),sellerItems, itemsToRemove);
+                SellerItemsAdapter sellerItemsAdapter = new SellerItemsAdapter(getActivity(),sellerItems);
                 foodList.setLayoutManager(new LinearLayoutManager(getActivity()));
                 foodList.setAdapter(sellerItemsAdapter);
                 Log.d("LOAD SELLER ITEMS LIST", sellerItems.toString());
@@ -154,54 +123,18 @@ public class Fragment_Seller_Items extends Fragment {
 
         foodList = (RecyclerView) root.findViewById(R.id.seller_items_list);
 
-        saveChanges = (Button) root.findViewById(R.id.save_button);
         addButton = (android.support.design.widget.FloatingActionButton) root.findViewById(R.id.addButton);
 
     }
 
     private void setListeners(){
 
-        saveChanges.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(itemsToAdd != null) {
-                    sellerItems.addAll(itemsToAdd);
-                    for (Item item : itemsToAdd) {
-                        dbHelper.addItemToSellerProfileDB(item, emptyCallback);
-                    }
-                    activity.setItemsToAdd(null);
-
-                    if (activity.isCurrentlyCooking()) {
-                        for (Item item : sellerItems) {
-                            dbHelper.addItemToActiveSellerProfile(item, emptyCallback);
-                        }
-                    }
-
-                }
-
-                for(Item item : itemsToRemove){
-                    dbHelper.removeItemFromSale(item, emptyCallback);
-                }
-                sellerItems.removeAll(itemsToRemove);
-
-                activity.setItemsToRemove(null);
-                activity.setSellerItems(sellerItems);
-                activity.replaceSellerFragment(new Fragment_Seller_ProfileSettings());
-
-
-
-            }
-        });
-
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveChanges.setClickable(true);
-                SellActivity activity = (SellActivity) getActivity();
                 activity.replaceSellerFragment(new Fragment_Seller_CreateItem());
             }
         });
-
 
     }
 

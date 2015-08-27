@@ -52,8 +52,6 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
     // for storing data between fragments in SellActivity
 
     private ArrayList<Item> sellerItems = null;
-    private ArrayList<Item> itemsToAdd = null;
-    private ArrayList<Item> itemsToRemove = null;
     private boolean currentlyCooking = false;
     private User user = null;
     private Seller seller = null;
@@ -272,14 +270,6 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
         this.sellerItems = sellerItems;
     }
 
-    public ArrayList<Item> getItemsToAdd(){
-        return itemsToAdd;
-    }
-
-    public void setItemsToAdd(ArrayList<Item> itemsToAdd){
-        this.itemsToAdd = itemsToAdd;
-    }
-
     public void setCookingStatus(boolean condition){
         currentlyCooking = condition;
     }
@@ -310,14 +300,6 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
 
     public void setFromItemCreation(boolean condition){
         fromItemCreation = condition;
-    }
-
-    public ArrayList<Item> getItemsToRemove() {
-        return itemsToRemove;
-    }
-
-    public void setItemsToRemove(ArrayList<Item> itemsToRemove) {
-        this.itemsToRemove = itemsToRemove;
     }
 
     public Item getItemToEdit() {

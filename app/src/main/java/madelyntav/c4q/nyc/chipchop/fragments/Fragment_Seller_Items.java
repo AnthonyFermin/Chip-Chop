@@ -12,6 +12,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
+
+import com.andexert.library.RippleView;
 
 import java.util.ArrayList;
 
@@ -51,6 +54,13 @@ public class Fragment_Seller_Items extends Fragment {
 
         getListSetAdapter();
 
+        RippleView ripple = (RippleView) root.findViewById(R.id.ripple);
+        ripple.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity().getApplicationContext(), "blahblah", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return root;
     }

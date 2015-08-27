@@ -12,8 +12,10 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.adapters.FoodListAdapter;
+import madelyntav.c4q.nyc.chipchop.adapters.SellerOrdersAdapter;
 
 public class Fragment_Seller_Orders extends Fragment {
 
@@ -35,8 +37,8 @@ public class Fragment_Seller_Orders extends Fragment {
         orderList = (RecyclerView) root.findViewById(R.id.sellers_orders_list);
         orderList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        FoodListAdapter foodListAdapter = new FoodListAdapter(getActivity(),foodOrders);
-        orderList.setAdapter(foodListAdapter);
+        SellerOrdersAdapter sellerOrdersAdapter = new SellerOrdersAdapter(getActivity(),foodOrders);
+        orderList.setAdapter(sellerOrdersAdapter);
 
         return root;
     }
@@ -45,7 +47,7 @@ public class Fragment_Seller_Orders extends Fragment {
     private void populateItems(){
         for(int i = 0; i < 10; i++) {
 
-           // foodOrders.add(new Item("test", "Something Fancy", 3, "The fanciest homemade meal you've ever had", "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg"));
+            foodOrders.add(new Item("test", "Something Fancy", 3, "The fanciest homemade meal you've ever had", "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg"));
         }
     }
 

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.R;
+import madelyntav.c4q.nyc.chipchop.adapters.BuyerOrdersAdapter;
 import madelyntav.c4q.nyc.chipchop.adapters.FoodListAdapter;
 
 
@@ -38,8 +39,8 @@ public class Fragment_Buyer_Orders extends Fragment {
         foodList = (RecyclerView) root.findViewById(R.id.buyers_orders_list);
         foodList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        FoodListAdapter foodListAdapter = new FoodListAdapter(getActivity(),foodItems);
-        foodList.setAdapter(foodListAdapter);
+        BuyerOrdersAdapter buyerOrdersAdapter = new BuyerOrdersAdapter(getActivity(),foodItems);
+        foodList.setAdapter(buyerOrdersAdapter);
 
         return root;
     }
@@ -47,7 +48,7 @@ public class Fragment_Buyer_Orders extends Fragment {
     //test method to populate RecyclerView
     private void populateItems(){
         for(int i = 0; i < 10; i++) {
-            //foodItems.add(new Item("test", "Something Fancy", 3, "The fanciest homemade meal you've ever had", "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg"));
+            foodItems.add(new Item("test", "Something Fancy", 3, "The fanciest homemade meal you've ever had", "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg"));
         }
     }
 

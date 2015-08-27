@@ -40,7 +40,7 @@ dependencies {
     compile 'com.sothree.slidinguppanel:library:3.1.1'
     compile 'com.google.android.gms:play-services-identity:7.8.0'
     compile 'com.google.android.gms:play-services-plus:7.8.0'
-
+    compile 'com.github.traex.rippleeffect:library:1.3'
 
 
 

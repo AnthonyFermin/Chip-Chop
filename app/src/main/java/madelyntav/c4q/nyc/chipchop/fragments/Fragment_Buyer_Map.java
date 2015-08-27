@@ -17,6 +17,7 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -130,7 +132,6 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         latsList= new ArrayList<>();
         addressList=new ArrayList<>();
         userList= new ArrayList<>();
-        signupButton= (Button) root.findViewById(R.id.signInButton);
 
         // Connect to Geolocation API to make current location request
         locationServiceIsAvailable();
@@ -160,13 +161,11 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             @Override
             public void onPanelCollapsed(View view) {
                 arrowImage.setImageDrawable(getResources().getDrawable(R.drawable.up));
-
             }
 
             @Override
             public void onPanelExpanded(View view) {
                 arrowImage.setImageDrawable(getResources().getDrawable(R.drawable.down));
-                sellersList.setFocusable(true);
             }
 
             @Override

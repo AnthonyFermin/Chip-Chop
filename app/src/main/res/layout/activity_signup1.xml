@@ -75,13 +75,15 @@
             android:id="@+id/remember_me"
             />
 
-        <Button
+          <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Sign In"
             style="@style/button_design"
             android:id="@+id/signInButton"
-            android:layout_margin="10dp"/>
+            android:layout_margin="5dp"
+            />
+
 
         <Button
             android:layout_width="match_parent"
@@ -89,7 +91,7 @@
             android:text="New User"
             style="@style/button_design"
             android:id="@+id/newUserButton"
-            android:layout_margin="10dp"/>
+            android:layout_margin="5dp"/>
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/sign_in_button"

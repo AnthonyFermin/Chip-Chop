@@ -26,6 +26,14 @@ public class ReviewDialogFragment2 extends android.support.v4.app.DialogFragment
 
         textReview = (EditText) root.findViewById(R.id.text_review);
         submitButton = (Button) root.findViewById(R.id.submit_review_button);
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getDialog().dismiss();
+
+                // TODO: Put the code/methods to save review data to database!
+            }
+        });
 
         return root;
     }

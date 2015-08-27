@@ -68,26 +68,25 @@ public class CheckoutListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             CheckoutViewHolder vh = (CheckoutViewHolder) viewHolder;
             vh.name.setText(checkoutItem.getNameOfItem());
             vh.price.setText(checkoutItem.getPrice() + "");
-            vh.quantity.setText(checkoutItem.getQuantity());
+            vh.quantity.setText(String.valueOf(checkoutItem.getQuantityWanted()));
             Picasso.with(context).load(checkoutItem.getImageLink()).fit().into(vh.image);
 
 
 
-            setAnimation(vh.container, position);
+//            setAnimation(vh.container, position);
 
 
 
         }
 
-        private void setAnimation(View viewToAnimate, int position) {
-            // only animates the view if it was not already displayed on the screen
-            if (position > lastPosition) {
-                Animation animation = AnimationUtils.loadAnimation(context, R.anim.abc_slide_in_bottom); //can make a custom animation here
-                viewToAnimate.startAnimation(animation);
-                lastPosition = position;
-            }
+    private void setAnimation(View viewToAnimate, int position){
+        // only animates the view if it was not already displayed on the screen
+        if(position > lastPosition){
+            Animation animation = AnimationUtils.loadAnimation(context, R.anim.abc_slide_in_bottom); //can make a custom animation here
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
         }
-
+    }
         @Override
         public int getItemCount() {
             return checkoutItems.size();

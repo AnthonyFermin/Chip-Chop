@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:textAppearance="?android:attr/textAppearanceListItemSmall"
-    android:gravity="center"
+    android:gravity="start|center"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:textColor="#fff"

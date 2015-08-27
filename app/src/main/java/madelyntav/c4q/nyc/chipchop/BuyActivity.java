@@ -265,10 +265,10 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
             editor.clear();
             editor.commit();
 
-            if (SignupActivity1.mGoogleApiClient.isConnected()) {
-                Plus.AccountApi.clearDefaultAccount(SignupActivity1.mGoogleApiClient);
-                SignupActivity1.mGoogleApiClient.disconnect();
-            }
+//            if (SignupActivity1.mGoogleApiClient.isConnected()) {
+//                Plus.AccountApi.clearDefaultAccount(SignupActivity1.mGoogleApiClient);
+//                SignupActivity1.mGoogleApiClient.disconnect();
+//            }
 
             //if not currently in fragment_buyer_map, replace current fragment with buyer_map fragment
             if (!getCurrentFragment().equals(Fragment_Buyer_Map.TAG)) {

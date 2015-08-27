@@ -1,8 +1,8 @@
 package madelyntav.c4q.nyc.chipchop.fragments;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -12,25 +12,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
-import madelyntav.c4q.nyc.chipchop.FoodItemSelectDialog;
 import madelyntav.c4q.nyc.chipchop.R;
-import madelyntav.c4q.nyc.chipchop.ReviewDialogFragment;
-import madelyntav.c4q.nyc.chipchop.SignupActivity1;
 import madelyntav.c4q.nyc.chipchop.adapters.CheckoutListAdapter;
 
+/**
+ * Created by alvin2 on 8/26/15.
+ */
+public class Fragment_Seller_OrderDetails extends Fragment {
 
-public class Fragment_Buyer_Checkout extends Fragment {
-
-    Button confirmOrder;
+    FloatingActionButton completedButton;
     private ArrayList<Item> foodItems;
     private RecyclerView foodList;
-
-    public static final String TAG = "fragment_buyer_checkout";
 
 
     @Override
@@ -38,7 +35,7 @@ public class Fragment_Buyer_Checkout extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View root = inflater.inflate(R.layout.fragment_buyer_checkout, container, false);
+        View root = inflater.inflate(R.layout.fragment_seller_orderdetail, container, false);
 
 
         foodItems = new ArrayList<>();
@@ -50,19 +47,12 @@ public class Fragment_Buyer_Checkout extends Fragment {
         CheckoutListAdapter checkoutListAdapter = new CheckoutListAdapter(getActivity(),foodItems);
         foodList.setAdapter(checkoutListAdapter);
 
-        confirmOrder = (Button) root.findViewById(R.id.confirmOrderButton);
-        confirmOrder.setOnClickListener(new View.OnClickListener() {
+        completedButton = (FloatingActionButton) root.findViewById(R.id.completedButton);
+        completedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //TODO: check if signed in, if not then go to signupactivity
-//                Intent signupIntent = new Intent(getActivity(), SignupActivity1.class);
-//                startActivity(signupIntent);
-
-                FragmentActivity activity = getActivity();
-                FragmentManager fm = activity.getSupportFragmentManager();
-                ReviewDialogFragment alertDialog = new ReviewDialogFragment();
-                alertDialog.show(fm, "fragment_alert");
+                // TODO: Send notification out to buyer! Subtract from seller's quantity??
+                Toast.makeText(getActivity().getApplicationContext(), "Order Completed!", Toast.LENGTH_SHORT).show();
             }
         });
 

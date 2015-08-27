@@ -258,6 +258,12 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
             fragment = new Fragment_Buyer_ProfileSettings();
         } else if (position == 3) {
             // TODO: SIGN OUT CODE !
+
+            if (SignupActivity1.mGoogleApiClient.isConnected()) {
+                Plus.AccountApi.clearDefaultAccount(SignupActivity1.mGoogleApiClient);
+                SignupActivity1.mGoogleApiClient.disconnect();
+            }
+
             dbHelper.signOutUser(emptyCallback);
             Toast.makeText(this, "Sign out successful", Toast.LENGTH_SHORT).show();
             SharedPreferences sharedPreferences = getSharedPreferences(SignupActivity1.USER_INFO, Context.MODE_PRIVATE);
@@ -265,10 +271,7 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
             editor.clear();
             editor.commit();
 
-//            if (SignupActivity1.mGoogleApiClient.isConnected()) {
-//                Plus.AccountApi.clearDefaultAccount(SignupActivity1.mGoogleApiClient);
-//                SignupActivity1.mGoogleApiClient.disconnect();
-//            }
+
 
             //if not currently in fragment_buyer_map, replace current fragment with buyer_map fragment
             if (!getCurrentFragment().equals(Fragment_Buyer_Map.TAG)) {

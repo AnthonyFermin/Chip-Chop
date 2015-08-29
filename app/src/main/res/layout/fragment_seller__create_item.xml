@@ -124,14 +124,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Vegetarian"
-                android:id="@+id/checkBox1"
+                android:id="@+id/veg_cb"
                 android:layout_weight="1"/>
 
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Gluten Free"
-            android:id="@+id/checkBox2"
+            android:id="@+id/glut_free_cb"
             android:layout_weight="1"/>
 
 
@@ -146,14 +146,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Dairy"
-                android:id="@+id/checkBox3"
+                android:id="@+id/dairy_cb"
                 android:layout_weight="1"/>
 
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Eggs"
-                android:id="@+id/checkBox4"
+                android:id="@+id/eggs_cb"
                 android:layout_weight="1"/>
 
 
@@ -168,14 +168,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Peanuts"
-                android:id="@+id/checkBox5"
+                android:id="@+id/peanuts_cb"
                 android:layout_weight="1"/>
 
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Shellfish"
-                android:id="@+id/checkBox6"
+                android:id="@+id/shellfish_cb"
                 android:layout_weight="1"/>
 
 

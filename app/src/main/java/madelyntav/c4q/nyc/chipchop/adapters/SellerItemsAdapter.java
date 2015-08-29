@@ -86,7 +86,7 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     if(activity.isCurrentlyCooking()) {
                         dbHelper.removeItemFromSale(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
                     }else {
-                        //TODO: Madelyn:
+                        //TODO: Madelyn: are these the correct methods to remove items from the seller profile in the DB?
                         dbHelper.removeItemFromSellerProfile(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
                     }
                 }

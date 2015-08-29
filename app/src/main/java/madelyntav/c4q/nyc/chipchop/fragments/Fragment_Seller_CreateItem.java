@@ -11,9 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import madelyntav.c4q.nyc.chipchop.DBCallback;
@@ -29,11 +29,11 @@ public class Fragment_Seller_CreateItem extends Fragment {
 
     EditText dollarPriceET, centPriceET;
     ImageButton dishPhotoButton;
-    ImageView dishPhoto;
     Button addButton;
     EditText dishNameET;
     EditText portionsET;
     EditText descriptionET;
+    CheckBox vegCB, glutFreeCB, dairyCB, eggsCB, peanutsCB, shellfishCB;
 
     DBHelper dbHelper;
     SellActivity activity;
@@ -49,8 +49,8 @@ public class Fragment_Seller_CreateItem extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_seller__create_item, container, false);
 
+        bindViews(root);
         initializeData();
-        initializeViews(root);
         setListeners();
 
         return root;
@@ -59,11 +59,26 @@ public class Fragment_Seller_CreateItem extends Fragment {
     private void editItem(){
         Item itemToEdit = activity.getItemToEdit();
         dishNameET.setText(itemToEdit.getNameOfItem());
-        portionsET.setText(itemToEdit.getQuantity());
+        portionsET.setText(itemToEdit.getQuantity() + "");
         descriptionET.setText(itemToEdit.getDescriptionOfItem());
-        String[] price = (itemToEdit.getPrice() + "").split(".");
-        dollarPriceET.setText(price[0]);
-        centPriceET.setText(price[1]);
+        String price = itemToEdit.getPrice() + "";
+        if(price.contains(".") && price.length() > 2){
+            int decInd = price.indexOf('.');
+            String dollarAmt = price.substring(0, decInd);
+            String centAmt = price.substring(decInd + 1);
+            dollarPriceET.setText(dollarAmt);
+            centPriceET.setText(centAmt);
+        }else{
+            dollarPriceET.setText(price);
+            centPriceET.setText("00");
+        }
+
+        vegCB.setChecked(itemToEdit.isVegetarian());
+        glutFreeCB.setChecked(itemToEdit.isGlutenFree());
+        dairyCB.setChecked(itemToEdit.isContainsDairy());
+        eggsCB.setChecked(itemToEdit.isContainsEggs());
+        peanutsCB.setChecked(itemToEdit.isContainsPeanuts());
+        shellfishCB.setChecked(itemToEdit.isContainsShellfish());
     }
 
     private void initializeData(){
@@ -117,6 +132,12 @@ public class Fragment_Seller_CreateItem extends Fragment {
 
                 Item item = new Item(dbHelper.getUserID(), "",dishName,portions,description, "https://tahala.files.wordpress.com/2010/12/avocado-3.jpg");
                 item.setPrice(decimalPrice);
+                item.setIsVegetarian(vegCB.isChecked());
+                item.setGlutenFree(glutFreeCB.isChecked());
+                item.setContainsDairy(dairyCB.isChecked());
+                item.setContainsEggs(eggsCB.isChecked());
+                item.setContainsPeanuts(peanutsCB.isChecked());
+                item.setContainsShellfish(shellfishCB.isChecked());
 
                 if(activity.getItemToEdit() == null) {
                     if (activity.isCurrentlyCooking()) {
@@ -135,7 +156,7 @@ public class Fragment_Seller_CreateItem extends Fragment {
         });
     }
 
-    private void initializeViews(View root){
+    private void bindViews(View root){
 
 
         addButton = (Button) root.findViewById(R.id.add_item_button);
@@ -146,11 +167,14 @@ public class Fragment_Seller_CreateItem extends Fragment {
         dollarPriceET = (EditText) root.findViewById(R.id.price_dollar_amount);
         centPriceET = (EditText) root.findViewById(R.id.price_cents_amount);
 
-
-        dishPhoto = (ImageView) root.findViewById(R.id.dish_image);
-
         dishPhotoButton = (ImageButton) root.findViewById(R.id.dish_image);
 
+        vegCB = (CheckBox) root.findViewById(R.id.veg_cb);
+        glutFreeCB = (CheckBox) root.findViewById(R.id.glut_free_cb);
+        dairyCB = (CheckBox) root.findViewById(R.id.dairy_cb);
+        eggsCB = (CheckBox) root.findViewById(R.id.eggs_cb);
+        peanutsCB = (CheckBox) root.findViewById(R.id.peanuts_cb);
+        shellfishCB = (CheckBox) root.findViewById(R.id.shellfish_cb);
 
     }
 
@@ -169,7 +193,7 @@ public class Fragment_Seller_CreateItem extends Fragment {
 
 
         if (imageFileUri != null) {
-            dishPhoto.setImageURI(imageFileUri);
+            dishPhotoButton.setImageURI(imageFileUri);
         }
     }
 

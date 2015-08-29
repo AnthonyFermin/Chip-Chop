@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -58,11 +59,13 @@ public class Fragment_Buyer_ViewCart extends Fragment {
             @Override
             public void onClick(View view) {
 
-                if (dbHelper.userIsLoggedIn()) {
-                    activity.replaceFragment(new Fragment_Buyer_Checkout());
-                } else {
+                if (!dbHelper.userIsLoggedIn()) {
                     Intent signupIntent = new Intent(getActivity(), SignupActivity1.class);
                     startActivity(signupIntent);
+                } else if(cartItems.size() == 0){
+                    Toast.makeText(activity,"Cart is empty",Toast.LENGTH_SHORT).show();
+                }else {
+                    activity.replaceFragment(new Fragment_Buyer_Checkout());
                 }
             }
         });

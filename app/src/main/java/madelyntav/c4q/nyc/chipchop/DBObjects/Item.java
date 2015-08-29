@@ -53,75 +53,12 @@ public class Item {
         this.imageLink=imageLink;
     }
 
-    public String getNameOfItem() {
-        return nameOfItem;
-    }
-
-    public void setNameOfItem(String nameOfItem) {
-        this.nameOfItem = nameOfItem;
-    }
-
     public String getBuyerID() {
         return buyerID;
     }
 
     public void setBuyerID(String buyerID) {
         this.buyerID = buyerID;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public String getDescriptionOfItem() {
-        return descriptionOfItem;
-    }
-
-    public void setDescriptionOfItem(String descriptionOfItem) {
-        this.descriptionOfItem = descriptionOfItem;
-    }
-    public String getImageLink() {
-        return imageLink;
-    }
-
-    public void setImageLink(String imageLink) {
-        this.imageLink = imageLink;
-    }
-
-    public Boolean getVegetarian() {
-        return isVegetarian;
-    }
-
-    public void setVegetarian(Boolean vegetarian) {
-        this.isVegetarian = vegetarian;
-    }
-
-    public Boolean getContainsPeanuts() {
-        return containsPeanuts;
-    }
-
-    public void setContainsPeanuts(Boolean containsPeanuts) {
-        this.containsPeanuts = containsPeanuts;
-    }
-
-    public int getQuantityWanted() {
-        return quantityWanted;
-    }
-
-    public void setQuantityWanted(int quantityWanted) {
-        this.quantityWanted = quantityWanted;
-    }
-
-    public Boolean getGlutenFree() {
-        return glutenFree;
-    }
-
-    public void setGlutenFree(Boolean glutenFree) {
-        this.glutenFree = glutenFree;
     }
 
     public String getSellerID() {
@@ -132,6 +69,22 @@ public class Item {
         this.sellerID = sellerID;
     }
 
+    public String getNameOfItem() {
+        return nameOfItem;
+    }
+
+    public void setNameOfItem(String nameOfItem) {
+        this.nameOfItem = nameOfItem;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     public double getPrice() {
         return price;
     }
@@ -140,20 +93,28 @@ public class Item {
         this.price = price;
     }
 
-    public boolean isVegan() {
+    public String getDescriptionOfItem() {
+        return descriptionOfItem;
+    }
+
+    public void setDescriptionOfItem(String descriptionOfItem) {
+        this.descriptionOfItem = descriptionOfItem;
+    }
+
+    public String getImageLink() {
+        return imageLink;
+    }
+
+    public void setImageLink(String imageLink) {
+        this.imageLink = imageLink;
+    }
+
+    public boolean isVegetarian() {
         return isVegetarian;
     }
 
-    public void setIsVegan(boolean isVegan) {
-        this.isVegetarian = isVegan;
-    }
-
-    public boolean isContainsShellfish() {
-        return containsShellfish;
-    }
-
-    public void setContainsShellfish(boolean containsShellfish) {
-        this.containsShellfish = containsShellfish;
+    public void setIsVegetarian(boolean isVegetarian) {
+        this.isVegetarian = isVegetarian;
     }
 
     public boolean isContainsEggs() {
@@ -164,11 +125,43 @@ public class Item {
         this.containsEggs = containsEggs;
     }
 
+    public boolean isContainsShellfish() {
+        return containsShellfish;
+    }
+
+    public void setContainsShellfish(boolean containsShellfish) {
+        this.containsShellfish = containsShellfish;
+    }
+
     public boolean isContainsDairy() {
         return containsDairy;
     }
 
     public void setContainsDairy(boolean containsDairy) {
         this.containsDairy = containsDairy;
+    }
+
+    public boolean isGlutenFree() {
+        return glutenFree;
+    }
+
+    public void setGlutenFree(boolean glutenFree) {
+        this.glutenFree = glutenFree;
+    }
+
+    public boolean isContainsPeanuts() {
+        return containsPeanuts;
+    }
+
+    public void setContainsPeanuts(boolean containsPeanuts) {
+        this.containsPeanuts = containsPeanuts;
+    }
+
+    public int getQuantityWanted() {
+        return quantityWanted;
+    }
+
+    public void setQuantityWanted(int quantityWanted) {
+        this.quantityWanted = quantityWanted;
     }
 }

@@ -63,7 +63,6 @@ public class BuyActivity extends AppCompatActivity {
 
     private DBHelper dbHelper;
 
-
     private User user = null;
 
     private SharedPreferences userInfoSP;
@@ -221,6 +220,7 @@ public class BuyActivity extends AppCompatActivity {
                 public void runOnFail() {
                     // clears user login info if login authentication failed
                     userInfoSP.edit().clear().commit();
+                    dbHelper.signOutUser(emptyCallback);
                     loadingPanel.setVisibility(View.GONE);
                     frameLayout.setVisibility(View.VISIBLE);
                     DrawerLinear.setVisibility(View.VISIBLE);

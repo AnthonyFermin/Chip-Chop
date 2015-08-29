@@ -39,7 +39,7 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_ProfileSettings;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Items;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Orders;
 
-public class SellActivity extends AppCompatActivity implements Fragment_Seller_Orders.OnHeadlineSelectedListener {
+public class SellActivity extends AppCompatActivity {
 
     FrameLayout frameLayout;
     LinearLayout DrawerLinear;
@@ -140,16 +140,6 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
         }
 
     }
-
-
-    // TODO: PUT CODE FOR INTERACTION WITH 'ORDERS' LIST HERE !!
-    @Override
-    public void onSellerOrderSelected(int position) {
-
-    }
-
-
-
 
 
     /* The click listener for ListView in the navigation drawer */

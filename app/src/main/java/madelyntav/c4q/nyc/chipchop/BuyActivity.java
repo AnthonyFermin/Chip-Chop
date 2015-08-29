@@ -15,7 +15,6 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.support.v4.widget.DrawerLayout;
 
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -60,6 +59,8 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
     private TextView drawerUserNameTV;
     private RelativeLayout loadingPanel;
 
+
+
     private DBHelper dbHelper;
 
     private User user = null;
@@ -81,18 +82,6 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         setUpDrawer();
         checkAutoLogIn();
         selectFragmentToLoad(savedInstanceState);
-
-        // NOTIFICATION CODE
-//        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//        NotificationCompat.Builder mBuilder =
-//                new NotificationCompat.Builder(getApplicationContext())
-//                        .setSmallIcon(R.drawable.chipchop_small)
-//                        .setContentTitle("ChipChop")
-//                        .setContentText("Your order is ready!");
-//
-//        mBuilder.setAutoCancel(true);
-//        Notification notification = mBuilder.build();
-//        notificationManager.notify(1234, notification);
 
     }
 

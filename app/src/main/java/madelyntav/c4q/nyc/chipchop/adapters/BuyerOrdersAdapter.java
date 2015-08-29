@@ -25,6 +25,8 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_OrderDetails;
 
 public class BuyerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    RecyclerView recycler;
+    List<Item> orderDetails;
     private List<Item> orderItems;
     private Context context;
     private int lastPosition = -1;
@@ -47,6 +49,7 @@ public class BuyerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public BuyerOrdersViewHolder(View itemView) {
             super(itemView);
 
+            recycler = (RecyclerView) itemView.findViewById(R.id.buyers_orders_list);
             container = (CardView) itemView.findViewById(R.id.card_view);
             orderID = (TextView) itemView.findViewById(R.id.order_id_tv);
             sellerName = (TextView) itemView.findViewById(R.id.seller_name_tv);
@@ -79,8 +82,14 @@ public class BuyerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 //            setAnimation(vh.container, position);
 
+//        CartListAdapter cartListAdapter = new CartListAdapter(context, orderDetails);
+//        recycler.setAdapter(cartListAdapter);
 
     }
+
+
+
+
 
     private void setAnimation(View viewToAnimate, int position) {
         // only animates the view if it was not already displayed on the screen

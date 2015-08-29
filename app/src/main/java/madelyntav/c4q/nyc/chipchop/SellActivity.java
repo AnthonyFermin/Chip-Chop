@@ -24,7 +24,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -64,6 +63,9 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
 
     DBCallback emptyCallback;
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +86,7 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
         };
 
         initializeUser();
+
 
         frameLayout = (FrameLayout) findViewById(R.id.sellerFrameLayout);
         DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
@@ -140,6 +143,8 @@ public class SellActivity extends AppCompatActivity implements Fragment_Seller_O
         if (savedInstanceState == null) {
             selectItem(2);
         }
+
+
 
     }
 

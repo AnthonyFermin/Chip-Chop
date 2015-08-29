@@ -51,6 +51,15 @@
 
         </activity>
 
+        <receiver
+            android:name=".BroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="ahhhlvin.c4q.nyc.notification" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

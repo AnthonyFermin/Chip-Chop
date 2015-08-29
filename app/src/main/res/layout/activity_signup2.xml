@@ -19,13 +19,24 @@
         android:textSize="30sp" />
 
 
-    <ImageButton
+    <ImageView
         android:id="@+id/profile_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:scaleType="centerInside"
         android:layout_gravity="center_horizontal"
         android:src="@drawable/chipchop"/>
+
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
@@ -134,5 +145,8 @@
         android:layout_height="wrap_content"
         android:text="sign up" />
 
+
+    </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

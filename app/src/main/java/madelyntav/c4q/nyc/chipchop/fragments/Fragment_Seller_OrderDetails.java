@@ -17,13 +17,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.R;
-import madelyntav.c4q.nyc.chipchop.SellActivity;
 import madelyntav.c4q.nyc.chipchop.adapters.CheckoutListAdapter;
 
 /**
@@ -79,7 +77,6 @@ public class Fragment_Seller_OrderDetails extends Fragment {
         mBuilder.setAutoCancel(true);
         notification = mBuilder.build();
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
-
 
 
         return root;

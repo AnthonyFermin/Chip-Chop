@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -24,6 +25,7 @@ import java.util.List;
 import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
 import madelyntav.c4q.nyc.chipchop.R;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile;
 
 /**
@@ -34,6 +36,7 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private List<Seller> sellers;
     private Context context;
     private int lastPosition = -1;
+    SellersViewHolder vh;
 
 
     public SellerListAdapter(Context context, ArrayList<Seller> sellers) {
@@ -80,6 +83,7 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         Seller seller = sellers.get(position);
         final SellersViewHolder vh = (SellersViewHolder) viewHolder;
         vh.name.setText(seller.getStoreName());
+
         //TODO: CHANGE TO DESCRIPTION !!
         vh.description.setText(seller.getDescription());
         Target target = new Target() {
@@ -88,7 +92,6 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 BitmapDrawable bd = new BitmapDrawable(context.getResources(), bitmap);
                 vh.container.setBackground(bd);
             }
-
             @Override
             public void onBitmapFailed(Drawable errorDrawable) {
 

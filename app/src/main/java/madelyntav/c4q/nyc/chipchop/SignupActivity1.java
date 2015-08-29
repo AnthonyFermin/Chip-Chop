@@ -1,6 +1,7 @@
 package madelyntav.c4q.nyc.chipchop;
 
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,11 +28,24 @@ import com.firebase.client.Firebase;
 
 import java.util.Arrays;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.Scopes;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.plus.Plus;
+
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 
-public class SignupActivity1 extends AppCompatActivity {
+public class SignupActivity1 extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
+
+    /* Request code used to invoke sign in user interactions. */
+    private static final int RC_SIGN_IN = 0;
+
+    /* Client used to interact with Google APIs. */
+    static GoogleApiClient mGoogleApiClient;
 
     Button signInButton;
     Button newUserButton;
@@ -40,6 +54,8 @@ public class SignupActivity1 extends AppCompatActivity {
     DBHelper dbHelper;
     CheckBox rememberMe;
     LoginButton loginButton;
+
+    public static final String TAG = "1";
     public static final String USER_INFO = "userinfo";
     public static final String EMAIL = "email";
     public static final String PASS = "pass";
@@ -49,6 +65,13 @@ public class SignupActivity1 extends AppCompatActivity {
     public static final String CITY = "city";
     public static final String ZIPCODE = "zipcode";
     public static final String PHONE_NUMBER = "phone_number";
+
+    /* Is there a ConnectionResult resolution in progress? */
+    private boolean mIsResolving = false;
+
+    /* Should we automatically resolve ConnectionResults when possible? */
+    private boolean mShouldResolve = false;
+
     String email;
     String password;
     LinearLayout containingView;
@@ -83,6 +106,14 @@ public class SignupActivity1 extends AppCompatActivity {
 
             }
         };
+
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Plus.API)
+                .addScope(new Scope(Scopes.PROFILE))
+                .build();
 
         containingView = (LinearLayout) findViewById(R.id.container);
         loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
@@ -155,6 +186,57 @@ public class SignupActivity1 extends AppCompatActivity {
                 loginWithFacebook();            }
         });
 
+        findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (view.getId() == R.id.sign_in_button) {
+                    onSignInClicked();
+                }
+
+            }
+        });
+
+
+    }
+
+
+
+
+    private void onSignInClicked() {
+        // User clicked the sign-in button, so begin the sign-in process and automatically
+        // attempt to resolve any errors that occur.
+        mShouldResolve = true;
+        mGoogleApiClient.connect();
+
+        // Show a message to the user that we are signing in.
+//        mStatusTextView.setText(R.string.signing_in);
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult:" + requestCode + ":" + resultCode + ":" + data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            // If the error resolution was not successful we should not resolve further.
+            if (resultCode != RESULT_OK) {
+                mShouldResolve = false;
+            }
+
+            mIsResolving = false;
+            mGoogleApiClient.connect();
+        }else if(resultCode== RESULT_OK) {
+            dbHelper.onFacebookAccessTokenChange(AccessToken.getCurrentAccessToken(), emptyCallback);
+            Log.d("request Code", String.valueOf(resultCode));
+            Intent intent1 = new Intent(SignupActivity1.this, SignupActivity2.class);
+            startActivity(intent1);
+        }
+        else{
+            Toast.makeText(this,"Login Failed",Toast.LENGTH_LONG).show();
+
+        }
+
     }
 
     public void loginWithFacebook() {
@@ -177,21 +259,22 @@ public class SignupActivity1 extends AppCompatActivity {
                     }
                 });
     }
+    @Override
+    public void onConnected(Bundle bundle) {
+        // onConnected indicates that an account was selected on the device, that the selected
+        // account has granted any requested permissions to our app and that we were able to
+        // establish a service connection to Google Play services.
+        Log.d(TAG, "onConnected:" + bundle);
+        mShouldResolve = false;
+
+        // Show the signed-in UI
+        Toast.makeText(getApplicationContext(), "Signed In", Toast.LENGTH_SHORT).show();
+
+    }
 
     @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-        if(resultCode== RESULT_OK) {
-            dbHelper.onFacebookAccessTokenChange(AccessToken.getCurrentAccessToken(), emptyCallback);
-            Log.d("request Code", String.valueOf(resultCode));
-            Intent intent1 = new Intent(SignupActivity1.this, SignupActivity2.class);
-            startActivity(intent1);
-        }
-        else{
-            Toast.makeText(this,"Login Failed",Toast.LENGTH_LONG).show();
+    public void onConnectionSuspended(int i) {
 
-        }
     }
 
     @Override
@@ -205,28 +288,28 @@ public class SignupActivity1 extends AppCompatActivity {
 //        dbHelper.removeAuthStateListener(mAuthStateListener);
     }
 
-            private void checkRememberMe() {
+    private void checkRememberMe() {
 
-                SharedPreferences sharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString(EMAIL, email);
-                if (rememberMe.isChecked()) {
-                    editor.putString(PASS, password);
-                }
-                // when user clicks sign in
-                if (user != null) {
-                    String addressString = user.getAddressString();
-                    Address address = HelperMethods.parseAddressString(addressString, dbHelper.getUserID());
-                    editor.putString(NAME, user.getName());
-                    editor.putString(ADDRESS, address.getStreetAddress());
-                    editor.putString(APT, address.getApartment());
-                    editor.putString(CITY, address.getCity());
-                    editor.putString(ZIPCODE, address.getZipCode());
-                    editor.putString(PHONE_NUMBER, user.getPhoneNumber());
-                }
-                editor.commit();
+        SharedPreferences sharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(EMAIL, email);
+        if (rememberMe.isChecked()) {
+            editor.putString(PASS, password);
+        }
+        // when user clicks sign in
+        if (user != null) {
+            String addressString = user.getAddressString();
+            Address address = HelperMethods.parseAddressString(addressString, dbHelper.getUserID());
+            editor.putString(NAME, user.getName());
+            editor.putString(ADDRESS, address.getStreetAddress());
+            editor.putString(APT, address.getApartment());
+            editor.putString(CITY, address.getCity());
+            editor.putString(ZIPCODE, address.getZipCode());
+            editor.putString(PHONE_NUMBER, user.getPhoneNumber());
+        }
+        editor.commit();
 
-            }
+    }
 
             private void load() {
                 new AsyncTask<Void, Void, Void>() {
@@ -272,7 +355,45 @@ public class SignupActivity1 extends AppCompatActivity {
             }
 
 
-        };
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        // Could not connect to Google Play Services.  The user needs to select an account,
+        // grant permissions or resolve an error in order to sign in. Refer to the javadoc for
+        // ConnectionResult to see possible error codes.
+        Log.d(TAG, "onConnectionFailed:" + connectionResult);
+
+        if (!mIsResolving && mShouldResolve) {
+            if (connectionResult.hasResolution()) {
+                try {
+                    connectionResult.startResolutionForResult(this, RC_SIGN_IN);
+                    mIsResolving = true;
+                } catch (IntentSender.SendIntentException e) {
+                    Log.e(TAG, "Could not resolve ConnectionResult.", e);
+                    mIsResolving = false;
+                    mGoogleApiClient.connect();
+                }
+            } else {
+                // Could not resolve the connection result, show the user an
+                // error dialog.
+                Toast.makeText(getApplicationContext(), "Error with connection", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            // Show the signed-out UI
+            Toast.makeText(getApplicationContext(), "Signed Out", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mGoogleApiClient.disconnect();
+    }
+}

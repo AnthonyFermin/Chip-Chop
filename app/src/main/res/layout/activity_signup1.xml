@@ -12,6 +12,7 @@
     <RelativeLayout
         style="@style/GenericProgressBackground"
         android:id="@+id/loadingPanel"
+        android:visibility="gone"
         >
         <ProgressBar
             style="@style/GenericProgressIndicator"/>
@@ -31,6 +32,12 @@
             android:textSize="30sp"
             android:layout_margin="5dp"
             android:gravity="center_horizontal"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/cc_logo_red"
+            android:layout_marginBottom="20dp"/>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -68,13 +75,15 @@
             android:id="@+id/remember_me"
             />
 
-        <Button
+          <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Sign In"
             style="@style/button_design"
             android:id="@+id/signInButton"
-            android:layout_margin="10dp"/>
+            android:layout_margin="5dp"
+            />
+
 
         <Button
             android:layout_width="match_parent"
@@ -92,11 +101,11 @@
             android:layout_marginTop="30dp"
             android:layout_marginBottom="5dp" />
 
-        <ImageView
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/cc_logo_red"
-            android:layout_marginTop="5dp"/>
+            android:layout_height="wrap_content"/>
 
         </LinearLayout>
 

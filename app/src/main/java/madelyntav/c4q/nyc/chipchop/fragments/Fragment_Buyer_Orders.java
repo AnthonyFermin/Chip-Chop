@@ -16,6 +16,7 @@ import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.R;
+import madelyntav.c4q.nyc.chipchop.adapters.BuyerOrdersAdapter;
 import madelyntav.c4q.nyc.chipchop.adapters.FoodListAdapter;
 
 
@@ -51,13 +52,11 @@ public class Fragment_Buyer_Orders extends Fragment {
         foodList = (RecyclerView) root.findViewById(R.id.buyers_orders_list);
         foodList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        FoodListAdapter foodListAdapter = new FoodListAdapter(getActivity(),foodItems);
-        foodList.setAdapter(foodListAdapter);
+        BuyerOrdersAdapter buyerOrdersAdapter = new BuyerOrdersAdapter(getActivity(),foodItems);
+        foodList.setAdapter(buyerOrdersAdapter);
 
         return root;
     }
-
-
 
 
 }

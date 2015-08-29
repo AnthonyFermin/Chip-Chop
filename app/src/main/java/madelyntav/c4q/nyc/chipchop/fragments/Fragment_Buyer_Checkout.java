@@ -91,5 +91,4 @@ public class Fragment_Buyer_Checkout extends Fragment {
 
     }
 
-
 }

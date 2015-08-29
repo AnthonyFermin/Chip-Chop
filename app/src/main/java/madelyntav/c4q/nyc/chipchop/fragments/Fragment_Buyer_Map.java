@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -63,6 +64,7 @@ import static android.content.res.Resources.*;
 
 public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
+    FloatingActionButton refreshButton;
     ImageView arrowImage;
     SlidingUpPanelLayout slidingPanel;
     public final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
@@ -99,6 +101,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         initializeData(inflater, container);
         bindViews();
         initializeMap();
+        setListeners();
 
         initializeListPanel();
 
@@ -106,6 +109,16 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
         return root;
     }
+
+    private void setListeners() {
+        refreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: WRITE CODE TO REFRESH RECYCLERVIEW !!
+            }
+        });
+    }
+
 
     @Override
     public void onResume() {
@@ -128,7 +141,6 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             @Override
             public void onPanelCollapsed(View view) {
                 arrowImage.setImageDrawable(getResources().getDrawable(R.drawable.up));
-
             }
 
             @Override
@@ -168,12 +180,14 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         map = mapFragment.getMap();
+
     }
 
     private void bindViews() {
         arrowImage = (ImageView) root.findViewById(R.id.arrow_image);
         slidingPanel = (SlidingUpPanelLayout) root.findViewById(R.id.slidinglayout);
         itemsRView = (RecyclerView) root.findViewById(R.id.buyers_orders_list);
+        refreshButton = (FloatingActionButton) root.findViewById(R.id.refresh_button);
 
     }
 
@@ -207,7 +221,6 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
             }
         };
-
 
         sellers = dbHelper.getAllActiveSellers(emptyCallback);
     }
@@ -318,7 +331,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
         // Set initial view to current location
         map.moveCamera(CameraUpdateFactory.newLatLng(locationLatLng));
-        map.animateCamera(CameraUpdateFactory.zoomTo(13));
+        map.animateCamera(CameraUpdateFactory.zoomTo(15));
 
     }
 

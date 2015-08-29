@@ -35,8 +35,7 @@ import android.widget.Toast;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 
-
-import java.util.ArrayList;
+import com.google.android.gms.plus.Plus;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
@@ -47,7 +46,6 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Checkout;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Orders;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_ProfileSettings;
-import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_ViewCart;
 
 public class BuyActivity extends AppCompatActivity {
 
@@ -60,6 +58,8 @@ public class BuyActivity extends AppCompatActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private TextView drawerUserNameTV;
     private RelativeLayout loadingPanel;
+
+
 
     private DBHelper dbHelper;
 
@@ -85,18 +85,6 @@ public class BuyActivity extends AppCompatActivity {
         setUpDrawer();
         checkAutoLogIn();
         selectFragmentToLoad(savedInstanceState);
-
-        // NOTIFICATION CODE
-//        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//        NotificationCompat.Builder mBuilder =
-//                new NotificationCompat.Builder(getApplicationContext())
-//                        .setSmallIcon(R.drawable.chipchop_small)
-//                        .setContentTitle("ChipChop")
-//                        .setContentText("Your order is ready!");
-//
-//        mBuilder.setAutoCancel(true);
-//        Notification notification = mBuilder.build();
-//        notificationManager.notify(1234, notification);
 
     }
 
@@ -250,6 +238,12 @@ public class BuyActivity extends AppCompatActivity {
             fragment = new Fragment_Buyer_ProfileSettings();
         } else if (position == 3) {
             // TODO: SIGN OUT CODE !
+
+            if (SignupActivity1.mGoogleApiClient.isConnected()) {
+                Plus.AccountApi.clearDefaultAccount(SignupActivity1.mGoogleApiClient);
+                SignupActivity1.mGoogleApiClient.disconnect();
+            }
+
             dbHelper.signOutUser(emptyCallback);
             LoginManager.getInstance().logOut();
             Toast.makeText(this, "Sign out successful", Toast.LENGTH_SHORT).show();
@@ -257,6 +251,8 @@ public class BuyActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.clear();
             editor.commit();
+
+
 
             //if not currently in fragment_buyer_map, replace current fragment with buyer_map fragment
             if (!getCurrentFragment().equals(Fragment_Buyer_Map.TAG)) {

@@ -6,15 +6,16 @@ Goals for this Sprint:
 - Front and back end SEAMLESSLY connected
 - Reviews system up and running and connected to DB
 - CartFlow working (Seller and Buyer side testing)
-- Notifications for orders(When order is ready and when seller receives a new order) 
-- Getting pictures from Gallery methods and displaying it
-- Saving photos to DB as a String
+- Getting pictures from Gallery methods and displaying it and save to DB as string
 - Methods to clear sharedPrefs when user logs Out (?)
-- Due: Wednesday 9:30pm (Google Hangouts to report progress and regroup)
+- FB Authentication
 
-- **** Implement cardPayments and FB Authentication !!!
+Following Sprint
+- Saving photos to DB as a String
+- Notifications for orders(When order is ready and when seller receives a new order) 
+- Implement cardPayments
+- Services for notifications
 
-Guiding Questions (consider before the meeting):
 
 What went well?
 Both ends of the project are 90% completed and just require linking up and connecting.
@@ -37,20 +38,19 @@ Did you meet your goals/responsibilities last week? Why or why not? Yes
 
 
 Team Member #2 Anthony
-Goals/Responsibilities Last Week: 
-Did you meet your goals/responsibilities last week? Why or why not? 
+Goals/Responsibilities Last Week: Connect everything, linking backend to frontend
+Did you meet your goals/responsibilities last week? Why or why not? We are all working on this
 
 
 Team Member #3 Madelyn
-Goals/Responsibilities Last Week: 
-Did you meet your goals/responsibilities last week? Why or why not?
+Goals/Responsibilities Last Week: Finishing the backend DB methods and restructuring the DB
+Did you meet your goals/responsibilities last week? Why or why not? Yes but working with Anthony to implement methods which may be missing
+working on FB authentiction now
 
 
 Roles, Goals and Resposibility: 
 
 [Visit ToDoist!](https://en.todoist.com/app?v=402#project%2F149091349)
-
-
 
 Compare your work planned with what your work completed.
 

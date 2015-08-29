@@ -22,6 +22,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -66,7 +67,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
     FloatingActionButton refreshButton;
     ImageView arrowImage;
-    SlidingUpPanelLayout slidingPanel;
+    public static SlidingUpPanelLayout slidingPanel;
     public final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     public final static String PREF_NAME = "Settings";
     public static final String LASTLONGITUDE = "LastLongitude";

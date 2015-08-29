@@ -17,7 +17,6 @@ import madelyntav.c4q.nyc.chipchop.adapters.FoodListAdapter;
 
 public class Fragment_Seller_Orders extends Fragment {
 
-    OnHeadlineSelectedListener mCallback;
     private ArrayList<Item> foodOrders;
     private RecyclerView orderList;
 
@@ -30,7 +29,6 @@ public class Fragment_Seller_Orders extends Fragment {
 
 
         foodOrders = new ArrayList<>();
-        populateItems();
 
         orderList = (RecyclerView) root.findViewById(R.id.sellers_orders_list);
         orderList.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -40,37 +38,6 @@ public class Fragment_Seller_Orders extends Fragment {
 
         return root;
     }
-
-    //test method to populate RecyclerView
-    private void populateItems(){
-        for(int i = 0; i < 10; i++) {
-
-           // foodOrders.add(new Item("test", "Something Fancy", 3, "The fanciest homemade meal you've ever had", "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg"));
-        }
-    }
-
-
-    // Container Activity must implement this interface
-    public interface OnHeadlineSelectedListener {
-        public void onSellerOrderSelected(int position);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
-        try {
-            mCallback = (OnHeadlineSelectedListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnBuyerOrderSelectedListener");
-        }
-    }
-
-
-
 
 
 }

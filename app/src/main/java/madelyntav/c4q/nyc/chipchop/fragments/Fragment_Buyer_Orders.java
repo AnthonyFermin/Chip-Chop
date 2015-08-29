@@ -8,9 +8,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import madelyntav.c4q.nyc.chipchop.BuyActivity;
+import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.adapters.FoodListAdapter;
@@ -18,9 +21,11 @@ import madelyntav.c4q.nyc.chipchop.adapters.FoodListAdapter;
 
 public class Fragment_Buyer_Orders extends Fragment {
 
-    OnBuyerOrderSelectedListener mCallback;
     private ArrayList<Item> foodItems;
     private RecyclerView foodList;
+
+    private DBHelper dbHelper;
+    private BuyActivity activity;
 
     public static final String TAG = "fragment_buyer_orders";
 
@@ -30,10 +35,18 @@ public class Fragment_Buyer_Orders extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_buyer__orders, container, false);
+        activity = (BuyActivity) getActivity();
+        dbHelper = DBHelper.getDbHelper(activity);
 
-
-        foodItems = new ArrayList<>();
-        populateItems();
+        //TODO: Madelyn missing method to retrieve a list of a user's orders - Can you possibly add the orderID when you send it down too?
+        // TODO: Madelyn Also need a method to retrieve a specific order's list of items ordered so we can display a receipt when the user clicks an order.
+        // TODO: Madelyn will need the same methods for Active Sellers and Sellers that are not currently cooking so that we can display their orders too
+        try {
+            foodItems = activity.getCurrentOrder().getItemsOrdered();
+        }catch(NullPointerException e){
+            foodItems = new ArrayList<>();
+            Toast.makeText(activity,"No orders found",Toast.LENGTH_SHORT).show();
+        }
 
         foodList = (RecyclerView) root.findViewById(R.id.buyers_orders_list);
         foodList.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -43,33 +56,6 @@ public class Fragment_Buyer_Orders extends Fragment {
 
         return root;
     }
-
-    //test method to populate RecyclerView
-    private void populateItems(){
-        for(int i = 0; i < 10; i++) {
-            //foodItems.add(new Item("test", "Something Fancy", 3, "The fanciest homemade meal you've ever had", "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg"));
-        }
-    }
-
-    // Container Activity must implement this interface
-    public interface OnBuyerOrderSelectedListener {
-        public void onArticleSelected(int position);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
-        try {
-            mCallback = (OnBuyerOrderSelectedListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnBuyerOrderSelectedListener");
-        }
-    }
-
 
 
 

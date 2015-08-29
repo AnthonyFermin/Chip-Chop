@@ -15,8 +15,6 @@
         android:padding="5dp"
         >
 
-
-
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/food_image"
             android:layout_width="90dp"
@@ -52,6 +50,13 @@
                 android:layout_toEndOf="@id/food_image"
                 android:layout_below="@+id/food_name_tv"
                 android:id="@+id/food_description_tv"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/food_quantity_tv"
+                android:layout_below="@+id/food_price_tv"
+                android:layout_alignParentEnd="true"/>
 
         <ImageView
             android:layout_width="20dp"

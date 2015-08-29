@@ -36,7 +36,12 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 
 
+import java.util.ArrayList;
+
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Checkout;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
@@ -44,7 +49,7 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Orders;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_ProfileSettings;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_ViewCart;
 
-public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Orders.OnBuyerOrderSelectedListener, Fragment_Buyer_Map.OnBuyerMapFragmentInteractionListener {
+public class BuyActivity extends AppCompatActivity {
 
     private FrameLayout frameLayout;
     private LinearLayout DrawerLinear;
@@ -66,7 +71,9 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
     private DBCallback emptyCallback;
 
     private String currentFragment;
-
+    private Seller sellerToView = null;
+    private Item itemToCart = null;
+    private Order currentOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,13 +108,10 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
     }
 
     private void selectFragmentToLoad(Bundle savedInstanceState) {
-        SharedPreferences sharedPreferences1 = getSharedPreferences(Fragment_Buyer_ViewCart.FROM_CHECKOUT, MODE_PRIVATE);
 
-        if(sharedPreferences1.getBoolean(Fragment_Buyer_ViewCart.FROM_CHECKOUT, false)) {
+        //if items are still in cart go to checkout
+        if(currentOrder != null && currentOrder.getItemsOrdered() != null) {
             replaceFragment(new Fragment_Buyer_Checkout());
-            SharedPreferences.Editor editor = sharedPreferences1.edit();
-            editor.putBoolean(Fragment_Buyer_ViewCart.FROM_CHECKOUT, false);
-            editor.commit();
         } else if (savedInstanceState == null) {
             selectItem(0);
         }
@@ -223,16 +227,6 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
                 }
             });
         }
-    }
-
-    // TODO: PUT CODE FOR INTERACTION WITH LIST HERE !!
-    @Override
-    public void onArticleSelected(int position) {
-
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
 
     }
 
@@ -280,16 +274,6 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
             mDrawerLayout.closeDrawer(DrawerLinear);
         }
 
-
-    @Override
-    protected void onStop () {
-        SharedPreferences sharedPreferences = getSharedPreferences(Fragment_Buyer_ViewCart.FROM_CHECKOUT, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear();
-        editor.commit();
-        super.onStop();
-    }
-
     @Override
     public void onConfigurationChanged (Configuration newConfig){
         super.onConfigurationChanged(newConfig);
@@ -336,15 +320,6 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
 
     }
 
-    @Override
-    protected void onDestroy() {
-        SharedPreferences sharedPreferences = getSharedPreferences(Fragment_Buyer_ViewCart.FROM_CHECKOUT, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear();
-        editor.commit();
-        super.onDestroy();
-    }
-
     private void load(){
         new AsyncTask<Void, Void, Void>() {
             @Override
@@ -388,6 +363,9 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         }.execute();
     }
 
+
+    // used for communication between fragments
+
     public String getCurrentFragment() {
         return currentFragment;
     }
@@ -396,5 +374,27 @@ public class BuyActivity extends AppCompatActivity implements Fragment_Buyer_Ord
         this.currentFragment = currentFragment;
     }
 
+    public Seller getSellerToView() {
+        return sellerToView;
+    }
 
+    public void setSellerToView(Seller sellerToView) {
+        this.sellerToView = sellerToView;
+    }
+
+    public Item getItemToCart() {
+        return itemToCart;
+    }
+
+    public void setItemToCart(Item itemToCart) {
+        this.itemToCart = itemToCart;
+    }
+
+    public Order getCurrentOrder() {
+        return currentOrder;
+    }
+
+    public void setCurrentOrder(Order currentOrder) {
+        this.currentOrder = currentOrder;
+    }
 }

@@ -1,6 +1,9 @@
 package madelyntav.c4q.nyc.chipchop.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,17 +44,24 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private class SellersViewHolder extends RecyclerView.ViewHolder {
 
         RelativeLayout container;
-        ImageView image;
         TextView name;
         TextView description;
 
         public SellersViewHolder(View itemView) {
             super(itemView);
 
-            container = (RelativeLayout) itemView.findViewById(R.id.card_view);
-            image = (ImageView) itemView.findViewById(R.id.profile_image);
-            name = (TextView) itemView.findViewById(R.id.seller_name);
-            description = (TextView) itemView.findViewById(R.id.seller_description);
+            container = (RelativeLayout) itemView.findViewById(R.id.container);
+            name = (TextView) itemView.findViewById(R.id.store_name);
+            description = (TextView) itemView.findViewById(R.id.store_description);
+
+            container.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    BuyActivity activity = (BuyActivity) context;
+                    activity.setSellerToView(sellers.get(getAdapterPosition()));
+                    activity.replaceFragment(new Fragment_Buyer_SellerProfile());
+                }
+            });
 
         }
 
@@ -67,20 +78,28 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
 
         Seller seller = sellers.get(position);
-        SellersViewHolder vh = (SellersViewHolder) viewHolder;
-        vh.name.setText(seller.getName());
+        final SellersViewHolder vh = (SellersViewHolder) viewHolder;
+        vh.name.setText(seller.getStoreName());
         //TODO: CHANGE TO DESCRIPTION !!
-        vh.description.setText("I LOVE TO COOK !");
-//        Picasso.with(context).load(R.drawable.food2).fit().into(vh.image);
-
-        vh.container.setOnClickListener(new View.OnClickListener() {
+        vh.description.setText(seller.getDescription());
+        Target target = new Target() {
             @Override
-            public void onClick(View view) {
-                BuyActivity activity = (BuyActivity) context;
-                activity.replaceFragment(new Fragment_Buyer_SellerProfile());
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                BitmapDrawable bd = new BitmapDrawable(context.getResources(), bitmap);
+                vh.container.setBackground(bd);
             }
-        });
 
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        };
+        Picasso.with(context).load(R.drawable.food2).into(target);
 
         setAnimation(vh.container, position);
 

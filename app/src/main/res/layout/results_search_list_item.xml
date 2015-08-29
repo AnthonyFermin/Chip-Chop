@@ -2,9 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:id="@+id/card_view"
-        android:padding="10dp"
-        android:background="@drawable/food2">
+        android:id="@+id/container"
+        android:padding="10dp">
 
        <LinearLayout
            android:layout_width="match_parent"
@@ -13,7 +12,7 @@
            android:orientation="vertical">
 
         <TextView
-            android:id="@+id/seller_name"
+            android:id="@+id/store_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="bottom|start"
@@ -22,7 +21,7 @@
             android:textSize="25sp" />
 
         <TextView
-            android:id="@+id/seller_description"
+            android:id="@+id/store_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#FFF"

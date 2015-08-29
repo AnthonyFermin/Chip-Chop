@@ -645,7 +645,7 @@ public class DBHelper extends Firebase {
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("Number2", dataSnapshot.getChildrenCount() + "");
+                Log.d("ACTIVE SELLER SIZE", dataSnapshot.getChildrenCount() + "");
 
                 sizeofAddDBList = dataSnapshot.getChildrenCount();
 
@@ -664,6 +664,7 @@ public class DBHelper extends Firebase {
 
         if (allActiveSellers.size() == sizeofAddDBList) {
             updateAllSellersList(dbCallback);
+            return allActiveSellers;
         }
 
         return allActiveSellers;

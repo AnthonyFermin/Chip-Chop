@@ -1,25 +1,32 @@
 package madelyntav.c4q.nyc.chipchop.fragments;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import madelyntav.c4q.nyc.chipchop.BuyActivity;
+import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
 import madelyntav.c4q.nyc.chipchop.R;
-import madelyntav.c4q.nyc.chipchop.SignupActivity1;
 import madelyntav.c4q.nyc.chipchop.adapters.FoodListAdapter;
 
 
@@ -31,6 +38,19 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
     private ArrayList<Item> foodItems;
     private RecyclerView foodList;
 
+    RelativeLayout loadingPanel;
+    LinearLayout containingView;
+
+    CircleImageView storeImage;
+    TextView storeName,storeDescription;
+
+    private DBHelper dbHelper;
+    private Seller seller;
+    private BuyActivity activity;
+    private DBCallback emptyCallback;
+    private Order order;
+    private ArrayList<Item> cartItems;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,19 +58,63 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_buyer_seller_profile, container, false);
 
+        initializeData();
+        bindViews(root);
+        initializeViews();
 
-        foodItems = new ArrayList<>();
-        populateItems();
+        setListeners();
 
-        foodList = (RecyclerView) root.findViewById(R.id.seller_items_list);
-        foodList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        load();
 
-        FoodListAdapter foodListAdapter = new FoodListAdapter(getActivity(),foodItems);
-        foodList.setAdapter(foodListAdapter);
+        return root;
+    }
 
+    private void initializeViews() {
+        Picasso.with(activity).load(seller.getPhotoLink()).fit().into(storeImage);
+        storeName.setText(seller.getStoreName());
+        storeDescription.setText(seller.getDescription());
+    }
 
+    private void load() {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
 
-        cartButton = (android.support.design.widget.FloatingActionButton) root.findViewById(R.id.viewCartButton);
+                int i = 0;
+                do{
+                    Log.d("Buyer - load seller", "Attempt #" + i);
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if (i > 10){
+                        Log.d("Buyer - load seller", "DIDN'T LOAD");
+                        break;
+                    }
+                    i++;
+                }while(foodItems == null);
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+
+                if(foodItems != null) {
+                    setAdapter();
+                }else{
+                    Toast.makeText(activity,"Seller food items not found",Toast.LENGTH_SHORT).show();
+                }
+                loadingPanel.setVisibility(View.GONE);
+                containingView.setVisibility(View.VISIBLE);
+
+            }
+        }.execute();
+    }
+
+    private void setListeners() {
         cartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,21 +122,50 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
                 activity.replaceFragment(new Fragment_Buyer_ViewCart());
             }
         });
-
-        return root;
     }
 
-    //test method to populate RecyclerView
-    private void populateItems(){
-        for(int i = 0; i < 10; i++) {
-
-//            foodItems.add(new Item("test", "Something Fancy", 3, "The fanciest homemade meal you've ever had", "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg"));
-        }
+    private void setAdapter() {
+        foodList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        FoodListAdapter foodListAdapter = new FoodListAdapter(getActivity(),foodItems);
+        foodList.setAdapter(foodListAdapter);
     }
 
-    public interface OnSellerProfileFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+    private void bindViews(View root) {
+        loadingPanel = (RelativeLayout) root.findViewById(R.id.loadingPanel);
+        containingView = (LinearLayout) root.findViewById(R.id.container);
+        containingView.setVisibility(View.INVISIBLE);
+
+        cartButton = (android.support.design.widget.FloatingActionButton) root.findViewById(R.id.viewCartButton);
+        foodList = (RecyclerView) root.findViewById(R.id.seller_items_list);
+        storeImage = (CircleImageView) root.findViewById(R.id.profile_image);
+        storeName = (TextView) root.findViewById(R.id.seller_name);
+        storeDescription = (TextView) root.findViewById(R.id.store_description);
+    }
+
+    private void initializeData() {
+        activity = (BuyActivity) getActivity();
+        dbHelper = DBHelper.getDbHelper(activity);
+
+        emptyCallback = new DBCallback() {
+            @Override
+            public void runOnSuccess() {
+
+            }
+
+            @Override
+            public void runOnFail() {
+
+            }
+        };
+
+        seller = activity.getSellerToView();
+        seller.setUID("113"); // was originally empty when retrieved from DB
+        //TODO: Madelyn: supposed to be seller.getUID() instead of 113, the Seller object does not have a UID when retrieved from DB
+        foodItems = dbHelper.getSellersOnSaleItems(seller.getUID(), emptyCallback);
+
+        order = new Order(dbHelper.getUserID(),seller.getUID());
+        cartItems = order.getItemsOrdered();
+        activity.setCurrentOrder(order);
     }
 
 }

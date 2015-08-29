@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.SignupActivity1;
 import madelyntav.c4q.nyc.chipchop.adapters.CartListAdapter;
@@ -32,18 +33,19 @@ public class Fragment_Buyer_ViewCart extends Fragment {
     private ArrayList<Item> cartItems;
     private RecyclerView cartList;
     private DBHelper dbHelper;
-    public static final String FROM_CHECKOUT = "FromCheckout";
+    private Order order;
+    private BuyActivity activity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_buyer__view_cart, container, false);
 
-        dbHelper = DBHelper.getDbHelper(getActivity());
+        activity = (BuyActivity) getActivity();
+        dbHelper = DBHelper.getDbHelper(activity);
 
-
-        cartItems = new ArrayList<>();
-        populateItems();
+        order = activity.getCurrentOrder();
+        cartItems = order.getItemsOrdered();
 
         cartList = (RecyclerView) root.findViewById(R.id.cart_list);
         cartList.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -57,12 +59,8 @@ public class Fragment_Buyer_ViewCart extends Fragment {
             public void onClick(View view) {
 
                 if (dbHelper.userIsLoggedIn()) {
-                    ((BuyActivity) getActivity()).replaceFragment(new Fragment_Buyer_Checkout());
+                    activity.replaceFragment(new Fragment_Buyer_Checkout());
                 } else {
-                    SharedPreferences preferences = getActivity().getSharedPreferences(FROM_CHECKOUT, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putBoolean(FROM_CHECKOUT, true);
-                    editor.apply();
                     Intent signupIntent = new Intent(getActivity(), SignupActivity1.class);
                     startActivity(signupIntent);
                 }
@@ -70,17 +68,9 @@ public class Fragment_Buyer_ViewCart extends Fragment {
         });
 
 
-
         return root;
 
     }
 
-
-    //test method to populate RecyclerView
-    private void populateItems(){
-        for(int i = 0; i < 10; i++) {
-            //cartItems.add(new Item("test", "Something Fancy", 3, "The fanciest homemade meal you've ever had", "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg"));
-        }
-    }
 
 }

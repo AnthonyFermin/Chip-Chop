@@ -11,7 +11,8 @@
         style="@style/text_design"
         android:padding="20dp"
         android:textSize="30sp"
-        android:gravity="center_horizontal"/>
+        android:gravity="center_horizontal"
+        android:id="@+id/dish_name"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +24,6 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center"
-            android:src="@drawable/food"
             app:border_color="#FFF"
             app:border_width="2dp" />
         <LinearLayout
@@ -62,12 +62,13 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION"/>
+        android:text=""
+        android:id="@+id/food_description_tv"/>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="SAVE"
+        android:text="Add to Cart"
         android:id="@+id/add_cart_button"
         style="@style/button_design"/>
 

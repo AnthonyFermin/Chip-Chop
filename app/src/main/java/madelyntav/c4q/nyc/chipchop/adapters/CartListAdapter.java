@@ -19,6 +19,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.FoodItemSelectDialog;
 import madelyntav.c4q.nyc.chipchop.R;
@@ -46,6 +47,7 @@ public class CartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TextView name;
         TextView price;
         TextView quantity;
+        TextView description;
 
 
         public CheckoutViewHolder(View itemView) {
@@ -56,6 +58,7 @@ public class CartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             name = (TextView) itemView.findViewById(R.id.food_name_tv);
             price = (TextView) itemView.findViewById(R.id.food_price_tv);
             quantity = (TextView) itemView.findViewById(R.id.food_quantity_tv);
+            description = (TextView) itemView.findViewById(R.id.food_description_tv);
             removeItemButton = (Button) itemView.findViewById(R.id.remove_item_button);
             removeItemButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -80,25 +83,15 @@ public class CartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         final Item checkoutItem = cartItems.get(position);
         CheckoutViewHolder vh = (CheckoutViewHolder) viewHolder;
+        int amtWanted = checkoutItem.getQuantityWanted();
+
         vh.name.setText(checkoutItem.getNameOfItem());
-        vh.price.setText(checkoutItem.getPrice() + "");
-        vh.quantity.setText(checkoutItem.getQuantity());
+        vh.price.setText((checkoutItem.getPrice() * amtWanted) + "");
+        vh.quantity.setText(checkoutItem.getQuantityWanted() + "");
+        vh.description.setText(checkoutItem.getDescriptionOfItem());
         Picasso.with(context).load(checkoutItem.getImageLink()).fit().into(vh.image);
 
-
-        vh.container.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentActivity activity = (FragmentActivity) (context);
-                FragmentManager fm = activity.getSupportFragmentManager();
-                FoodItemSelectDialog alertDialog = new FoodItemSelectDialog();
-                alertDialog.show(fm, "fragment_alert");
-            }
-        });
-
-
         setAnimation(vh.container, position);
-
 
     }
 

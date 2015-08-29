@@ -37,6 +37,12 @@ public class Order {
         this.itemsOrdered=itemsOrdered;
     }
 
+    public Order(String buyerID, String sellerID){
+        this.buyerID = buyerID;
+        this.sellerID=sellerID;
+        this.itemsOrdered= new ArrayList<>();
+    }
+
     public String getOrderID() {
         return orderID;
     }

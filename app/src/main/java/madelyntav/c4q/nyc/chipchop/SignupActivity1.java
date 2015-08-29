@@ -203,7 +203,6 @@ public class SignupActivity1 extends AppCompatActivity {
         }
         // if changing configurations, stop tracking firebase session.
 //        dbHelper.removeAuthStateListener(mAuthStateListener);
-        mFacebookAccessTokenTracker.stopTracking();
     }
 
             private void checkRememberMe() {

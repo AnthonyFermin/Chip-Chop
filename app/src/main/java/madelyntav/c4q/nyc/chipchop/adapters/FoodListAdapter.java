@@ -17,6 +17,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.FoodItemSelectDialog;
 import madelyntav.c4q.nyc.chipchop.R;
@@ -54,6 +55,17 @@ public class FoodListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             price = (TextView) itemView.findViewById(R.id.food_price_tv);
             quantity = (TextView) itemView.findViewById(R.id.food_quantity_tv);
 
+            container.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    BuyActivity activity = (BuyActivity)(context);
+                    FragmentManager fm = activity.getSupportFragmentManager();
+                    activity.setItemToCart(foodItems.get(getAdapterPosition()));
+                    FoodItemSelectDialog alertDialog = new FoodItemSelectDialog();
+                    alertDialog.show(fm, "fragment_alert");
+                }
+            });
+
         }
     }
 
@@ -72,19 +84,8 @@ public class FoodListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         vh.name.setText(foodItem.getNameOfItem());
         vh.description.setText(foodItem.getDescriptionOfItem());
         vh.price.setText(foodItem.getPrice() + "");
-        vh.quantity.setText(foodItem.getQuantity());
+        vh.quantity.setText(foodItem.getQuantity() + "");
         Picasso.with(context).load(foodItem.getImageLink()).fit().into(vh.image);
-
-
-        vh.container.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentActivity activity = (FragmentActivity)(context);
-                FragmentManager fm = activity.getSupportFragmentManager();
-                FoodItemSelectDialog alertDialog = new FoodItemSelectDialog();
-                alertDialog.show(fm, "fragment_alert");
-            }
-        });
 
         setAnimation(vh.container, position);
 

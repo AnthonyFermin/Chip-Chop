@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
@@ -14,9 +15,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -24,8 +23,9 @@ import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -49,12 +49,16 @@ import java.util.ArrayList;
 
 import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBCallback;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.R;
-import madelyntav.c4q.nyc.chipchop.adapters.SellerItemsAdapter;
 import madelyntav.c4q.nyc.chipchop.adapters.SellerListAdapter;
+
+import static android.content.res.Resources.*;
 
 
 public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -65,7 +69,6 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     public final static String PREF_NAME = "Settings";
     public static final String LASTLONGITUDE = "LastLongitude";
     public static final String LASTLATITUDE = "LastLatitude";
-    public Button signupButton;
     public ArrayList<madelyntav.c4q.nyc.chipchop.DBObjects.Address> addressList;
     private LocationRequest mLocationRequest;
     private GoogleMap map;
@@ -77,78 +80,45 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     private GoogleApiClient googleApiClient;
     private DBHelper dbHelper;
     private ArrayList<Seller> sellers;
-    private RecyclerView sellersList;
+    private RecyclerView itemsRView;
     private View root;
-    ArrayList<User> userList;
-    User user;
-    User user1;
-    ArrayList<LatLng> latsList;
 
-    DBCallback emptyCallback;
+    private DBCallback emptyCallback;
 
     public static final String TAG = "fragment_buyer_map";
 
-    BuyActivity activity;
+    private BuyActivity activity;
+    private AsyncTask<Void, Void, Void> addSellerMarkers;
+    private RelativeLayout loadingPanel;
+    private LinearLayout containingView;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        if (root != null) {
-            ViewGroup parent = (ViewGroup) root.getParent();
-            if (parent != null)
-                parent.removeView(root);
-        }
-        try {
-            root = inflater.inflate(R.layout.fragment_buyer_map, container, false);
-        } catch (InflateException e) {
-        /* map is already there, just return view as it is */
-        }
+        initializeData(inflater, container);
+        bindViews();
+        initializeMap();
 
-        dbHelper = DBHelper.getDbHelper(getActivity());
+        initializeListPanel();
 
-        activity = (BuyActivity) getActivity();
+        //addSellerMarkers() is in onResume()
 
-        activity.setCurrentFragment(Fragment_Buyer_Map.TAG);
+        return root;
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        addSellerMarkers();
 
-        emptyCallback = new DBCallback() {
-            @Override
-            public void runOnSuccess() {
-
-            }
-
-            @Override
-            public void runOnFail() {
-
-            }
-        };
+        // clear cart when entering this fragment
+        activity.setCurrentOrder(new Order());
+        activity.setItemToCart(null);
+    }
 
 
-        latsList= new ArrayList<>();
-        addressList=new ArrayList<>();
-        userList= new ArrayList<>();
-        signupButton= (Button) root.findViewById(R.id.signInButton);
-
-        // Connect to Geolocation API to make current location request
-        locationServiceIsAvailable();
-        connectGoogleApiClient();
-        mLocationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(10000)        // 10 seconds, in milliseconds
-                .setFastestInterval(5000); // 1 second, in milliseconds
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-        map = mapFragment.getMap();
-
-        sellers = new ArrayList<>();
-        populateItems();
-
-        arrowImage = (ImageView) root.findViewById(R.id.arrow_image);
-
-        slidingPanel = (SlidingUpPanelLayout) root.findViewById(R.id.slidinglayout);
+    private void initializeListPanel() {
         slidingPanel.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelSlide(View view, float v) {
@@ -177,28 +147,69 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             }
         });
 
-        sellersList = (RecyclerView) root.findViewById(R.id.buyers_orders_list);
-        sellersList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        itemsRView.setLayoutManager(new LinearLayoutManager(getActivity()));
 //        sellersList.addItemDecoration(new MarginDe(this));
-        sellersList.setHasFixedSize(true);
+        itemsRView.setHasFixedSize(true);
 //        sellersList.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 //        sellersList.setAdapter(new NumberedAdapter(30));
 
-        SellerListAdapter sellersListAdapter = new SellerListAdapter(getActivity(), sellers);
-        sellersList.setAdapter(sellersListAdapter);
-
-        //getListForMarkers.execute();
-
-        return root;
     }
 
-    //test method to populate RecyclerView
-    private void populateItems(){
-        for(int i = 0; i < 10; i++) {
+    private void initializeMap() {
+        // Connect to Geolocation API to make current location request
+        locationServiceIsAvailable();
+        connectGoogleApiClient();
+        mLocationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(10000)        // 10 seconds, in milliseconds
+                .setFastestInterval(5000); // 1 second, in milliseconds
 
-            sellers.add(new Seller("test", "Github Cat", "Github Cat", new madelyntav.c4q.nyc.chipchop.DBObjects.Address(), "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg", "ajs;djf;d"));
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+        map = mapFragment.getMap();
+    }
 
+    private void bindViews() {
+        arrowImage = (ImageView) root.findViewById(R.id.arrow_image);
+        slidingPanel = (SlidingUpPanelLayout) root.findViewById(R.id.slidinglayout);
+        itemsRView = (RecyclerView) root.findViewById(R.id.buyers_orders_list);
+
+    }
+
+    private void initializeData(LayoutInflater inflater, ViewGroup container) {
+
+        if (root != null) {
+            ViewGroup parent = (ViewGroup) root.getParent();
+            if (parent != null)
+                parent.removeView(root);
         }
+        try {
+            root = inflater.inflate(R.layout.fragment_buyer_map, container, false);
+        } catch (InflateException e) {
+        /* map is already there, just return view as it is */
+        }
+
+        dbHelper = DBHelper.getDbHelper(getActivity());
+
+        activity = (BuyActivity) getActivity();
+
+        activity.setCurrentFragment(Fragment_Buyer_Map.TAG);
+
+        emptyCallback = new DBCallback() {
+            @Override
+            public void runOnSuccess() {
+
+            }
+
+            @Override
+            public void runOnFail() {
+
+            }
+        };
+
+
+        sellers = dbHelper.getAllActiveSellers(emptyCallback);
     }
 
 
@@ -260,7 +271,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
                 if (location != null)
                     handleNewLocation(location);
             }
-        }, 2000);
+        }, 3000);
     }
 
     @Override
@@ -323,66 +334,88 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         Log.d("Map", "Connected to Google API Client");
     }
 
+    public void addWithinRangeMarkersToMap() {
+        for (Seller seller : sellers) {
 
-    public interface OnBuyerMapFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+            double lat = 0;
+            double lng = 0;
+
+            double gLat = 0;
+            double gLng = 0;
+
+            String userName = "Local Food";
+
+            try {
+                String uid = seller.getUID();
+                Log.d("SELLER UID", uid + "");
+                userName = seller.getStoreName();
+                gLat = Double.parseDouble(seller.getLatitude());
+                gLng = Double.parseDouble(seller.getLongitude());
+
+                lat = location.getLatitude();
+                lng = location.getLongitude();
+            } catch (NullPointerException e) {
+                lat = 40.737257;
+                lng = -73.855279;
+            }
+
+            Circle circle = map.addCircle(new CircleOptions()
+                    .center(new LatLng(lat, lng))
+                    .radius(100000)
+                    .strokeColor(Color.RED));
+
+            float[] distance = new float[sellers.size()];
+
+            Location.distanceBetween(lat, lng,
+                    gLat, gLng, distance);
+
+            if (distance[0] < circle.getRadius()) {
+
+                map.addMarker(new MarkerOptions()
+                        .position(new LatLng(gLat, gLng))
+                        .title(userName));
+
+            }
+        }
     }
 
-    public void addWithinRangeMarkersToMap() {
-                for (madelyntav.c4q.nyc.chipchop.DBObjects.Address address : addressList) {
+    private void addSellerMarkers() {
 
-                    String userName= address.getName();
-                    double gLat = address.getLatitude();
-                    double gLng = address.getLongitude();
+        // Task to get LatLng List and populate markers when done
+        addSellerMarkers = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground (Void...voids){
 
-                    double lat = 40.7484;
-                    double lng = -73.9857;
-
-                    Circle circle = map.addCircle(new CircleOptions()
-                            .center(new LatLng(lat, lng))
-                            .radius(100000)
-                            .strokeColor(Color.RED));
-
-                    float[] distance = new float[addressList.size()];
-
-                    Location.distanceBetween(lat, lng,
-                            gLat, gLng, distance);
-
-                    if (distance[0] < circle.getRadius()) {
-
-                        map.addMarker(new MarkerOptions()
-                                .position(new LatLng(gLat, gLng))
-                                .title(userName));
-
-                    } else {
-
+                int i = 0;
+                do {
+                    // thread cannot continue until dbHelper.getUserListLatLng returns an ArrayList
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
+                    if (sellers.size() != 0)
+                        break;
+
+                    i++;
+                } while (i < 10);
+
+                //create markers list by sorting throught latsList
+                return null;
+            }
+            @Override
+            protected void onPostExecute (Void aVoid){
+                super.onPostExecute(aVoid);
+                if (sellers == null) {
+                    Toast.makeText(activity, "No sellers found in area", Toast.LENGTH_SHORT).show();
+                } else {
+                    SellerListAdapter sellersListAdapter = new SellerListAdapter(getActivity(), sellers);
+                    itemsRView.setAdapter(sellersListAdapter);
+                    addWithinRangeMarkersToMap();
                 }
             }
-
-    // Task to get LatLng List and populate markers when done
-    AsyncTask<Void, Void, Void> getListForMarkers = new AsyncTask<Void, Void, Void>() {
-        @Override
-        protected Void doInBackground(Void... voids) {
-            dbHelper.getAllActiveSellers(emptyCallback);
-
-            while(sellers.size()==0){
-                // thread cannot continue until dbHelper.getUserListLatLng returns an ArrayList
-                Log.d("LATSLIST", addressList.toString());
-
-                sellers.addAll(dbHelper.getAllActiveSellers(emptyCallback));
-            }
-            //create markers list by sorting throught latsList
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            Log.d("LATSLIST", addressList.toString());
-            addWithinRangeMarkersToMap();
-        }
-    };
+        }.execute();
+}
 
     @Override
     public void onDetach() {
@@ -390,5 +423,9 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         super.onDetach();
     }
 
-
+    @Override
+    public void onPause() {
+        addSellerMarkers.cancel(true);
+        super.onPause();
+    }
 }

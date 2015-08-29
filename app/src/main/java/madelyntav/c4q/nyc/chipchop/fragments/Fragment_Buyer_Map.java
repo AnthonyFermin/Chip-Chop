@@ -12,16 +12,20 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -39,6 +43,7 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
 
@@ -54,6 +59,8 @@ import madelyntav.c4q.nyc.chipchop.adapters.SellerListAdapter;
 
 public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
+    ImageView arrowImage;
+    SlidingUpPanelLayout slidingPanel;
     public final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     public final static String PREF_NAME = "Settings";
     public static final String LASTLONGITUDE = "LastLongitude";
@@ -84,11 +91,20 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     BuyActivity activity;
 
 
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        root = inflater.inflate(R.layout.fragment_buyer_map, container, false);
+        if (root != null) {
+            ViewGroup parent = (ViewGroup) root.getParent();
+            if (parent != null)
+                parent.removeView(root);
+        }
+        try {
+            root = inflater.inflate(R.layout.fragment_buyer_map, container, false);
+        } catch (InflateException e) {
+        /* map is already there, just return view as it is */
+        }
+
         dbHelper = DBHelper.getDbHelper(getActivity());
 
         activity = (BuyActivity) getActivity();
@@ -107,6 +123,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
             }
         };
+
 
         latsList= new ArrayList<>();
         addressList=new ArrayList<>();
@@ -129,9 +146,43 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         sellers = new ArrayList<>();
         populateItems();
 
+        arrowImage = (ImageView) root.findViewById(R.id.arrow_image);
+
+        slidingPanel = (SlidingUpPanelLayout) root.findViewById(R.id.slidinglayout);
+        slidingPanel.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View view, float v) {
+
+            }
+
+            @Override
+            public void onPanelCollapsed(View view) {
+                arrowImage.setImageDrawable(getResources().getDrawable(R.drawable.up));
+
+            }
+
+            @Override
+            public void onPanelExpanded(View view) {
+                arrowImage.setImageDrawable(getResources().getDrawable(R.drawable.down));
+            }
+
+            @Override
+            public void onPanelAnchored(View view) {
+
+            }
+
+            @Override
+            public void onPanelHidden(View view) {
+
+            }
+        });
 
         sellersList = (RecyclerView) root.findViewById(R.id.buyers_orders_list);
         sellersList.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        sellersList.addItemDecoration(new MarginDe(this));
+        sellersList.setHasFixedSize(true);
+//        sellersList.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+//        sellersList.setAdapter(new NumberedAdapter(30));
 
         SellerListAdapter sellersListAdapter = new SellerListAdapter(getActivity(), sellers);
         sellersList.setAdapter(sellersListAdapter);
@@ -203,8 +254,13 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         googleMap.getUiSettings().setRotateGesturesEnabled(true);
         googleMap.setMyLocationEnabled(true);
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        if(location != null)
-            handleNewLocation(location);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (location != null)
+                    handleNewLocation(location);
+            }
+        }, 2000);
     }
 
     @Override
@@ -333,4 +389,6 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         activity.setCurrentFragment("");
         super.onDetach();
     }
+
+
 }

@@ -71,7 +71,6 @@ public class SignupActivity1 extends AppCompatActivity {
         callbackManager = CallbackManager.Factory.create();
 
 
-
         emptyCallback = new DBCallback() {
             @Override
             public void runOnSuccess() {

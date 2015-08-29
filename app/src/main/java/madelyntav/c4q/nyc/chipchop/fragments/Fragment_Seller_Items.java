@@ -24,7 +24,7 @@ import madelyntav.c4q.nyc.chipchop.adapters.SellerItemsAdapter;
 
 public class Fragment_Seller_Items extends Fragment {
 
-    private Button addButton;
+    private android.support.design.widget.FloatingActionButton addButton;
     private RecyclerView foodList;
     private RelativeLayout loadingPanel;
     private LinearLayout containingView;
@@ -155,7 +155,7 @@ public class Fragment_Seller_Items extends Fragment {
         foodList = (RecyclerView) root.findViewById(R.id.seller_items_list);
 
         saveChanges = (Button) root.findViewById(R.id.save_button);
-        addButton = (Button) root.findViewById(R.id.addButton);
+        addButton = (android.support.design.widget.FloatingActionButton) root.findViewById(R.id.addButton);
 
     }
 
@@ -171,11 +171,11 @@ public class Fragment_Seller_Items extends Fragment {
                     }
                     activity.setItemsToAdd(null);
 
-//                    if (activity.isCurrentlyCooking()) {
-//                        for (Item item : sellerItems) {
-//                            dbHelper.addItemToActiveSellerProfile(item, emptyCallback);
-//                        }
-//                    }
+                    if (activity.isCurrentlyCooking()) {
+                        for (Item item : sellerItems) {
+                            dbHelper.addItemToActiveSellerProfile(item, emptyCallback);
+                        }
+                    }
 
                 }
 

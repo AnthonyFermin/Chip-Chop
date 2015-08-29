@@ -86,7 +86,6 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     public static final int RESULT_OK = -1;
     private Uri imageFileUri;
     Intent intent;
-    private boolean isNotCooking = true;
     private String stringVariable;
 
     DBCallback emptyCallback;
@@ -157,7 +156,6 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 userAddress.setLongitude(location.getLng());
                 Seller sellerTemp = new Seller(uid, user.geteMail(), user.getName(), userAddress, storeName, phoneNumber);
 
-
                 dbHelper.addSellerProfileInfoToDB(sellerTemp);
                 activity.setSeller(sellerTemp);
 
@@ -204,17 +202,15 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 super.onPostExecute(aVoid);
 
                 if(seller != null) {
-                    loadingPanel.setVisibility(View.GONE);
-                    containingView.setVisibility(View.VISIBLE);
                     setEditTexts();
                     activity.setSeller(seller);
                 }else{
                     //TODO:display cannot connect to internet error message
-                    Toast.makeText(activity,"Cannot Connect to Internet", Toast.LENGTH_SHORT).show();
-                    loadingPanel.setVisibility(View.GONE);
-                    startActivity(new Intent(activity, BuyActivity.class));
-                    activity.finish();
+                    Toast.makeText(activity,"New Seller Profile Created", Toast.LENGTH_SHORT).show();
+                    seller = new Seller(dbHelper.getUserID(),user.geteMail(),user.getName(),user.getAddress(),"",user.getPhoneNumber());
                 }
+                loadingPanel.setVisibility(View.GONE);
+                containingView.setVisibility(View.VISIBLE);
             }
         }.execute();
     }
@@ -304,16 +300,17 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
         cookingStatus = (ToggleButton) root.findViewById(R.id.cooking_status);
         cookingStatusTV = (TextView) root.findViewById(R.id.cooking_status_text);
-        
+        saveButton = (Button) root.findViewById(R.id.save_button);
+
         if(activity.isCurrentlyCooking()){
             cookingStatus.setChecked(true);
             cookingStatusTV.setVisibility(View.VISIBLE);
+            saveButton.setEnabled(false);
         }else{
             cookingStatus.setChecked(false);
             cookingStatusTV.setVisibility(View.INVISIBLE);
+            saveButton.setEnabled(true);
         }
-
-        saveButton = (Button) root.findViewById(R.id.save_button);
 
         profilePhoto = (ImageButton) root.findViewById(R.id.profile_image);
 
@@ -342,6 +339,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                             dbHelper.addItemToActiveSellerProfile(item, emptyCallback);
                         }
                         activity.setCookingStatus(true);
+                        saveButton.setEnabled(false);
                         cookingStatusTV.setVisibility(View.VISIBLE);
                         Toast.makeText(activity, "Cooking Status Active", Toast.LENGTH_SHORT).show();
                     } else {
@@ -351,7 +349,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                     }
 
                 } else {
-
+                    saveButton.setEnabled(true);
                     cookingStatusTV.setVisibility(View.INVISIBLE);
                     dbHelper.removeSellersFromActiveSellers(seller, emptyCallback);
                     activity.setCookingStatus(false);
@@ -367,8 +365,12 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 if(saveButton.getText().toString().equalsIgnoreCase("save changes")) {
                     getGeoLocation();
                 }else{
-                    saveButton.setText("Save Changes");
-                    setReadOnlyAll(false);
+                    if(activity.isCurrentlyCooking()){
+                        Toast.makeText(activity,"Cannot edit seller profile while actively cooking",Toast.LENGTH_SHORT).show();
+                    }else {
+                        saveButton.setText("Save Changes");
+                        setReadOnlyAll(false);
+                    }
                 }
             }
         });
@@ -423,7 +425,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         if(readOnly){
             view.setTextColor(Color.BLACK);
         }else{
-            view.setTextColor(Color.argb(255,0,100,255));
+            view.setTextColor(Color.parseColor("#D51F27"));
         }
     }
 

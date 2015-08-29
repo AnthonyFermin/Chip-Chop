@@ -12,7 +12,6 @@
 
 
     <!-- The navigation drawer -->
-
     <LinearLayout
         android:id="@+id/DrawerLinear"
         android:layout_width="match_parent"
@@ -39,7 +38,6 @@
             style="@style/text_design"
             android:textSize="30sp"
             android:padding="15dp"
-            android:text="NAME HERE"
             android:textStyle="bold"
             android:textColor="#E53934"
             android:gravity="center_horizontal"/>

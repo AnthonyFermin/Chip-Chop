@@ -69,6 +69,18 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     Toast.makeText(context,"Save changes to confirm deletion", Toast.LENGTH_SHORT).show();
                 }
             });
+
+            container.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Item itemToEdit = sellerItems.get(getAdapterPosition());
+
+                    SellActivity activity = (SellActivity) context;
+                    activity.setItemToEdit(itemToEdit);
+                    activity.replaceSellerFragment(new Fragment_Seller_CreateItem());
+                }
+            });
         }
 
     }
@@ -81,7 +93,7 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
 
         Item sellerItem = sellerItems.get(position);
         SellersViewHolder vh = (SellersViewHolder) viewHolder;
@@ -93,14 +105,6 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         vh.description.setText(sellerItem.getDescriptionOfItem());
         if(!sellerItem.getImageLink().isEmpty())
             Picasso.with(context).load(sellerItem.getImageLink()).fit().into(vh.image);
-
-        vh.container.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SellActivity activity = (SellActivity) context;
-                activity.replaceSellerFragment(new Fragment_Seller_CreateItem());
-            }
-        });
 
         setAnimation(vh.container, position);
 

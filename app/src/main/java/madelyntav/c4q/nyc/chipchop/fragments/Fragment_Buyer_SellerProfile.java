@@ -27,7 +27,7 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
 
     public static final String TAG = "fragment_buyer_seller_profile";
 
-    Button cartButton;
+    android.support.design.widget.FloatingActionButton cartButton;
     private ArrayList<Item> foodItems;
     private RecyclerView foodList;
 
@@ -50,7 +50,7 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
 
 
 
-        cartButton = (Button) root.findViewById(R.id.viewCartButton);
+        cartButton = (android.support.design.widget.FloatingActionButton) root.findViewById(R.id.viewCartButton);
         cartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

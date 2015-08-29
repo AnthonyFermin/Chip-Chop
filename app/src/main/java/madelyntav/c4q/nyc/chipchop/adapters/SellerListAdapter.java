@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.List;
 import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
 import madelyntav.c4q.nyc.chipchop.R;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile;
 
 /**
@@ -30,6 +32,7 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private List<Seller> sellers;
     private Context context;
     private int lastPosition = -1;
+    SellersViewHolder vh;
 
 
     public SellerListAdapter(Context context, ArrayList<Seller> sellers) {
@@ -67,20 +70,21 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
 
         Seller seller = sellers.get(position);
-        SellersViewHolder vh = (SellersViewHolder) viewHolder;
+        vh = (SellersViewHolder) viewHolder;
         vh.name.setText(seller.getName());
         //TODO: CHANGE TO DESCRIPTION !!
         vh.description.setText("I LOVE TO COOK !");
 //        Picasso.with(context).load(R.drawable.food2).fit().into(vh.image);
 
-        vh.container.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                BuyActivity activity = (BuyActivity) context;
-                activity.replaceFragment(new Fragment_Buyer_SellerProfile());
-            }
-        });
 
+                vh.container.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        BuyActivity activity = (BuyActivity) context;
+                        activity.replaceFragment(new Fragment_Buyer_SellerProfile());
+                    }
+
+                });
 
         setAnimation(vh.container, position);
 

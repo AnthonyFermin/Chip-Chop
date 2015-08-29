@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
@@ -54,7 +55,7 @@ public class SignupActivity2 extends AppCompatActivity {
 
     DBHelper dbHelper;
 
-    ImageButton profilePhoto;
+    ImageView profilePhoto;
     public static final int RESULT_OK = -1;
     private Uri imageFileUri;
     Intent intent;
@@ -93,7 +94,7 @@ public class SignupActivity2 extends AppCompatActivity {
         });
 
 
-        profilePhoto = (ImageButton) findViewById(R.id.profile_image);
+        profilePhoto = (ImageView) findViewById(R.id.profile_image);
         profilePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -502,7 +502,7 @@ public class DBHelper extends Firebase {
                         user.setUserItems(user1.userItems);
                         user.setLongitude(user1.latitude);
                         user.setLongitude(user1.longitude);
-                        Log.d("NAMEOFUSER", user.name);
+//                        Log.d("NAMEOFUSER", user.name);
                     }
                 }
             }

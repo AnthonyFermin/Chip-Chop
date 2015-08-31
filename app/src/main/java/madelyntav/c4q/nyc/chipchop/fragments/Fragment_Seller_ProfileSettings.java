@@ -25,7 +25,6 @@ import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 
-import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
@@ -35,7 +34,6 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.GeolocationAPI.Geolocation;
 import madelyntav.c4q.nyc.chipchop.GeolocationAPI.GeolocationAPI;
 import madelyntav.c4q.nyc.chipchop.GeolocationAPI.Location;
-import madelyntav.c4q.nyc.chipchop.HelperMethods;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.SellActivity;
 import retrofit.Callback;
@@ -352,7 +350,8 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                         Log.d("Seller Info", seller.getUID() + "");
                         Log.d("Seller Info", seller.getName() + "");
                         Log.d("Seller Info", seller.getStoreName() + "");
-                        dbHelper.addActiveSellerToTable(seller);
+                        dbHelper.sendSellerToActiveSellerTable(seller);
+
                         for(Item item: sellerItems) {
                             item.setSellerID(seller.getUID());
                             dbHelper.addItemToActiveSellerProfile(item, emptyCallback);

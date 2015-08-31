@@ -158,7 +158,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 userAddress.setLatitude(location.getLat());
                 userAddress.setLongitude(location.getLng());
                 seller = new Seller(uid, user.geteMail(), user.getName(), userAddress, storeName, phoneNumber);
-
+                seller.setIsCooking(false);
                 dbHelper.addSellerProfileInfoToDB(seller);
                 activity.setSeller(seller);
 
@@ -209,6 +209,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                     Log.d("SELLER INFO", "UID: " + seller.getUID());
                     Log.d("SELLER INFO", "Name: " + seller.getName());
                     Log.d("SELLER INFO", "Store Name: " + seller.getStoreName());
+                    Log.d("SELLER INFO", "isCooking: " + seller.getIsCooking());
                     setEditTexts();
                 }else{
                     //TODO:display cannot connect to internet error message
@@ -225,6 +226,17 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     }
 
     private void setEditTexts(){
+        activity.setCookingStatus(seller.getIsCooking());
+        if(activity.isCurrentlyCooking()){
+            cookingStatus.setChecked(true);
+            cookingStatusTV.setVisibility(View.VISIBLE);
+            saveButton.setEnabled(false);
+        }else{
+            cookingStatus.setChecked(false);
+            cookingStatusTV.setVisibility(View.INVISIBLE);
+            saveButton.setEnabled(true);
+        }
+
         Address address = user.getAddress();
         sellerNameTV.setText(user.getName());
         storeNameET.setText(seller.getStoreName());
@@ -350,7 +362,10 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                         Log.d("Seller Info", seller.getUID() + "");
                         Log.d("Seller Info", seller.getName() + "");
                         Log.d("Seller Info", seller.getStoreName() + "");
+                        seller.setIsCooking(true);
+                        activity.setSeller(seller);
                         dbHelper.sendSellerToActiveSellerTable(seller);
+                        dbHelper.addSellerProfileInfoToDB(seller);
 
                         activity.setCookingStatus(true);
                         saveButton.setEnabled(false);
@@ -367,6 +382,9 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                     cookingStatusTV.setVisibility(View.INVISIBLE);
                     dbHelper.removeSellersFromActiveSellers(seller, emptyCallback);
                     activity.setCookingStatus(false);
+                    seller.setIsCooking(false);
+                    activity.setSeller(seller);
+                    dbHelper.addSellerProfileInfoToDB(seller);
                     Toast.makeText(activity,"Cooking Status Deactivated", Toast.LENGTH_SHORT).show();
                 }
             }

@@ -626,7 +626,7 @@ public class DBHelper extends Firebase {
         Firebase fRef = new Firebase(URL + "ActiveSellers/");
         sellerId = seller.getUID();
 
-        fRef.child(sellerId).push();
+        fRef.child(sellerId).child("UID").setValue(sellerId);
         fRef.child(sellerId).child(sName).setValue(seller.getName());
         fRef.child(sellerId).child(sEmailAddress).setValue(seller.geteMail());
         fRef.child(sellerId).child(sPhoneNumber).setValue(seller.getPhoneNumber());

@@ -20,8 +20,10 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 
+import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.R;
+import madelyntav.c4q.nyc.chipchop.SellActivity;
 import madelyntav.c4q.nyc.chipchop.adapters.CheckoutListAdapter;
 
 /**
@@ -33,9 +35,14 @@ public class Fragment_Seller_OrderDetails extends Fragment {
     private ArrayList<Item> foodItems;
     private RecyclerView foodList;
 
+    public static final String TAG = "fragment_seller_order_details";
+
+
     public static NotificationManager notificationManager;
     public static Notification notification;
     public static final String NOTIFICATION_ACTION = "ahhhlvin.c4q.nyc.notification";
+    private SellActivity activity;
+    private DBHelper dbHelper;
 
 
 
@@ -46,6 +53,9 @@ public class Fragment_Seller_OrderDetails extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_seller_orderdetail, container, false);
 
+        activity = (SellActivity) getActivity();
+        dbHelper = DBHelper.getDbHelper(activity);
+        activity.setCurrentFragment(TAG);
 
         foodItems = new ArrayList<>();
         populateItems();

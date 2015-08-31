@@ -34,6 +34,8 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_CreateItem;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_OrderDetails;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_ProfileSettings;
 
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Items;
@@ -58,10 +60,12 @@ public class SellActivity extends AppCompatActivity {
     private Seller seller = null;
     private boolean fromItemCreation = false;
     private Item itemToEdit = null;
+    private String currentFragment;
 
     private DBHelper dbHelper;
 
     DBCallback emptyCallback;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -234,16 +238,31 @@ public class SellActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-
-        } else {
-            getSupportFragmentManager().popBackStack();
+        switch(getCurrentFragment()){
+            case Fragment_Seller_Orders.TAG:
+                replaceSellerFragment(new Fragment_Seller_ProfileSettings());
+                break;
+            case Fragment_Seller_OrderDetails.TAG:
+                replaceSellerFragment(new Fragment_Seller_Orders());
+                break;
+            case Fragment_Seller_ProfileSettings.TAG:
+                startActivity(new Intent(SellActivity.this, BuyActivity.class));
+                finish();
+                break;
+            case Fragment_Seller_Items.TAG:
+                replaceSellerFragment(new Fragment_Seller_ProfileSettings());
+                break;
+            case Fragment_Seller_CreateItem.TAG:
+                replaceSellerFragment(new Fragment_Seller_Items());
+                break;
+            default:
+                super.onBackPressed();
         }
     }
 
     public void replaceSellerFragment(Fragment fragment) {
         FragmentManager BuyFragmentManager = getSupportFragmentManager();
-        BuyFragmentManager.beginTransaction().replace(R.id.sellerFrameLayout, fragment).addToBackStack(null).commit();
+        BuyFragmentManager.beginTransaction().replace(R.id.sellerFrameLayout, fragment).commit();
 
     }
 
@@ -311,5 +330,13 @@ public class SellActivity extends AppCompatActivity {
 
     public void setItemToEdit(Item itemToEdit) {
         this.itemToEdit = itemToEdit;
+    }
+
+    public String getCurrentFragment() {
+        return currentFragment;
+    }
+
+    public void setCurrentFragment(String currentFragment) {
+        this.currentFragment = currentFragment;
     }
 }

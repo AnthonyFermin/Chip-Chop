@@ -21,7 +21,7 @@ public class Seller {
     String description;
     String latitude;
     String longitude;
-    Boolean isCooking;
+    boolean isCooking;
     String storeName;
     int numOfReviews;
     int numOfTotalStars;
@@ -173,6 +173,7 @@ public class Seller {
     public void setItemsForSale(Item itemsForSale) {
         this.itemsForSale = itemsForSale;
     }
+
 
     public void clearUser(){
         eMail =null;

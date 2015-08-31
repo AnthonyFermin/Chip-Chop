@@ -51,6 +51,8 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
     DBHelper dbHelper;
 
+    public static final String TAG = "fragment_seller_profile";
+
     ToggleButton cookingStatus;
     TextView cookingStatusTV;
 
@@ -203,12 +205,13 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
                 if(seller != null) {
                     setEditTexts();
-                    activity.setSeller(seller);
                 }else{
                     //TODO:display cannot connect to internet error message
                     Toast.makeText(activity,"New Seller Profile Created", Toast.LENGTH_SHORT).show();
                     seller = new Seller(dbHelper.getUserID(),user.geteMail(),user.getName(),user.getAddress(),"",user.getPhoneNumber());
+                    dbHelper.addSellerProfileInfoToDB(seller);
                 }
+                activity.setSeller(seller);
                 loadingPanel.setVisibility(View.GONE);
                 containingView.setVisibility(View.VISIBLE);
             }
@@ -404,6 +407,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         user = activity.getUser();
 
         stringVariable = Environment.getExternalStorageDirectory().getPath() + "_pictureholder_id.jpg";
+        activity.setCurrentFragment(TAG);
 
     }
 

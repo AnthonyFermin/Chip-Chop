@@ -32,6 +32,8 @@ public class Fragment_Seller_Items extends Fragment {
     private RelativeLayout loadingPanel;
     private LinearLayout containingView;
 
+    public static final String TAG = "fragment_seller_items";
+
     private DBHelper dbHelper;
     private SellActivity activity;
 
@@ -75,6 +77,7 @@ public class Fragment_Seller_Items extends Fragment {
         }else{
             sellerItems = dbHelper.getSellerItems(dbHelper.getUserID(), emptyCallback);
         }
+        activity.setCurrentFragment(TAG);
     }
 
     private void loadList(){
@@ -140,6 +143,8 @@ public class Fragment_Seller_Items extends Fragment {
         });
 
     }
+
+
 
 
 

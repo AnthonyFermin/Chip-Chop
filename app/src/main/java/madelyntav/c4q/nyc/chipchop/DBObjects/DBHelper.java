@@ -497,7 +497,7 @@ public class DBHelper extends Firebase {
 
     public void addSellerProfileInfoToDB(Seller user) {
         Firebase fRef = new Firebase(URL + "SellerProfiles/");
-//        UID = user.getUID();
+        UID = user.getUID();
 
         fRef.child(UID).push();
         fRef.child(UID).child(sName).setValue(user.getName());

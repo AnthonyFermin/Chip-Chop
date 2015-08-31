@@ -112,11 +112,14 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
     private void loadSellerInfo(){
 
+        Log.d("Seller Profile", "LOADING SELLER INFO");
         if(activity.getSeller() == null) {
             seller = dbHelper.getSellerFromDB(dbHelper.getUserID());
             load();
+            Log.d("Load Seller Info", "LOADING FROM DB");
         }else{
             seller = activity.getSeller();
+            Log.d("Load Seller Info", "PREVIOUSLY CACHED");
             setEditTexts();
             loadingPanel.setVisibility(View.GONE);
             containingView.setVisibility(View.VISIBLE);
@@ -156,10 +159,10 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
                 userAddress.setLatitude(location.getLat());
                 userAddress.setLongitude(location.getLng());
-                Seller sellerTemp = new Seller(uid, user.geteMail(), user.getName(), userAddress, storeName, phoneNumber);
+                seller = new Seller(uid, user.geteMail(), user.getName(), userAddress, storeName, phoneNumber);
 
-                dbHelper.addSellerProfileInfoToDB(sellerTemp);
-                activity.setSeller(sellerTemp);
+                dbHelper.addSellerProfileInfoToDB(seller);
+                activity.setSeller(seller);
 
                 Toast.makeText(getActivity(), "Changes Saved", Toast.LENGTH_SHORT).show();
 
@@ -183,14 +186,14 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
                 int i = 0;
                 do{
-                    Log.d("SellerP - load seller", "Attempt #" + i);
+                    Log.d("Load Seller Info", "Attempt #" + i);
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                     if (i > 10){
-                        Log.d("SellerP - load seller", "DIDN'T LOAD");
+                        Log.d("Load Seller Info", "DIDN'T LOAD");
                         break;
                     }
                     i++;
@@ -204,12 +207,17 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 super.onPostExecute(aVoid);
 
                 if(seller != null) {
+                    Log.d("Load Seller Info", "LOAD FROM DB SUCCESSFUL");
+                    Log.d("SELLER INFO", "UID: " + seller.getUID());
+                    Log.d("SELLER INFO", "Name: " + seller.getName());
+                    Log.d("SELLER INFO", "Store Name: " + seller.getStoreName());
                     setEditTexts();
                 }else{
                     //TODO:display cannot connect to internet error message
-                    Toast.makeText(activity,"New Seller Profile Created", Toast.LENGTH_SHORT).show();
+                    Log.d("Load Seller Info", "NOT FOUND IN DB, NEW SELLER CREATED");
                     seller = new Seller(dbHelper.getUserID(),user.geteMail(),user.getName(),user.getAddress(),"",user.getPhoneNumber());
                     dbHelper.addSellerProfileInfoToDB(seller);
+                    Toast.makeText(activity,"New Seller Profile Created", Toast.LENGTH_SHORT).show();
                 }
                 activity.setSeller(seller);
                 loadingPanel.setVisibility(View.GONE);
@@ -336,9 +344,17 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 }else if (cookingStatus.getText().toString().equalsIgnoreCase("on")) {
                     //TODO: add confirmation dialog when changing cooking status mention to click save to commit changes
                     sellerItems = activity.getSellerItems();
-                    if (sellerItems != null && hasPositiveQuantity()) {
+                    if(storeNameET.getText().toString().isEmpty()){
+                        Toast.makeText(activity,"Please add a store name",Toast.LENGTH_SHORT).show();
+                        cookingStatus.setChecked(false);
+                    }else if (sellerItems != null && hasPositiveQuantity()) {
+                        seller.setUID(dbHelper.getUserID());
+                        Log.d("Seller Info", seller.getUID() + "");
+                        Log.d("Seller Info", seller.getName() + "");
+                        Log.d("Seller Info", seller.getStoreName() + "");
                         dbHelper.addActiveSellerToTable(seller);
                         for(Item item: sellerItems) {
+                            item.setSellerID(seller.getUID());
                             dbHelper.addItemToActiveSellerProfile(item, emptyCallback);
                         }
                         activity.setCookingStatus(true);

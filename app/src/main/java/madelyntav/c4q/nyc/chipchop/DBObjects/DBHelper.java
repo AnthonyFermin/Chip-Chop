@@ -499,7 +499,7 @@ public class DBHelper extends Firebase {
         Firebase fRef = new Firebase(URL + "SellerProfiles/");
 //        UID = user.getUID();
 
-        fRef.child(UID).push();
+        fRef.child(UID).child("UID").setValue(UID);
         fRef.child(UID).child(sName).setValue(user.getName());
         fRef.child(UID).child("storeName").setValue(user.getStoreName());
         fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
@@ -552,7 +552,6 @@ public class DBHelper extends Firebase {
                         seller.setLatitude(seller1.longitude);
 
                         Log.d("Seller", seller.name+"");
-
                     }
                 }
             }
@@ -608,15 +607,16 @@ public class DBHelper extends Firebase {
 
         Firebase fRef = new Firebase(URL + "ActiveSellers/");
         sellerId = seller.getUID();
+        Log.d("ADD TO ACTIVE", sellerId + "");
 
         fRef.child(sellerId).child("UID").setValue(sellerId);
         fRef.child(sellerId).child(sName).setValue(seller.getName());
         fRef.child(sellerId).child(sEmailAddress).setValue(seller.geteMail());
         fRef.child(sellerId).child(sPhoneNumber).setValue(seller.getPhoneNumber());
         fRef.child(sellerId).child(sPhotoLink).setValue(seller.getPhotoLink());
-        fRef.child(sellerId).child(sAddress).setValue(seller.getAddress().toString());
-        fRef.child(sellerId).child(sLatitude).setValue(seller.getAddress().getLatitude());
-        fRef.child(sellerId).child(sLongitude).setValue(seller.getAddress().getLatitude());
+        fRef.child(sellerId).child(sAddress).setValue(seller.getAddressString());
+        fRef.child(sellerId).child(sLatitude).setValue(seller.getLatitude());
+        fRef.child(sellerId).child(sLongitude).setValue(seller.getLatitude());
     }
 
     public ArrayList<Seller> getAllActiveSellers(DBCallback dbCallback){

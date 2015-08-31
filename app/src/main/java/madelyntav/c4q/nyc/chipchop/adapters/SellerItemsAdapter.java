@@ -69,6 +69,7 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 @Override
                 public void runOnSuccess() {
                     Toast.makeText(context,"Item removed successfully", Toast.LENGTH_SHORT).show();
+
                 }
 
                 @Override
@@ -85,9 +86,11 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     if(activity.isCurrentlyCooking()) {
                         dbHelper.removeItemFromSale(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
                     }else {
-                        //TODO: Madelyn: are these the correct methods to remove items from the seller profile in the DB?
+                    //TODO: Madelyn: are these the correct methods to remove items from the seller profile in the DB?
                         dbHelper.removeItemFromSellerProfile(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
+                        Log.d("ITEMID REMOVED", sellerItems.get(getAdapterPosition()).getItemID() + "");
                     }
+
                     sellerItems.remove(getAdapterPosition());
                     notifyItemRemoved(getAdapterPosition());
                 }

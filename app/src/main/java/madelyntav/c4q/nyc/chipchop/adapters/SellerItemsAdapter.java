@@ -3,6 +3,7 @@ package madelyntav.c4q.nyc.chipchop.adapters;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,8 +69,6 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 @Override
                 public void runOnSuccess() {
                     Toast.makeText(context,"Item removed successfully", Toast.LENGTH_SHORT).show();
-                    sellerItems.remove(getAdapterPosition());
-                    notifyItemRemoved(getAdapterPosition());
                 }
 
                 @Override
@@ -89,6 +88,8 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         //TODO: Madelyn: are these the correct methods to remove items from the seller profile in the DB?
                         dbHelper.removeItemFromSellerProfile(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
                     }
+                    sellerItems.remove(getAdapterPosition());
+                    notifyItemRemoved(getAdapterPosition());
                 }
             });
 

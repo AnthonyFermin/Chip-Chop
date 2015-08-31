@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.facebook.AccessToken;
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
@@ -13,7 +12,6 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.model.LatLng;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -853,7 +851,7 @@ public class DBHelper extends Firebase {
         fRef.child(itemID);
         fRef.child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
         fRef.child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
-        fRef.child(itemID).child("quantityOfItem").setValue(item.getQuantity());
+        fRef.child(itemID).child("quantity").setValue(item.getQuantity());
         fRef.child(itemID).child("price").setValue(item.getPrice());
         fRef.child(itemID).child("imageLink").setValue(item.getImageLink());
         fRef.child(itemID).child("containsPeanuts").setValue(item.isContainsPeanuts());

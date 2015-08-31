@@ -94,7 +94,6 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         callbackManager = CallbackManager.Factory.create();
 
 
-
         emptyCallback = new DBCallback() {
             @Override
             public void runOnSuccess() {
@@ -380,7 +379,9 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
             }
         } else {
             // Show the signed-out UI
-            Toast.makeText(getApplicationContext(), "Signed Out", Toast.LENGTH_SHORT).show();
+
+            //This toast should not show everytime this activity is launched
+            //Toast.makeText(getApplicationContext(), "Signed Out", Toast.LENGTH_SHORT).show();
         }
     }
 

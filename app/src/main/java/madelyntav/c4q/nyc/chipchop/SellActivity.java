@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public class SellActivity extends AppCompatActivity {
     LinearLayout DrawerLinear;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
+    private TextView drawerUserNameTV;
     private String[] mListTitles;
     private Fragment fragment;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -61,9 +63,6 @@ public class SellActivity extends AppCompatActivity {
 
     DBCallback emptyCallback;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,32 +70,22 @@ public class SellActivity extends AppCompatActivity {
 
         dbHelper = DBHelper.getDbHelper(this);
 
-        emptyCallback = new DBCallback() {
-            @Override
-            public void runOnSuccess() {
-
-            }
-
-            @Override
-            public void runOnFail() {
-
-            }
-        };
-
+        bindViews();
+        initializeData();
+        setUpNavActionBar();
         initializeUser();
 
+        if (savedInstanceState == null) {
+            selectItem(2);
+        }
 
-        frameLayout = (FrameLayout) findViewById(R.id.sellerFrameLayout);
-        DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        mListTitles = getResources().getStringArray(R.array.SELLER_nav_drawer_titles);
+    }
 
+    private void setUpNavActionBar() {
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.navdrawer_list_item, mListTitles));
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 new Toolbar(this), R.string.drawer_open,
@@ -136,14 +125,30 @@ public class SellActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.navdrawer);
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
         getSupportActionBar().setBackgroundDrawable(colorDrawable);
+    }
 
+    private void initializeData() {
+        emptyCallback = new DBCallback() {
+            @Override
+            public void runOnSuccess() {
 
-        if (savedInstanceState == null) {
-            selectItem(2);
-        }
+            }
 
+            @Override
+            public void runOnFail() {
 
+            }
+        };
+        mListTitles = getResources().getStringArray(R.array.SELLER_nav_drawer_titles);
 
+    }
+
+    private void bindViews(){
+        drawerUserNameTV = (TextView) findViewById(R.id.drawer_user_nameTV);
+        frameLayout = (FrameLayout) findViewById(R.id.sellerFrameLayout);
+        DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
     }
 
 
@@ -172,6 +177,7 @@ public class SellActivity extends AppCompatActivity {
             SharedPreferences.Editor editor=sharedPreferences.edit();
             editor.clear();
             editor.commit();
+            drawerUserNameTV.setText("");
 
             Intent intent = new Intent(this,BuyActivity.class);
             startActivity(intent);
@@ -253,6 +259,8 @@ public class SellActivity extends AppCompatActivity {
 
         Address userAddress = new Address(address, apt, city, "NY", zip, dbHelper.getUserID());
         user = new User(dbHelper.getUserID(), email, name, userAddress, phoneNumber);
+
+        drawerUserNameTV.setText(user.getName());
     }
 
     // for storing data between fragments in SellActivity

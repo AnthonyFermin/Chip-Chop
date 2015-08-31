@@ -146,11 +146,8 @@ public class DBHelper extends Firebase {
                 mSuccess = true;
 
 
-                String userIDOne = String.valueOf(stringObjectMap.get("uid"));
+                UID = String.valueOf(stringObjectMap.get("uid"));
 
-                for (int i = 12; i < userIDOne.length(); i++) {
-                    UID += userIDOne.charAt(i);
-                }
 
                 SharedPreferences sharedPreferences = mContext.getSharedPreferences("UID", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -185,10 +182,8 @@ public class DBHelper extends Firebase {
                 Toast.makeText(mContext, "Account Created", Toast.LENGTH_SHORT).show();
                 mSuccess = true;
 
-                String userIDOne = String.valueOf(stringObjectMap.get("uid"));
-                for (int i = 12; i < userIDOne.length(); i++) {
-                    UID += userIDOne.charAt(i);
-                }
+                UID = String.valueOf(stringObjectMap.get("uid"));
+
 
                 SharedPreferences sharedPreferences = mContext.getSharedPreferences("New User", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -226,10 +221,8 @@ public class DBHelper extends Firebase {
                 Toast.makeText(mContext, "Account Created", Toast.LENGTH_SHORT).show();
                 mSuccess = true;
 
-                String userIDOne = String.valueOf(stringObjectMap.get("uid"));
-                for (int i = 12; i < userIDOne.length(); i++) {
-                    UID += userIDOne.charAt(i);
-                }
+                UID = String.valueOf(stringObjectMap.get("uid"));
+
 
                 SharedPreferences sharedPreferences = mContext.getSharedPreferences("New User", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -269,11 +262,8 @@ public class DBHelper extends Firebase {
                     @Override
                     public void onAuthenticated(AuthData authData) { /* ... */
                         mSuccess = true;
-                        String timeUID = authData.getUid();
+                        UID = authData.getUid();
 
-                        for (int i = 12; i < timeUID.length(); i++) {
-                            UID += timeUID.charAt(i);
-                        }
                     }
 
                     @Override
@@ -305,11 +295,9 @@ public class DBHelper extends Firebase {
                     @Override
                     public void onAuthenticated(AuthData authData) { /* ... */
                         mSuccess = true;
-                        String timeUID = authData.getUid();
+                        UID = authData.getUid();
 
-                        for (int i = 12; i < timeUID.length(); i++) {
-                            UID += timeUID.charAt(i);
-                        }
+
                         mContext.startActivity(intent);
                     }
 
@@ -342,11 +330,9 @@ public class DBHelper extends Firebase {
                     @Override
                     public void onAuthenticated(AuthData authData) { /* ... */
                         mSuccess = true;
-                        String timeUID = authData.getUid();
+                        UID = authData.getUid();
 
-                        for (int i = 12; i < timeUID.length(); i++) {
-                            UID += timeUID.charAt(i);
-                        }
+
                         callback.runOnSuccess();
                     }
 
@@ -395,12 +381,9 @@ public class DBHelper extends Firebase {
                     createUserFromFBAuthLogin(String.valueOf(authData.getProviderData().get("email")), AccessToken.getCurrentAccessToken().getToken(), dbCallback);
                     Log.d("email", authData.getProviderData().get("email").toString());
                     UID="";
-                    String linkUID = authData.getUid();
+                    UID = authData.getUid();
 
-                    for (int i = 9; i < linkUID.length(); i++) {
 
-                        UID += linkUID.charAt(i);
-                    }
 
                     Log.d("UID", UID+"");
 
@@ -459,11 +442,9 @@ public class DBHelper extends Firebase {
                     @Override
                     public void onAuthenticated(AuthData authData) { /* ... */
                         mSuccess = true;
-                        String timeUID = authData.getUid();
+                        UID = authData.getUid();
 
-                        for (int i = 12; i < timeUID.length(); i++) {
-                            UID += timeUID.charAt(i);
-                        }
+
                         dbCallback.runOnSuccess();
                     }
 
@@ -570,7 +551,7 @@ public class DBHelper extends Firebase {
                         seller.setLongitude(seller1.latitude);
                         seller.setLatitude(seller1.longitude);
 
-                        Log.d("Seller", seller.name);
+                        Log.d("Seller", seller.name+"");
 
                     }
                 }
@@ -987,57 +968,19 @@ public class DBHelper extends Firebase {
         return item;
     }
 
-    public Item removeItemFromSellerProfile(final Item item, final DBCallback dbCallback){
+    public void removeItemFromSellerProfile(final Item item, final DBCallback dbCallback){
         sellerId = item.getSellerID();
+
         final String itemid1=item.getItemID();
+
         Log.d("DATASNAPSHOTKEY",itemid1+"");
 
-        final Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId+ "/itemsForSale/");
+        final Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId+ "/itemsForSale/"+itemid1);
 
-        fRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("Number2", dataSnapshot.getChildrenCount() + "");
+        fRef.setValue(null);
 
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
 
-                    Item item1 = dataSnapshot1.getValue(Item.class);
 
-                    if (item1.getItemID().equals(itemid1)) {
-                        Log.d("DATASNAPSHOTKEY",dataSnapshot1.getKey()+"");
-
-                        item.setItemID(dataSnapshot1.getKey());
-                        item.setContainsPeanuts(item1.containsPeanuts);
-                        item.setDescriptionOfItem(item1.descriptionOfItem);
-                        item.setGlutenFree(item1.glutenFree);
-                        item.setPrice(item.price);
-                        item.setImageLink(item1.imageLink);
-                        item.setNameOfItem(item1.nameOfItem);
-                        item.setIsVegetarian(item1.isVegetarian);
-                        item.setQuantity(item1.quantity);
-                        moveItemToPreviouslySoldItems(item, dbCallback);
-
-                        if(item.getBuyerID()!=null) {
-                            moveItemToPreviouslyBoughtItems(item, dbCallback);
-                        }
-                        //moveItemToPreviouslySoldItems(item, callback);
-
-                        fRef.child(itemid1).removeValue();
-                        dbCallback.runOnSuccess();
-
-                    }
-                }
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                Toast.makeText(mContext, "Error: Seller not found", Toast.LENGTH_SHORT).show();
-                seller = null;
-                dbCallback.runOnFail();
-            }
-        });
-        return item;
     }
 
     public Item getItemFromSellerProfile(final Item item12, final DBCallback dbCallback){

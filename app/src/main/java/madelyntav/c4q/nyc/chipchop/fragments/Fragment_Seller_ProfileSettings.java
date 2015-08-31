@@ -25,7 +25,6 @@ import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 
-import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
@@ -35,7 +34,6 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.GeolocationAPI.Geolocation;
 import madelyntav.c4q.nyc.chipchop.GeolocationAPI.GeolocationAPI;
 import madelyntav.c4q.nyc.chipchop.GeolocationAPI.Location;
-import madelyntav.c4q.nyc.chipchop.HelperMethods;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.SellActivity;
 import retrofit.Callback;
@@ -337,7 +335,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                     //TODO: add confirmation dialog when changing cooking status mention to click save to commit changes
                     sellerItems = activity.getSellerItems();
                     if (sellerItems != null && hasPositiveQuantity()) {
-                        dbHelper.addActiveSellerToTable(seller);
+                        dbHelper.sendSellerToActiveSellerTable(seller);
                         for(Item item: sellerItems) {
                             dbHelper.addItemToActiveSellerProfile(item, emptyCallback);
                         }

@@ -117,6 +117,8 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             load();
         }else{
             seller = activity.getSeller();
+            Log.d("Seller UID", seller.getUID() + "");
+            Log.d("Seller name", seller.getName() + "");
             setEditTexts();
             loadingPanel.setVisibility(View.GONE);
             containingView.setVisibility(View.VISIBLE);
@@ -336,7 +338,10 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 }else if (cookingStatus.getText().toString().equalsIgnoreCase("on")) {
                     //TODO: add confirmation dialog when changing cooking status mention to click save to commit changes
                     sellerItems = activity.getSellerItems();
-                    if (sellerItems != null && hasPositiveQuantity()) {
+                    if(storeNameET.getText().toString().isEmpty()){
+                        Toast.makeText(activity,"Please add a store name",Toast.LENGTH_SHORT).show();
+                        cookingStatus.setChecked(false);
+                    }else if (sellerItems != null && hasPositiveQuantity()) {
                         dbHelper.addActiveSellerToTable(seller);
                         for(Item item: sellerItems) {
                             dbHelper.addItemToActiveSellerProfile(item, emptyCallback);

@@ -516,7 +516,7 @@ public class DBHelper extends Firebase {
         Firebase fRef = new Firebase(URL + "SellerProfiles/");
 //        UID = user.getUID();
 
-        fRef.child(UID).push();
+        fRef.child(UID).child("UID").setValue(UID);
         fRef.child(UID).child(sName).setValue(user.getName());
         fRef.child(UID).child("storeName").setValue(user.getStoreName());
         fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
@@ -568,8 +568,7 @@ public class DBHelper extends Firebase {
                         seller.setLongitude(seller1.latitude);
                         seller.setLatitude(seller1.longitude);
 
-                        Log.d("Seller", seller.name);
-
+//                        Log.d("Seller", seller.name);
                     }
                 }
             }

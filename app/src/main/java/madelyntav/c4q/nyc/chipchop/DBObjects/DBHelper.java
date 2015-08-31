@@ -551,7 +551,7 @@ public class DBHelper extends Firebase {
                         seller.setLongitude(seller1.latitude);
                         seller.setLatitude(seller1.longitude);
 
-                        Log.d("Seller", seller.name+"");
+                        Log.d("Seller", seller.name + "");
 
                     }
                 }
@@ -969,18 +969,49 @@ public class DBHelper extends Firebase {
     }
 
     public void removeItemFromSellerProfile(final Item item, final DBCallback dbCallback){
-        sellerId = item.getSellerID();
 
+        sellerId = item.getSellerID();
         final String itemid1=item.getItemID();
 
-        Log.d("DATASNAPSHOTKEY",itemid1+"");
+        final Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId+ "/itemsForSale/");
 
-        final Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId+ "/itemsForSale/"+itemid1);
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("Number2", dataSnapshot.getChildrenCount() + "");
 
-        fRef.setValue(null);
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
 
+                    Item item1 = dataSnapshot1.getValue(Item.class);
 
+                    if (dataSnapshot1.getKey().equals(itemid1)) {
+                        item.setItemID(dataSnapshot1.getKey());
+                        item.setContainsPeanuts(item1.containsPeanuts);
+                        item.setDescriptionOfItem(item1.descriptionOfItem);
+                        item.setGlutenFree(item1.glutenFree);
+                        item.setPrice(item.price);
+                        item.setImageLink(item1.imageLink);
+                        item.setNameOfItem(item1.nameOfItem);
+                        item.setIsVegetarian(item1.isVegetarian);
+                        item.setQuantity(item1.quantity);
+                        moveItemToPreviouslySoldItems(item, dbCallback);
 
+                        if (item.getBuyerID() != null) {
+                            moveItemToPreviouslyBoughtItems(item, dbCallback);
+                        }
+                        fRef.child(dataSnapshot1.getKey()).removeValue();
+                    }
+                }
+                dbCallback.runOnSuccess();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Toast.makeText(mContext, "Error: Seller not found", Toast.LENGTH_SHORT).show();
+                seller = null;
+                dbCallback.runOnFail();
+            }
+        });
     }
 
     public Item getItemFromSellerProfile(final Item item12, final DBCallback dbCallback){
@@ -1433,7 +1464,7 @@ public class DBHelper extends Firebase {
         return userList;
     }
 
-    public ArrayList<Item> getSellerItems(String sellerId, final DBCallback dbCallback) {
+    public ArrayList<Item> getSellerItems(final String sellerId, final DBCallback dbCallback) {
         this.sellerId = sellerId;
 
         Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId+"/itemsForSale");
@@ -1449,6 +1480,7 @@ public class DBHelper extends Firebase {
 
                     item.setItemID(dataSnapshot1.getKey());
                     item.setQuantity(item.quantity);
+                    item.setSellerID(sellerId);
 
                     if (items.size() < sizeofAddDBList) {
 

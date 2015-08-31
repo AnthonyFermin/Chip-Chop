@@ -352,10 +352,6 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                         Log.d("Seller Info", seller.getStoreName() + "");
                         dbHelper.sendSellerToActiveSellerTable(seller);
 
-                        for(Item item: sellerItems) {
-                            item.setSellerID(seller.getUID());
-                            dbHelper.addItemToActiveSellerProfile(item, emptyCallback);
-                        }
                         activity.setCookingStatus(true);
                         saveButton.setEnabled(false);
                         cookingStatusTV.setVisibility(View.VISIBLE);

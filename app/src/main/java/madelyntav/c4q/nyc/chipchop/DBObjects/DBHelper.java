@@ -1054,10 +1054,11 @@ public class DBHelper extends Firebase {
 
     public void addItemToActiveSellerProfile(Item item, DBCallback dbCallback) {
         sellerId=item.getSellerID();
-
         Firebase fRef = new Firebase(URL + "ActiveSellers/" + sellerId + "/itemsForSale/");
 
-        String itemID = item.getItemID();
+        Firebase fire=fRef.child("itemsForSale/").push();
+        String itemID = fire.getKey();
+        item.setItemID(itemID);
 
         fRef.child(itemID).push();
         fRef.child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
@@ -1291,7 +1292,6 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child(itemID).child("containsEggs").setValue(item.isContainsEggs());
             fRef.child(orderID).child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
             fRef.child(orderID).child(itemID).child("containsDairy").setValue(item.isContainsDairy());
-
 
             copyOrderToBuyerProfile(order,item);
         }

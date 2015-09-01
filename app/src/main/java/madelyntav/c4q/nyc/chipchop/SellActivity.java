@@ -27,6 +27,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
+
 import java.util.ArrayList;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
@@ -147,7 +149,7 @@ public class SellActivity extends AppCompatActivity {
 
     }
 
-    private void bindViews(){
+    private void bindViews() {
         drawerUserNameTV = (TextView) findViewById(R.id.drawer_user_nameTV);
         frameLayout = (FrameLayout) findViewById(R.id.sellerFrameLayout);
         DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
@@ -175,18 +177,26 @@ public class SellActivity extends AppCompatActivity {
         } else if (position == 2) {
             fragment = new Fragment_Seller_ProfileSettings();
         } else if (position == 3) {
-            dbHelper.signOutUser(emptyCallback);
 
-            SharedPreferences sharedPreferences= getSharedPreferences(SignupActivity1.USER_INFO, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor=sharedPreferences.edit();
-            editor.clear();
-            editor.commit();
-            drawerUserNameTV.setText("");
+            if (dbHelper.userIsLoggedIn()) {
+                dbHelper.signOutUser(emptyCallback);
+                drawerUserNameTV.setText("");
+                mListTitles[3] = "Sign Out";
+                mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+                        R.layout.navdrawer_list_item, mListTitles));
+                LoginManager.getInstance().logOut();
+                Toast.makeText(this, "Sign out successful", Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent(this,BuyActivity.class);
-            startActivity(intent);
-            Toast.makeText(this,"Sign out successful",Toast.LENGTH_SHORT).show();
-            finish();
+                SharedPreferences sharedPreferences = getSharedPreferences(SignupActivity1.USER_INFO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.clear();
+                editor.commit();
+
+            } else {
+                Intent intent = new Intent(this, BuyActivity.class);
+                startActivity(intent);
+//                finish();
+            }
         }
 
             // Create fragment manager to begin interacting with the fragments and the container
@@ -198,15 +208,16 @@ public class SellActivity extends AppCompatActivity {
             mDrawerList.setItemChecked(position, true);
             mDrawerLayout.closeDrawer(DrawerLinear);
 
+
     }
 
     @Override
-    protected void onStop () {
+    protected void onStop() {
         super.onStop();
     }
 
     @Override
-    public void onConfigurationChanged (Configuration newConfig){
+    public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggles
 
@@ -238,7 +249,7 @@ public class SellActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        switch(getCurrentFragment()){
+        switch (getCurrentFragment()) {
             case Fragment_Seller_Orders.TAG:
                 replaceSellerFragment(new Fragment_Seller_ProfileSettings());
                 break;
@@ -266,11 +277,11 @@ public class SellActivity extends AppCompatActivity {
 
     }
 
-    private void initializeUser(){
+    private void initializeUser() {
         SharedPreferences sp = getSharedPreferences(SignupActivity1.USER_INFO, MODE_PRIVATE);
         String email = sp.getString(SignupActivity1.EMAIL, "");
         String name = sp.getString(SignupActivity1.NAME, "");
-        String address = sp.getString(SignupActivity1.ADDRESS,"");
+        String address = sp.getString(SignupActivity1.ADDRESS, "");
         String apt = sp.getString(SignupActivity1.APT, "");
         String city = sp.getString(SignupActivity1.CITY, "");
         String zip = sp.getString(SignupActivity1.ZIPCODE, "");
@@ -284,43 +295,43 @@ public class SellActivity extends AppCompatActivity {
 
     // for storing data between fragments in SellActivity
 
-    public ArrayList<Item> getSellerItems(){
+    public ArrayList<Item> getSellerItems() {
         return sellerItems;
     }
 
-    public void setSellerItems(ArrayList<Item> sellerItems){
+    public void setSellerItems(ArrayList<Item> sellerItems) {
         this.sellerItems = sellerItems;
     }
 
-    public void setCookingStatus(boolean condition){
+    public void setCookingStatus(boolean condition) {
         currentlyCooking = condition;
     }
 
-    public boolean isCurrentlyCooking(){
+    public boolean isCurrentlyCooking() {
         return currentlyCooking;
     }
 
-    public void setSeller(Seller seller){
+    public void setSeller(Seller seller) {
         this.seller = seller;
     }
 
-    public Seller getSeller(){
+    public Seller getSeller() {
         return seller;
     }
 
-    public void setUser(User user){
+    public void setUser(User user) {
         this.user = user;
     }
 
-    public User getUser(){
+    public User getUser() {
         return user;
     }
 
-    public boolean isFromItemCreation(){
+    public boolean isFromItemCreation() {
         return fromItemCreation;
     }
 
-    public void setFromItemCreation(boolean condition){
+    public void setFromItemCreation(boolean condition) {
         fromItemCreation = condition;
     }
 

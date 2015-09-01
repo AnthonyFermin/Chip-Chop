@@ -25,14 +25,13 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.firebase.client.Firebase;
-
-import java.util.Arrays;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.plus.Plus;
+
+import java.util.Arrays;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
@@ -297,6 +296,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         }
         // when user clicks sign in
         if (user != null) {
+            Log.d("Address",user.getAddressString()+"");
             String addressString = user.getAddressString();
             Address address = HelperMethods.parseAddressString(addressString, dbHelper.getUserID());
             editor.putString(NAME, user.getName());

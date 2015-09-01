@@ -8,10 +8,14 @@
 
     <RelativeLayout
         style="@style/GenericProgressBackground"
+        android:background="@android:color/transparent"
         android:id="@+id/loadingPanel"
         >
         <ProgressBar
-            style="@style/GenericProgressIndicator"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"/>
     </RelativeLayout>
 
 

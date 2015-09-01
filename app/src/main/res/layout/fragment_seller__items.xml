@@ -11,13 +11,15 @@
         android:id="@+id/loadingPanel"
         >
         <ProgressBar
-            style="@style/GenericProgressIndicator"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"/>
     </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:id="@+id/container">
 
         <TextView
@@ -26,13 +28,14 @@
             style="@style/text_design"
             android:text="items"
             android:textSize="40sp"
-            android:gravity="center_horizontal"/>
+            android:gravity="center_horizontal"
+            android:id="@+id/title_tv"/>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/addButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
+            android:layout_alignParentEnd="true"
             android:src="@drawable/plus"
             app:backgroundTint="#D42028"
             app:elevation="6dp"
@@ -40,10 +43,10 @@
 
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:id="@+id/seller_items_list"/>
+            android:layout_height="wrap_content"
+            android:id="@+id/seller_items_list"
+            android:layout_below="@+id/addButton"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </FrameLayout>

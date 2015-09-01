@@ -3,10 +3,10 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="130dp"
     android:orientation="horizontal"
     card_view:cardCornerRadius="1dp"
-    android:padding="5dp">
+    android:padding="7dp">
 
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -22,7 +22,9 @@
             android:layout_gravity="center"
             android:src="@drawable/food"
             app:border_color="#FFF"
-            app:border_width="2dp" />
+            app:border_width="2dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="5dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,7 +41,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:padding="4dp"
+                    android:paddingLeft="4dp"
                     android:textSize="20sp" />
 
 
@@ -50,6 +52,16 @@
                     android:layout_alignParentEnd="true"
                     android:padding="4dp" />
 
+                <TextView
+                    android:id="@+id/food_quantity_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@+id/food_price_tv"
+                    android:gravity="center"
+                    android:padding="4dp"/>
+
+
 
             </RelativeLayout>
 
@@ -57,38 +69,66 @@
                 android:id="@+id/food_description_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="DESCRIPTION HERE" />
+                android:text="DESCRIPTION HERE"
+                android:padding="4dp"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:padding="4dp">
 
-                <ImageView
-                    android:id="@+id/vegan_icon"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginRight="3dp"
-                    android:src="@drawable/vegan" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginRight="3dp"
-                    android:layout_toEndOf="@+id/vegan_icon"
-                    android:src="@drawable/glutenfree" />
-
-                <TextView
-                    android:id="@+id/food_quantity_tv"
-                    android:layout_width="40dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toStartOf="@+id/remove_item_button"
-                    android:gravity="center" />
+                    android:gravity="bottom|start"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="3dp"
+                        android:src="@drawable/vegan" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="3dp"
+                        android:src="@drawable/glutenfree" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="3dp"
+                        android:src="@drawable/dairy" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="3dp"
+                        android:src="@drawable/nut" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="3dp"
+                        android:src="@drawable/egg" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="3dp"
+                        android:src="@drawable/shellfish" />
+
+
+                </LinearLayout>
+
 
                 <Button
                     android:id="@+id/remove_item_button"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
                     android:background="@android:color/transparent"
                     android:text="X"
                     android:textColor="#D32F2F" />

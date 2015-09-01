@@ -178,7 +178,6 @@ public class BuyActivity extends AppCompatActivity {
             public void runOnSuccess() {
 
             }
-
             @Override
             public void runOnFail() {
 
@@ -245,11 +244,12 @@ public class BuyActivity extends AppCompatActivity {
             if(dbHelper.userIsLoggedIn()) {
                 dbHelper.signOutUser(emptyCallback);
                 drawerUserNameTV.setText("");
-                mListTitles[3] = "Sign In";
+                mListTitles[3] = "Sign Out";
                 mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                         R.layout.navdrawer_list_item, mListTitles));
                 LoginManager.getInstance().logOut();
                 Toast.makeText(this, "Sign out successful", Toast.LENGTH_SHORT).show();
+
                 SharedPreferences sharedPreferences = getSharedPreferences(SignupActivity1.USER_INFO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.clear();

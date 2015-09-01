@@ -123,12 +123,16 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         Item sellerItem = sellerItems.get(position);
         SellersViewHolder vh = (SellersViewHolder) viewHolder;
         vh.name.setText(sellerItem.getNameOfItem());
-        DecimalFormat df = new DecimalFormat("#.00");
-        String price = df.format(sellerItem.getPrice());
-        vh.price.setText("$" + price);
+        try {
+            DecimalFormat df = new DecimalFormat("#.00");
+            String price = df.format(sellerItem.getPrice());
+            vh.price.setText("$" + price);
+        }catch(NullPointerException e){
+            e.printStackTrace();
+        }
         vh.quantity.setText(sellerItem.getQuantity() + "");
         vh.description.setText(sellerItem.getDescriptionOfItem());
-        if(!sellerItem.getImageLink().isEmpty())
+        if(sellerItem.getImageLink() != null && !sellerItem.getImageLink().isEmpty())
             Picasso.with(context).load(sellerItem.getImageLink()).fit().into(vh.image);
 
         setAnimation(vh.container, position);

@@ -3,6 +3,7 @@ package madelyntav.c4q.nyc.chipchop;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -385,6 +386,27 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         }
     }
 
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        float fbIconScale = 1.45F;
+        Drawable drawable = getResources().getDrawable(
+                com.facebook.R.drawable.com_facebook_button_icon);
+        drawable.setBounds(0, 0, (int)(drawable.getIntrinsicWidth()*fbIconScale),
+                (int)(drawable.getIntrinsicHeight()*fbIconScale));
+        loginButton.setCompoundDrawables(drawable, null, null, null);
+        loginButton.setCompoundDrawablePadding(getResources().
+                getDimensionPixelSize(R.dimen.fb_margin_override_textpadding));
+        loginButton.setPadding(
+                getResources().getDimensionPixelSize(
+                        R.dimen.fb_margin_override_lr),
+                getResources().getDimensionPixelSize(
+                        R.dimen.fb_margin_override_top),
+                0,
+                getResources().getDimensionPixelSize(
+                        R.dimen.fb_margin_override_bottom));
+        super.onPostCreate(savedInstanceState);
+    }
 
     @Override
     protected void onStart() {

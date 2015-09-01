@@ -67,7 +67,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
     FloatingActionButton refreshButton;
     ImageView arrowImage;
-    public static SlidingUpPanelLayout slidingPanel;
+    public SlidingUpPanelLayout slidingPanel;
     public final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     public final static String PREF_NAME = "Settings";
     public static final String LASTLONGITUDE = "LastLongitude";
@@ -92,9 +92,6 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
     private BuyActivity activity;
     private AsyncTask<Void, Void, Void> addSellerMarkers;
-    private RelativeLayout loadingPanel;
-    private LinearLayout containingView;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -349,7 +346,14 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     }
 
     public void addWithinRangeMarkersToMap() {
+        Log.d("Buyer Map Fragment", "ADDING SELLER MARKERS");
+
         for (Seller seller : sellers) {
+            Log.d("SELLER INFO", "UID: " + seller.getUID());
+            Log.d("SELLER INFO", "Store Name: " + seller.getStoreName());
+            Log.d("SELLER INFO", "Lat: " + seller.getLatitude());
+            Log.d("SELLER INFO", "Long:" + seller.getLongitude());
+            Log.d("SELLER INFO", "Description:" + seller.getDescription());
 
             double lat = 0;
             double lng = 0;
@@ -360,8 +364,6 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             String userName = "Local Food";
 
             try {
-                String uid = seller.getUID();
-                Log.d("SELLER UID", uid + "");
                 userName = seller.getStoreName();
                 gLat = Double.parseDouble(seller.getLatitude());
                 gLng = Double.parseDouble(seller.getLongitude());
@@ -369,8 +371,9 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
                 lat = location.getLatitude();
                 lng = location.getLongitude();
             } catch (NullPointerException e) {
-                lat = 40.737257;
-                lng = -73.855279;
+                Log.d("Buyer Map Fragment","Failed to get coordinates");
+                lat = 40.737256;
+                lng = -73.855278;
             }
 
             Circle circle = map.addCircle(new CircleOptions()
@@ -383,8 +386,13 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             Location.distanceBetween(lat, lng,
                     gLat, gLng, distance);
 
-            if (distance[0] < circle.getRadius()) {
+            Log.d("Buyer Map Fragment", "Seller Lat: " + gLat);
+            Log.d("Buyer Map Fragment","Seller Long: " + gLng);
+            Log.d("Buyer Map Fragment","User Lat: " + lat);
+            Log.d("Buyer Map Fragment","User Long: " + lng);
 
+            if (distance[0] < circle.getRadius()) {
+                Log.d("Fragment Buyer Map","MARKER ADDED");
                 map.addMarker(new MarkerOptions()
                         .position(new LatLng(gLat, gLng))
                         .title(userName));

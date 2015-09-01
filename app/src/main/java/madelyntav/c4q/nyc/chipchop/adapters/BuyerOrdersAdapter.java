@@ -26,7 +26,6 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_OrderDetails;
 public class BuyerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     RecyclerView recycler;
-    List<Item> orderDetails;
     private List<Item> orderItems;
     private Context context;
     private int lastPosition = -1;
@@ -80,7 +79,7 @@ public class BuyerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 //        Picasso.with(context).load(checkoutItem.getImageLink()).fit().into(vh.image);
 
 
-//            setAnimation(vh.container, position);
+            setAnimation(vh.container, position);
 
 //        CartListAdapter cartListAdapter = new CartListAdapter(context, orderDetails);
 //        recycler.setAdapter(cartListAdapter);
@@ -102,6 +101,7 @@ public class BuyerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        return orderItems.size();
+//        return orderItems.size();
+        return 0;
     }
 }

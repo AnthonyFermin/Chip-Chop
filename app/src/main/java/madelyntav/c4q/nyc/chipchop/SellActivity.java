@@ -24,7 +24,10 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.facebook.login.LoginManager;
 
 import java.util.ArrayList;
 
@@ -33,6 +36,8 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_CreateItem;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_OrderDetails;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_ProfileSettings;
 
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Items;
@@ -44,6 +49,7 @@ public class SellActivity extends AppCompatActivity {
     LinearLayout DrawerLinear;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
+    private TextView drawerUserNameTV;
     private String[] mListTitles;
     private Fragment fragment;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -56,12 +62,11 @@ public class SellActivity extends AppCompatActivity {
     private Seller seller = null;
     private boolean fromItemCreation = false;
     private Item itemToEdit = null;
+    private String currentFragment;
 
     private DBHelper dbHelper;
 
     DBCallback emptyCallback;
-
-
 
 
     @Override
@@ -71,32 +76,22 @@ public class SellActivity extends AppCompatActivity {
 
         dbHelper = DBHelper.getDbHelper(this);
 
-        emptyCallback = new DBCallback() {
-            @Override
-            public void runOnSuccess() {
-
-            }
-
-            @Override
-            public void runOnFail() {
-
-            }
-        };
-
+        bindViews();
+        initializeData();
+        setUpNavActionBar();
         initializeUser();
 
+        if (savedInstanceState == null) {
+            selectItem(2);
+        }
 
-        frameLayout = (FrameLayout) findViewById(R.id.sellerFrameLayout);
-        DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        mListTitles = getResources().getStringArray(R.array.SELLER_nav_drawer_titles);
+    }
 
+    private void setUpNavActionBar() {
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.navdrawer_list_item, mListTitles));
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 new Toolbar(this), R.string.drawer_open,
@@ -136,14 +131,30 @@ public class SellActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.navdrawer);
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
         getSupportActionBar().setBackgroundDrawable(colorDrawable);
+    }
 
+    private void initializeData() {
+        emptyCallback = new DBCallback() {
+            @Override
+            public void runOnSuccess() {
 
-        if (savedInstanceState == null) {
-            selectItem(2);
-        }
+            }
 
+            @Override
+            public void runOnFail() {
 
+            }
+        };
+        mListTitles = getResources().getStringArray(R.array.SELLER_nav_drawer_titles);
 
+    }
+
+    private void bindViews() {
+        drawerUserNameTV = (TextView) findViewById(R.id.drawer_user_nameTV);
+        frameLayout = (FrameLayout) findViewById(R.id.sellerFrameLayout);
+        DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
     }
 
 
@@ -166,17 +177,26 @@ public class SellActivity extends AppCompatActivity {
         } else if (position == 2) {
             fragment = new Fragment_Seller_ProfileSettings();
         } else if (position == 3) {
-            dbHelper.signOutUser(emptyCallback);
 
-            SharedPreferences sharedPreferences= getSharedPreferences(SignupActivity1.USER_INFO, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor=sharedPreferences.edit();
-            editor.clear();
-            editor.commit();
+            if (dbHelper.userIsLoggedIn()) {
+                dbHelper.signOutUser(emptyCallback);
+                drawerUserNameTV.setText("");
+                mListTitles[3] = "Sign Out";
+                mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+                        R.layout.navdrawer_list_item, mListTitles));
+                LoginManager.getInstance().logOut();
+                Toast.makeText(this, "Sign out successful", Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent(this,BuyActivity.class);
-            startActivity(intent);
-            Toast.makeText(this,"Sign out successful",Toast.LENGTH_SHORT).show();
-            finish();
+                SharedPreferences sharedPreferences = getSharedPreferences(SignupActivity1.USER_INFO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.clear();
+                editor.commit();
+
+            } else {
+                Intent intent = new Intent(this, BuyActivity.class);
+                startActivity(intent);
+//                finish();
+            }
         }
 
             // Create fragment manager to begin interacting with the fragments and the container
@@ -188,15 +208,16 @@ public class SellActivity extends AppCompatActivity {
             mDrawerList.setItemChecked(position, true);
             mDrawerLayout.closeDrawer(DrawerLinear);
 
+
     }
 
     @Override
-    protected void onStop () {
+    protected void onStop() {
         super.onStop();
     }
 
     @Override
-    public void onConfigurationChanged (Configuration newConfig){
+    public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggles
 
@@ -228,24 +249,39 @@ public class SellActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-
-        } else {
-            getSupportFragmentManager().popBackStack();
+        switch (getCurrentFragment()) {
+            case Fragment_Seller_Orders.TAG:
+                replaceSellerFragment(new Fragment_Seller_ProfileSettings());
+                break;
+            case Fragment_Seller_OrderDetails.TAG:
+                replaceSellerFragment(new Fragment_Seller_Orders());
+                break;
+            case Fragment_Seller_ProfileSettings.TAG:
+                startActivity(new Intent(SellActivity.this, BuyActivity.class));
+                finish();
+                break;
+            case Fragment_Seller_Items.TAG:
+                replaceSellerFragment(new Fragment_Seller_ProfileSettings());
+                break;
+            case Fragment_Seller_CreateItem.TAG:
+                replaceSellerFragment(new Fragment_Seller_Items());
+                break;
+            default:
+                super.onBackPressed();
         }
     }
 
     public void replaceSellerFragment(Fragment fragment) {
         FragmentManager BuyFragmentManager = getSupportFragmentManager();
-        BuyFragmentManager.beginTransaction().replace(R.id.sellerFrameLayout, fragment).addToBackStack(null).commit();
+        BuyFragmentManager.beginTransaction().replace(R.id.sellerFrameLayout, fragment).commit();
 
     }
 
-    private void initializeUser(){
+    private void initializeUser() {
         SharedPreferences sp = getSharedPreferences(SignupActivity1.USER_INFO, MODE_PRIVATE);
         String email = sp.getString(SignupActivity1.EMAIL, "");
         String name = sp.getString(SignupActivity1.NAME, "");
-        String address = sp.getString(SignupActivity1.ADDRESS,"");
+        String address = sp.getString(SignupActivity1.ADDRESS, "");
         String apt = sp.getString(SignupActivity1.APT, "");
         String city = sp.getString(SignupActivity1.CITY, "");
         String zip = sp.getString(SignupActivity1.ZIPCODE, "");
@@ -253,47 +289,49 @@ public class SellActivity extends AppCompatActivity {
 
         Address userAddress = new Address(address, apt, city, "NY", zip, dbHelper.getUserID());
         user = new User(dbHelper.getUserID(), email, name, userAddress, phoneNumber);
+
+        drawerUserNameTV.setText(user.getName());
     }
 
     // for storing data between fragments in SellActivity
 
-    public ArrayList<Item> getSellerItems(){
+    public ArrayList<Item> getSellerItems() {
         return sellerItems;
     }
 
-    public void setSellerItems(ArrayList<Item> sellerItems){
+    public void setSellerItems(ArrayList<Item> sellerItems) {
         this.sellerItems = sellerItems;
     }
 
-    public void setCookingStatus(boolean condition){
+    public void setCookingStatus(boolean condition) {
         currentlyCooking = condition;
     }
 
-    public boolean isCurrentlyCooking(){
+    public boolean isCurrentlyCooking() {
         return currentlyCooking;
     }
 
-    public void setSeller(Seller seller){
+    public void setSeller(Seller seller) {
         this.seller = seller;
     }
 
-    public Seller getSeller(){
+    public Seller getSeller() {
         return seller;
     }
 
-    public void setUser(User user){
+    public void setUser(User user) {
         this.user = user;
     }
 
-    public User getUser(){
+    public User getUser() {
         return user;
     }
 
-    public boolean isFromItemCreation(){
+    public boolean isFromItemCreation() {
         return fromItemCreation;
     }
 
-    public void setFromItemCreation(boolean condition){
+    public void setFromItemCreation(boolean condition) {
         fromItemCreation = condition;
     }
 
@@ -303,5 +341,13 @@ public class SellActivity extends AppCompatActivity {
 
     public void setItemToEdit(Item itemToEdit) {
         this.itemToEdit = itemToEdit;
+    }
+
+    public String getCurrentFragment() {
+        return currentFragment;
+    }
+
+    public void setCurrentFragment(String currentFragment) {
+        this.currentFragment = currentFragment;
     }
 }

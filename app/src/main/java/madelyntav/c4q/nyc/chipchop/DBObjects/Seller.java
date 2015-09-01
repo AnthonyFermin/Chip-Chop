@@ -21,11 +21,12 @@ public class Seller {
     String description;
     String latitude;
     String longitude;
-    Boolean isCooking;
+    boolean isCooking;
     String storeName;
     int numOfReviews;
     int numOfTotalStars;
     int newReviewNumOfStars;
+    String addressString;
 
     public Seller(){}
 
@@ -45,6 +46,7 @@ public class Seller {
         this.phoneNumber=phoneNumber;
         this.storeName=storeName;
         this.photoLink=photoLink;
+        this.addressString = address.toString();
     }
 
     public Seller(String UID, String eMail, String name, Address address, String photoLink,String storeName, String phoneNumber){
@@ -172,6 +174,7 @@ public class Seller {
         this.itemsForSale = itemsForSale;
     }
 
+
     public void clearUser(){
         eMail =null;
         name=null;
@@ -179,5 +182,13 @@ public class Seller {
         phoneNumber=null;
         UID=null;
         photoLink=null;
+    }
+
+    public String getAddressString() {
+        return addressString;
+    }
+
+    public void setAddressString(String addressString) {
+        this.addressString = addressString;
     }
 }

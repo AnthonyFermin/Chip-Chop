@@ -35,6 +35,8 @@ public class Fragment_Seller_CreateItem extends Fragment {
     EditText descriptionET;
     CheckBox vegCB, glutFreeCB, dairyCB, eggsCB, peanutsCB, shellfishCB;
 
+    public static final String TAG = "fragment_seller_create_item";
+
     DBHelper dbHelper;
     SellActivity activity;
 
@@ -104,6 +106,8 @@ public class Fragment_Seller_CreateItem extends Fragment {
                 activity.replaceSellerFragment(new Fragment_Seller_Items());
             }
         };
+
+        activity.setCurrentFragment(TAG);
     }
 
     private void setListeners(){

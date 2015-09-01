@@ -3,17 +3,15 @@ package madelyntav.c4q.nyc.chipchop;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
-
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.content.res.Configuration;
-import android.net.Uri;
 import android.support.v4.widget.DrawerLayout;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 
-import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -34,8 +32,6 @@ import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
-
-import com.google.android.gms.plus.Plus;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
@@ -58,8 +54,6 @@ public class BuyActivity extends AppCompatActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private TextView drawerUserNameTV;
     private RelativeLayout loadingPanel;
-
-
 
     private DBHelper dbHelper;
 
@@ -85,6 +79,17 @@ public class BuyActivity extends AppCompatActivity {
         setUpDrawer();
         checkAutoLogIn();
         selectFragmentToLoad(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(dbHelper.userIsLoggedIn()){
+            mListTitles[3] = "Sign Out";
+            mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+                    R.layout.navdrawer_list_item, mListTitles));
+        }
 
     }
 
@@ -123,8 +128,6 @@ public class BuyActivity extends AppCompatActivity {
                 InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputManager.hideSoftInputFromWindow(drawerView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
-//
-
                 Button sellButton = (Button) findViewById(R.id.sellButton);
                 sellButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -134,12 +137,10 @@ public class BuyActivity extends AppCompatActivity {
                             Intent sellIntent = new Intent(getApplicationContext(), SellActivity.class);
                             startActivity(sellIntent);
                         }else{
+                            Toast.makeText(BuyActivity.this,"Must be logged for this feature",Toast.LENGTH_SHORT).show();
                             Intent signUpIntent = new Intent(getApplicationContext(), SignupActivity1.class);
                             startActivity(signUpIntent);
                         }
-
-
-
                     }
                 });
 
@@ -177,7 +178,6 @@ public class BuyActivity extends AppCompatActivity {
             public void runOnSuccess() {
 
             }
-
             @Override
             public void runOnFail() {
 
@@ -226,7 +226,6 @@ public class BuyActivity extends AppCompatActivity {
         }
     }
 
-
     private void selectItem(int position) {
         // update the main content by replacing fragments
 
@@ -237,27 +236,35 @@ public class BuyActivity extends AppCompatActivity {
         } else if (position == 2) {
             fragment = new Fragment_Buyer_ProfileSettings();
         } else if (position == 3) {
-            // TODO: SIGN OUT CODE !
+            //CRASHES APP
+//            if (SignupActivity1.mGoogleApiClient.isConnected()) {
+//                Plus.AccountApi.clearDefaultAccount(SignupActivity1.mGoogleApiClient);
+//                SignupActivity1.mGoogleApiClient.disconnect();
+//            }
+            if(dbHelper.userIsLoggedIn()) {
+                dbHelper.signOutUser(emptyCallback);
+                drawerUserNameTV.setText("");
+                mListTitles[3] = "Sign Out";
+                mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+                        R.layout.navdrawer_list_item, mListTitles));
+                LoginManager.getInstance().logOut();
+                Toast.makeText(this, "Sign out successful", Toast.LENGTH_SHORT).show();
 
-            if (SignupActivity1.mGoogleApiClient.isConnected()) {
-                Plus.AccountApi.clearDefaultAccount(SignupActivity1.mGoogleApiClient);
-                SignupActivity1.mGoogleApiClient.disconnect();
+                SharedPreferences sharedPreferences = getSharedPreferences(SignupActivity1.USER_INFO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.clear();
+                editor.commit();
+
+                //if not currently in fragment_buyer_map, replace current fragment with buyer_map fragment
+                if (!getCurrentFragment().equals(Fragment_Buyer_Map.TAG)) {
+                    replaceFragment(new Fragment_Buyer_Map());
+                }
+            }else{
+                Intent intent = new Intent(BuyActivity.this,SignupActivity1.class);
+                startActivity(intent);
             }
 
-            dbHelper.signOutUser(emptyCallback);
-            LoginManager.getInstance().logOut();
-            Toast.makeText(this, "Sign out successful", Toast.LENGTH_SHORT).show();
-            SharedPreferences sharedPreferences = getSharedPreferences(SignupActivity1.USER_INFO, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.clear();
-            editor.commit();
 
-
-
-            //if not currently in fragment_buyer_map, replace current fragment with buyer_map fragment
-            if (!getCurrentFragment().equals(Fragment_Buyer_Map.TAG)) {
-                replaceFragment(new Fragment_Buyer_Map());
-            }
         }
 
             // Create fragment manager to begin interacting with the fragments and the container
@@ -266,7 +273,7 @@ public class BuyActivity extends AppCompatActivity {
 
 
             // update selected item and title in nav drawer, then close the drawer
-            mDrawerList.setItemChecked(position, true);
+        mDrawerList.setItemChecked(position, true);
             mDrawerLayout.closeDrawer(DrawerLinear);
         }
 

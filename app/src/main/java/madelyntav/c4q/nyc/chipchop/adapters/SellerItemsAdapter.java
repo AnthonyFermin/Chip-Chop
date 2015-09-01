@@ -3,6 +3,7 @@ package madelyntav.c4q.nyc.chipchop.adapters;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,8 +69,7 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 @Override
                 public void runOnSuccess() {
                     Toast.makeText(context,"Item removed successfully", Toast.LENGTH_SHORT).show();
-                    sellerItems.remove(getAdapterPosition());
-                    notifyItemRemoved(getAdapterPosition());
+
                 }
 
                 @Override
@@ -86,9 +86,13 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     if(activity.isCurrentlyCooking()) {
                         dbHelper.removeItemFromSale(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
                     }else {
-                        //TODO: Madelyn: are these the correct methods to remove items from the seller profile in the DB?
+                    //TODO: Madelyn: are these the correct methods to remove items from the seller profile in the DB?
                         dbHelper.removeItemFromSellerProfile(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
+                        Log.d("ITEMID REMOVED", sellerItems.get(getAdapterPosition()).getItemID() + "");
                     }
+
+                    sellerItems.remove(getAdapterPosition());
+                    notifyItemRemoved(getAdapterPosition());
                 }
             });
 
@@ -119,12 +123,16 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         Item sellerItem = sellerItems.get(position);
         SellersViewHolder vh = (SellersViewHolder) viewHolder;
         vh.name.setText(sellerItem.getNameOfItem());
-        DecimalFormat df = new DecimalFormat("#.00");
-        String price = df.format(sellerItem.getPrice());
-        vh.price.setText("$" + price);
+        try {
+            DecimalFormat df = new DecimalFormat("#.00");
+            String price = df.format(sellerItem.getPrice());
+            vh.price.setText("$" + price);
+        }catch(NullPointerException e){
+            e.printStackTrace();
+        }
         vh.quantity.setText(sellerItem.getQuantity() + "");
         vh.description.setText(sellerItem.getDescriptionOfItem());
-        if(!sellerItem.getImageLink().isEmpty())
+        if(sellerItem.getImageLink() != null && !sellerItem.getImageLink().isEmpty())
             Picasso.with(context).load(sellerItem.getImageLink()).fit().into(vh.image);
 
         setAnimation(vh.container, position);

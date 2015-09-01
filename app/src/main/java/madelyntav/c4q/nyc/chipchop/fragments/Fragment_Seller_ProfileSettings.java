@@ -25,7 +25,6 @@ import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 
-import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
@@ -35,7 +34,6 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.GeolocationAPI.Geolocation;
 import madelyntav.c4q.nyc.chipchop.GeolocationAPI.GeolocationAPI;
 import madelyntav.c4q.nyc.chipchop.GeolocationAPI.Location;
-import madelyntav.c4q.nyc.chipchop.HelperMethods;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.SellActivity;
 import retrofit.Callback;
@@ -50,6 +48,8 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     private static final String ENDPOINT = "https://maps.googleapis.com/maps/api/geocode";
 
     DBHelper dbHelper;
+
+    public static final String TAG = "fragment_seller_profile";
 
     ToggleButton cookingStatus;
     TextView cookingStatusTV;
@@ -110,11 +110,14 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
     private void loadSellerInfo(){
 
+        Log.d("Seller Profile", "LOADING SELLER INFO");
         if(activity.getSeller() == null) {
             seller = dbHelper.getSellerFromDB(dbHelper.getUserID());
             load();
+            Log.d("Load Seller Info", "LOADING FROM DB");
         }else{
             seller = activity.getSeller();
+            Log.d("Load Seller Info", "PREVIOUSLY CACHED");
             setEditTexts();
             loadingPanel.setVisibility(View.GONE);
             containingView.setVisibility(View.VISIBLE);
@@ -154,10 +157,10 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
                 userAddress.setLatitude(location.getLat());
                 userAddress.setLongitude(location.getLng());
-                Seller sellerTemp = new Seller(uid, user.geteMail(), user.getName(), userAddress, storeName, phoneNumber);
-
-                dbHelper.addSellerProfileInfoToDB(sellerTemp);
-                activity.setSeller(sellerTemp);
+                seller = new Seller(uid, user.geteMail(), user.getName(), userAddress, storeName, phoneNumber);
+                seller.setIsCooking(false);
+                dbHelper.addSellerProfileInfoToDB(seller);
+                activity.setSeller(seller);
 
                 Toast.makeText(getActivity(), "Changes Saved", Toast.LENGTH_SHORT).show();
 
@@ -181,14 +184,14 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
                 int i = 0;
                 do{
-                    Log.d("SellerP - load seller", "Attempt #" + i);
+                    Log.d("Load Seller Info", "Attempt #" + i);
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                     if (i > 10){
-                        Log.d("SellerP - load seller", "DIDN'T LOAD");
+                        Log.d("Load Seller Info", "DIDN'T LOAD");
                         break;
                     }
                     i++;
@@ -202,13 +205,20 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 super.onPostExecute(aVoid);
 
                 if(seller != null) {
+                    Log.d("Load Seller Info", "LOAD FROM DB SUCCESSFUL");
+                    Log.d("SELLER INFO", "UID: " + seller.getUID());
+                    Log.d("SELLER INFO", "Name: " + seller.getName());
+                    Log.d("SELLER INFO", "Store Name: " + seller.getStoreName());
+                    Log.d("SELLER INFO", "isCooking: " + seller.getIsCooking());
                     setEditTexts();
-                    activity.setSeller(seller);
                 }else{
                     //TODO:display cannot connect to internet error message
-                    Toast.makeText(activity,"New Seller Profile Created", Toast.LENGTH_SHORT).show();
+                    Log.d("Load Seller Info", "NOT FOUND IN DB, NEW SELLER CREATED");
                     seller = new Seller(dbHelper.getUserID(),user.geteMail(),user.getName(),user.getAddress(),"",user.getPhoneNumber());
+                    dbHelper.addSellerProfileInfoToDB(seller);
+                    Toast.makeText(activity,"New Seller Profile Created", Toast.LENGTH_SHORT).show();
                 }
+                activity.setSeller(seller);
                 loadingPanel.setVisibility(View.GONE);
                 containingView.setVisibility(View.VISIBLE);
             }
@@ -216,6 +226,18 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     }
 
     private void setEditTexts(){
+        Log.d("SELLER INFO", "Is Cooking: " + seller.getIsCooking());
+        activity.setCookingStatus(seller.getIsCooking());
+        if(activity.isCurrentlyCooking()){
+            cookingStatus.setChecked(true);
+            cookingStatusTV.setVisibility(View.VISIBLE);
+            saveButton.setEnabled(false);
+        }else{
+            cookingStatus.setChecked(false);
+            cookingStatusTV.setVisibility(View.INVISIBLE);
+            saveButton.setEnabled(true);
+        }
+
         Address address = user.getAddress();
         sellerNameTV.setText(user.getName());
         storeNameET.setText(seller.getStoreName());
@@ -228,7 +250,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         phoneNumberET.setText(user.getPhoneNumber());
     }
 
-    private boolean hasPositiveQuantity(){
+    private boolean hasOneItemWithPosQuant(){
 
         for(Item item: sellerItems){
             if(item.getQuantity() > 0)
@@ -333,11 +355,20 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 }else if (cookingStatus.getText().toString().equalsIgnoreCase("on")) {
                     //TODO: add confirmation dialog when changing cooking status mention to click save to commit changes
                     sellerItems = activity.getSellerItems();
-                    if (sellerItems != null && hasPositiveQuantity()) {
-                        dbHelper.addActiveSellerToTable(seller);
-                        for(Item item: sellerItems) {
-                            dbHelper.addItemToActiveSellerProfile(item, emptyCallback);
-                        }
+                    if(storeNameET.getText().toString().isEmpty()){
+                        Toast.makeText(activity,"Please add a store name",Toast.LENGTH_SHORT).show();
+                        cookingStatus.setChecked(false);
+                    }else if (sellerItems != null && hasOneItemWithPosQuant()) {
+                        seller.setUID(dbHelper.getUserID());
+                        seller.setItems(sellerItems);
+                        Log.d("Seller Info", seller.getUID() + "");
+                        Log.d("Seller Info", seller.getName() + "");
+                        Log.d("Seller Info", seller.getStoreName() + "");
+                        seller.setIsCooking(true);
+                        dbHelper.setSellerCookingStatus(true);
+                        activity.setSeller(seller);
+                        dbHelper.sendSellerToActiveSellerTable(seller);
+
                         activity.setCookingStatus(true);
                         saveButton.setEnabled(false);
                         cookingStatusTV.setVisibility(View.VISIBLE);
@@ -353,6 +384,9 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                     cookingStatusTV.setVisibility(View.INVISIBLE);
                     dbHelper.removeSellersFromActiveSellers(seller, emptyCallback);
                     activity.setCookingStatus(false);
+                    seller.setIsCooking(false);
+                    activity.setSeller(seller);
+                    dbHelper.setSellerCookingStatus(false);
                     Toast.makeText(activity,"Cooking Status Deactivated", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -404,6 +438,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         user = activity.getUser();
 
         stringVariable = Environment.getExternalStorageDirectory().getPath() + "_pictureholder_id.jpg";
+        activity.setCurrentFragment(TAG);
 
     }
 

@@ -57,13 +57,13 @@
             </LinearLayout>
 
 
-            <TextView
-                style="@style/text_design"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="LOGIN"
-                android:textStyle="bold" />
+            <!--<TextView-->
+                <!--style="@style/text_design"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:gravity="center_horizontal"-->
+                <!--android:text="LOGIN"-->
+                <!--android:textStyle="bold" />-->
 
 
             <LinearLayout
@@ -99,23 +99,23 @@
 
                 <!--</android.support.design.widget.TextInputLayout>-->
 
-                <Button
-                    android:id="@+id/change_email_button"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="CHANGE EMAIL"
-                    android:layout_margin="5dp"
-                    style="@style/button_design"/>
+                <!--<Button-->
+                    <!--android:id="@+id/change_email_button"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:text="CHANGE EMAIL"-->
+                    <!--android:layout_margin="5dp"-->
+                    <!--style="@style/button_design"/>-->
 
-                <Button
-                    android:id="@+id/change_pw_button"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="CHANGE PASSWORD"
-                    android:layout_margin="5dp"
-                    style="@style/button_design"/>
+                <!--<Button-->
+                    <!--android:id="@+id/change_pw_button"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:text="CHANGE PASSWORD"-->
+                    <!--android:layout_margin="5dp"-->
+                    <!--style="@style/button_design"/>-->
 
             </LinearLayout>
 
@@ -222,7 +222,7 @@
                     android:id="@+id/phone_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Phone Number"
+                    android:hint="Phone Number (optional)"
                     android:inputType="phone"
                     android:textSize="20sp" />
 

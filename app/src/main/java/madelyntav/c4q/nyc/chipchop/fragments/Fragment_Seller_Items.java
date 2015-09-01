@@ -30,7 +30,7 @@ public class Fragment_Seller_Items extends Fragment {
     private android.support.design.widget.FloatingActionButton addButton;
     private RecyclerView foodList;
     private RelativeLayout loadingPanel;
-    private LinearLayout containingView;
+    private RelativeLayout containingView;
 
     private DBHelper dbHelper;
     private SellActivity activity;
@@ -120,7 +120,7 @@ public class Fragment_Seller_Items extends Fragment {
     private void initializeViews(View root){
 
         loadingPanel = (RelativeLayout) root.findViewById(R.id.loadingPanel);
-        containingView = (LinearLayout) root.findViewById(R.id.container);
+        containingView = (RelativeLayout) root.findViewById(R.id.container);
 
         containingView.setVisibility(View.INVISIBLE);
 

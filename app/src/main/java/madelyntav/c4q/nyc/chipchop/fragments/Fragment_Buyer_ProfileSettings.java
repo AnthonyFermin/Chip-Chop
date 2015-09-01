@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import madelyntav.c4q.nyc.chipchop.R;
 
@@ -23,7 +24,7 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
     public static final String TAG = "fragment_buyer_profile_settings";
 
 
-    ImageButton profilePhoto;
+    ImageView profilePhoto;
     public static final int RESULT_OK = -1;
     private Uri imageFileUri;
     Intent intent;
@@ -35,7 +36,7 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_buyer_profile_settings, container, false);
 
-        profilePhoto = (ImageButton) root.findViewById(R.id.profile_image);
+        profilePhoto = (ImageView) root.findViewById(R.id.profile_image);
         profilePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

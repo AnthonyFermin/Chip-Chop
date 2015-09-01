@@ -570,7 +570,7 @@ public class DBHelper extends Firebase {
                         seller.setLongitude(seller1.latitude);
                         seller.setLatitude(seller1.longitude);
 
-                        Log.d("Seller", seller.name);
+//                        Log.d("Seller", seller.name);
 
                     }
                 }

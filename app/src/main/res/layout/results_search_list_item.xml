@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:id="@+id/container"
-        android:padding="10dp">
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:background="@drawable/food2"
+    android:padding="10dp">
 
-       <LinearLayout
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:layout_alignParentBottom="true"
-           android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/store_name"
@@ -20,14 +21,19 @@
             android:textColor="#FFF"
             android:textSize="25sp" />
 
+        <RatingBar
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_gravity="start"/>
+
         <TextView
             android:id="@+id/store_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#FFF"
             android:gravity="bottom|start"
             android:padding="8dp"
-            android:visibility="gone"/>
+            android:textColor="#FFF"
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -75,4 +81,4 @@
         </LinearLayout>
 
     </LinearLayout>
-    </RelativeLayout>
+</RelativeLayout>

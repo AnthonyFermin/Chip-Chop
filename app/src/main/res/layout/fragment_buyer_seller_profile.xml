@@ -12,8 +12,8 @@
         android:id="@+id/loadingPanel"
         >
         <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_gravity="center"
             android:background="@android:color/transparent"/>
     </RelativeLayout>
@@ -50,6 +50,10 @@
                 android:textSize="35sp"
                 android:gravity="center"
                 android:layout_weight="1"/>
+
+            <RatingBar
+                android:layout_width="wrap_content"
+                android:layout_height="25dp" />
 
             <TextView
                 android:layout_width="match_parent"

@@ -642,6 +642,16 @@ public class DBHelper extends Firebase {
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     Seller seller1 = dataSnapshot1.getValue(Seller.class);
+                    seller1.setName(seller1.name);
+                    seller1.setUID(dataSnapshot1.getKey());
+                    seller1.setIsCooking(seller1.isCooking);
+                    seller1.setLatitude(seller1.latitude);
+                    seller1.setLongitude(seller1.longitude);
+                    seller1.setPhoneNumber(seller1.phoneNumber);
+                    seller1.setAddress(seller1.address);
+                    seller1.seteMail(seller1.eMail);
+                    seller1.setPhotoLink(seller1.photoLink);
+                    seller1.setStoreName(seller1.storeName);
                     allActiveSellers.add(seller1);
                 }
             }

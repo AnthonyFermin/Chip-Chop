@@ -178,7 +178,6 @@ public class BuyActivity extends AppCompatActivity {
             public void runOnSuccess() {
 
             }
-
             @Override
             public void runOnFail() {
 

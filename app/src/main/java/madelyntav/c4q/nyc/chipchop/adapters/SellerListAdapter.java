@@ -36,8 +36,6 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private List<Seller> sellers;
     private Context context;
     private int lastPosition = -1;
-    SellersViewHolder vh;
-
 
     public SellerListAdapter(Context context, ArrayList<Seller> sellers) {
         this.context = context;
@@ -83,8 +81,6 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         Seller seller = sellers.get(position);
         final SellersViewHolder vh = (SellersViewHolder) viewHolder;
         vh.name.setText(seller.getStoreName());
-
-        //TODO: CHANGE TO DESCRIPTION !!
         vh.description.setText(seller.getDescription());
         Target target = new Target() {
             @Override

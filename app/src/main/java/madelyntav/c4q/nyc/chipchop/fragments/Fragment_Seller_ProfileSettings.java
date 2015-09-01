@@ -249,7 +249,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         phoneNumberET.setText(user.getPhoneNumber());
     }
 
-    private boolean hasPositiveQuantity(){
+    private boolean hasOneItemWithPosQuant(){
 
         for(Item item: sellerItems){
             if(item.getQuantity() > 0)
@@ -357,15 +357,16 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                     if(storeNameET.getText().toString().isEmpty()){
                         Toast.makeText(activity,"Please add a store name",Toast.LENGTH_SHORT).show();
                         cookingStatus.setChecked(false);
-                    }else if (sellerItems != null && hasPositiveQuantity()) {
+                    }else if (sellerItems != null && hasOneItemWithPosQuant()) {
                         seller.setUID(dbHelper.getUserID());
+                        seller.setItems(sellerItems);
                         Log.d("Seller Info", seller.getUID() + "");
                         Log.d("Seller Info", seller.getName() + "");
                         Log.d("Seller Info", seller.getStoreName() + "");
                         seller.setIsCooking(true);
+                        dbHelper.setSellerCookingStatus(true);
                         activity.setSeller(seller);
                         dbHelper.sendSellerToActiveSellerTable(seller);
-                        dbHelper.addSellerProfileInfoToDB(seller);
 
                         activity.setCookingStatus(true);
                         saveButton.setEnabled(false);
@@ -384,7 +385,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                     activity.setCookingStatus(false);
                     seller.setIsCooking(false);
                     activity.setSeller(seller);
-                    dbHelper.addSellerProfileInfoToDB(seller);
+                    dbHelper.setSellerCookingStatus(false);
                     Toast.makeText(activity,"Cooking Status Deactivated", Toast.LENGTH_SHORT).show();
                 }
             }

@@ -597,9 +597,8 @@ public class DBHelper extends Firebase {
                         user.setUID(user1.UID);
                         user.setPhoneNumber(user1.phoneNumber);
                         user.setUserItems(user1.userItems);
-                        user.setLongitude(user1.latitude);
                         user.setLongitude(user1.longitude);
-//                        Log.d("NAMEOFUSER", user.name);
+                        user.setLatitude(user1.latitude);
                     }
                 }
             }

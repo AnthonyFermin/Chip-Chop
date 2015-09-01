@@ -150,7 +150,6 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
             public void runOnSuccess() {
 
             }
-
             @Override
             public void runOnFail() {
 

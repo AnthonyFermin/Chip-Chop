@@ -1,6 +1,5 @@
 package madelyntav.c4q.nyc.chipchop.fragments;
 
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -161,6 +160,7 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
         seller = activity.getSellerToView();
         seller.setUID("113"); // was originally empty when retrieved from DB
         //TODO: Madelyn: supposed to be seller.getUID() instead of 113, the Seller object does not have a UID when retrieved from DB
+        //TODO: Anthony: I think I fixed this but I wasn't sure what you meant by what you wrote which method are you referring to, we retrieve the seller a lot?
         foodItems = dbHelper.getSellersOnSaleItems(seller.getUID(), emptyCallback);
 
         order = new Order(dbHelper.getUserID(),seller.getUID());

@@ -62,6 +62,7 @@ public class DBHelper extends Firebase {
     public static Order returnOrder;
     public ArrayList<Item> listOfItemsSellingForSeller;
     public String sellerId;
+    public String orderID;
     public static DBCallback callback;
     public static Seller seller;
     public static ArrayList<Seller> allSellersInDB;
@@ -70,6 +71,7 @@ public class DBHelper extends Firebase {
     public static ArrayList<Review> sellersReviewArrayList;
     public static ArrayList<Order> previouslyBought;
     public static ArrayList<Order> previouslySold;
+    public static ArrayList<Item> receiptForSpecificOrder;
 
 
 
@@ -105,6 +107,7 @@ public class DBHelper extends Firebase {
         seller=new Seller();
         item=new Item();
         allSellersInDB=new ArrayList<>();
+        receiptForSpecificOrder= new ArrayList<>();
         callback= new DBCallback() {
             @Override
             public void runOnSuccess() {
@@ -131,6 +134,12 @@ public class DBHelper extends Firebase {
 
     public String getUserID() {
         return UID;
+    }
+    public String getSellerID() {
+        return sellerId;
+    }
+    public Seller getCurrentSeller() {
+        return seller;
     }
 
     public User getCurrentUser() {
@@ -1143,6 +1152,7 @@ public class DBHelper extends Firebase {
         fRef.child(itemID).child("containsDairy").setValue(item.isContainsDairy());
         dbCallback.runOnSuccess();
     }
+
     public void moveItemToPreviouslySoldItems(Item item,DBCallback dbCallback){
         Firebase fRef = new Firebase(URL + "SellerProfiles/" + item.getSellerID()+"/PreviouslySold/");
         String itemID=item.getItemID();
@@ -1151,6 +1161,7 @@ public class DBHelper extends Firebase {
         fRef.child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
         fRef.child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
         fRef.child(itemID).child(quantity).setValue(item.getQuantity());
+        fRef.child(itemID).child("buyerId").setValue(item.getBuyerID());
         fRef.child(itemID).child("price").setValue(item.getPrice());
         fRef.child(itemID).child("imageLink").setValue(item.getImageLink());
         fRef.child(itemID).child("containsPeanuts").setValue(item.isContainsPeanuts());
@@ -1170,6 +1181,7 @@ public class DBHelper extends Firebase {
 
         fRef.child(itemID);
         fRef.child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
+        fRef.child(itemID).child("sellerId").setValue(item.getSellerID());
         fRef.child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
         fRef.child(itemID).child(quantity).setValue(item.getQuantity());
         fRef.child(itemID).child("price").setValue(item.getPrice());
@@ -1183,7 +1195,6 @@ public class DBHelper extends Firebase {
 
         dbCallback.runOnSuccess();
     }
-
     public void getAllPreviouslyBoughtItems(String userID, final DBCallback dbCallback){
         UID=userID;
 
@@ -1196,6 +1207,7 @@ public class DBHelper extends Firebase {
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     Order order = dataSnapshot1.getValue(Order.class);
+                    order.setOrderID(dataSnapshot1.getKey());
                     if (previouslyBought.size() < sizeofAddDBList) {
                         previouslyBought.add(order);
                     }
@@ -1216,6 +1228,101 @@ public class DBHelper extends Firebase {
 
     }
 
+    //Method to get Item Details For Buyer Receipt. Only returning details needed for receipt
+    public void getReceiptForSpecificOrderForBuyer(String orderID, final DBCallback dbCallback){
+        UID=userID;
+        this.orderID=orderID;
+        Firebase fRef = new Firebase(URL + "UserProfiles/"+UID+"/PreviouslyBought/"+orderID);
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                sizeofAddDBList = dataSnapshot.getChildrenCount();
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Item item = dataSnapshot1.getValue(Item.class);
+                    item.setItemID(dataSnapshot1.getKey());
+                    item.setPrice(item.price);
+                    item.setQuantity(item.quantity);
+                    item.setSellerID(item.sellerID);
+                    item.setNameOfItem(item.nameOfItem);
+                    item.setBuyerID(item.buyerID);
+
+                    if (receiptForSpecificOrder.size() < sizeofAddDBList) {
+                        receiptForSpecificOrder.add(item);
+                    }
+                }
+                dbCallback.runOnSuccess();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Toast.makeText(mContext, "Unable To Retrieve Orders Please Try Again", Toast.LENGTH_SHORT).show();
+                dbCallback.runOnFail();
+            }
+        });
+
+        if (receiptForSpecificOrder.size() == sizeofAddDBList) {
+            updateReceipt(dbCallback);
+        }
+    }
+
+
+    public ArrayList<Item> updateReceipt(DBCallback dbCallback){
+        if(receiptForSpecificOrder.size()<sizeofAddDBList){
+            getReceiptForSpecificOrderForBuyer(orderID, callback);
+        }
+        dbCallback.runOnSuccess();
+
+        return receiptForSpecificOrder;
+    }
+
+    //Method to get Item Details For Buyer Receipt. Only returning details needed for receipt
+    public void getReceiptForSpecificOrderForSeller(String orderID, String sellerId, final DBCallback dbCallback){
+        this.sellerId=sellerId;
+        this.orderID =orderID;
+        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId+"/PreviouslySold/"+orderID);
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                sizeofAddDBList = dataSnapshot.getChildrenCount();
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Item item = dataSnapshot1.getValue(Item.class);
+                    item.setItemID(dataSnapshot1.getKey());
+                    item.setPrice(item.price);
+                    item.setQuantity(item.quantity);
+                    item.setNameOfItem(item.nameOfItem);
+                    item.setBuyerID(item.buyerID);
+
+                    if (receiptForSpecificOrder.size() < sizeofAddDBList) {
+                        receiptForSpecificOrder.add(item);
+                    }
+                }
+                dbCallback.runOnSuccess();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Toast.makeText(mContext, "Unable To Retrieve Orders Please Try Again", Toast.LENGTH_SHORT).show();
+                dbCallback.runOnFail();
+            }
+        });
+
+        if (receiptForSpecificOrder.size() == sizeofAddDBList) {
+            updateReceipt(dbCallback);
+        }
+    }
+
+
+    public ArrayList<Item> updateReceiptForSeller(DBCallback dbCallback){
+        if(receiptForSpecificOrder.size()<sizeofAddDBList){
+            getReceiptForSpecificOrderForSeller(orderID,sellerId, callback);
+        }
+        dbCallback.runOnSuccess();
+        return receiptForSpecificOrder;
+    }
+
     public void getAllPreviouslySoldItems(String sellerId, final DBCallback dbCallback){
         this.sellerId=sellerId;
 
@@ -1227,6 +1334,7 @@ public class DBHelper extends Firebase {
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     Order order = dataSnapshot1.getValue(Order.class);
+                    order.setOrderID(dataSnapshot1.getKey());
                     if (previouslySold.size() < sizeofAddDBList) {
                         previouslySold.add(order);
                     }

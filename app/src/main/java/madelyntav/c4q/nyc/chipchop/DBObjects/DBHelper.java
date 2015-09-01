@@ -1700,8 +1700,8 @@ public class DBHelper extends Firebase {
                         user.seteMail(user1.eMail);
                         user.setUID(user1.UID);
                         user.setPhoneNumber(user1.phoneNumber);
-                        user.setLongitude(user1.latitude);
-                        user.setLatitude(user1.longitude);
+                        user.setLongitude(user1.longitude);
+                        user.setLatitude(user1.latitude);
                     }
                 }
                 dbCallback.runOnSuccess();

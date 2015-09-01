@@ -226,6 +226,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     }
 
     private void setEditTexts(){
+        Log.d("SELLER INFO", "Is Cooking: " + seller.getIsCooking());
         activity.setCookingStatus(seller.getIsCooking());
         if(activity.isCurrentlyCooking()){
             cookingStatus.setChecked(true);

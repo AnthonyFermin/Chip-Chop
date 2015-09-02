@@ -20,7 +20,6 @@ import java.util.Map;
 
 import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.SignupActivity1;
-import retrofit.http.HEAD;
 
 /**
  * Created by c4q-madelyntavarez on 8/12/15.
@@ -700,6 +699,7 @@ public class DBHelper extends Firebase {
                         seller.setDescription(seller1.description);
                         seller.seteMail(seller1.eMail);
                         seller.setUID(seller1.UID);
+                        seller.setStoreName(seller1.storeName);
                         seller.setPhoneNumber(seller1.phoneNumber);
                         seller.setItems(seller1.items);
                         seller.setLongitude(seller1.latitude);

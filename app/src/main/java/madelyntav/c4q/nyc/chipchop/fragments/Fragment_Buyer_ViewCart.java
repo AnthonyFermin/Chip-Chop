@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,6 +22,8 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
 import madelyntav.c4q.nyc.chipchop.R;
+import madelyntav.c4q.nyc.chipchop.ReviewDialogFragment;
+import madelyntav.c4q.nyc.chipchop.ReviewDialogFragment2;
 import madelyntav.c4q.nyc.chipchop.SignupActivity1;
 import madelyntav.c4q.nyc.chipchop.adapters.CartListAdapter;
 
@@ -64,6 +68,10 @@ public class Fragment_Buyer_ViewCart extends Fragment {
                     startActivity(signupIntent);
                 } else if(cartItems.size() == 0){
                     Toast.makeText(activity,"Cart is empty",Toast.LENGTH_SHORT).show();
+                    FragmentActivity activity = getActivity();
+                    FragmentManager fm = activity.getSupportFragmentManager();
+                    ReviewDialogFragment alertDialog = new ReviewDialogFragment();
+                    alertDialog.show(fm, "fragment_alert");
                 }else {
                     activity.replaceFragment(new Fragment_Buyer_Checkout());
                 }

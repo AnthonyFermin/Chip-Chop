@@ -41,6 +41,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -392,10 +394,11 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             Log.d("Buyer Map Fragment","User Long: " + lng);
 
             if (distance[0] < circle.getRadius()) {
-                Log.d("Fragment Buyer Map","MARKER ADDED");
+                Log.d("Fragment Buyer Map", "MARKER ADDED");
                 map.addMarker(new MarkerOptions()
                         .position(new LatLng(gLat, gLng))
-                        .title(userName));
+                        .title(userName))
+                        .setIcon(BitmapDescriptorFactory.fromResource(R.drawable.mapmarker));
 
             }
         }

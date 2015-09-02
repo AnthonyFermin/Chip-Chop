@@ -39,7 +39,7 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
     private ArrayList<Item> foodItems;
     private RecyclerView foodList;
 
-    RelativeLayout loadingPanel;
+    ProgressBar loadingPanel;
     LinearLayout containingView;
 
     CircleImageView storeImage;
@@ -65,6 +65,7 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
 
         setListeners();
 
+        loadingPanel.setVisibility(root.VISIBLE);
         load();
 
         return root;
@@ -132,7 +133,7 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
     }
 
     private void bindViews(View root) {
-        loadingPanel = (RelativeLayout) root.findViewById(R.id.loadingPanel);
+        loadingPanel = (ProgressBar) root.findViewById(R.id.loadingPanel);
         containingView = (LinearLayout) root.findViewById(R.id.container);
         containingView.setVisibility(View.INVISIBLE);
 

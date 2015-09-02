@@ -26,16 +26,14 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.firebase.client.Firebase;
-
-import java.util.Arrays;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.plus.Plus;
 
-import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
+import java.util.Arrays;
+
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 
@@ -298,13 +296,14 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         }
         // when user clicks sign in
         if (user != null) {
+            //Log.d("Address",user.getAddressString()+"");
             String addressString = user.getAddressString();
-            Address address = HelperMethods.parseAddressString(addressString, dbHelper.getUserID());
+//            Address address = HelperMethods.parseAddressString(addressString, dbHelper.getUserID());
             editor.putString(NAME, user.getName());
-            editor.putString(ADDRESS, address.getStreetAddress());
-            editor.putString(APT, address.getApartment());
-            editor.putString(CITY, address.getCity());
-            editor.putString(ZIPCODE, address.getZipCode());
+           // editor.putString(ADDRESS, address.getStreetAddress());
+           // editor.putString(APT, address.getApartment());
+           // editor.putString(CITY, address.getCity());
+           // editor.putString(ZIPCODE, address.getZipCode());
             editor.putString(PHONE_NUMBER, user.getPhoneNumber());
         }
         editor.commit();
@@ -388,18 +387,6 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
 
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mGoogleApiClient.disconnect();
-    }
-
-    @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         float fbIconScale = 1.45F;
         Drawable drawable = getResources().getDrawable(
@@ -418,5 +405,17 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
                 getResources().getDimensionPixelSize(
                         R.dimen.fb_margin_override_bottom));
         super.onPostCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mGoogleApiClient.disconnect();
     }
 }

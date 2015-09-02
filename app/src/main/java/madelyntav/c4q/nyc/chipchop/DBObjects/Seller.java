@@ -55,6 +55,7 @@ public class Seller {
         this.eMail = eMail;
         this.name=name;
         this.address=address;
+        this.storeName=storeName;
         this.photoLink=photoLink;
         this.phoneNumber=phoneNumber;
     }

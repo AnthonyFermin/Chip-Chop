@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -68,6 +70,10 @@ public class SignupActivity2 extends AppCompatActivity {
         setContentView(R.layout.activity_signup2);
 
         //TODO: onclick circleImageview allows user to upload a profile image
+
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
+        getSupportActionBar().setBackgroundDrawable(colorDrawable);
+
 
         dbHelper = DBHelper.getDbHelper(this);
         Intent intent = getIntent();

@@ -2,8 +2,6 @@ package madelyntav.c4q.nyc.chipchop.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,7 +20,6 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
 import madelyntav.c4q.nyc.chipchop.R;
-import madelyntav.c4q.nyc.chipchop.ReviewDialogFragment;
 import madelyntav.c4q.nyc.chipchop.adapters.CheckoutListAdapter;
 
 
@@ -31,11 +28,12 @@ public class Fragment_Buyer_Checkout extends Fragment {
     Button confirmOrder;
     private ArrayList<Item> cartItems;
     private RecyclerView cartRView;
-    private TextView totalPrice;
+    private TextView totalPriceTV;
 
     private BuyActivity activity;
     private Order order;
     private DBHelper dbHelper;
+    private double total;
 
     public static final String TAG = "fragment_buyer_checkout";
 
@@ -62,6 +60,7 @@ public class Fragment_Buyer_Checkout extends Fragment {
             public void onClick(View view) {
                 //TODO: Madelyn this the right method? I see multiple methods that can be used to send this to the DB
                 //TODO: Madelyn this can be for next weeks sprint if you like: is there a way to check the quanities wanted vs the quantities actually available on the DB inside a DBHelper method before accepting the transaction? https://www.firebase.com/docs/web/api/firebase/transaction.html
+                order.setPrice(total);
                 dbHelper.addCurrentOrderToSellerDB(order,new DBCallback() {
                     @Override
                     public void runOnSuccess() {
@@ -87,16 +86,12 @@ public class Fragment_Buyer_Checkout extends Fragment {
     }
 
     private void initializeViews() {
-        double total = 0;
-        for(Item item: cartItems){
-            total = total + (item.getPrice() * item.getQuantityWanted());
-        }
-        totalPrice.setText(total + "");
+        totalPriceTV.setText(total + "");
     }
 
     private void bindViews(View root) {
         cartRView = (RecyclerView) root.findViewById(R.id.checkout_items_list);
-        totalPrice = (TextView) root.findViewById(R.id.total_price_tv);
+        totalPriceTV = (TextView) root.findViewById(R.id.total_price_tv);
         confirmOrder = (Button) root.findViewById(R.id.confirmOrderButton);
     }
 
@@ -113,6 +108,11 @@ public class Fragment_Buyer_Checkout extends Fragment {
             Log.d("Checkout Item","Item ID: " + item.getItemID());
             Log.d("Checkout Item","Item Name: " + item.getNameOfItem());
             Log.d("Checkout Item","          ------");
+        }
+
+        total = 0;
+        for(Item item: cartItems){
+            total = total + (item.getPrice() * item.getQuantityWanted());
         }
     }
 

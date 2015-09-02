@@ -4,12 +4,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-    android:padding="5dp">
+        android:padding="5dp"
+        android:id="@+id/container">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
+        <!--TODO: Alvin these views need to align with the views in fragment_buyer_checkout under the order summary-->
 
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/food_image"

@@ -42,30 +42,20 @@ public class Fragment_Buyer_Checkout extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
 
         View root = inflater.inflate(R.layout.fragment_buyer_checkout, container, false);
 
-        activity = (BuyActivity) getActivity();
-        dbHelper = DBHelper.getDbHelper(activity);
+        initializeData();
+        bindViews(root);
+        initializeViews();
+        setListAdapter();
+        setListeners();
 
-        order = activity.getCurrentOrder();
-        cartItems = order.getItemsOrdered();
+        return root;
 
-        totalPrice = (TextView) root.findViewById(R.id.total_price_tv);
-        double total = 0;
-        for(Item item: cartItems){
-            total = total + (item.getPrice() * item.getQuantityWanted());
-        }
-        totalPrice.setText(total + "");
+    }
 
-        cartRView = (RecyclerView) root.findViewById(R.id.checkout_items_list);
-        cartRView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        CheckoutListAdapter checkoutListAdapter = new CheckoutListAdapter(getActivity(), cartItems);
-        cartRView.setAdapter(checkoutListAdapter);
-
-        confirmOrder = (Button) root.findViewById(R.id.confirmOrderButton);
+    private void setListeners() {
         confirmOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,10 +75,36 @@ public class Fragment_Buyer_Checkout extends Fragment {
                 //TODO: Check if Signed in, else go into signup activity - Sign in should just be a pop up dialog
             }
         });
+    }
 
+    private void setListAdapter() {
+        cartRView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        return root;
+        CheckoutListAdapter checkoutListAdapter = new CheckoutListAdapter(getActivity(), cartItems);
+        cartRView.setAdapter(checkoutListAdapter);
 
+    }
+
+    private void initializeViews() {
+        double total = 0;
+        for(Item item: cartItems){
+            total = total + (item.getPrice() * item.getQuantityWanted());
+        }
+        totalPrice.setText(total + "");
+    }
+
+    private void bindViews(View root) {
+        cartRView = (RecyclerView) root.findViewById(R.id.checkout_items_list);
+        totalPrice = (TextView) root.findViewById(R.id.total_price_tv);
+        confirmOrder = (Button) root.findViewById(R.id.confirmOrderButton);
+    }
+
+    private void initializeData() {
+        activity = (BuyActivity) getActivity();
+        dbHelper = DBHelper.getDbHelper(activity);
+
+        order = activity.getCurrentOrder();
+        cartItems = order.getItemsOrdered();
     }
 
 }

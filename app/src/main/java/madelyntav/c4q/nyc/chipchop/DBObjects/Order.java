@@ -17,7 +17,7 @@ public class Order {
     ArrayList<Item> itemsOrdered;
 
     public Order(){
-        //this.buyerID=buyerID;
+        this.itemsOrdered = new ArrayList<>();
     }
 
     public Order(ArrayList<Item> itemsOrdered){

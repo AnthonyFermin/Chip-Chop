@@ -80,9 +80,7 @@ public class FoodItemSelectDialog extends android.support.v4.app.DialogFragment 
         addToCartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Item item = new Item(itemForCart.getSellerID(),
-                        dbHelper.getUserID(), itemForCart.getNameOfItem(), itemForCart.getQuantity(),
-                        itemForCart.getDescriptionOfItem(), itemForCart.getImageLink());
+                Item item = itemForCart.clone();
                 item.setQuantityWanted(quantity);
                 ArrayList<Item> cart = order.getItemsOrdered();
                 boolean replacedItem = false;

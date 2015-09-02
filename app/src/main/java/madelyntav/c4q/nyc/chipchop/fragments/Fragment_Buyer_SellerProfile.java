@@ -159,9 +159,6 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
         };
 
         seller = activity.getSellerToView();
-//        seller.setUID("c28c24d9-e127-437c-b03a-de70af28bf78"); // was originally empty when retrieved from DB
-        //TODO: Madelyn: supposed to be seller.getUID() instead of 113, the Seller object does not have a UID when retrieved from DB in the Buyer Map Fragment
-        //TODO: Anthony: I think I fixed this but I wasn't sure what you meant by what you wrote which method are you referring to, we retrieve the seller a lot?
         foodItems = dbHelper.getSellersOnSaleItems(seller.getUID(), emptyCallback);
 
         order = new Order(dbHelper.getUserID(),seller.getUID());

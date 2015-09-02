@@ -651,6 +651,7 @@ public class DBHelper extends Firebase {
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     Seller seller1 = dataSnapshot1.getValue(Seller.class);
+
                     seller1.setName(seller1.name);
                     seller1.setUID(dataSnapshot1.getKey());
                     seller1.setIsCooking(seller1.isCooking);
@@ -765,7 +766,7 @@ public class DBHelper extends Firebase {
     public void sendSellerToActiveSellerTable(Seller seller) {
         this.sellerId = seller.getUID();
         Firebase fRef = new Firebase(URL + "ActiveSellers/");
-        Seller sellerToSend = getSpecificActiveSeller(sellerId, callback);
+       // Seller sellerToSend = getSpecificActiveSeller(sellerId, callback);
 
         fRef.child(sellerId).child(sUID).setValue(sellerId);
         fRef.child(sellerId).child(sName).setValue(seller.getName());

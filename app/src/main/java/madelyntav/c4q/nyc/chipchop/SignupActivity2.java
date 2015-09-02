@@ -163,12 +163,13 @@ public class SignupActivity2 extends AppCompatActivity {
 
         GeolocationAPI geolocationAPI = restAdapter.create(GeolocationAPI.class);
 
-        address = addressET.getText().toString();
+        address = addressET.getText().toString().trim();
         address = address.trim().replace(" ", "+");
         name = nameET.getText().toString().trim();
         apt = aptET.getText().toString().trim();
         city = cityET.getText().toString().trim().replace(' ','+');
-        phoneNumber = phoneNumberET.getText().toString();
+        phoneNumber = phoneNumberET.getText().toString().trim().replace(" ", "");
+        zipcode = zipET.getText().toString().trim();
 
 
         String queryString = address + ",+" + city + ",+NY";// + "&key=" + APIKEY;
@@ -179,7 +180,6 @@ public class SignupActivity2 extends AppCompatActivity {
             public void success(Geolocation geolocation, Response response) {
                 String uid = dbHelper.getUserID();
                 Location location = geolocation.getResults().get(0).getGeometry().getLocation();
-                zipcode = geolocation.getResults().get(0).getAddressComponents().get(7).getLongName();
 
                 address = address.replace('+', ' ');
                 city = city.replace('+', ' ');

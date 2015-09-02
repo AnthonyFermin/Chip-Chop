@@ -164,4 +164,21 @@ public class Item {
     public void setQuantityWanted(int quantityWanted) {
         this.quantityWanted = quantityWanted;
     }
+
+    @Override
+    public Item clone() {
+        Item item = new Item(this.getSellerID(),this.getBuyerID(),this.getNameOfItem(),this.getQuantity()
+        ,this.getDescriptionOfItem(),this.getImageLink());
+        item.setPrice(this.getPrice());
+        item.setContainsShellfish(this.isContainsShellfish());
+        item.setContainsPeanuts(this.isContainsPeanuts());
+        item.setContainsDairy(this.isContainsDairy());
+        item.setContainsEggs(this.isContainsEggs());
+        item.setIsVegetarian(this.isVegetarian());
+        item.setGlutenFree(this.isGlutenFree());
+        item.setItemID(this.getItemID());
+        item.setQuantityWanted(this.getQuantityWanted());
+
+        return item;
+    }
 }

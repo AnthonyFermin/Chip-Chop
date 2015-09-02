@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     card_view:cardCornerRadius="1dp"
     android:orientation="horizontal"
-    android:padding="5dp">
+    android:padding="15dp">
 
 
     <LinearLayout
@@ -116,8 +116,8 @@
                 </LinearLayout>
 
                 <Button
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:text="X"
                     android:background="@android:color/transparent"
                     android:textColor="#D32F2F"

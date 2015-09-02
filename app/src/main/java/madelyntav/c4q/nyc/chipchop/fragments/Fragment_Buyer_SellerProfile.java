@@ -48,6 +48,7 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
     private Seller seller;
     private BuyActivity activity;
     private DBCallback emptyCallback;
+    private Order order;
 
 
     @Override
@@ -157,6 +158,10 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
 
         seller = activity.getSellerToView();
         foodItems = dbHelper.getSellersOnSaleItems(seller.getUID(), emptyCallback);
+        order = activity.getCurrentOrder();
+        order.setBuyerID(dbHelper.getUserID());
+        order.setSellerID(seller.getUID());
+        activity.setCurrentOrder(order);
     }
 
 }

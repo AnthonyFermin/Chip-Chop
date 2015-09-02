@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,6 +106,14 @@ public class Fragment_Buyer_Checkout extends Fragment {
 
         order = activity.getCurrentOrder();
         cartItems = order.getItemsOrdered();
+        //debug
+        for(Item item: cartItems){
+            Log.d("Checkout Item","Buyer ID: " + item.getBuyerID());
+            Log.d("Checkout Item","Seller ID: " + item.getSellerID());
+            Log.d("Checkout Item","Item ID: " + item.getItemID());
+            Log.d("Checkout Item","Item Name: " + item.getNameOfItem());
+            Log.d("Checkout Item","          ------");
+        }
     }
 
 }

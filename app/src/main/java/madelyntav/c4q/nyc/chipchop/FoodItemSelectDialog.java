@@ -82,6 +82,7 @@ public class FoodItemSelectDialog extends android.support.v4.app.DialogFragment 
             public void onClick(View view) {
                 Item item = itemForCart.clone();
                 item.setQuantityWanted(quantity);
+                item.setBuyerID(dbHelper.getUserID());
                 ArrayList<Item> cart = order.getItemsOrdered();
                 boolean replacedItem = false;
                 for (int i = 0; i < cart.size(); i++) {

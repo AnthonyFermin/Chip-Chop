@@ -77,7 +77,6 @@ public class BuyActivity extends AppCompatActivity {
         bindViews();
         initializeData();
         setUpDrawer();
-        checkAutoLogIn();
         selectFragmentToLoad(savedInstanceState);
     }
 
@@ -91,12 +90,6 @@ public class BuyActivity extends AppCompatActivity {
                     R.layout.navdrawer_list_item, mListTitles));
         }
 
-    }
-
-    private void checkAutoLogIn() {
-        if(dbHelper.userIsLoggedIn() && user != null){
-            load();
-        }
     }
 
     private void selectFragmentToLoad(Bundle savedInstanceState) {
@@ -197,7 +190,6 @@ public class BuyActivity extends AppCompatActivity {
             loadingPanel.setVisibility(View.VISIBLE);
             frameLayout.setVisibility(View.INVISIBLE);
             DrawerLinear.setVisibility(View.INVISIBLE);
-            //TODO: AUTO LOG IN SHOULD INITIALIZE USER OBJECT FOR DRAWER
             dbHelper.logInUser(email,pass, new DBCallback() {
                 @Override
                 public void runOnSuccess() {
@@ -236,11 +228,6 @@ public class BuyActivity extends AppCompatActivity {
         } else if (position == 2) {
             fragment = new Fragment_Buyer_ProfileSettings();
         } else if (position == 3) {
-            //CRASHES APP
-//            if (SignupActivity1.mGoogleApiClient.isConnected()) {
-//                Plus.AccountApi.clearDefaultAccount(SignupActivity1.mGoogleApiClient);
-//                SignupActivity1.mGoogleApiClient.disconnect();
-//            }
             if(dbHelper.userIsLoggedIn()) {
                 dbHelper.signOutUser(emptyCallback);
                 drawerUserNameTV.setText("");
@@ -351,9 +338,9 @@ public class BuyActivity extends AppCompatActivity {
                 super.onPostExecute(aVoid);
 
                 if(user != null){
-                    SharedPreferences.Editor editor = userInfoSP.edit();
-                    editor.putString(SignupActivity1.NAME, user.getName());
-                    editor.commit();
+                    userInfoSP.edit()
+                            .putString(SignupActivity1.NAME, user.getName())
+                            .commit();
 
                     drawerUserNameTV.setText(user.getName());
                 }

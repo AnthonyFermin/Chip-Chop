@@ -148,9 +148,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
 
         });
 
-        newUserButton = (Button)
-
-                findViewById(R.id.newUserButton);
+        newUserButton = (Button) findViewById(R.id.newUserButton);
 
         newUserButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -157,8 +158,8 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
         };
 
         seller = activity.getSellerToView();
-        seller.setUID("113"); // was originally empty when retrieved from DB
-        //TODO: Madelyn: supposed to be seller.getUID() instead of 113, the Seller object does not have a UID when retrieved from DB
+//        seller.setUID("c28c24d9-e127-437c-b03a-de70af28bf78"); // was originally empty when retrieved from DB
+        //TODO: Madelyn: supposed to be seller.getUID() instead of 113, the Seller object does not have a UID when retrieved from DB in the Buyer Map Fragment
         //TODO: Anthony: I think I fixed this but I wasn't sure what you meant by what you wrote which method are you referring to, we retrieve the seller a lot?
         foodItems = dbHelper.getSellersOnSaleItems(seller.getUID(), emptyCallback);
 
@@ -166,5 +167,7 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
         cartItems = order.getItemsOrdered();
         activity.setCurrentOrder(order);
     }
+
+
 
 }

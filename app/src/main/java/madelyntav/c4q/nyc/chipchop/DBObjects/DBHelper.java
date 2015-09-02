@@ -47,7 +47,7 @@ public class DBHelper extends Firebase {
     private static final String sName = "name";
     private static final String sEmailAddress = "eMail";
     private static final String sPhoneNumber = "phoneNumber";
-    private static final String sAddress = "addressString";
+    private static final String sAddress = "address";
     private static final String sPhotoLink = "photoLink";
     private static final String sUID = "UID";
     private static final String sIsCooking = "isCooking";
@@ -621,7 +621,6 @@ public class DBHelper extends Firebase {
     }
 
     public void addActiveSellerToTable(Seller seller){
-
         Firebase fRef = new Firebase(URL + "ActiveSellers/");
         sellerId = seller.getUID();
         Log.d("ADD TO ACTIVE", sellerId + "");
@@ -650,6 +649,7 @@ public class DBHelper extends Firebase {
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     Seller seller1 = dataSnapshot1.getValue(Seller.class);
+
                     seller.setName(seller1.name);
                     seller.setUID(dataSnapshot1.getKey());
                     seller.setIsCooking(seller1.isCooking);
@@ -736,7 +736,7 @@ public class DBHelper extends Firebase {
                     if (dataSnapshot1.getKey().equals(sellerID)) {
                         seller.setName(seller1.name);
                         seller.setIsCooking(seller1.isCooking);
-                        seller.setAddress(seller1.address);
+                        seller.setAddressString(seller1.addressString);
                         seller.setDescription(seller1.description);
                         seller.seteMail(seller1.eMail);
                         seller.setUID(seller1.UID);
@@ -766,7 +766,7 @@ public class DBHelper extends Firebase {
     public void sendSellerToActiveSellerTable(Seller seller) {
         this.sellerId = seller.getUID();
         Firebase fRef = new Firebase(URL + "ActiveSellers/");
-        Seller sellerToSend = getSpecificActiveSeller(sellerId, callback);
+        //Seller sellerToSend = getSpecificActiveSeller(sellerId, callback);
 
         fRef.child(sellerId).child(sUID).setValue(sellerId);
         fRef.child(sellerId).child(sName).setValue(seller.getName());
@@ -776,7 +776,6 @@ public class DBHelper extends Firebase {
         fRef.child(sellerId).child(sEmailAddress).setValue(seller.geteMail());
         fRef.child(sellerId).child(sPhoneNumber).setValue(seller.getPhoneNumber());
         fRef.child(sellerId).child(sPhotoLink).setValue(seller.getPhotoLink());
-        fRef.child(sellerId).child(sAddress).setValue(seller.getAddress());
         fRef.child(sellerId).child(sLatitude).setValue(seller.getLatitude());
         fRef.child(sellerId).child(sLongitude).setValue(seller.getLongitude());
 
@@ -1738,7 +1737,7 @@ public class DBHelper extends Firebase {
                     seller.setPhotoLink(seller.photoLink);
                     seller.seteMail(seller.eMail);
                     seller.setDescription(seller.description);
-                    seller.setAddress(seller.address);
+                    seller.setAddressString(seller.addressString);
                     seller.setLatitude(seller.latitude);
                     seller.setLongitude(seller.longitude);
 
@@ -1782,7 +1781,7 @@ public class DBHelper extends Firebase {
 
                     if (dataSnapshot1.getKey().equals(UID)) {
                         user.setName(user1.name);
-                        user.setAddress(user1.address);
+                        user.setAddressString(user1.addressString);
                         user.seteMail(user1.eMail);
                         user.setUID(user1.UID);
                         user.setPhoneNumber(user1.phoneNumber);

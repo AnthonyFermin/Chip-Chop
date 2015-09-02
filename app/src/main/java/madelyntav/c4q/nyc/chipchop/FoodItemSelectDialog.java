@@ -1,11 +1,13 @@
 package madelyntav.c4q.nyc.chipchop;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -26,14 +28,18 @@ public class FoodItemSelectDialog extends android.support.v4.app.DialogFragment 
     private int quantity = 0;
     private CircleImageView foodImage;
     private TextView quantityDisplay, foodDescription, dishName;
-    private Button upButton, downButton, addToCartButton;
+    private ImageButton upButton, downButton;
+    private Button addToCartButton;
     private Item itemForCart;
     private BuyActivity activity;
     private Order order;
 
     private DBHelper dbHelper;
 
-    public static FoodItemSelectDialog newInstance() { FoodItemSelectDialog f = new FoodItemSelectDialog(); return f; }
+    public static FoodItemSelectDialog newInstance() {
+        FoodItemSelectDialog f = new FoodItemSelectDialog();
+        return f;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,7 +60,7 @@ public class FoodItemSelectDialog extends android.support.v4.app.DialogFragment 
         upButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(quantity < itemForCart.getQuantity()) {
+                if (quantity < itemForCart.getQuantity()) {
                     quantity += 1;
                     quantityDisplay.setText(String.valueOf(quantity));
                 }
@@ -75,20 +81,20 @@ public class FoodItemSelectDialog extends android.support.v4.app.DialogFragment 
             @Override
             public void onClick(View view) {
                 Item item = new Item(itemForCart.getSellerID(),
-                        dbHelper.getUserID(),itemForCart.getNameOfItem(),itemForCart.getQuantity(),
-                        itemForCart.getDescriptionOfItem(),itemForCart.getImageLink());
+                        dbHelper.getUserID(), itemForCart.getNameOfItem(), itemForCart.getQuantity(),
+                        itemForCart.getDescriptionOfItem(), itemForCart.getImageLink());
                 item.setQuantityWanted(quantity);
                 ArrayList<Item> cart = order.getItemsOrdered();
                 boolean replacedItem = false;
-                for(int i = 0; i < cart.size(); i++){
-                    if(cart.get(i).getNameOfItem().equals(item.getNameOfItem())){
+                for (int i = 0; i < cart.size(); i++) {
+                    if (cart.get(i).getNameOfItem().equals(item.getNameOfItem())) {
                         cart.remove(i);
                         cart.add(i, item);
                         replacedItem = true;
                         break;
                     }
                 }
-                if(!replacedItem){
+                if (!replacedItem) {
                     cart.add(item);
                 }
                 order.setItemsOrdered(cart);
@@ -110,12 +116,12 @@ public class FoodItemSelectDialog extends android.support.v4.app.DialogFragment 
         dishName = (TextView) root.findViewById(R.id.dish_name);
         foodDescription = (TextView) root.findViewById(R.id.food_description_tv);
         quantityDisplay = (TextView) root.findViewById(R.id.quantity_tv);
-        upButton = (Button) root.findViewById(R.id.upButton);
-        downButton = (Button) root.findViewById(R.id.downButton);
+        upButton = (ImageButton) root.findViewById(R.id.upButton);
+        downButton = (ImageButton) root.findViewById(R.id.downButton);
         addToCartButton = (Button) root.findViewById(R.id.add_cart_button);
     }
 
-    private void initializeViews(){
+    private void initializeViews() {
         Picasso.with(activity).load(itemForCart.getImageLink()).fit().into(foodImage);
         dishName.setText(itemForCart.getNameOfItem());
         foodDescription.setText(itemForCart.getDescriptionOfItem());

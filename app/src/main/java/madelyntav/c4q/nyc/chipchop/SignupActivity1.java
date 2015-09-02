@@ -34,7 +34,6 @@ import com.google.android.gms.plus.Plus;
 
 import java.util.Arrays;
 
-import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 
@@ -297,14 +296,14 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         }
         // when user clicks sign in
         if (user != null) {
-            Log.d("Address",user.getAddressString()+"");
+            //Log.d("Address",user.getAddressString()+"");
             String addressString = user.getAddressString();
-            Address address = HelperMethods.parseAddressString(addressString, dbHelper.getUserID());
+//            Address address = HelperMethods.parseAddressString(addressString, dbHelper.getUserID());
             editor.putString(NAME, user.getName());
-            editor.putString(ADDRESS, address.getStreetAddress());
-            editor.putString(APT, address.getApartment());
-            editor.putString(CITY, address.getCity());
-            editor.putString(ZIPCODE, address.getZipCode());
+           // editor.putString(ADDRESS, address.getStreetAddress());
+           // editor.putString(APT, address.getApartment());
+           // editor.putString(CITY, address.getCity());
+           // editor.putString(ZIPCODE, address.getZipCode());
             editor.putString(PHONE_NUMBER, user.getPhoneNumber());
         }
         editor.commit();

@@ -9,10 +9,56 @@
         android:layout_height="wrap_content"
         android:text="DISH NAME"
         style="@style/text_design"
-        android:padding="20dp"
+        android:padding="5dp"
         android:textSize="30sp"
         android:gravity="center_horizontal"
         android:id="@+id/dish_name"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:padding="10dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="3dp"
+            android:src="@drawable/vegan" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="3dp"
+            android:src="@drawable/glutenfree" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="3dp"
+            android:src="@drawable/dairy" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="3dp"
+            android:src="@drawable/nut" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="3dp"
+            android:src="@drawable/egg" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="3dp"
+            android:src="@drawable/shellfish" />
+
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,34 +71,36 @@
             android:layout_height="150dp"
             android:layout_gravity="center"
             app:border_color="#FFF"
-            app:border_width="2dp" />
+            app:border_width="2dp"
+            android:layout_margin="5dp" />
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
-    <Button
+    <ImageButton
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:id="@+id/upButton"
-        android:text="+"
-        style="@style/button_design"
+        android:src="@drawable/up"
+        android:background="@android:color/transparent"
         android:layout_weight="1"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="0"
+        android:textSize="30sp"
         android:gravity="center"
         android:id="@+id/quantity_tv"
         android:layout_weight="1"/>
 
-    <Button
+    <ImageButton
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:id="@+id/downButton"
-        android:text="-"
-        style="@style/button_design"
+        android:src="@drawable/down"
+        android:background="@android:color/transparent"
         android:layout_weight="1"/>
 
         </LinearLayout>
@@ -63,7 +111,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text=""
+        android:padding="10dp"
         android:id="@+id/food_description_tv"/>
+
+
 
     <Button
         android:layout_width="match_parent"

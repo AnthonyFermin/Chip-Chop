@@ -41,7 +41,7 @@ public class DBHelper extends Firebase {
     private static final String nameOfItem = "nameOfItem";
     private static final String descriptionOfItem = "descriptionOfItem";
     private static final String quantity = "quantity";
-    private static final String itemID = "itemID";
+    private static String itemID = "itemID";
     private static final String imageLink = "imageLink";
     private static final String sName = "name";
     private static final String sEmailAddress = "eMail";
@@ -1456,16 +1456,18 @@ public class DBHelper extends Firebase {
 
 
         for (Item item : itemsOrdered) {
+            itemID=item.getItemID();
+
+            Log.d("ItsItemID",itemID+"");
 
             Firebase fire=fRef.child(orderID).push();
-            String itemID = fire.getKey();
-            item.setItemID(itemID);
 
             fRef.child(UID).child(orderID);
-            fRef.child(orderID).push().child(itemID);
+            fRef.child(orderID).child("price").setValue(order.getPrice());
+            fRef.child(orderID).child(itemID);
             fRef.child(orderID).child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
             fRef.child(orderID).child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
-            fRef.child(orderID).child(itemID).child(quantity).setValue(item.getQuantity());
+            fRef.child(orderID).child(itemID).child(quantity).setValue(item.getQuantityWanted());
             fRef.child(orderID).child(itemID).child("price").setValue(item.getPrice());
             fRef.child(orderID).child(itemID).child("imageLink").setValue(item.getImageLink());
             fRef.child(orderID).child(itemID).child("containsPeanuts").setValue(item.isContainsPeanuts());
@@ -1475,7 +1477,8 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
             fRef.child(orderID).child(itemID).child("containsDairy").setValue(item.isContainsDairy());
 
-            copyOrderToBuyerProfile(order,item);
+            copyOrderToBuyerProfile(order, item);
+            updateSellerItemsWhenItemIsBought(item, callback);
         }
         dbCallback.runOnSuccess();
 
@@ -1760,13 +1763,11 @@ public class DBHelper extends Firebase {
                     seller.setLatitude(seller.latitude);
                     seller.setLongitude(seller.longitude);
 
-                    if(allSellersInDB.size()<sizeofAddDBList){
+                    if(allSellersInDB.size() < sizeofAddDBList){
                         allSellersInDB.add(seller);
                     }
-
-
+                    updateAllSellersList(dbCallback);
                 }
-                updateAllSellersList(dbCallback);
             }
 
             @Override
@@ -1781,7 +1782,7 @@ public class DBHelper extends Firebase {
     //Returns list of all users
     public ArrayList<Seller> updateAllSellersList(DBCallback dbCallback){
 
-        if(allSellersInDB.size()<sizeofAddDBList){
+        if(allSellersInDB.size() < sizeofAddDBList){
             getAllSellers(dbCallback);
         }
         return allSellersInDB;
@@ -1887,10 +1888,17 @@ public class DBHelper extends Firebase {
     //the seller currently has available. So for this we can pass it for each item
     //in the order. You can run this in the background
     public void updateSellerItemsWhenItemIsBought(final Item item1, final DBCallback dbCallback){
+
         sellerId=item1.getSellerID();
+
+        Log.d("ITEMSELLERI1",sellerId);
         final int quantityWanted=item1.getQuantityWanted();
 
+        Log.d("ITEMID2",item.getItemID()+"");
+
         Firebase fRef = new Firebase(URL + "ActiveSellers/"+sellerId+"/itemsForSale/");
+
+        Log.d("In UpdateSeller","IM IN HERE");
 
         fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -1898,13 +1906,14 @@ public class DBHelper extends Firebase {
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     Item item = dataSnapshot1.getValue(Item.class);
-
                     if (item1.getItemID().equals(dataSnapshot1.getKey())) {
                         int oldQuantity = item.quantity;
                         int updateQuantityAvailable = oldQuantity - quantityWanted;
 
+                        Log.d("Quantity Available", updateQuantityAvailable + "");
+
                         item.setQuantity(updateQuantityAvailable);
-                        item.setItemID(item1.getItemID());
+                        item.setItemID(dataSnapshot1.getKey());
                         item.setPrice(item1.price);
                         item.setContainsDairy(item1.containsDairy);
                         item.setContainsEggs(item1.containsEggs);
@@ -1915,7 +1924,7 @@ public class DBHelper extends Firebase {
                         item.setImageLink(item1.imageLink);
                         item.setIsVegetarian(item1.isVegetarian());
                         item.setSellerID(item1.sellerID);
-                        subtractBoughtQuantityFromQuantityInDB(item,item.getSellerID(), item.getItemID(), updateQuantityAvailable, dbCallback);
+                        subtractBoughtQuantityFromQuantityInDB(item, item.getSellerID(), item.getItemID(), updateQuantityAvailable, dbCallback);
                     }
                 }
             }
@@ -1925,6 +1934,9 @@ public class DBHelper extends Firebase {
                 dbCallback.runOnFail();
             }
         });
+
+        Log.d("OOFMethod", "IM OUTTA HERE");
+
     }
 
     //Method that actually updates the number in the database
@@ -1935,7 +1947,7 @@ public class DBHelper extends Firebase {
         if(quantityAvailable>0) {
             fRef.child(itemID).child("quantity").setValue(quantityAvailable);
             dbCallback.runOnSuccess();
-        }{
+        } else{
             removeItemFromSale(item,callback);
         }
     }

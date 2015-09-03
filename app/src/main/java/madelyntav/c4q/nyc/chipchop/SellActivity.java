@@ -179,9 +179,6 @@ public class SellActivity extends AppCompatActivity {
         } else if (position == 2) {
             fragment = new Fragment_Seller_ProfileSettings();
         } else if (position == 3) {
-            fragment = new Fragment_Seller_Review();
-        } else if (position == 4) {
-
             if (dbHelper.userIsLoggedIn()) {
                 dbHelper.signOutUser(emptyCallback);
                 drawerUserNameTV.setText("");

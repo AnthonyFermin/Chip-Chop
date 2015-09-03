@@ -87,7 +87,7 @@ public class BuyActivity extends AppCompatActivity {
         super.onResume();
 
         if(dbHelper.userIsLoggedIn()){
-            mListTitles[4] = "Sign Out";
+            mListTitles[3] = "Sign Out";
             mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                     R.layout.navdrawer_list_item, mListTitles));
         }
@@ -237,8 +237,6 @@ public class BuyActivity extends AppCompatActivity {
         } else if (position == 2) {
             fragment = new Fragment_Buyer_ProfileSettings();
         } else if (position == 3) {
-            fragment = new Fragment_Buyer_Review();
-        } else if (position == 4) {
             //CRASHES APP
 //            if (SignupActivity1.mGoogleApiClient.isConnected()) {
 //                Plus.AccountApi.clearDefaultAccount(SignupActivity1.mGoogleApiClient);
@@ -247,7 +245,7 @@ public class BuyActivity extends AppCompatActivity {
             if(dbHelper.userIsLoggedIn()) {
                 dbHelper.signOutUser(emptyCallback);
                 drawerUserNameTV.setText("");
-                mListTitles[4] = "Sign Out";
+                mListTitles[3] = "Sign Out";
                 mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                         R.layout.navdrawer_list_item, mListTitles));
                 LoginManager.getInstance().logOut();

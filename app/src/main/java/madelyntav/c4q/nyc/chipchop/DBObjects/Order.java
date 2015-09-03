@@ -15,6 +15,8 @@ public class Order {
     Review review;
     String sellerID;
     ArrayList<Item> itemsOrdered;
+    String timeStamp;
+    boolean isActive;
 
     public Order(){
         this.itemsOrdered = new ArrayList<>();
@@ -34,6 +36,25 @@ public class Order {
     public Order(String buyerID, ArrayList<Item> itemsOrdered,String sellerID){
         this.buyerID = buyerID;
         this.sellerID=sellerID;
+        this.itemsOrdered=itemsOrdered;
+    }
+    public Order(String buyerID, ArrayList<Item> itemsOrdered,String sellerID, String timeStamp){
+        this.buyerID = buyerID;
+        this.sellerID=sellerID;
+        this.timeStamp=timeStamp;
+        this.itemsOrdered=itemsOrdered;
+    }
+    public Order(String buyerID, ArrayList<Item> itemsOrdered,String sellerID, boolean isActive){
+        this.buyerID = buyerID;
+        this.sellerID=sellerID;
+        this.isActive=isActive;
+        this.itemsOrdered=itemsOrdered;
+    }
+    public Order(String buyerID, ArrayList<Item> itemsOrdered,String sellerID, String timeStamp, boolean isActive){
+        this.buyerID = buyerID;
+        this.sellerID=sellerID;
+        this.timeStamp=timeStamp;
+        this.isActive=isActive;
         this.itemsOrdered=itemsOrdered;
     }
 
@@ -89,5 +110,21 @@ public class Order {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }
 }

@@ -107,6 +107,7 @@ public class Fragment_Buyer_Checkout extends Fragment {
             Log.d("Checkout Item","Seller ID: " + item.getSellerID());
             Log.d("Checkout Item","Item ID: " + item.getItemID());
             Log.d("Checkout Item","Item Name: " + item.getNameOfItem());
+            Log.d("Checkout Item","Quantity Wanted: " + item.getQuantityWanted());
             Log.d("Checkout Item","          ------");
         }
 

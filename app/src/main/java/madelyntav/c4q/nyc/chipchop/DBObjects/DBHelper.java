@@ -682,10 +682,18 @@ public class DBHelper extends Firebase {
         });
 
         if (allActiveSellers.size() == sizeofAddDBList) {
-            updateAllSellersList(dbCallback);
-            return allActiveSellers;
+            updateAllActiveSellers(dbCallback);
         }
 
+        return allActiveSellers;
+    }
+
+    //Returns list of all users
+    public ArrayList<Seller> updateAllActiveSellers(DBCallback dbCallback){
+
+        if(allActiveSellers.size() < sizeofAddDBList){
+            getAllActiveSellers(dbCallback);
+        }
         return allActiveSellers;
     }
 

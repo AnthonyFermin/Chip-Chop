@@ -37,7 +37,7 @@ public class Fragment_Buyer_Orders extends Fragment {
         activity = (BuyActivity) getActivity();
         dbHelper = DBHelper.getDbHelper(activity);
         //TODO: Madelyn missing method to retrieve a list of a user's orders - Can you possibly add the orderID when you send it down too?
-        //TODO: Anthony the methods for these are getAllPreviouslyBoughtItems and getAllPreviouslySoldItems which come in an List<Orders> containing Items
+        //TODO: Anthony the methods for these are getAllPreviouslyBoughtOrders and getAllPreviouslySoldOrders which come in an List<Orders> containing Items
         // TODO: Madelyn Also need a method to retrieve a specific order's list of items ordered so we can display a receipt when the user clicks an order.
         //TODO: Anthony I have added the method to get an orders Items in order to create a receip for both the user and the seller
         // TODO: Madelyn will need the same methods for Active Sellers and Sellers that are not currently cooking so that we can display their orders too

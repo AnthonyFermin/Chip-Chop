@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
 
 
            // dbHelper.updateSellerItemsWhenItemIsBought(item2);
-            dbHelper.updateSellerItemsWhenItemIsBought(item2, emptyCallback);
+           // dbHelper.updateSellerItemsWhenItemIsBought(item2, emptyCallback);
 
     }
 

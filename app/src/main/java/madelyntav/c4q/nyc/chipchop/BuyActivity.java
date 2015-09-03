@@ -42,7 +42,7 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Checkout;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Orders;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_ProfileSettings;
-import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Reviews;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Review;
 
 public class BuyActivity extends AppCompatActivity {
 
@@ -237,7 +237,7 @@ public class BuyActivity extends AppCompatActivity {
         } else if (position == 2) {
             fragment = new Fragment_Buyer_ProfileSettings();
         } else if (position == 3) {
-            fragment = new Fragment_Buyer_Reviews();
+            fragment = new Fragment_Buyer_Review();
         } else if (position == 4) {
             //CRASHES APP
 //            if (SignupActivity1.mGoogleApiClient.isConnected()) {

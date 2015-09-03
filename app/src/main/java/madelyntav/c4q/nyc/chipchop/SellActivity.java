@@ -36,14 +36,14 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
-import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Reviews;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Review;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_CreateItem;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_OrderDetails;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_ProfileSettings;
 
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Items;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Orders;
-import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Reviews;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Review;
 
 public class SellActivity extends AppCompatActivity {
 
@@ -179,7 +179,7 @@ public class SellActivity extends AppCompatActivity {
         } else if (position == 2) {
             fragment = new Fragment_Seller_ProfileSettings();
         } else if (position == 3) {
-            fragment = new Fragment_Seller_Reviews();
+            fragment = new Fragment_Seller_Review();
         } else if (position == 4) {
 
             if (dbHelper.userIsLoggedIn()) {

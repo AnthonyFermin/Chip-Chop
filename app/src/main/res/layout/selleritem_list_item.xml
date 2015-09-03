@@ -134,6 +134,13 @@
                     android:background="@android:color/transparent"
                     android:text="X"
                     android:textColor="#D32F2F" />
+
+
+                <Switch
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/remove_item_button"
+                    android:layout_alignParentBottom="true"/>
             </RelativeLayout>
 
 

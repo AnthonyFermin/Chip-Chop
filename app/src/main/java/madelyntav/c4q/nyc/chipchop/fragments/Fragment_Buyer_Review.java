@@ -12,11 +12,11 @@ import madelyntav.c4q.nyc.chipchop.R;
 /**
  * Created by alvin2 on 9/3/15.
  */
-public class Fragment_Seller_Reviews extends Fragment {
+public class Fragment_Buyer_Review extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_seller_reviews, container, false);
+        View root = inflater.inflate(R.layout.fragment_buyer_review, container, false);
 
 
         return root;

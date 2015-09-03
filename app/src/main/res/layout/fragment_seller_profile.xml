@@ -6,16 +6,16 @@
         android:padding="5dp"
         tools:context="madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile">
 
-    <!--<RelativeLayout-->
-        <!--style="@style/GenericProgressBackground"-->
-        <!--android:id="@+id/loadingPanel"-->
-        <!-->-->
-        <!--<ProgressBar-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:background="@android:color/transparent"/>-->
-    <!--</RelativeLayout>-->
+    <RelativeLayout
+        style="@style/GenericProgressBackground"
+        android:id="@+id/loadingPanel"
+        >
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

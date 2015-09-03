@@ -650,6 +650,8 @@ public class DBHelper extends Firebase {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     Seller seller1 = dataSnapshot1.getValue(Seller.class);
 
+                    Seller seller=new Seller();
+
                     seller.setName(seller1.name);
                     seller.setUID(dataSnapshot1.getKey());
                     seller.setIsCooking(seller1.isCooking);

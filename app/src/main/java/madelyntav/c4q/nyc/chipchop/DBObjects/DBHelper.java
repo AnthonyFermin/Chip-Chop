@@ -46,7 +46,7 @@ public class DBHelper extends Firebase {
     private static final String sName = "name";
     private static final String sEmailAddress = "eMail";
     private static final String sPhoneNumber = "phoneNumber";
-    private static final String sAddress = "address";
+    private static final String sAddress = "addressString";
     private static final String sPhotoLink = "photoLink";
     private static final String sUID = "UID";
     private static final String sIsCooking = "isCooking";
@@ -1828,7 +1828,7 @@ public class DBHelper extends Firebase {
 //        userList.clear();
 //        items.clear();
 
-        SharedPreferences sharedPreferences=mContext.getSharedPreferences(SignupActivity1.USER_INFO,Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences=mContext.getSharedPreferences(SignupActivity1.SP_USER_INFO,Context.MODE_PRIVATE);
         SharedPreferences.Editor editor=sharedPreferences.edit();
         editor.clear();
         editor.commit();

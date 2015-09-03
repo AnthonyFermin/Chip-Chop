@@ -34,6 +34,7 @@ import com.google.android.gms.plus.Plus;
 
 import java.util.Arrays;
 
+import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 
@@ -51,19 +52,19 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
     EditText emailET;
     EditText passET;
     DBHelper dbHelper;
-    CheckBox rememberMe;
     LoginButton loginButton;
 
     public static final String TAG = "1";
-    public static final String USER_INFO = "userinfo";
-    public static final String EMAIL = "email";
-    public static final String PASS = "pass";
-    public static final String NAME = "name";
-    public static final String ADDRESS = "address";
-    public static final String APT = "apt";
-    public static final String CITY = "city";
-    public static final String ZIPCODE = "zipcode";
-    public static final String PHONE_NUMBER = "phone_number";
+    public static final String SP_USER_INFO = "user_info";
+    public static final String SP_EMAIL = "email";
+    public static final String SP_PASS = "pass";
+    public static final String SP_NAME = "name";
+    public static final String SP_ADDRESS = "address";
+    public static final String SP_APT = "apt";
+    public static final String SP_CITY = "city";
+    public static final String SP_ZIPCODE = "zipcode";
+    public static final String SP_PHONE_NUMBER = "phone_number";
+    public static final String SP_IS_LOGGED_IN = "logged_in";
 
     /* Is there a ConnectionResult resolution in progress? */
     private boolean mIsResolving = false;
@@ -76,18 +77,21 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
     LinearLayout containingView;
     RelativeLayout loadingPanel;
     private User user;
-    Intent intent;
     CallbackManager callbackManager;
     AccessTokenTracker mFacebookAccessTokenTracker;
     DBCallback emptyCallback;
     Firebase.AuthStateListener mAuthStateListener;
     AccessToken accessToken;
 
+    private boolean toSellActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         setContentView(R.layout.activity_signup1);
+
+        toSellActivity = getIntent().getBooleanExtra(BuyActivity.TO_SELL_ACTIVITY,false);
 
         dbHelper = DBHelper.getDbHelper(this);
         callbackManager = CallbackManager.Factory.create();
@@ -116,12 +120,10 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         containingView = (LinearLayout) findViewById(R.id.container);
         loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
         loadingPanel.setVisibility(View.GONE);
-        intent = new Intent(getApplicationContext(), BuyActivity.class);
         loginButton=(LoginButton) findViewById(R.id.login_button);
 
         emailET = (EditText) findViewById(R.id.eMail);
         passET = (EditText) findViewById(R.id.password);
-        rememberMe = (CheckBox) findViewById(R.id.remember_me);
 
         signInButton = (Button) findViewById(R.id.signInButton);
         signInButton.setOnClickListener(new View.OnClickListener() {
@@ -159,9 +161,13 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
                 dbHelper.createUserAndCallback(email, password, new DBCallback() {
                     @Override
                     public void runOnSuccess() {
-                        checkRememberMe();
+                        storeUserInfo();
                         Intent intent1 = new Intent(SignupActivity1.this, SignupActivity2.class);
                         intent1.putExtra("email", email);
+                        intent1.putExtra("pass", password);
+                        if(toSellActivity){
+                            intent1.putExtra(BuyActivity.TO_SELL_ACTIVITY, true);
+                        }
                         startActivity(intent1);
                         finish();
                     }
@@ -284,25 +290,24 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
 //        dbHelper.removeAuthStateListener(mAuthStateListener);
     }
 
-    private void checkRememberMe() {
+    private void storeUserInfo() {
 
-        SharedPreferences sharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(SP_USER_INFO, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(EMAIL, email);
-        if (rememberMe.isChecked()) {
-            editor.putString(PASS, password);
-        }
+        editor.putString(SP_EMAIL, email);
+        editor.putString(SP_PASS, password);
+        editor.putBoolean(SP_IS_LOGGED_IN, true);
         // when user clicks sign in
         if (user != null) {
-            //Log.d("Address",user.getAddressString()+"");
+            Log.d("Address",user.getAddressString()+"");
             String addressString = user.getAddressString();
-//            Address address = HelperMethods.parseAddressString(addressString, dbHelper.getUserID());
-            editor.putString(NAME, user.getName());
-           // editor.putString(ADDRESS, address.getStreetAddress());
-           // editor.putString(APT, address.getApartment());
-           // editor.putString(CITY, address.getCity());
-           // editor.putString(ZIPCODE, address.getZipCode());
-            editor.putString(PHONE_NUMBER, user.getPhoneNumber());
+            Address address = HelperMethods.parseAddressString(addressString, dbHelper.getUserID());
+            editor.putString(SP_NAME, user.getName());
+            editor.putString(SP_ADDRESS, address.getStreetAddress());
+            editor.putString(SP_APT, address.getApartment());
+            editor.putString(SP_CITY, address.getCity());
+            editor.putString(SP_ZIPCODE, address.getZipCode());
+            editor.putString(SP_PHONE_NUMBER, user.getPhoneNumber());
         }
         editor.commit();
 
@@ -336,13 +341,19 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
                         super.onPostExecute(aVoid);
 
                         if (user != null) {
-                            checkRememberMe();
+                            storeUserInfo();
                             Log.d("SIGNUPACTIVITY1", "USER LOG IN SUCCESSFUL");
+                            Intent intent;
+                            if(toSellActivity){
+                                intent = new Intent(SignupActivity1.this,SellActivity.class);
+                            }else{
+                                intent = new Intent(SignupActivity1.this,BuyActivity.class);
+                            }
                             startActivity(intent);
                             finish();
                         } else {
                             //TODO:display cannot connect to internet error message
-                            Toast.makeText(SignupActivity1.this, "Cannot Connect to Internet", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignupActivity1.this, "Failed to load account, try again", Toast.LENGTH_SHORT).show();
                             loadingPanel.setVisibility(View.GONE);
                             containingView.setVisibility(View.VISIBLE);
                             dbHelper.signOutUser(emptyCallback);
@@ -415,5 +426,11 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
     protected void onStop() {
         super.onStop();
         mGoogleApiClient.disconnect();
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this,BuyActivity.class));
+        finish();
     }
 }

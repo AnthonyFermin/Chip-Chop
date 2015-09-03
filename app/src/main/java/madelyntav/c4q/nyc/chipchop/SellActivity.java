@@ -66,6 +66,8 @@ public class SellActivity extends AppCompatActivity {
 
     DBCallback emptyCallback;
 
+    private SharedPreferences userInfoSP;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +134,7 @@ public class SellActivity extends AppCompatActivity {
     }
 
     private void initializeData() {
+        userInfoSP = getSharedPreferences(SignupActivity1.SP_USER_INFO, MODE_PRIVATE);
         emptyCallback = new DBCallback() {
             @Override
             public void runOnSuccess() {
@@ -175,13 +178,7 @@ public class SellActivity extends AppCompatActivity {
         } else if (position == 2) {
             fragment = new Fragment_Seller_ProfileSettings();
         } else if (position == 3) {
-            dbHelper.signOutUser(emptyCallback);
-
-            SharedPreferences sharedPreferences= getSharedPreferences(SignupActivity1.USER_INFO, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor=sharedPreferences.edit();
-            editor.clear();
-            editor.commit();
-            drawerUserNameTV.setText("");
+            clearLogin();
 
             Intent intent = new Intent(this,BuyActivity.class);
             startActivity(intent);
@@ -198,6 +195,12 @@ public class SellActivity extends AppCompatActivity {
             mDrawerList.setItemChecked(position, true);
             mDrawerLayout.closeDrawer(DrawerLinear);
 
+    }
+
+    private void clearLogin() {
+        userInfoSP.edit().clear().commit();
+        dbHelper.signOutUser(emptyCallback);
+        drawerUserNameTV.setText("");
     }
 
     @Override
@@ -256,7 +259,6 @@ public class SellActivity extends AppCompatActivity {
                 replaceSellerFragment(new Fragment_Seller_Items());
                 break;
             default:
-                super.onBackPressed();
         }
     }
 
@@ -267,14 +269,14 @@ public class SellActivity extends AppCompatActivity {
     }
 
     private void initializeUser(){
-        SharedPreferences sp = getSharedPreferences(SignupActivity1.USER_INFO, MODE_PRIVATE);
-        String email = sp.getString(SignupActivity1.EMAIL, "");
-        String name = sp.getString(SignupActivity1.NAME, "");
-        String address = sp.getString(SignupActivity1.ADDRESS,"");
-        String apt = sp.getString(SignupActivity1.APT, "");
-        String city = sp.getString(SignupActivity1.CITY, "");
-        String zip = sp.getString(SignupActivity1.ZIPCODE, "");
-        String phoneNumber = sp.getString(SignupActivity1.PHONE_NUMBER, "");
+        SharedPreferences sp = getSharedPreferences(SignupActivity1.SP_USER_INFO, MODE_PRIVATE);
+        String email = sp.getString(SignupActivity1.SP_EMAIL, "");
+        String name = sp.getString(SignupActivity1.SP_NAME, "");
+        String address = sp.getString(SignupActivity1.SP_ADDRESS,"");
+        String apt = sp.getString(SignupActivity1.SP_APT, "");
+        String city = sp.getString(SignupActivity1.SP_CITY, "");
+        String zip = sp.getString(SignupActivity1.SP_ZIPCODE, "");
+        String phoneNumber = sp.getString(SignupActivity1.SP_PHONE_NUMBER, "");
 
         Address userAddress = new Address(address, apt, city, "NY", zip, dbHelper.getUserID());
         user = new User(dbHelper.getUserID(), email, name, userAddress, phoneNumber);

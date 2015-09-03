@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -209,7 +208,6 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         // attempt to resolve any errors that occur.
         mShouldResolve = true;
         mGoogleApiClient.connect();
-
         // Show a message to the user that we are signing in.
 //        mStatusTextView.setText(R.string.signing_in);
     }
@@ -271,6 +269,9 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
 
         // Show the signed-in UI
         Toast.makeText(getApplicationContext(), "Signed In", Toast.LENGTH_SHORT).show();
+        dbHelper.onGmailAccessTokenChange(AccessToken.getCurrentAccessToken(), emptyCallback);
+        Intent intent1 = new Intent(SignupActivity1.this, SignupActivity2.class);
+        startActivity(intent1);
 
     }
 
@@ -433,7 +434,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(this,BuyActivity.class));
+        startActivity(new Intent(this, BuyActivity.class));
         finish();
     }
 }

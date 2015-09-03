@@ -480,6 +480,108 @@ public class DBHelper extends Firebase {
                         dbCallback.runOnFail();
                     }
                 });
+    }
+
+    public void onGmailAccessTokenChange(final AccessToken token, final DBCallback dbCallback) {
+        Firebase ref = new Firebase(URL);
+        Log.d("Tok In DB preAuth", "Token");
+
+
+        if (token != null) {
+            ref.authWithOAuthToken("google", token.getToken(), new Firebase.AuthResultHandler() {
+                @Override
+                public void onAuthenticated(AuthData authData) {
+                    // The Facebook user is now authenticated with your Firebase app
+                    Log.d("Tok In DB after Auth", "Token");
+                    //Create user Profile with user email
+                    createUserFromFBAuthLogin(String.valueOf(authData.getProviderData().get("email")), AccessToken.getCurrentAccessToken().getToken(), dbCallback);
+                    Log.d("email", authData.getProviderData().get("email").toString());
+                    UID = "";
+                    UID = authData.getUid();
+
+
+                    Log.d("UID", UID + "");
+
+                    Firebase fRef = new Firebase(URL + "UserProfiles/");
+                    fRef.child(UID);
+                    fRef.child(UID).child(sEmailAddress).setValue(authData.getProviderData().get("email"));
+                    fRef.child(UID).child(imageLink).setValue(authData.getProviderData().get("profileImageURL"));
+                    fRef.child(UID).child(sName).setValue(authData.getProviderData().get("displayName"));
+                    dbCallback.runOnSuccess();
+                }
+
+                @Override
+                public void onAuthenticationError(FirebaseError firebaseError) {
+                    // there was an error
+                    dbCallback.runOnFail();
+                }
+            });
+        } else {
+        /* Logged out of google so do a logout from the Firebase app */
+            ref.unauth();
+        }
+    }
+
+
+    private void createUserFromGmailAuthLogin(final String email, final String password, final DBCallback dbCallback) {
+        fireBaseRef.createUser(email, password, new ValueResultHandler<Map<String, Object>>() {
+            @Override
+            public void onSuccess(Map<String, Object> stringObjectMap) {
+
+                mSuccess = true;
+
+                SharedPreferences sharedPreferences = mContext.getSharedPreferences("New User", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("id", UID);
+                editor.putString("eMail", email);
+                editor.putString("password", password);
+                editor.apply();
+
+                user = new User(UID, email);
+
+                Firebase fRef = new Firebase(URL + "UserProfiles");
+                fRef.child(UID);
+                fRef.child(UID).child(sEmailAddress).setValue(email);
+
+                callback.runOnSuccess();
+            }
+
+            @Override
+            public void onError(FirebaseError firebaseError) {
+                loginUserThroughFacebookAuth(email, password, dbCallback);
+
+            }
+        });
+    }
+
+    private void loginUserThroughGmailAuth(String email, String password, final DBCallback dbCallback) {
+        fireBaseRef.authWithPassword(email, password,
+                new Firebase.AuthResultHandler() {
+                    @Override
+                    public void onAuthenticated(AuthData authData) { /* ... */
+                        mSuccess = true;
+                        UID = authData.getUid();
+
+
+                        dbCallback.runOnSuccess();
+                    }
+
+                    @Override
+                    public void onAuthenticationError(FirebaseError error) {
+                        // Something went wrong :(
+                        switch (error.getCode()) {
+                            case FirebaseError.USER_DOES_NOT_EXIST:
+                                Toast.makeText(mContext, "E-mail or Password Invalid", Toast.LENGTH_LONG).show();
+                                break;
+                            case FirebaseError.INVALID_PASSWORD:
+                                break;
+                            default:
+                                // handle other errors
+                                break;
+                        }
+                        dbCallback.runOnFail();
+                    }
+                });
 
     }
 

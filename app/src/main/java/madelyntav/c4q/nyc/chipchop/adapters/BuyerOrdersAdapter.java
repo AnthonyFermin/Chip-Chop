@@ -101,7 +101,6 @@ public class BuyerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-//        return orderItems.size();
-        return 0;
+        return orderItems.size();
     }
 }

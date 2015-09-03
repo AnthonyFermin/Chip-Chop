@@ -5,12 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile" >
 
-    <ProgressBar
-        android:id="@+id/loadingPanel"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_centerInParent="true"
-        android:background="@android:color/transparent"/>
+
 
 
     <!--<RelativeLayout-->
@@ -32,7 +27,6 @@
         android:id="@+id/container">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/profile_image"
             android:layout_width="100dp"
             android:layout_height="100dp"
@@ -41,10 +35,11 @@
             app:border_color="#FFF"/>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_gravity="center_vertical">
+
 
             <TextView
                 android:layout_width="match_parent"
@@ -58,7 +53,8 @@
 
             <RatingBar
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:id="@+id/rating_bar"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -68,22 +64,9 @@
                 android:textSize="18sp"
                 android:id="@+id/cooking_status"
                 android:padding="2dp"
-                android:gravity="start"
+                android:gravity="center_horizontal"
                 android:layout_weight="1"/>
-            
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/store_description"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"/>
-
-
-            </LinearLayout>
 
         </LinearLayout>
 
@@ -105,5 +88,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/container"
         android:id="@+id/seller_items_list"/>
+
+    <ProgressBar
+        android:id="@+id/loadingPanel"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
+        android:background="@android:color/transparent"/>
 
 </RelativeLayout>

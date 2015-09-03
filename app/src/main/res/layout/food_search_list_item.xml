@@ -6,64 +6,85 @@
     android:layout_height="wrap_content"
     card_view:cardCornerRadius="1dp"
     android:orientation="horizontal"
-    android:padding="5dp">
+    android:layout_margin="5dp">
 
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="5dp"
-        >
+        android:orientation="horizontal">
 
-        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/food_image"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:gravity="center"
-            android:src="@drawable/food"
-            app:border_color="#FFF"
-            app:border_width="2dp"
-            android:layout_margin="4dp"/>
 
+    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/food_image"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:src="@drawable/food"
+        app:border_color="#FFF"
+        app:border_width="2dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="5dp"/>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/food_name_tv"
+            style="@style/text_design"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:paddingStart="4dp"
+            android:paddingTop="5dp"
+            android:textSize="20sp" />
+
+
+        <TextView
+            android:id="@+id/food_price_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_alignParentEnd="true"
+            android:layout_above="@+id/food_description_tv"
+            android:paddingRight="10dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:text="4.00"
-            android:id="@+id/food_price_tv"/>
+            android:text="QTY: "
+            android:textStyle="bold"
+            android:id="@+id/qty_tv"
+            android:paddingLeft="4dp"
+            android:layout_below="@+id/food_name_tv"/>
+
+        <TextView
+            android:textStyle="bold"
+            android:id="@+id/food_quantity_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/qty_tv"
+            android:layout_above="@+id/food_description_tv"/>
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_toEndOf="@id/food_image"
-                android:layout_toStartOf="@id/food_price_tv"
-                android:textSize="20sp"
-                style="@style/text_design"
-                android:id="@+id/food_name_tv"/>
+        <TextView
+            android:id="@+id/food_description_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/qty_tv"
+            android:text="DESCRIPTION HERE"
+            android:padding="4dp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/food_image"
-                android:layout_below="@+id/food_name_tv"
-                android:id="@+id/food_description_tv"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/food_quantity_tv"
-                android:layout_below="@+id/food_price_tv"
-                android:layout_alignParentEnd="true"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_toEndOf="@+id/food_image"
-            android:orientation="horizontal">
+            android:gravity="start"
+            android:orientation="horizontal"
+            android:layout_below="@+id/food_description_tv"
+            android:layout_marginBottom="10dp">
 
             <ImageView
                 android:layout_width="20dp"
@@ -102,10 +123,8 @@
                 android:src="@drawable/shellfish" />
 
 
-        </LinearLayout>
-
+</LinearLayout>
         </RelativeLayout>
 
-
-
+    </LinearLayout>
 </android.support.v7.widget.CardView>

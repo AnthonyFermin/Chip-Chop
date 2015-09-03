@@ -106,8 +106,7 @@ public class CartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemCount() {
-//        return cartItems.size();
-        return 0;
+        return cartItems.size();
     }
 }
 

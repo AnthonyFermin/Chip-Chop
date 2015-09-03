@@ -666,7 +666,11 @@ public class DBHelper extends Firebase {
                     seller.setDescription(seller1.description);
                     seller.setPhotoLink(seller1.photoLink);
                     seller.setStoreName(seller1.storeName);
-                    allActiveSellers.add(seller);
+
+                    if (allActiveSellers.size() < sizeofAddDBList) {
+
+                        allActiveSellers.add(seller);
+                    }
                 }
             }
 

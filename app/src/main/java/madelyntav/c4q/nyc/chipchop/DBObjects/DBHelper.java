@@ -486,7 +486,6 @@ public class DBHelper extends Firebase {
         Firebase ref = new Firebase(URL);
         Log.d("Tok In DB preAuth", "Token");
 
-        Log.d("Token Is:", token.toString());
 
         if (token != null) {
             ref.authWithOAuthToken("google", token.getToken(), new Firebase.AuthResultHandler() {

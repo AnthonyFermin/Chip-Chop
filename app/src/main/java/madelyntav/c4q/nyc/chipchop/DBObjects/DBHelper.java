@@ -379,8 +379,8 @@ public class DBHelper extends Firebase {
     }
 
     public void onFacebookAccessTokenChange(final AccessToken token, final DBCallback dbCallback) {
-            Firebase ref = new Firebase(URL);
-            Log.d("Tok In DB preAuth","Token");
+        Firebase ref = new Firebase(URL);
+        Log.d("Tok In DB preAuth","Token");
 
         Log.d("Token Is:", token.toString());
 
@@ -589,17 +589,18 @@ public class DBHelper extends Firebase {
 
     public User getUserFromDB(final String userID) {
         this.UID=userID;
-        Log.d("Get User From DB","USER ID: " + userID);
-        Firebase fRef = new Firebase(URL + "UserProfiles/" + userID);
 
-        user = null;
+        Firebase fRef = new Firebase(URL + "UserProfiles/");
 
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                    user = new User();
-                    User user1 = dataSnapshot.getValue(User.class);
+                Log.d("Number2", dataSnapshot.getChildrenCount() + "");
 
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    User user1 = dataSnapshot1.getValue(User.class);
+
+                    if (dataSnapshot1.getKey().equals(UID)) {
                         user.setName(user1.name);
                         user.setAddressString(user1.addressString);
                         user.seteMail(user1.eMail);
@@ -608,6 +609,8 @@ public class DBHelper extends Firebase {
                         user.setUserItems(user1.userItems);
                         user.setLongitude(user1.longitude);
                         user.setLatitude(user1.latitude);
+                    }
+                }
             }
 
             @Override
@@ -1595,7 +1598,6 @@ public class DBHelper extends Firebase {
 
         return itemsInSpecificOrder;
     }
-    //TODO revise
 
     public void copyOrderToBuyerProfile(Order order,Item item){
 
@@ -1606,19 +1608,19 @@ public class DBHelper extends Firebase {
 
         Firebase fRef = new Firebase(URL + "UserProfiles/" + UID+"/Orders/");
 
-            fRef.child(sellerId).child(orderID);
-            fRef.child(orderID).push().child(itemID);
-            fRef.child(orderID).child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
-            fRef.child(orderID).child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
-            fRef.child(orderID).child(itemID).child(quantity).setValue(item.getQuantity());
-            fRef.child(orderID).child(itemID).child("price").setValue(item.getPrice());
-            fRef.child(orderID).child(itemID).child("imageLink").setValue(item.getImageLink());
-            fRef.child(orderID).child(itemID).child("containsPeanuts").setValue(item.isContainsPeanuts());
-            fRef.child(orderID).child(itemID).child("isGluttenFree").setValue(item.isGlutenFree());
-            fRef.child(orderID).child(itemID).child("isVegetarian").setValue(item.isVegetarian());
-            fRef.child(orderID).child(itemID).child("containsEggs").setValue(item.isContainsEggs());
-            fRef.child(orderID).child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
-            fRef.child(orderID).child(itemID).child("containsDairy").setValue(item.isContainsDairy());
+        fRef.child(sellerId).child(orderID);
+        fRef.child(orderID).push().child(itemID);
+        fRef.child(orderID).child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
+        fRef.child(orderID).child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
+        fRef.child(orderID).child(itemID).child(quantity).setValue(item.getQuantity());
+        fRef.child(orderID).child(itemID).child("price").setValue(item.getPrice());
+        fRef.child(orderID).child(itemID).child("imageLink").setValue(item.getImageLink());
+        fRef.child(orderID).child(itemID).child("containsPeanuts").setValue(item.isContainsPeanuts());
+        fRef.child(orderID).child(itemID).child("isGluttenFree").setValue(item.isGlutenFree());
+        fRef.child(orderID).child(itemID).child("isVegetarian").setValue(item.isVegetarian());
+        fRef.child(orderID).child(itemID).child("containsEggs").setValue(item.isContainsEggs());
+        fRef.child(orderID).child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
+        fRef.child(orderID).child(itemID).child("containsDairy").setValue(item.isContainsDairy());
 
     }
 
@@ -1695,7 +1697,7 @@ public class DBHelper extends Firebase {
     public ArrayList<Item> updateItemsList(DBCallback dbCallback){
 
         if(arrayListOfSellerItems.size()<sizeofAddDBList){
-            getSellersOnSaleItems(sellerId,dbCallback);
+            getSellersOnSaleItems(sellerId, dbCallback);
         }
 
         dbCallback.runOnSuccess();
@@ -1752,7 +1754,7 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-            dbCallback.runOnFail();
+                dbCallback.runOnFail();
             }
         });
 
@@ -1833,7 +1835,7 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-            dbCallback.runOnFail();
+                dbCallback.runOnFail();
             }
         });
 
@@ -1883,7 +1885,7 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-            dbCallback.runOnFail();
+                dbCallback.runOnFail();
             }
         });
 
@@ -1991,7 +1993,7 @@ public class DBHelper extends Firebase {
             }
         });
 
-     return invitesSent;
+        return invitesSent;
     }
 
     //method takes in an item and checks who the seller of that item is, then goes
@@ -2256,7 +2258,7 @@ public class DBHelper extends Firebase {
 
     public ArrayList<Review> updateListOfReviewsForSeller(DBCallback dbCallback) {
         if (sellersReviewArrayList.size() < sizeofAddDBList) {
-            getAllReviewsForCertainSeller(sellerId,dbCallback);
+            getAllReviewsForCertainSeller(sellerId, dbCallback);
         }
         return sellersReviewArrayList;
     }
@@ -2293,6 +2295,14 @@ public class DBHelper extends Firebase {
 
         fRef.child(buyerID).removeValue();
         dbCallback.runOnSuccess();
+    }
+
+    public void removeActiveSellerWhenLoggedOut(Seller seller, DBCallback dbCallback){
+        sellerId=seller.getUID();
+
+        Firebase fRef = new Firebase(URL + "ActiveSellers/"+sellerId);
+
+        fRef.child(sellerId).removeValue();
     }
     public void sentToFullfilledOrdersTable(Order order, DBCallback dbCallback) {
         sellerId = order.getSellerID();

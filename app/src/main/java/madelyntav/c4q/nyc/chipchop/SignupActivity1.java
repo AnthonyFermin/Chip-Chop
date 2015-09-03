@@ -234,9 +234,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         }
         else{
             Toast.makeText(this,"Login Failed",Toast.LENGTH_LONG).show();
-
         }
-
     }
 
     public void loginWithFacebook() {

@@ -57,7 +57,7 @@ public class Fragment_Buyer_Checkout extends Fragment {
         for(Item item: cartItems){
             total = total + (item.getPrice() * item.getQuantityWanted());
         }
-        totalPrice.setText(total + "");
+        totalPrice.setText("$ " + total + "");
 
         cartRView = (RecyclerView) root.findViewById(R.id.checkout_items_list);
         cartRView.setLayoutManager(new LinearLayoutManager(getActivity()));

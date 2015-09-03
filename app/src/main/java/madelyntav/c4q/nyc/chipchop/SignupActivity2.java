@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -85,6 +86,7 @@ public class SignupActivity2 extends AppCompatActivity {
         cityET = (EditText) findViewById(R.id.city);
         zipET = (EditText) findViewById(R.id.zipcode);
         phoneNumberET = (EditText) findViewById(R.id.phone_number);
+        phoneNumberET.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
 
 

@@ -4,6 +4,7 @@
         <item>Find Food</item>
         <item>Orders</item>
         <item>Profile Settings</item>
+        <item>Reviews</item>
         <item>Sign In</item>
     </string-array>
 
@@ -13,6 +14,7 @@
         <item>Seller Items</item>
         <item>Orders</item>
         <item>Profile Settings</item>
+        <item>Reviews</item>
         <item>Sign In</item>
     </string-array>
 

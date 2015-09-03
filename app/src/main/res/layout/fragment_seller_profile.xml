@@ -6,16 +6,16 @@
         android:padding="5dp"
         tools:context="madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile">
 
-    <RelativeLayout
-        style="@style/GenericProgressBackground"
-        android:id="@+id/loadingPanel"
-        >
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@android:color/transparent"/>
-    </RelativeLayout>
+    <!--<RelativeLayout-->
+        <!--style="@style/GenericProgressBackground"-->
+        <!--android:id="@+id/loadingPanel"-->
+        <!-->-->
+        <!--<ProgressBar-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:background="@android:color/transparent"/>-->
+    <!--</RelativeLayout>-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -111,24 +111,24 @@
 
                 </android.support.design.widget.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    >
-                <EditText
-                    android:id="@+id/address"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Street Address"
-                    android:textSize="20sp" />
-
-                </android.support.design.widget.TextInputLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5">
+
+                        <EditText
+                            android:id="@+id/address"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Street Address"
+                            android:textSize="20sp" />
+
+                    </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="0dp"
@@ -140,15 +140,25 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Apt"
+                            android:maxLength="3"
                             android:textSize="20sp" />
 
                     </android.support.design.widget.TextInputLayout>
 
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+
+
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="4"
-                        >
+                        android:layout_weight="4">
 
                         <EditText
                             android:id="@+id/city"
@@ -163,9 +173,33 @@
                         android:layout_width="0dp"
                         android:layout_height="70dp"
                         android:layout_weight="1"
-                        android:text=", NY "
                         android:gravity="center"
+                        android:visibility="gone"
+                        android:text=", NY "
                         android:textSize="20sp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="70dp"
+                        android:layout_weight="1"
+                        android:gravity="bottom|center"
+                        android:text=","
+                        android:textSize="20sp" />
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <EditText
+                            android:id="@+id/state"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="State"
+                            android:maxLength="2"
+                            android:textSize="20sp" />
+
+                    </android.support.design.widget.TextInputLayout>
 
                 </LinearLayout>
                 <android.support.design.widget.TextInputLayout
@@ -191,9 +225,10 @@
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Phone Number (optional)"
+                        android:hint="Phone Number"
                         android:inputType="phone"
                         android:textSize="20sp"
+                        android:maxLength="14"
                         android:id="@+id/phone_number"/>
 
                 </android.support.design.widget.TextInputLayout>

@@ -38,6 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:id="@+id/linear_layout"
             android:layout_gravity="center_vertical">
 
 
@@ -47,14 +48,17 @@
                 android:id="@+id/seller_name"
                 android:text="Chip Chopper"
                 style="@style/text_design"
-                android:textSize="35sp"
+                android:textSize="30sp"
                 android:gravity="center"
                 android:layout_weight="1"/>
 
             <RatingBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/rating_bar"/>
+                android:id="@+id/rating_bar"
+                android:numStars="5"
+                android:rating="4"
+                android:clickable="false"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -64,7 +68,7 @@
                 android:textSize="18sp"
                 android:id="@+id/cooking_status"
                 android:padding="2dp"
-                android:gravity="center_horizontal"
+                android:gravity="start"
                 android:layout_weight="1"/>
 
 

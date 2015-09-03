@@ -42,6 +42,7 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Checkout;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Orders;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_ProfileSettings;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Reviews;
 
 public class BuyActivity extends AppCompatActivity {
 
@@ -86,7 +87,7 @@ public class BuyActivity extends AppCompatActivity {
         super.onResume();
 
         if(dbHelper.userIsLoggedIn()){
-            mListTitles[3] = "Sign Out";
+            mListTitles[4] = "Sign Out";
             mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                     R.layout.navdrawer_list_item, mListTitles));
         }
@@ -236,6 +237,8 @@ public class BuyActivity extends AppCompatActivity {
         } else if (position == 2) {
             fragment = new Fragment_Buyer_ProfileSettings();
         } else if (position == 3) {
+            fragment = new Fragment_Buyer_Reviews();
+        } else if (position == 4) {
             //CRASHES APP
 //            if (SignupActivity1.mGoogleApiClient.isConnected()) {
 //                Plus.AccountApi.clearDefaultAccount(SignupActivity1.mGoogleApiClient);
@@ -244,7 +247,7 @@ public class BuyActivity extends AppCompatActivity {
             if(dbHelper.userIsLoggedIn()) {
                 dbHelper.signOutUser(emptyCallback);
                 drawerUserNameTV.setText("");
-                mListTitles[3] = "Sign Out";
+                mListTitles[4] = "Sign Out";
                 mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                         R.layout.navdrawer_list_item, mListTitles));
                 LoginManager.getInstance().logOut();

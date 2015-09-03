@@ -115,6 +115,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             @Override
             public void onClick(View view) {
                 // TODO: WRITE CODE TO REFRESH RECYCLERVIEW !!
+                activity.replaceFragment(new Fragment_Buyer_Map());
             }
         });
     }
@@ -146,6 +147,8 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             @Override
             public void onPanelExpanded(View view) {
                 arrowImage.setImageDrawable(getResources().getDrawable(R.drawable.down));
+                itemsRView.setFocusableInTouchMode(true);
+                itemsRView.setFocusable(true);
             }
 
             @Override

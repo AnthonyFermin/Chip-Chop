@@ -23,7 +23,6 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.ReviewDialogFragment;
-import madelyntav.c4q.nyc.chipchop.ReviewDialogFragment2;
 import madelyntav.c4q.nyc.chipchop.SignupActivity1;
 import madelyntav.c4q.nyc.chipchop.adapters.CartListAdapter;
 

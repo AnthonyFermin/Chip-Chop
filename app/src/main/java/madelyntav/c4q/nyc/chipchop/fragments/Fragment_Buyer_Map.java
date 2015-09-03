@@ -208,7 +208,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
         activity = (BuyActivity) getActivity();
 
-        activity.setCurrentFragment(Fragment_Buyer_Map.TAG);
+        activity.setCurrentFragment(TAG);
 
         emptyCallback = new DBCallback() {
             @Override

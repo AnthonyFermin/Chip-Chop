@@ -97,6 +97,7 @@ public class Fragment_Buyer_Checkout extends Fragment {
     private void initializeData() {
         activity = (BuyActivity) getActivity();
         dbHelper = DBHelper.getDbHelper(activity);
+        activity.setCurrentFragment(TAG);
 
         order = activity.getCurrentOrder();
         order.setBuyerID(dbHelper.getUserID());

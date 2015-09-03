@@ -14,12 +14,21 @@
     android:padding="5dp">
 
     <TextView
+        android:id="@+id/buyer_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:text="Name of Buyer" />
+
+    <TextView
         android:id="@+id/order_id_tv"
         style="@style/text_design"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Order ID#"
         android:textStyle="bold"
+        android:layout_below="@+id/buyer_name_tv"
         android:textSize="20sp" />
 
     <TextView
@@ -29,29 +38,6 @@
         android:layout_below="@+id/order_id_tv"
         android:text="TOTAL COST" />
 
-    <TextView
-        android:id="@+id/total_item_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/order_cost_tv"
-        android:text="10" />
-
-    <TextView
-        android:id="@+id/buyer_distance_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/total_item_tv"
-        android:text="Distance from seller" />
-
-
-
-    <TextView
-        android:id="@+id/buyer_name_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:text="Name of Buyer" />
 
 </RelativeLayout>
 

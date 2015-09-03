@@ -1,6 +1,5 @@
 package madelyntav.c4q.nyc.chipchop.fragments;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,17 +16,14 @@ import java.util.ArrayList;
 
 import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
-import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
-import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.SellActivity;
-import madelyntav.c4q.nyc.chipchop.adapters.FoodListAdapter;
-import madelyntav.c4q.nyc.chipchop.adapters.SellerItemsAdapter;
 import madelyntav.c4q.nyc.chipchop.adapters.SellerOrdersAdapter;
 
 public class Fragment_Seller_Orders extends Fragment {
 
-    private ArrayList<Item> foodOrders = null;
+    private ArrayList<Order> foodOrders = null;
     private RecyclerView orderList;
 
     public static final String TAG = "fragment_seller_orders";
@@ -48,14 +44,13 @@ public class Fragment_Seller_Orders extends Fragment {
         initializeData();
         bindViews(root);
         loadOrders();
-        setListAdapter();
-
 
         return root;
     }
 
     private void loadOrders() {
-//        foodOrders = dbHelper.getAllPreviouslySoldOrders(dbHelper.getUserID(), emptyCallback);
+        foodOrders = dbHelper.getAllPreviouslySoldOrders(dbHelper.getUserID(), emptyCallback);
+        loadList();
     }
 
     private void setListAdapter() {

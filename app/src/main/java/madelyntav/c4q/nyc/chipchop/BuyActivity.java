@@ -316,10 +316,17 @@ public class BuyActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+//        TODO: Anthony remove all backstack and use replace() to navigate between frags with back button (more efficient)
+        FragmentManager fm = getSupportFragmentManager();
+//        switch(getCurrentFragment()){
+//            case():
+//
+//                break;
+//        }
+        if (fm.getBackStackEntryCount() == 1) {
 
         } else {
-            getSupportFragmentManager().popBackStack();
+            fm.popBackStack();
         }
     }
 

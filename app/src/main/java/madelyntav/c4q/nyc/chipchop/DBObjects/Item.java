@@ -22,7 +22,6 @@ public class Item {
     boolean glutenFree;
     boolean containsPeanuts;
     String itemID;
-
     int quantityWanted;
 
     public Item(){}
@@ -43,6 +42,15 @@ public class Item {
         this.quantity = quantity;
         this.descriptionOfItem=descriptionOfItem;
         this.imageLink=imageLink;
+    }
+
+    //TODO: ANTHONY - USE THIS CONSTRUCTOR WHEN ADDING TO CART
+    public Item(String itemID,String sellerID,String buyerID, String nameOfItem, int quantityWanted){
+        this.buyerID = buyerID;
+        this.itemID=itemID;
+        this.sellerID=sellerID;
+        this.nameOfItem=nameOfItem;
+        this.quantityWanted = quantityWanted;
     }
 
     public Item(String sellerID, String nameOfItem, int quantity, String descriptionOfItem, String imageLink){
@@ -163,5 +171,22 @@ public class Item {
 
     public void setQuantityWanted(int quantityWanted) {
         this.quantityWanted = quantityWanted;
+    }
+
+    @Override
+    public Item clone() {
+        Item item = new Item(this.getSellerID(),this.getBuyerID(),this.getNameOfItem(),this.getQuantity()
+        ,this.getDescriptionOfItem(),this.getImageLink());
+        item.setPrice(this.getPrice());
+        item.setContainsShellfish(this.isContainsShellfish());
+        item.setContainsPeanuts(this.isContainsPeanuts());
+        item.setContainsDairy(this.isContainsDairy());
+        item.setContainsEggs(this.isContainsEggs());
+        item.setIsVegetarian(this.isVegetarian());
+        item.setGlutenFree(this.isGlutenFree());
+        item.setItemID(this.getItemID());
+        item.setQuantityWanted(this.getQuantityWanted());
+
+        return item;
     }
 }

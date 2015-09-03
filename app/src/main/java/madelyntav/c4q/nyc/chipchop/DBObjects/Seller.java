@@ -8,6 +8,7 @@ import java.util.ArrayList;
  * Created by c4q-madelyntavarez on 8/20/15.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
+
 public class Seller {
 
     ArrayList<Item> items;
@@ -54,6 +55,7 @@ public class Seller {
         this.eMail = eMail;
         this.name=name;
         this.address=address;
+        this.storeName=storeName;
         this.photoLink=photoLink;
         this.phoneNumber=phoneNumber;
     }

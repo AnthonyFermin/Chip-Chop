@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,7 +38,7 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
     private ArrayList<Item> foodItems;
     private RecyclerView foodList;
 
-    ProgressBar loadingPanel;
+    RelativeLayout loadingPanel;
     LinearLayout containingView;
 
     CircleImageView storeImage;
@@ -50,7 +49,6 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
     private BuyActivity activity;
     private DBCallback emptyCallback;
     private Order order;
-    private ArrayList<Item> cartItems;
 
 
     @Override
@@ -132,7 +130,7 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
     }
 
     private void bindViews(View root) {
-        loadingPanel = (ProgressBar) root.findViewById(R.id.loadingPanel);
+        loadingPanel = (RelativeLayout) root.findViewById(R.id.loadingPanel);
         containingView = (LinearLayout) root.findViewById(R.id.container);
         containingView.setVisibility(View.INVISIBLE);
 
@@ -159,16 +157,11 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
         };
 
         seller = activity.getSellerToView();
-//        seller.setUID("c28c24d9-e127-437c-b03a-de70af28bf78"); // was originally empty when retrieved from DB
-        //TODO: Madelyn: supposed to be seller.getUID() instead of 113, the Seller object does not have a UID when retrieved from DB in the Buyer Map Fragment
-        //TODO: Anthony: I think I fixed this but I wasn't sure what you meant by what you wrote which method are you referring to, we retrieve the seller a lot?
         foodItems = dbHelper.getSellersOnSaleItems(seller.getUID(), emptyCallback);
-
-        order = new Order(dbHelper.getUserID(),seller.getUID());
-        cartItems = order.getItemsOrdered();
+        order = activity.getCurrentOrder();
+        order.setBuyerID(dbHelper.getUserID());
+        order.setSellerID(seller.getUID());
         activity.setCurrentOrder(order);
     }
-
-
 
 }

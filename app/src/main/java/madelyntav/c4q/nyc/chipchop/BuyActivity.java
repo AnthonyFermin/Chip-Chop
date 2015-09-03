@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 
+import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
@@ -69,6 +70,8 @@ public class BuyActivity extends AppCompatActivity {
     private Item itemToCart = null;
     private Order currentOrder;
 
+    public static final String TO_SELL_ACTIVITY = "to_sell";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,14 +80,62 @@ public class BuyActivity extends AppCompatActivity {
 
         bindViews();
         initializeData();
+        checkIsLogged();
         setUpDrawer();
-        checkAutoLogIn();
         selectFragmentToLoad(savedInstanceState);
+    }
+
+    private void checkIsLogged() {
+        userInfoSP = getSharedPreferences(SignupActivity1.SP_USER_INFO, MODE_PRIVATE);
+        boolean isLoggedIn = userInfoSP.getBoolean(SignupActivity1.SP_IS_LOGGED_IN, false);
+        if(isLoggedIn){
+            String email = userInfoSP.getString(SignupActivity1.SP_EMAIL, null);
+            String pass = userInfoSP.getString(SignupActivity1.SP_PASS, null);
+
+            if(email != null && pass != null){
+                Log.d("AUTO LOG-IN",email + ", " + pass);
+                loadingPanel.setVisibility(View.VISIBLE);
+                frameLayout.setVisibility(View.INVISIBLE);
+                DrawerLinear.setVisibility(View.INVISIBLE);
+                dbHelper.logInUser(email,pass, new DBCallback() {
+                    @Override
+                    public void runOnSuccess() {
+                        load();
+                    }
+
+                    @Override
+                    public void runOnFail() {
+
+                        clearLogin();
+                        // clears user login info if login authentication failed
+                        loadingPanel.setVisibility(View.GONE);
+                        frameLayout.setVisibility(View.VISIBLE);
+                        DrawerLinear.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        }else{
+            clearLogin();
+        }
+    }
+
+    private void clearLogin() {
+        userInfoSP.edit().clear().commit();
+        mListTitles[3] = "Sign In";
+        mDrawerList.setAdapter(new ArrayAdapter<>(this,
+                R.layout.navdrawer_list_item, mListTitles));
+        dbHelper.signOutUser(emptyCallback);
+        drawerUserNameTV.setText("");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        boolean isLoggedIn = userInfoSP.getBoolean(SignupActivity1.SP_IS_LOGGED_IN,false);
+        if(isLoggedIn){
+
+        }
 
         if(dbHelper.userIsLoggedIn()){
             mListTitles[3] = "Sign Out";
@@ -92,12 +143,6 @@ public class BuyActivity extends AppCompatActivity {
                     R.layout.navdrawer_list_item, mListTitles));
         }
 
-    }
-
-    private void checkAutoLogIn() {
-        if(dbHelper.userIsLoggedIn() && user != null){
-            load();
-        }
     }
 
     private void selectFragmentToLoad(Bundle savedInstanceState) {
@@ -138,10 +183,12 @@ public class BuyActivity extends AppCompatActivity {
                             Intent sellIntent = new Intent(getApplicationContext(), SellActivity.class);
                             startActivity(sellIntent);
                         }else{
-                            Toast.makeText(BuyActivity.this,"Must be logged for this feature",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(BuyActivity.this,"Must be logged for this feature", Toast.LENGTH_SHORT).show();
                             Intent signUpIntent = new Intent(getApplicationContext(), SignupActivity1.class);
+                            signUpIntent.putExtra(TO_SELL_ACTIVITY,true);
                             startActivity(signUpIntent);
                         }
+                        finish();
                     }
                 });
 
@@ -185,38 +232,6 @@ public class BuyActivity extends AppCompatActivity {
             }
         };
 
-        /*
-            checks if user info is saved for auto log in
-         */
-
-        userInfoSP = getSharedPreferences(SignupActivity1.USER_INFO, MODE_PRIVATE);
-        String email = userInfoSP.getString(SignupActivity1.EMAIL, null);
-        String pass = userInfoSP.getString(SignupActivity1.PASS, null);
-
-        if(email != null && pass != null){
-            Log.d("AUTO LOG-IN",email + ", " + pass);
-            loadingPanel.setVisibility(View.VISIBLE);
-            frameLayout.setVisibility(View.INVISIBLE);
-            DrawerLinear.setVisibility(View.INVISIBLE);
-            //TODO: AUTO LOG IN SHOULD INITIALIZE USER OBJECT FOR DRAWER
-            dbHelper.logInUser(email,pass, new DBCallback() {
-                @Override
-                public void runOnSuccess() {
-                    load();
-                }
-
-                @Override
-                public void runOnFail() {
-                    // clears user login info if login authentication failed
-                    userInfoSP.edit().clear().commit();
-                    dbHelper.signOutUser(emptyCallback);
-                    loadingPanel.setVisibility(View.GONE);
-                    frameLayout.setVisibility(View.VISIBLE);
-                    DrawerLinear.setVisibility(View.VISIBLE);
-                }
-            });
-        }
-
     }
 
     /* The click listener for ListView in the navigation drawer */
@@ -237,32 +252,23 @@ public class BuyActivity extends AppCompatActivity {
         } else if (position == 2) {
             fragment = new Fragment_Buyer_ProfileSettings();
         } else if (position == 3) {
-            //CRASHES APP
-//            if (SignupActivity1.mGoogleApiClient.isConnected()) {
-//                Plus.AccountApi.clearDefaultAccount(SignupActivity1.mGoogleApiClient);
-//                SignupActivity1.mGoogleApiClient.disconnect();
-//            }
-            if(dbHelper.userIsLoggedIn()) {
-                dbHelper.signOutUser(emptyCallback);
-                drawerUserNameTV.setText("");
-                mListTitles[3] = "Sign Out";
-                mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                        R.layout.navdrawer_list_item, mListTitles));
+            //SIGN OUT/IN DRAWER ITEM
+            boolean isLoggedIn = userInfoSP.getBoolean(SignupActivity1.SP_IS_LOGGED_IN, false);
+            if(isLoggedIn) {
+                clearLogin();
+                user = null;
                 LoginManager.getInstance().logOut();
                 Toast.makeText(this, "Sign out successful", Toast.LENGTH_SHORT).show();
-
-                SharedPreferences sharedPreferences = getSharedPreferences(SignupActivity1.USER_INFO, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.clear();
-                editor.commit();
 
                 //if not currently in fragment_buyer_map, replace current fragment with buyer_map fragment
                 if (!getCurrentFragment().equals(Fragment_Buyer_Map.TAG)) {
                     replaceFragment(new Fragment_Buyer_Map());
                 }
+
             }else{
                 Intent intent = new Intent(BuyActivity.this,SignupActivity1.class);
                 startActivity(intent);
+                finish();  // killing the activity for now when switching to another activity
             }
 
 
@@ -311,10 +317,17 @@ public class BuyActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+//        TODO: Anthony remove all backstack and use replace() to navigate between frags with back button (more efficient)
+        FragmentManager fm = getSupportFragmentManager();
+//        switch(getCurrentFragment()){
+//            case():
+//
+//                break;
+//        }
+        if (fm.getBackStackEntryCount() == 1) {
 
         } else {
-            getSupportFragmentManager().popBackStack();
+            fm.popBackStack();
         }
     }
 
@@ -351,12 +364,26 @@ public class BuyActivity extends AppCompatActivity {
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
 
-                if(user != null){
-                    SharedPreferences.Editor editor = userInfoSP.edit();
-                    editor.putString(SignupActivity1.NAME, user.getName());
-                    editor.commit();
+                if(user != null && user.getAddressString() != null){
+                    Address address = HelperMethods.parseAddressString(user.getAddressString(), user.getUID());
+                    userInfoSP.edit()
+                            .putString(SignupActivity1.SP_NAME, user.getName())
+                            .putString(SignupActivity1.SP_EMAIL, user.geteMail())
+                            .putString(SignupActivity1.SP_ADDRESS, address.getStreetAddress())
+                            .putString(SignupActivity1.SP_APT, address.getApartment())
+                            .putString(SignupActivity1.SP_CITY, address.getCity())
+                            .putString(SignupActivity1.SP_ZIPCODE, address.getZipCode())
+                            .putString(SignupActivity1.SP_PHONE_NUMBER, user.getPhoneNumber())
+                            .commit();
 
                     drawerUserNameTV.setText(user.getName());
+                    mListTitles[3] = "Sign Out";
+                    mDrawerList.setAdapter(new ArrayAdapter<>(BuyActivity.this,
+                            R.layout.navdrawer_list_item, mListTitles));
+
+                }else{
+                    Toast.makeText(BuyActivity.this,"Auto-login failed", Toast.LENGTH_SHORT).show();
+                    clearLogin();
                 }
 
                 loadingPanel.setVisibility(View.GONE);

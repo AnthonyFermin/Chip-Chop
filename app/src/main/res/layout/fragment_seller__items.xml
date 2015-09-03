@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="ACTIVE ITEMS"
-            android:layout_marginBottom="5dp"
+            android:layout_margin="5dp"
             style="@style/text_design"
             android:layout_below="@+id/title_tv"/>
 
@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:text="INACTIVE ITEMS"
             style="@style/text_design"
-            android:layout_marginBottom="5dp"
+            android:layout_margin="5dp"
             android:layout_below="@+id/seller_items_list"/>
 
         <android.support.v7.widget.RecyclerView

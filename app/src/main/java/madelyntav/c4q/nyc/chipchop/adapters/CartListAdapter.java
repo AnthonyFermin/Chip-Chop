@@ -17,10 +17,12 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
 import madelyntav.c4q.nyc.chipchop.FoodItemSelectDialog;
 import madelyntav.c4q.nyc.chipchop.R;
 
@@ -30,13 +32,16 @@ import madelyntav.c4q.nyc.chipchop.R;
 public class CartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     Button removeItemButton;
-    private List<Item> cartItems;
+    private ArrayList<Item> cartItems;
     private Context context;
     private int lastPosition = -1;
+    BuyActivity activity;
 
-    public CartListAdapter(Context context, List<Item> checkoutItems) {
+    public CartListAdapter(Context context, ArrayList<Item> cartItems) {
         this.context = context;
-        this.cartItems = checkoutItems;
+        this.cartItems = cartItems;
+        activity = (BuyActivity) context;
+
     }
 
 
@@ -63,8 +68,12 @@ public class CartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             removeItemButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    cartItems.remove(cartItems.get(getAdapterPosition()));
+                    cartItems.remove(getAdapterPosition());
                     notifyItemRemoved(getAdapterPosition());
+                    //order code unnecessary
+                    Order order = activity.getCurrentOrder();
+                    order.setItemsOrdered(cartItems);
+                    activity.setCurrentOrder(order);
                 }
             });
         }
@@ -81,7 +90,7 @@ public class CartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
 
-        final Item checkoutItem = cartItems.get(position);
+        Item checkoutItem = cartItems.get(position);
         CheckoutViewHolder vh = (CheckoutViewHolder) viewHolder;
         int amtWanted = checkoutItem.getQuantityWanted();
 

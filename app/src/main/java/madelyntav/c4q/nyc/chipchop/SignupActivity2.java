@@ -15,9 +15,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
@@ -50,6 +52,7 @@ public class SignupActivity2 extends AppCompatActivity {
     private String zipcode;
 
     private String email;
+    private String password;
 
     private String name;
     private String phoneNumber;
@@ -63,7 +66,7 @@ public class SignupActivity2 extends AppCompatActivity {
     private Uri imageFileUri;
     Intent intent;
     private String stringVariable = "file:///sdcard/_pictureholder_id.jpg";
-
+    private boolean toSellActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +80,10 @@ public class SignupActivity2 extends AppCompatActivity {
 
 
         dbHelper = DBHelper.getDbHelper(this);
-        Intent intent = getIntent();
-        email = intent.getStringExtra("email");
+        Intent prevIntent = getIntent();
+        email = prevIntent.getStringExtra("email");
+        password = prevIntent.getStringExtra("pass");
+        toSellActivity = prevIntent.getBooleanExtra(BuyActivity.TO_SELL_ACTIVITY, false);
 
         nameET = (EditText) findViewById(R.id.name);
         addressET = (EditText) findViewById(R.id.address);
@@ -171,12 +176,13 @@ public class SignupActivity2 extends AppCompatActivity {
 
         GeolocationAPI geolocationAPI = restAdapter.create(GeolocationAPI.class);
 
-        address = addressET.getText().toString();
+        address = addressET.getText().toString().trim();
         address = address.trim().replace(" ", "+");
         name = nameET.getText().toString().trim();
         apt = aptET.getText().toString().trim();
         city = cityET.getText().toString().trim().replace(' ','+');
-        phoneNumber = phoneNumberET.getText().toString();
+        phoneNumber = phoneNumberET.getText().toString().trim().replace(" ", "");
+        zipcode = zipET.getText().toString().trim();
 
 
         String queryString = address + ",+" + city + ",+NY";// + "&key=" + APIKEY;
@@ -187,7 +193,6 @@ public class SignupActivity2 extends AppCompatActivity {
             public void success(Geolocation geolocation, Response response) {
                 String uid = dbHelper.getUserID();
                 Location location = geolocation.getResults().get(0).getGeometry().getLocation();
-                zipcode = geolocation.getResults().get(0).getAddressComponents().get(7).getLongName();
 
                 address = address.replace('+', ' ');
                 city = city.replace('+', ' ');
@@ -209,8 +214,13 @@ public class SignupActivity2 extends AppCompatActivity {
 
                 saveToSharedPrefs();
 
-                Intent buyActivity = new Intent(getApplicationContext(), BuyActivity.class);
-                startActivity(buyActivity);
+                Intent activity;
+                if(toSellActivity){
+                    activity = new Intent(getApplicationContext(), SellActivity.class);
+                }else{
+                    activity = new Intent(getApplicationContext(), BuyActivity.class);
+                }
+                startActivity(activity);
                 finish();
             }
 
@@ -225,17 +235,35 @@ public class SignupActivity2 extends AppCompatActivity {
     }
 
     private void saveToSharedPrefs(){
-        SharedPreferences sp = getSharedPreferences(SignupActivity1.USER_INFO, MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences(SignupActivity1.SP_USER_INFO, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putString(SignupActivity1.ADDRESS, address)
-                .putString(SignupActivity1.NAME, name)
-                .putString(SignupActivity1.APT, apt)
-                .putString(SignupActivity1.CITY,city)
-                .putString(SignupActivity1.ZIPCODE, zipcode)
-                .putString(SignupActivity1.PHONE_NUMBER, phoneNumber)
+        editor.putString(SignupActivity1.SP_ADDRESS, address)
+                .putString(SignupActivity1.SP_NAME, name)
+                .putString(SignupActivity1.SP_APT, apt)
+                .putString(SignupActivity1.SP_CITY,city)
+                .putString(SignupActivity1.SP_ZIPCODE, zipcode)
+                .putString(SignupActivity1.SP_PHONE_NUMBER, phoneNumber)
+                .putString(SignupActivity1.SP_PASS, password)
+                .putString(SignupActivity1.SP_EMAIL, email)
+                .putBoolean(SignupActivity1.SP_IS_LOGGED_IN, true)
                 .commit();
     }
 
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(this, "Failed to create account", Toast.LENGTH_SHORT).show();
+        dbHelper.removeUser(email, password, new Firebase.ResultHandler() {
+            @Override
+            public void onSuccess() {
 
+            }
 
+            @Override
+            public void onError(FirebaseError firebaseError) {
+
+            }
+        });
+        startActivity(new Intent(this, BuyActivity.class));
+        finish();
+    }
 }

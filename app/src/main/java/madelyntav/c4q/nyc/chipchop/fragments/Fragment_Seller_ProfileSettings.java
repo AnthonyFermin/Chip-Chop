@@ -159,6 +159,8 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 userAddress.setLatitude(location.getLat());
                 userAddress.setLongitude(location.getLng());
                 seller = new Seller(uid, user.geteMail(), user.getName(), userAddress, storeName, phoneNumber);
+                seller.setLatitude(location.getLat() + "");
+                seller.setLongitude(location.getLng() + "");
                 seller.setIsCooking(false);
                 dbHelper.addSellerProfileInfoToDB(seller);
                 activity.setSeller(seller);

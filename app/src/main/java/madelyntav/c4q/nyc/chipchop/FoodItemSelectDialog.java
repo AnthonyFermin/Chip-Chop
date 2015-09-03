@@ -2,6 +2,7 @@ package madelyntav.c4q.nyc.chipchop;
 
 import android.media.Image;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,11 +81,16 @@ public class FoodItemSelectDialog extends android.support.v4.app.DialogFragment 
         addToCartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Item item = new Item(itemForCart.getSellerID(),
-                        dbHelper.getUserID(), itemForCart.getNameOfItem(), itemForCart.getQuantity(),
-                        itemForCart.getDescriptionOfItem(), itemForCart.getImageLink());
+                Item item = itemForCart.clone();
                 item.setQuantityWanted(quantity);
+                item.setBuyerID(dbHelper.getUserID());
                 ArrayList<Item> cart = order.getItemsOrdered();
+
+                Log.d("CART ITEM","Item ID: " + item.getItemID());
+                Log.d("CART ITEM","Seller ID: " + item.getSellerID());
+                Log.d("CART ITEM","Buyer ID: " + item.getBuyerID());
+                Log.d("CART ITEM","Quantity wanted: " + item.getQuantityWanted());
+                Log.d("CART ITEM","Name of Item: " + item.getNameOfItem());
                 boolean replacedItem = false;
                 for (int i = 0; i < cart.size(); i++) {
                     if (cart.get(i).getNameOfItem().equals(item.getNameOfItem())) {

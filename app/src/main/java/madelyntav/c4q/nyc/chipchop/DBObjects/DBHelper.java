@@ -589,18 +589,17 @@ public class DBHelper extends Firebase {
 
     public User getUserFromDB(final String userID) {
         this.UID=userID;
+        Log.d("Get User From DB","USER ID: " + userID);
+        Firebase fRef = new Firebase(URL + "UserProfiles/" + userID);
 
-        Firebase fRef = new Firebase(URL + "UserProfiles/");
+        user = null;
 
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("Number2", dataSnapshot.getChildrenCount() + "");
+                    user = new User();
+                    User user1 = dataSnapshot.getValue(User.class);
 
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    User user1 = dataSnapshot1.getValue(User.class);
-
-                    if (dataSnapshot1.getKey().equals(UID)) {
                         user.setName(user1.name);
                         user.setAddressString(user1.addressString);
                         user.seteMail(user1.eMail);
@@ -609,8 +608,6 @@ public class DBHelper extends Firebase {
                         user.setUserItems(user1.userItems);
                         user.setLongitude(user1.longitude);
                         user.setLatitude(user1.latitude);
-                    }
-                }
             }
 
             @Override

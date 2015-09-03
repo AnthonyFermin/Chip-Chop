@@ -299,7 +299,10 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         editor.putBoolean(SP_IS_LOGGED_IN, true);
         // when user clicks sign in
         if (user != null) {
-            Log.d("Address",user.getAddressString()+"");
+            Log.d("SignUp - User Info","Name: " + user.getName());
+            Log.d("SignUp - User Info","Address: " + user.getAddressString());
+            Log.d("SignUp - User Info","UID: " + user.getUID());
+            Log.d("SignUp - User Info","Email: " + user.geteMail());
             String addressString = user.getAddressString();
             Address address = HelperMethods.parseAddressString(addressString, dbHelper.getUserID());
             editor.putString(SP_NAME, user.getName());

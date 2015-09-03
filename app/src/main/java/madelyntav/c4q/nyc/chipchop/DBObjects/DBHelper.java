@@ -1598,7 +1598,6 @@ public class DBHelper extends Firebase {
 
         return itemsInSpecificOrder;
     }
-    //TODO revise
 
     public void copyOrderToBuyerProfile(Order order,Item item){
 
@@ -1698,7 +1697,7 @@ public class DBHelper extends Firebase {
     public ArrayList<Item> updateItemsList(DBCallback dbCallback){
 
         if(arrayListOfSellerItems.size()<sizeofAddDBList){
-            getSellersOnSaleItems(sellerId,dbCallback);
+            getSellersOnSaleItems(sellerId, dbCallback);
         }
 
         dbCallback.runOnSuccess();
@@ -1755,7 +1754,7 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-            dbCallback.runOnFail();
+                dbCallback.runOnFail();
             }
         });
 
@@ -2259,7 +2258,7 @@ public class DBHelper extends Firebase {
 
     public ArrayList<Review> updateListOfReviewsForSeller(DBCallback dbCallback) {
         if (sellersReviewArrayList.size() < sizeofAddDBList) {
-            getAllReviewsForCertainSeller(sellerId,dbCallback);
+            getAllReviewsForCertainSeller(sellerId, dbCallback);
         }
         return sellersReviewArrayList;
     }
@@ -2296,6 +2295,14 @@ public class DBHelper extends Firebase {
 
         fRef.child(buyerID).removeValue();
         dbCallback.runOnSuccess();
+    }
+
+    public void removeActiveSellerWhenLoggedOut(Seller seller, DBCallback dbCallback){
+        sellerId=seller.getUID();
+
+        Firebase fRef = new Firebase(URL + "ActiveSellers/"+sellerId);
+
+        fRef.child(sellerId).removeValue();
     }
     public void sentToFullfilledOrdersTable(Order order, DBCallback dbCallback) {
         sellerId = order.getSellerID();

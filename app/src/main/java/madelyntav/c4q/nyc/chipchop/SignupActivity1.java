@@ -343,7 +343,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
                     protected void onPostExecute(Void aVoid) {
                         super.onPostExecute(aVoid);
 
-                        if (user != null) {
+                        if (user != null && user.getAddressString() != null) {
                             storeUserInfo();
                             Log.d("SIGNUPACTIVITY1", "USER LOG IN SUCCESSFUL");
                             Intent intent;
@@ -356,7 +356,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
                             finish();
                         } else {
                             //TODO:display cannot connect to internet error message
-                            Toast.makeText(SignupActivity1.this, "Failed to load account, try again", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignupActivity1.this, "Failed to load account, please try again", Toast.LENGTH_SHORT).show();
                             loadingPanel.setVisibility(View.GONE);
                             containingView.setVisibility(View.VISIBLE);
                             dbHelper.signOutUser(emptyCallback);

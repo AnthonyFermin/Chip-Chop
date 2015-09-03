@@ -37,7 +37,6 @@ public class Fragment_Buyer_Checkout extends Fragment {
 
     public static final String TAG = "fragment_buyer_checkout";
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -100,6 +99,7 @@ public class Fragment_Buyer_Checkout extends Fragment {
         dbHelper = DBHelper.getDbHelper(activity);
 
         order = activity.getCurrentOrder();
+        order.setBuyerID(dbHelper.getUserID());
         cartItems = order.getItemsOrdered();
         //debug
         for(Item item: cartItems){
@@ -113,6 +113,7 @@ public class Fragment_Buyer_Checkout extends Fragment {
 
         total = 0;
         for(Item item: cartItems){
+            item.setBuyerID(dbHelper.getUserID());
             total = total + (item.getPrice() * item.getQuantityWanted());
         }
     }

@@ -356,7 +356,7 @@ public class BuyActivity extends AppCompatActivity {
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
 
-                if(user != null){
+                if(user != null && user.getAddressString() != null){
                     Address address = HelperMethods.parseAddressString(user.getAddressString(), user.getUID());
                     userInfoSP.edit()
                             .putString(SignupActivity1.SP_NAME, user.getName())

@@ -1441,8 +1441,8 @@ public class DBHelper extends Firebase {
     }
 
     public void addCurrentOrderToSellerDB(Order order, DBCallback dbCallback) {
-        UID = order.getBuyerID();
 
+        UID = order.getBuyerID();
         Log.d("UIDFORCHECKOUT",UID+"");
         sellerId=order.getSellerID();
         Log.d("SELLERIDFORCHECKOUT",sellerId+"");
@@ -1888,7 +1888,7 @@ public class DBHelper extends Firebase {
     //in the order. You can run this in the background
     public void updateSellerItemsWhenItemIsBought(final Item item1, final DBCallback dbCallback){
         sellerId=item1.getSellerID();
-        final int quantity=item1.getQuantityWanted();
+        final int quantityWanted=item1.getQuantityWanted();
 
         Firebase fRef = new Firebase(URL + "ActiveSellers/"+sellerId+"/itemsForSale/");
 
@@ -1901,7 +1901,7 @@ public class DBHelper extends Firebase {
 
                     if (item1.getItemID().equals(dataSnapshot1.getKey())) {
                         int oldQuantity = item.quantity;
-                        int updateQuantityAvailable = oldQuantity - quantity;
+                        int updateQuantityAvailable = oldQuantity - quantityWanted;
 
                         item.setQuantity(updateQuantityAvailable);
                         item.setItemID(item1.getItemID());
@@ -1930,17 +1930,14 @@ public class DBHelper extends Firebase {
     //Method that actually updates the number in the database
     public void subtractBoughtQuantityFromQuantityInDB(Item item, String sellerId, String itemID, int quantityAvailable, DBCallback dbCallback) {
         Firebase fRef = new Firebase(URL + "ActiveSellers/" + sellerId + "/itemsForSale/");
-
         fRef.child(itemID);
+
         if(quantityAvailable>0) {
             fRef.child(itemID).child("quantity").setValue(quantityAvailable);
             dbCallback.runOnSuccess();
         }{
             removeItemFromSale(item,callback);
         }
-
-
-
     }
 
     //method to send an order to the sellers database and then send that order to the seller

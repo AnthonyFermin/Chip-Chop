@@ -22,7 +22,6 @@ public class Item {
     boolean glutenFree;
     boolean containsPeanuts;
     String itemID;
-
     int quantityWanted;
 
     public Item(){}
@@ -43,6 +42,15 @@ public class Item {
         this.quantity = quantity;
         this.descriptionOfItem=descriptionOfItem;
         this.imageLink=imageLink;
+    }
+
+    //TODO: ANTHONY - USE THIS CONSTRUCTOR WHEN ADDING TO CART
+    public Item(String itemID,String sellerID,String buyerID, String nameOfItem, int quantityWanted){
+        this.buyerID = buyerID;
+        this.itemID=itemID;
+        this.sellerID=sellerID;
+        this.nameOfItem=nameOfItem;
+        this.quantityWanted = quantityWanted;
     }
 
     public Item(String sellerID, String nameOfItem, int quantity, String descriptionOfItem, String imageLink){

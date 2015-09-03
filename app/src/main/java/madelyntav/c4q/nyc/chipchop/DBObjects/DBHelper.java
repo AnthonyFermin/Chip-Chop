@@ -73,6 +73,7 @@ public class DBHelper extends Firebase {
     public static ArrayList<Order> previouslyBought;
     public static ArrayList<Order> previouslySold;
     public static ArrayList<Item> receiptForSpecificOrder;
+    public static ArrayList<Item> itemsInSpecificOrder;
 
 
 
@@ -109,6 +110,7 @@ public class DBHelper extends Firebase {
         item=new Item();
         allSellersInDB=new ArrayList<>();
         receiptForSpecificOrder= new ArrayList<>();
+        itemsInSpecificOrder=new ArrayList<>();
         callback= new DBCallback() {
             @Override
             public void runOnSuccess() {
@@ -610,6 +612,7 @@ public class DBHelper extends Firebase {
                     }
                 }
             }
+
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 Toast.makeText(mContext, "Error: Please Try Again", Toast.LENGTH_SHORT).show();
@@ -1237,7 +1240,7 @@ public class DBHelper extends Firebase {
 
         dbCallback.runOnSuccess();
     }
-    public void getAllPreviouslyBoughtItems(String userID, final DBCallback dbCallback){
+    public void getAllPreviouslyBoughtOrders(String userID, final DBCallback dbCallback){
         UID=userID;
 
         Firebase fRef = new Firebase(URL + "UserProfiles/"+UID+"/PreviouslyBought/");
@@ -1380,16 +1383,16 @@ public class DBHelper extends Firebase {
 
     public ArrayList<Item> updateReceiptForSeller(DBCallback dbCallback){
         if(receiptForSpecificOrder.size()<sizeofAddDBList){
-            getReceiptForSpecificOrderForSeller(orderID,sellerId, callback);
+            getReceiptForSpecificOrderForSeller(orderID, sellerId, callback);
         }
         dbCallback.runOnSuccess();
         return receiptForSpecificOrder;
     }
 
-    public void getAllPreviouslySoldItems(String sellerId, final DBCallback dbCallback){
+    public void getAllPreviouslySoldOrders(String sellerId, final DBCallback dbCallback){
         this.sellerId=sellerId;
 
-        Firebase fRef = new Firebase(URL +"SellerProfiles/"+sellerId+"/PreviouslySold/");
+        Firebase fRef = new Firebase(URL + "ActiveSellers/" + sellerId+"/Orders/");
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -1425,7 +1428,7 @@ public class DBHelper extends Firebase {
     public ArrayList<Order> updatePreviouslySoldList(DBCallback dbCallback){
 
         if(previouslySold.size()<sizeofAddDBList){
-            getAllPreviouslySoldItems(sellerId, callback);
+            getAllPreviouslySoldOrders(sellerId, callback);
         }
         dbCallback.runOnSuccess();
 
@@ -1433,10 +1436,59 @@ public class DBHelper extends Firebase {
         return previouslySold;
     }
 
+    public void getItemsInSpecificOrder(String sellerId,String orderID, final DBCallback dbCallback){
+        this.sellerId=sellerId;
+        this.orderID=orderID;
+
+        Firebase fRef = new Firebase(URL + "ActiveSellers/" + sellerId+"/Orders/"+orderID);
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                sizeofAddDBList = dataSnapshot.getChildrenCount();
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Item item = dataSnapshot1.getValue(Item.class);
+                    item.setItemID(dataSnapshot1.getKey());
+                    item.setPrice(item.price);
+                    item.setSellerID(item.sellerID);
+                    item.setBuyerID(item.buyerID);
+                    item.setNameOfItem(item.nameOfItem);
+                    item.setQuantity(item.getQuantity());
+                    item.setDescriptionOfItem(item.descriptionOfItem);
+
+                    if (itemsInSpecificOrder.size() < sizeofAddDBList) {
+                        itemsInSpecificOrder.add(item);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Toast.makeText(mContext, "Unable To Retrieve Items For Order Please Try Again", Toast.LENGTH_SHORT).show();
+                dbCallback.runOnFail();
+            }
+        });
+
+        if (itemsInSpecificOrder.size() == sizeofAddDBList) {
+            updateItemsForSpecificOrder(dbCallback);
+        }
+
+    }
+    public ArrayList<Item> updateItemsForSpecificOrder(DBCallback dbCallback){
+
+        if(itemsInSpecificOrder.size()<sizeofAddDBList){
+            getItemsInSpecificOrder(sellerId, orderID, callback);
+        }
+        dbCallback.runOnSuccess();
+
+
+        return itemsInSpecificOrder;
+    }
+
     public ArrayList<Order> updatePreviouslyBoughtList(DBCallback dbCallback){
 
         if(previouslyBought.size()<sizeofAddDBList){
-            getAllPreviouslyBoughtItems(UID, callback);
+            getAllPreviouslyBoughtOrders(UID, callback);
         }
         dbCallback.runOnSuccess();
         return previouslyBought;
@@ -1483,8 +1535,56 @@ public class DBHelper extends Firebase {
             updateSellerItemsWhenItemIsBought(item, callback);
         }
         dbCallback.runOnSuccess();
+    }
+
+    public void getItemsInSpecificOrderForBuyer(String buyerID,String orderID, final DBCallback dbCallback){
+        this.UID=buyerID;
+        this.orderID=orderID;
+
+        Firebase fRef = new Firebase(URL + "UserProfiles/"+UID+"/PreviouslyBought/"+orderID);
+
+        fRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                sizeofAddDBList = dataSnapshot.getChildrenCount();
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Item item = dataSnapshot1.getValue(Item.class);
+                    item.setItemID(dataSnapshot1.getKey());
+                    item.setPrice(item.price);
+                    item.setSellerID(item.sellerID);
+                    item.setBuyerID(item.buyerID);
+                    item.setNameOfItem(item.nameOfItem);
+                    item.setQuantity(item.getQuantity());
+                    item.setDescriptionOfItem(item.descriptionOfItem);
+
+                    if (itemsInSpecificOrder.size() < sizeofAddDBList) {
+                        itemsInSpecificOrder.add(item);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Toast.makeText(mContext, "Unable To Retrieve Items For Order Please Try Again", Toast.LENGTH_SHORT).show();
+                dbCallback.runOnFail();
+            }
+        });
+
+        if (itemsInSpecificOrder.size() == sizeofAddDBList) {
+            updateItemsForSpecificOrderForBuyer(dbCallback);
+        }
+
+    }
+    public ArrayList<Item> updateItemsForSpecificOrderForBuyer(DBCallback dbCallback){
+
+        if(itemsInSpecificOrder.size()<sizeofAddDBList){
+            getItemsInSpecificOrderForBuyer(UID, orderID, callback);
+        }
+        dbCallback.runOnSuccess();
 
 
+        return itemsInSpecificOrder;
     }
     //TODO revise
 

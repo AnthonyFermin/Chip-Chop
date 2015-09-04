@@ -37,6 +37,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -115,6 +116,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             @Override
             public void onClick(View view) {
                 // TODO: WRITE CODE TO REFRESH RECYCLERVIEW !!
+                activity.replaceFragment(new Fragment_Buyer_Map());
             }
         });
     }
@@ -146,6 +148,8 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             @Override
             public void onPanelExpanded(View view) {
                 arrowImage.setImageDrawable(getResources().getDrawable(R.drawable.down));
+                itemsRView.setFocusableInTouchMode(true);
+                itemsRView.setFocusable(true);
             }
 
             @Override
@@ -173,8 +177,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         connectGoogleApiClient();
         mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(10000)        // 10 seconds, in milliseconds
-                .setFastestInterval(5000); // 1 second, in milliseconds
+                .setNumUpdates(1);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
@@ -330,8 +333,8 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         location.setLongitude(longitude);
 
         // Set initial view to current location
-        map.moveCamera(CameraUpdateFactory.newLatLng(locationLatLng));
-        map.animateCamera(CameraUpdateFactory.zoomTo(15));
+        CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(locationLatLng, 15);
+        map.animateCamera(yourLocation);
 
     }
 

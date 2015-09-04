@@ -1,4 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -31,6 +31,36 @@
             android:gravity="center_horizontal"
             android:id="@+id/title_tv"/>
 
+        <TextView
+            android:id="@+id/active_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ACTIVE ITEMS"
+            android:layout_margin="5dp"
+            style="@style/text_design"
+            android:layout_below="@+id/title_tv"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:id="@+id/seller_items_list"
+            android:layout_below="@+id/active_tv"/>
+
+        <TextView
+            android:id="@+id/inactive_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="INACTIVE ITEMS"
+            style="@style/text_design"
+            android:layout_margin="5dp"
+            android:layout_below="@+id/seller_items_list"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:id="@+id/seller_items_list_INACTIVE"
+            android:layout_below="@+id/inactive_tv"/>
+
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/addButton"
             android:layout_width="wrap_content"
@@ -41,12 +71,6 @@
             app:elevation="6dp"
             app:pressedTranslationZ="12dp"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/seller_items_list"
-            android:layout_below="@+id/addButton"/>
-
     </RelativeLayout>
 
-</FrameLayout>
+</RelativeLayout>

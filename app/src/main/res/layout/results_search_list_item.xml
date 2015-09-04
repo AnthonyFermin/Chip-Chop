@@ -2,21 +2,30 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
-    android:background="@drawable/food2"
-    android:padding="10dp">
+    android:layout_height="150dp">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/food2"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        android:id="@id/food_image"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="10dp">
+
+
 
         <TextView
             android:id="@+id/store_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="bottom|start"
+            android:gravity="start"
             android:text="name"
             android:textColor="#FFF"
             android:textSize="25sp" />
@@ -24,6 +33,9 @@
         <RatingBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:numStars="5"
+            android:rating="4"
+            android:clickable="false"
             android:layout_gravity="start"/>
 
         <TextView
@@ -81,4 +93,6 @@
         </LinearLayout>
 
     </LinearLayout>
+
+
 </RelativeLayout>

@@ -32,11 +32,7 @@ public class ReviewDialogFragment extends android.support.v4.app.DialogFragment 
             @Override
             public void onClick(View view) {
                 getDialog().dismiss();
-
-                FragmentActivity activity = getActivity();
-                FragmentManager fm = activity.getSupportFragmentManager();
-                ReviewDialogFragment2 alertDialog = new ReviewDialogFragment2();
-                alertDialog.show(fm, "fragment_alert");
+                // TODO: code to save review to database!
             }
         });
 

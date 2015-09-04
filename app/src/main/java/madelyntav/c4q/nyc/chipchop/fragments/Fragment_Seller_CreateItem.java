@@ -67,12 +67,12 @@ public class Fragment_Seller_CreateItem extends Fragment {
         if(price.contains(".") && price.length() > 2){
             int decInd = price.indexOf('.');
             String dollarAmt = price.substring(0, decInd);
-            String centAmt = price.substring(decInd + 1);
+//            String centAmt = price.substring(decInd + 1);
             dollarPriceET.setText(dollarAmt);
-            centPriceET.setText(centAmt);
+//            centPriceET.setText(centAmt);
         }else{
             dollarPriceET.setText(price);
-            centPriceET.setText("00");
+//            centPriceET.setText("00");
         }
 
         vegCB.setChecked(itemToEdit.isVegetarian());
@@ -169,7 +169,7 @@ public class Fragment_Seller_CreateItem extends Fragment {
         portionsET = (EditText) root.findViewById(R.id.portions);
         descriptionET = (EditText) root.findViewById(R.id.description);
         dollarPriceET = (EditText) root.findViewById(R.id.price_dollar_amount);
-        centPriceET = (EditText) root.findViewById(R.id.price_cents_amount);
+//        centPriceET = (EditText) root.findViewById(R.id.price_cents_amount);
 
         dishPhotoButton = (ImageButton) root.findViewById(R.id.dish_image);
 

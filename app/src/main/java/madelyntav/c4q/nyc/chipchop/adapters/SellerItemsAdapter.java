@@ -126,7 +126,7 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         try {
             DecimalFormat df = new DecimalFormat("#.00");
             String price = df.format(sellerItem.getPrice());
-            vh.price.setText("$" + price);
+            vh.price.setText("$ " + price);
         }catch(NullPointerException e){
             e.printStackTrace();
         }

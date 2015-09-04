@@ -95,7 +95,7 @@ public class CartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         int amtWanted = checkoutItem.getQuantityWanted();
 
         vh.name.setText(checkoutItem.getNameOfItem());
-        vh.price.setText((checkoutItem.getPrice() * amtWanted) + "");
+        vh.price.setText("$ " + (checkoutItem.getPrice() * amtWanted) + "");
         vh.quantity.setText(checkoutItem.getQuantityWanted() + "");
         vh.description.setText(checkoutItem.getDescriptionOfItem());
         Picasso.with(context).load(checkoutItem.getImageLink()).fit().into(vh.image);

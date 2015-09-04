@@ -175,4 +175,5 @@ public class MainActivity extends AppCompatActivity {
        bytes = output.toByteArray();
        String encodedString = Base64.encodeToString(bytes, Base64.DEFAULT);
    }
+
 }

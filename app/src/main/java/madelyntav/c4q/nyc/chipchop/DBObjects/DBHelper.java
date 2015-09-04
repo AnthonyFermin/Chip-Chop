@@ -1155,7 +1155,7 @@ public class DBHelper extends Firebase {
                         item.setQuantity(item1.quantity);
                         item.setIsVegetarian(item1.isVegetarian);
                         item.setImageLink(item1.imageLink);
-                        item.setContainsDairy(item1.containsDairy);
+                        item.setContainsDairy(items1.containsDairy);
                         item.setContainsEggs(item1.containsEggs);
                         item.setContainsPeanuts(item1.containsPeanuts);
                         item.setContainsShellfish(item1.containsShellfish);
@@ -1584,6 +1584,7 @@ public class DBHelper extends Firebase {
                     Item item = dataSnapshot1.getValue(Item.class);
                     item.setItemID(dataSnapshot1.getKey());
                     item.setPrice(item.price);
+                    item.setImageLink(item.imageLink);
                     item.setSellerID(item.sellerID);
                     item.setBuyerID(item.buyerID);
                     item.setNameOfItem(item.nameOfItem);
@@ -1691,6 +1692,7 @@ public class DBHelper extends Firebase {
                     item.setItemID(dataSnapshot1.getKey());
                     item.setPrice(item.price);
                     item.setSellerID(item.sellerID);
+                    item.setImageLink(item.imageLink);
                     item.setBuyerID(item.buyerID);
                     item.setNameOfItem(item.nameOfItem);
                     item.setQuantity(item.getQuantity());
@@ -1773,6 +1775,7 @@ public class DBHelper extends Firebase {
                     item.setItemID(dataSnapshot1.getKey());
                     item.setNameOfItem(item.nameOfItem);
                     item.setPrice(item.price);
+                    item.setImageLink(item.imageLink);
                     item.setQuantity(item.quantity);
                     item.setIsVegetarian(item.isVegetarian);
                     item.setImageLink(item.imageLink);

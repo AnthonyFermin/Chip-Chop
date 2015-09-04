@@ -408,6 +408,8 @@ public class DBHelper extends Firebase {
 
 
                     intent.putExtra("email", String.valueOf(authData.getProviderData().get("email")));
+                    intent.putExtra("name",String.valueOf(authData.getProviderData().get("displayName")));
+                    intent.putExtra("display",String.valueOf(authData.getProviderData().get("profileImageURL")));
                     intent.putExtra("UID", UID);
                     mContext.getApplicationContext().startActivity(intent);
                 }
@@ -505,6 +507,8 @@ public class DBHelper extends Firebase {
                     fRef.child(UID).child(sName).setValue(authData.getProviderData().get("displayName"));
 
                     intent.putExtra("email", String.valueOf(authData.getProviderData().get("email")));
+                    intent.putExtra("name", String.valueOf(authData.getProviderData().get("displayName")));
+                    intent.putExtra("display",String.valueOf(authData.getProviderData().get("profileImageURL")));
                     intent.putExtra("UID", UID);
                     mContext.getApplicationContext().startActivity(intent);
                 }
@@ -1356,7 +1360,7 @@ public class DBHelper extends Firebase {
     public ArrayList<Order> getAllPreviouslyBoughtOrders(String userID, final DBCallback dbCallback) {
         UID = userID;
 
-        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID + "/PreviouslyBought/");
+        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID + "/Orders/");
 
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -1390,7 +1394,7 @@ public class DBHelper extends Firebase {
     public ArrayList<Item> getReceiptForSpecificOrderForBuyer(String orderID, final DBCallback dbCallback) {
         UID = userID;
         this.orderID = orderID;
-        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID + "/PreviouslyBought/" + orderID);
+        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID + "/Orders/" + orderID);
 
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -1451,7 +1455,7 @@ public class DBHelper extends Firebase {
     public ArrayList<Item> getReceiptForSpecificOrderForSeller(String orderID, String sellerId, final DBCallback dbCallback) {
         this.sellerId = sellerId;
         this.orderID = orderID;
-        Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId + "/PreviouslySold/" + orderID);
+        Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId + "/Orders/" + orderID);
 
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -1659,7 +1663,7 @@ public class DBHelper extends Firebase {
         this.UID = buyerID;
         this.orderID = orderID;
 
-        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID + "/PreviouslyBought/" + orderID);
+        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID + "/Orders/" + orderID);
 
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -1701,8 +1705,6 @@ public class DBHelper extends Firebase {
             getItemsInSpecificOrderForBuyer(UID, orderID, callback);
         }
         dbCallback.runOnSuccess();
-
-
         return itemsInSpecificOrder;
     }
 
@@ -1728,9 +1730,7 @@ public class DBHelper extends Firebase {
         fRef.child(orderID).child(itemID).child("containsEggs").setValue(item.isContainsEggs());
         fRef.child(orderID).child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
         fRef.child(orderID).child(itemID).child("containsDairy").setValue(item.isContainsDairy());
-
     }
-
 
     public ArrayList<Item> getSellersOnSaleItems(String sellerId, DBCallback dbCallback) {
         this.sellerId = sellerId;
@@ -1747,7 +1747,6 @@ public class DBHelper extends Firebase {
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     Item item = dataSnapshot1.getValue(Item.class);
-
                     item.setItemID(dataSnapshot1.getKey());
                     item.setQuantity(item.quantity);
                     item.setSellerID(item.sellerID);

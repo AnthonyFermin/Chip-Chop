@@ -13,6 +13,11 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
+        <android.support.v7.widget.SwitchCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_gravity="center_vertical"/>
 
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/food_image"
@@ -136,11 +141,7 @@
                     android:textColor="#D32F2F" />
 
 
-                <android.support.v7.widget.SwitchCompat
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/remove_item_button"
-                    android:layout_alignParentBottom="true"/>
+
             </RelativeLayout>
 
 

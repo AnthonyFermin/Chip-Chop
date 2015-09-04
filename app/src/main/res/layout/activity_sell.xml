@@ -43,6 +43,12 @@
             android:gravity="center_horizontal"
             android:id="@+id/drawer_user_nameTV"/>
 
+        <RatingBar
+            android:id="@+id/rating_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"/>
+
         <ListView
             android:id="@+id/left_drawer"
             android:layout_width="match_parent"

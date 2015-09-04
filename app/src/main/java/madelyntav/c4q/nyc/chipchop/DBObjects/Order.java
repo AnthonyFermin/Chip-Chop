@@ -17,6 +17,7 @@ public class Order {
     ArrayList<Item> itemsOrdered;
     String timeStamp;
     boolean isActive;
+    String storeName;
 
     public Order(){
         this.itemsOrdered = new ArrayList<>();
@@ -56,6 +57,29 @@ public class Order {
         this.timeStamp=timeStamp;
         this.isActive=isActive;
         this.itemsOrdered=itemsOrdered;
+    }
+
+    public Order(String buyerID, double price, String orderID, Review review, String sellerID, String timeStamp, boolean isActive, String storeName) {
+        this.buyerID = buyerID;
+        this.price = price;
+        this.orderID = orderID;
+        this.review = review;
+        this.sellerID = sellerID;
+        this.timeStamp = timeStamp;
+        this.isActive = isActive;
+        this.storeName = storeName;
+    }
+
+    public Order(String buyerID, double price, String orderID, Review review, ArrayList<Item> itemsOrdered, String sellerID, String timeStamp, boolean isActive, String storeName) {
+        this.buyerID = buyerID;
+        this.price = price;
+        this.orderID = orderID;
+        this.review = review;
+        this.itemsOrdered = itemsOrdered;
+        this.sellerID = sellerID;
+        this.timeStamp = timeStamp;
+        this.isActive = isActive;
+        this.storeName = storeName;
     }
 
     public Order(String buyerID, String sellerID){
@@ -126,5 +150,13 @@ public class Order {
 
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
     }
 }

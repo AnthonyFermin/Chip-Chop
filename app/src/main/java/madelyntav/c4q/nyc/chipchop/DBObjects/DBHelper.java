@@ -1360,7 +1360,7 @@ public class DBHelper extends Firebase {
     public ArrayList<Order> getAllPreviouslyBoughtOrders(String userID, final DBCallback dbCallback) {
         UID = userID;
 
-        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID + "/PreviouslyBought/");
+        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID + "/Orders/");
 
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -1394,7 +1394,7 @@ public class DBHelper extends Firebase {
     public ArrayList<Item> getReceiptForSpecificOrderForBuyer(String orderID, final DBCallback dbCallback) {
         UID = userID;
         this.orderID = orderID;
-        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID + "/PreviouslyBought/" + orderID);
+        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID + "/Orders/" + orderID);
 
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -1455,7 +1455,7 @@ public class DBHelper extends Firebase {
     public ArrayList<Item> getReceiptForSpecificOrderForSeller(String orderID, String sellerId, final DBCallback dbCallback) {
         this.sellerId = sellerId;
         this.orderID = orderID;
-        Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId + "/PreviouslySold/" + orderID);
+        Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId + "/Orders/" + orderID);
 
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -1663,7 +1663,7 @@ public class DBHelper extends Firebase {
         this.UID = buyerID;
         this.orderID = orderID;
 
-        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID + "/PreviouslyBought/" + orderID);
+        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID + "/Orders/" + orderID);
 
         fRef.addValueEventListener(new ValueEventListener() {
             @Override

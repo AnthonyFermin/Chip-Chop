@@ -408,6 +408,8 @@ public class DBHelper extends Firebase {
 
 
                     intent.putExtra("email", String.valueOf(authData.getProviderData().get("email")));
+                    intent.putExtra("name",String.valueOf(authData.getProviderData().get("displayName")));
+                    intent.putExtra("display",String.valueOf(authData.getProviderData().get("profileImageURL")));
                     intent.putExtra("UID", UID);
                     mContext.getApplicationContext().startActivity(intent);
                 }
@@ -505,6 +507,8 @@ public class DBHelper extends Firebase {
                     fRef.child(UID).child(sName).setValue(authData.getProviderData().get("displayName"));
 
                     intent.putExtra("email", String.valueOf(authData.getProviderData().get("email")));
+                    intent.putExtra("name", String.valueOf(authData.getProviderData().get("displayName")));
+                    intent.putExtra("display",String.valueOf(authData.getProviderData().get("profileImageURL")));
                     intent.putExtra("UID", UID);
                     mContext.getApplicationContext().startActivity(intent);
                 }

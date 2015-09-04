@@ -235,7 +235,6 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
             Intent intent1 = new Intent(SignupActivity1.this, SignupActivity2.class);
             dbHelper.onFacebookAccessTokenChange(AccessToken.getCurrentAccessToken(), intent1);
             Log.d("request Code", String.valueOf(resultCode));
-            startActivity(intent1);
         }
         else{
             Toast.makeText(this,"Login Failed",Toast.LENGTH_LONG).show();
@@ -274,7 +273,6 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         Toast.makeText(getApplicationContext(), "Signed In", Toast.LENGTH_SHORT).show();
         Intent intent1 = new Intent(SignupActivity1.this, SignupActivity2.class);
         dbHelper.onGmailAccessTokenChange(AccessToken.getCurrentAccessToken(), intent1);
-        startActivity(intent1);
 
     }
 

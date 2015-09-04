@@ -1705,8 +1705,6 @@ public class DBHelper extends Firebase {
             getItemsInSpecificOrderForBuyer(UID, orderID, callback);
         }
         dbCallback.runOnSuccess();
-
-
         return itemsInSpecificOrder;
     }
 
@@ -1732,9 +1730,7 @@ public class DBHelper extends Firebase {
         fRef.child(orderID).child(itemID).child("containsEggs").setValue(item.isContainsEggs());
         fRef.child(orderID).child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
         fRef.child(orderID).child(itemID).child("containsDairy").setValue(item.isContainsDairy());
-
     }
-
 
     public ArrayList<Item> getSellersOnSaleItems(String sellerId, DBCallback dbCallback) {
         this.sellerId = sellerId;
@@ -1751,7 +1747,6 @@ public class DBHelper extends Firebase {
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     Item item = dataSnapshot1.getValue(Item.class);
-
                     item.setItemID(dataSnapshot1.getKey());
                     item.setQuantity(item.quantity);
                     item.setSellerID(item.sellerID);

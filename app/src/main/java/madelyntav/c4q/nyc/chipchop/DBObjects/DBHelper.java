@@ -1371,7 +1371,17 @@ public class DBHelper extends Firebase {
                     Order order = dataSnapshot1.getValue(Order.class);
                     order.setOrderID(dataSnapshot1.getKey());
                     if (previouslyBought.size() < sizeofAddDBList) {
+                        order.setPrice(order.price);
+                        order.setSellerID(order.sellerID);
+                        order.setBuyerID(order.buyerID);
+                        order.setItemsOrdered(order.itemsOrdered);
+                        order.setReview(order.review);
+                        order.setTimeStamp(order.timeStamp);
+                        order.setIsActive(order.isActive);
+                        order.setStoreName(order.storeName);
+
                         previouslyBought.add(order);
+
                     }
                 }
                 dbCallback.runOnSuccess();
@@ -1526,6 +1536,9 @@ public class DBHelper extends Firebase {
                     order.setBuyerID(order.buyerID);
                     order.setItemsOrdered(order.itemsOrdered);
                     order.setReview(order.review);
+                    order.setTimeStamp(order.timeStamp);
+                    order.setIsActive(order.isActive);
+                    order.setStoreName(order.storeName);
 
                     if (previouslySold.size() < sizeofAddDBList) {
                         previouslySold.add(order);
@@ -1641,6 +1654,7 @@ public class DBHelper extends Firebase {
             fRef.child(UID).child(orderID);
             fRef.child(orderID).child("price").setValue(order.getPrice());
             fRef.child(orderID).child("buyerID").setValue(order.getBuyerID());
+            fRef.child(orderID).child("storeName").setValue(order.getStoreName());
             fRef.child(orderID).child(itemID);
             fRef.child(orderID).child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
             fRef.child(orderID).child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
@@ -1721,6 +1735,7 @@ public class DBHelper extends Firebase {
         fRef.child(sellerId).child(orderID);
         fRef.child(orderID).child("price").setValue(order.getPrice());
         fRef.child(orderID).child("sellerID").setValue(order.getSellerID());
+        fRef.child(orderID).child("storeName").setValue(order.getStoreName());
         fRef.child(orderID).child(itemID);
         fRef.child(orderID).child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
         fRef.child(orderID).child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());

@@ -987,6 +987,7 @@ public class DBHelper extends Firebase {
 
         String itemID = fire1.getKey();
         item.setItemID(itemID);
+        Log.d("ADD ITEM TO SELLER","IMAGE LINK: " + item.getImageLink());
 
         fRef.child(itemID);
         fRef.child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
@@ -1155,7 +1156,7 @@ public class DBHelper extends Firebase {
                         item.setQuantity(item1.quantity);
                         item.setIsVegetarian(item1.isVegetarian);
                         item.setImageLink(item1.imageLink);
-                        item.setContainsDairy(items1.containsDairy);
+                        item.setContainsDairy(item1.containsDairy);
                         item.setContainsEggs(item1.containsEggs);
                         item.setContainsPeanuts(item1.containsPeanuts);
                         item.setContainsShellfish(item1.containsShellfish);

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -139,7 +140,7 @@ public class Fragment_Seller_CreateItem extends Fragment {
                 if (!portionsET.getText().toString().isEmpty()) {
                     portions = Integer.parseInt(portionsET.getText().toString());
                 }
-                String price = dollarPriceET.getText().toString() + "." + centPriceET.getText().toString();
+                String price = dollarPriceET.getText().toString();
                 double decimalPrice = 1;
                 if (!price.isEmpty()) {
                     decimalPrice = Double.parseDouble(price);
@@ -147,6 +148,7 @@ public class Fragment_Seller_CreateItem extends Fragment {
                 String description = descriptionET.getText().toString();
 
                 Item item = new Item(dbHelper.getUserID(), "", dishName, portions, description, imageLink);
+                Log.d("Item Created","ImageLink: " + imageLink);
                 item.setPrice(decimalPrice);
                 item.setIsVegetarian(vegCB.isChecked());
                 item.setGlutenFree(glutFreeCB.isChecked());
@@ -203,11 +205,14 @@ public class Fragment_Seller_CreateItem extends Fragment {
             imageFileUri = data.getData();
             String filePath = imageFileUri.getPath();
             imageLink = saveImageToEncodedString(filePath);
-
+            Log.d("Item Creation","ImageLink: " + imageLink);
         }
 
         if (requestCode == 0 && resultCode == RESULT_OK) {
             imageFileUri = Uri.parse(stringVariable);
+            String filePath = imageFileUri.getPath();
+            imageLink = saveImageToEncodedString(filePath);
+            Log.d("Item Creation","ImageLink: " + imageLink);
         }
 
 

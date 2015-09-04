@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +18,16 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+
 import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
+import madelyntav.c4q.nyc.chipchop.MainActivity;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.SellActivity;
 
@@ -34,6 +43,8 @@ public class Fragment_Seller_CreateItem extends Fragment {
     EditText portionsET;
     EditText descriptionET;
     CheckBox vegCB, glutFreeCB, dairyCB, eggsCB, peanutsCB, shellfishCB;
+
+    String imageLink;
 
     public static final String TAG = "fragment_seller_create_item";
 
@@ -88,6 +99,8 @@ public class Fragment_Seller_CreateItem extends Fragment {
         dbHelper = DBHelper.getDbHelper(getActivity());
         activity = (SellActivity) getActivity();
 
+        imageLink = "";
+
         if(activity.getItemToEdit() != null){
             editItem();
         }
@@ -124,17 +137,18 @@ public class Fragment_Seller_CreateItem extends Fragment {
                 // TODO: add item to sellers items in db and arraylist displayed in profile/items fragment recycler views
                 String dishName = dishNameET.getText().toString();
                 int portions = 0;
-                if(!portionsET.getText().toString().isEmpty()) {
+                if (!portionsET.getText().toString().isEmpty()) {
                     portions = Integer.parseInt(portionsET.getText().toString());
                 }
-                String price = dollarPriceET.getText().toString() + "." + centPriceET.getText().toString();
+                String price = dollarPriceET.getText().toString();
                 double decimalPrice = 1;
-                if(!price.isEmpty()){
+                if (!price.isEmpty()) {
                     decimalPrice = Double.parseDouble(price);
                 }
                 String description = descriptionET.getText().toString();
 
-                Item item = new Item(dbHelper.getUserID(), "",dishName,portions,description, "https://tahala.files.wordpress.com/2010/12/avocado-3.jpg");
+                Item item = new Item(dbHelper.getUserID(), "", dishName, portions, description, imageLink);
+                Log.d("Item Created","ImageLink: " + imageLink);
                 item.setPrice(decimalPrice);
                 item.setIsVegetarian(vegCB.isChecked());
                 item.setGlutenFree(glutFreeCB.isChecked());
@@ -143,13 +157,13 @@ public class Fragment_Seller_CreateItem extends Fragment {
                 item.setContainsPeanuts(peanutsCB.isChecked());
                 item.setContainsShellfish(shellfishCB.isChecked());
 
-                if(activity.getItemToEdit() == null) {
+                if (activity.getItemToEdit() == null) {
                     if (activity.isCurrentlyCooking()) {
                         dbHelper.addItemToActiveSellerProfile(item, itemAddCallback);
                     } else {
                         dbHelper.addItemToSellerProfileDB(item, itemAddCallback);
                     }
-                }else{
+                } else {
                     if (activity.isCurrentlyCooking()) {
                         dbHelper.editItemInActiveSellerProfile(item, itemAddCallback);
                     } else {
@@ -189,10 +203,16 @@ public class Fragment_Seller_CreateItem extends Fragment {
 
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
             imageFileUri = data.getData();
+            String filePath = imageFileUri.getPath();
+            imageLink = saveImageToEncodedString(filePath);
+            Log.d("Item Creation","ImageLink: " + imageLink);
         }
 
         if (requestCode == 0 && resultCode == RESULT_OK) {
             imageFileUri = Uri.parse(stringVariable);
+            String filePath = imageFileUri.getPath();
+            imageLink = saveImageToEncodedString(filePath);
+            Log.d("Item Creation","ImageLink: " + imageLink);
         }
 
 
@@ -229,6 +249,29 @@ public class Fragment_Seller_CreateItem extends Fragment {
         });
         AlertDialog alertDialog = dialogBuilder.create();
         alertDialog.show();
+    }
+
+    public String saveImageToEncodedString(String fileName){
+        InputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(fileName);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        byte[] bytes;
+        byte[] buffer = new byte[8192];
+        int bytesRead;
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try {
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                output.write(buffer, 0, bytesRead);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        bytes = output.toByteArray();
+        String encodedString = Base64.encodeToString(bytes, Base64.DEFAULT);
+        return encodedString;
     }
 
     @Override

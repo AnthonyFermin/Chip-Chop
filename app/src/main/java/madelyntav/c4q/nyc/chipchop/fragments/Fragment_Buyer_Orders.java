@@ -85,18 +85,18 @@ public class Fragment_Buyer_Orders extends Fragment {
 
                 int i = 0;
                 do{
-                    Log.d("LOAD SELLER ITEMS", "Attempt #" + i);
+                    Log.d("LOAD BUYER ORDERS", "Attempt #" + i);
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                     if (i > 10){
-                        Log.d("LOAD SELLER ITEMS", "DIDN'T LOAD");
+                        Log.d("LOAD BUYER ORDERS", "DIDN'T LOAD");
                         break;
                     }
                     i++;
-                }while(foodOrders == null);
+                }while(foodOrders.size() == 0);
 
                 return null;
             }

@@ -980,6 +980,7 @@ public class DBHelper extends Firebase {
 
         String itemID = fire1.getKey();
         item.setItemID(itemID);
+        Log.d("ADD ITEM TO SELLER","IMAGE LINK: " + item.getImageLink());
 
         fRef.child(itemID);
         fRef.child(itemID).child("nameOfItem").setValue(item.getNameOfItem());

@@ -1655,6 +1655,7 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child("price").setValue(order.getPrice());
             fRef.child(orderID).child("buyerID").setValue(order.getBuyerID());
             fRef.child(orderID).child("storeName").setValue(order.getStoreName());
+            fRef.child(orderID).child("isActive").setValue(order.isActive());
             fRef.child(orderID).child(itemID);
             fRef.child(orderID).child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
             fRef.child(orderID).child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
@@ -1736,6 +1737,7 @@ public class DBHelper extends Firebase {
         fRef.child(orderID).child("price").setValue(order.getPrice());
         fRef.child(orderID).child("sellerID").setValue(order.getSellerID());
         fRef.child(orderID).child("storeName").setValue(order.getStoreName());
+        fRef.child(orderID).child("isActive").setValue(order.isActive());
         fRef.child(orderID).child(itemID);
         fRef.child(orderID).child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
         fRef.child(orderID).child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());

@@ -65,7 +65,10 @@ public class Fragment_Buyer_Checkout extends Fragment {
                 //TODO: Madelyn this the right method? I see multiple methods that can be used to send this to the DB
                 //TODO: Madelyn this can be for next weeks sprint if you like: is there a way to check the quanities wanted vs the quantities actually available on the DB inside a DBHelper method before accepting the transaction? https://www.firebase.com/docs/web/api/firebase/transaction.html
                 order.setPrice(total);
-                dbHelper.addCurrentOrderToSellerDB(order,new DBCallback() {
+                Log.d("Order Info", "Seller ID: " + order.getSellerID());
+                Log.d("Order Info", "Buyer ID: " + order.getBuyerID());
+                Log.d("Order Info","Total Price: $" + order.getPrice());
+                dbHelper.addCurrentOrderToSellerDB(order, new DBCallback() {
                     @Override
                     public void runOnSuccess() {
                         confirmImage.setVisibility(View.VISIBLE);
@@ -80,7 +83,7 @@ public class Fragment_Buyer_Checkout extends Fragment {
 
                     @Override
                     public void runOnFail() {
-                        Toast.makeText(activity,"Items are no longer available",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, "Items are no longer available", Toast.LENGTH_SHORT).show();
                     }
                 });
                 //TODO: Check if Signed in, else go into signup activity - Sign in should just be a pop up dialog

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.facebook.AccessToken;
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
@@ -13,7 +12,6 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.model.LatLng;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -160,9 +158,7 @@ public class DBHelper extends Firebase {
                 Toast.makeText(mContext, "Account Created", Toast.LENGTH_SHORT).show();
                 mSuccess = true;
 
-
                 UID = String.valueOf(stringObjectMap.get("uid"));
-
 
                 SharedPreferences sharedPreferences = mContext.getSharedPreferences("UID", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -199,7 +195,6 @@ public class DBHelper extends Firebase {
 
                 UID = String.valueOf(stringObjectMap.get("uid"));
 
-
                 SharedPreferences sharedPreferences = mContext.getSharedPreferences("New User", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("id", UID);
@@ -223,7 +218,6 @@ public class DBHelper extends Firebase {
                 mSuccess = false;
             }
         });
-
 
         return mSuccess;
     }
@@ -263,7 +257,6 @@ public class DBHelper extends Firebase {
                 callback.runOnFail();
             }
         });
-
 
         return mSuccess;
     }
@@ -1155,7 +1148,7 @@ public class DBHelper extends Firebase {
                         item.setQuantity(item1.quantity);
                         item.setIsVegetarian(item1.isVegetarian);
                         item.setImageLink(item1.imageLink);
-                        item.setContainsDairy(items1.containsDairy);
+                        item.setContainsDairy(item1.containsDairy);
                         item.setContainsEggs(item1.containsEggs);
                         item.setContainsPeanuts(item1.containsPeanuts);
                         item.setContainsShellfish(item1.containsShellfish);

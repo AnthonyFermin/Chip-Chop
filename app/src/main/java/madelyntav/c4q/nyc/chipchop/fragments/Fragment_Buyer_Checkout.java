@@ -1,6 +1,8 @@
 package madelyntav.c4q.nyc.chipchop.fragments;
 
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,11 +28,13 @@ import madelyntav.c4q.nyc.chipchop.adapters.CheckoutListAdapter;
 
 public class Fragment_Buyer_Checkout extends Fragment {
 
+    ImageView confirmImage;
     Button confirmOrder;
     private ArrayList<Item> cartItems;
     private RecyclerView cartRView;
     private TextView totalPriceTV;
 
+    private TransitionDrawable confirmDrawable;
     private BuyActivity activity;
     private Order order;
     private DBHelper dbHelper;
@@ -63,7 +68,14 @@ public class Fragment_Buyer_Checkout extends Fragment {
                 dbHelper.addCurrentOrderToSellerDB(order,new DBCallback() {
                     @Override
                     public void runOnSuccess() {
-                        activity.replaceFragment(new Fragment_Buyer_Orders());
+                        confirmImage.setVisibility(View.VISIBLE);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                confirmImage.setVisibility(View.GONE);
+                                activity.replaceFragment(new Fragment_Buyer_Orders());
+                            }
+                        }, 2000);
                     }
 
                     @Override
@@ -86,12 +98,16 @@ public class Fragment_Buyer_Checkout extends Fragment {
 
     private void initializeViews() {
         totalPriceTV.setText(total + "");
+
     }
 
     private void bindViews(View root) {
         cartRView = (RecyclerView) root.findViewById(R.id.checkout_items_list);
         totalPriceTV = (TextView) root.findViewById(R.id.total_price_tv);
         confirmOrder = (Button) root.findViewById(R.id.confirmOrderButton);
+        confirmImage = (ImageView) root.findViewById(R.id.confirm_image);
+
+
     }
 
     private void initializeData() {

@@ -232,9 +232,9 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
             mIsResolving = false;
             mGoogleApiClient.connect();
         }else if(resultCode== RESULT_OK) {
-            dbHelper.onFacebookAccessTokenChange(AccessToken.getCurrentAccessToken(), emptyCallback);
-            Log.d("request Code", String.valueOf(resultCode));
             Intent intent1 = new Intent(SignupActivity1.this, SignupActivity2.class);
+            dbHelper.onFacebookAccessTokenChange(AccessToken.getCurrentAccessToken(), intent1);
+            Log.d("request Code", String.valueOf(resultCode));
             startActivity(intent1);
         }
         else{
@@ -272,8 +272,8 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
 
         // Show the signed-in UI
         Toast.makeText(getApplicationContext(), "Signed In", Toast.LENGTH_SHORT).show();
-        dbHelper.onGmailAccessTokenChange(AccessToken.getCurrentAccessToken(), emptyCallback);
         Intent intent1 = new Intent(SignupActivity1.this, SignupActivity2.class);
+        dbHelper.onGmailAccessTokenChange(AccessToken.getCurrentAccessToken(), intent1);
         startActivity(intent1);
 
     }

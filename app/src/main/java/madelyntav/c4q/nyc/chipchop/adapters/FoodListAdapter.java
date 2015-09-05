@@ -1,6 +1,9 @@
 package madelyntav.c4q.nyc.chipchop.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -79,12 +82,28 @@ public class FoodListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
 
         Item foodItem = foodItems.get(position);
-        FoodItemViewHolder vh = (FoodItemViewHolder) viewHolder;
+        final FoodItemViewHolder vh = (FoodItemViewHolder) viewHolder;
         vh.name.setText(foodItem.getNameOfItem());
         vh.description.setText(foodItem.getDescriptionOfItem());
         vh.price.setText("$ " + foodItem.getPrice() + "");
         vh.quantity.setText(foodItem.getQuantity() + "");
-        Picasso.with(context).load(foodItem.getImageLink()).fit().into(vh.image);
+        if(foodItem.getImageLink() != null && !foodItem.getImageLink().isEmpty() && foodItem.getImageLink().length() > 200) {
+            final String imageLink = foodItem.getImageLink();
+            new AsyncTask<Void, Void, Bitmap>() {
+                @Override
+                protected Bitmap doInBackground(Void... voids) {
+                    byte[] decoded = org.apache.commons.codec.binary.Base64.decodeBase64(imageLink.getBytes());
+                    BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
+                    return BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
+                }
+
+                @Override
+                protected void onPostExecute(Bitmap bitmap) {
+                    super.onPostExecute(bitmap);
+                    vh.image.setImageBitmap(bitmap);
+                }
+            }.execute();
+        }
 
         setAnimation(vh.container, position);
 

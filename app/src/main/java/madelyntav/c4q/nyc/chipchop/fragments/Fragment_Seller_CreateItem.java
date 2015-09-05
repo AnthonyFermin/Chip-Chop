@@ -27,6 +27,7 @@ import java.io.InputStream;
 import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
+import madelyntav.c4q.nyc.chipchop.HelperMethods;
 import madelyntav.c4q.nyc.chipchop.MainActivity;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.SellActivity;
@@ -204,14 +205,14 @@ public class Fragment_Seller_CreateItem extends Fragment {
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
             imageFileUri = data.getData();
             String filePath = imageFileUri.getPath();
-            imageLink = saveImageToEncodedString(filePath);
+            imageLink = HelperMethods.saveImageToEncodedString(filePath);
             Log.d("Item Creation","ImageLink: " + imageLink);
         }
 
         if (requestCode == 0 && resultCode == RESULT_OK) {
             imageFileUri = Uri.parse(stringVariable);
             String filePath = imageFileUri.getPath();
-            imageLink = saveImageToEncodedString(filePath);
+            imageLink = HelperMethods.saveImageToEncodedString(filePath);
             Log.d("Item Creation","ImageLink: " + imageLink);
         }
 
@@ -249,29 +250,6 @@ public class Fragment_Seller_CreateItem extends Fragment {
         });
         AlertDialog alertDialog = dialogBuilder.create();
         alertDialog.show();
-    }
-
-    public String saveImageToEncodedString(String fileName){
-        InputStream inputStream = null;
-        try {
-            inputStream = new FileInputStream(fileName);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        byte[] bytes;
-        byte[] buffer = new byte[8192];
-        int bytesRead;
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        try {
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                output.write(buffer, 0, bytesRead);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        bytes = output.toByteArray();
-        String encodedString = Base64.encodeToString(bytes, Base64.DEFAULT);
-        return encodedString;
     }
 
     @Override

@@ -3,6 +3,8 @@ package madelyntav.c4q.nyc.chipchop.fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -35,6 +37,7 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.GeolocationAPI.Geolocation;
 import madelyntav.c4q.nyc.chipchop.GeolocationAPI.GeolocationAPI;
 import madelyntav.c4q.nyc.chipchop.GeolocationAPI.Location;
+import madelyntav.c4q.nyc.chipchop.HelperMethods;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.SellActivity;
 import retrofit.Callback;
@@ -72,6 +75,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     String city;
     String zipcode;
     String phoneNumber;
+    String imageLink;
 
     Seller seller = null;
     User user;
@@ -251,6 +255,24 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             zipcodeET.setText(address.getZipCode());
         }
         phoneNumberET.setText(user.getPhoneNumber());
+        imageLink = seller.getPhotoLink();
+        if(imageLink != null && !imageLink.isEmpty() && imageLink.length() > 200) {
+            new AsyncTask<Void, Void, Bitmap>() {
+                @Override
+                protected Bitmap doInBackground(Void... voids) {
+                    byte[] decoded = org.apache.commons.codec.binary.Base64.decodeBase64(imageLink.getBytes());
+                    BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
+                    return BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
+                }
+
+                @Override
+                protected void onPostExecute(Bitmap bitmap) {
+                    super.onPostExecute(bitmap);
+                    profilePhoto.setImageBitmap(bitmap);
+                }
+            }.execute();
+        }
+
     }
 
     private boolean hasOneItemWithPosQuant(){
@@ -269,10 +291,16 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
             imageFileUri = data.getData();
+            String filePath = imageFileUri.getPath();
+            imageLink = HelperMethods.saveImageToEncodedString(filePath);
+            Log.d("Seller Profile","ImageLink: " + imageLink);
         }
 
-        if (requestCode == 0 && resultCode == RESULT_OK) {
+        if (requestCode == 0 && resultCode == RESULT_OK && data != null) {
             imageFileUri = Uri.parse(stringVariable);
+            String filePath = imageFileUri.getPath();
+            imageLink = HelperMethods.saveImageToEncodedString(filePath);
+            Log.d("Seller Profile","ImageLink: " + imageLink);
         }
 
 
@@ -368,6 +396,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                         Log.d("Seller Info", seller.getName() + "");
                         Log.d("Seller Info", seller.getStoreName() + "");
                         seller.setIsCooking(true);
+                        seller.setPhotoLink(imageLink);
                         dbHelper.setSellerCookingStatus(true);
                         activity.setSeller(seller);
                         dbHelper.sendSellerToActiveSellerTable(seller);
@@ -439,6 +468,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
         dbHelper = DBHelper.getDbHelper(getActivity());
         activity = (SellActivity) getActivity();
+        imageLink = "";
 
         user = activity.getUser();
 

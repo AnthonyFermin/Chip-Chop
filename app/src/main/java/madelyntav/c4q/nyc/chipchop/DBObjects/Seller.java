@@ -46,7 +46,7 @@ public class Seller {
         this.address=address;
         this.phoneNumber=phoneNumber;
         this.storeName=storeName;
-        this.photoLink=photoLink;
+        this.photoLink= "";
         this.addressString = address.toString();
     }
 

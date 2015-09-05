@@ -70,7 +70,7 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
     }
 
     private void initializeViews() {
-//        Picasso.with(activity).load(seller.getPhotoLink()).fit().into(storeImage);
+        Picasso.with(activity).load(seller.getPhotoLink()).fit().into(storeImage);
         storeName.setText(seller.getStoreName());
     }
 

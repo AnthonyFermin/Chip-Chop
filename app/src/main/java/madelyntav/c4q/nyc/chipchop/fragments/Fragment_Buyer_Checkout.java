@@ -35,7 +35,6 @@ public class Fragment_Buyer_Checkout extends Fragment {
     private RecyclerView cartRView;
     private TextView totalPriceTV;
 
-    private TransitionDrawable confirmDrawable;
     private BuyActivity activity;
     private Order order;
     private DBHelper dbHelper;

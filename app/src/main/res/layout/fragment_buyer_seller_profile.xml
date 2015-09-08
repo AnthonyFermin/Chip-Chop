@@ -22,6 +22,8 @@
             android:layout_centerInParent="true"
             android:background="@android:color/transparent"/>
 
+
+
     </RelativeLayout>
 
 
@@ -41,7 +43,7 @@
             app:border_color="#FFF"/>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="210dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:id="@+id/linear_layout"
@@ -59,11 +61,13 @@
                 android:layout_weight="1"/>
 
             <RatingBar
+                style="@style/RatingBar"
+                android:isIndicator="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/rating_bar"
                 android:numStars="5"
-                android:rating="4"
+                android:layout_gravity="center_horizontal"
                 android:clickable="false"/>
 
             <TextView
@@ -74,7 +78,7 @@
                 android:textSize="18sp"
                 android:id="@+id/cooking_status"
                 android:padding="2dp"
-                android:gravity="start"
+                android:gravity="center_horizontal"
                 android:layout_weight="1"/>
 
 
@@ -87,9 +91,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_above="@+id/seller_items_list"
         android:src="@drawable/cart"
         app:backgroundTint="#D42028"
+        android:layout_above="@+id/seller_items_list"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp"/>
 

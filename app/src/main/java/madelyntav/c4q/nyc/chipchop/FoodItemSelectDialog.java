@@ -129,7 +129,7 @@ public class FoodItemSelectDialog extends android.support.v4.app.DialogFragment 
 
     private void initializeViews() {
         if(itemForCart.getImageLink() != null && !itemForCart.getImageLink().isEmpty())
-            Picasso.with(activity).load(itemForCart.getImageLink()).fit().into(foodImage);
+//            Picasso.with(activity).load(itemForCart.getImageLink()).fit().into(foodImage);
         dishName.setText(itemForCart.getNameOfItem());
         foodDescription.setText(itemForCart.getDescriptionOfItem());
     }

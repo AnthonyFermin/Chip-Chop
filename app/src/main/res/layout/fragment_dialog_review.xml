@@ -15,8 +15,10 @@
         android:gravity="center_horizontal"/>
 
     <RatingBar
+        style="@style/RatingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:numStars="5"
         android:id="@+id/ratingBar"
         android:layout_gravity="center"/>
 

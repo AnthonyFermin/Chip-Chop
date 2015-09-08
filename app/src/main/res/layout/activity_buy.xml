@@ -47,17 +47,21 @@
             android:layout_height="wrap_content"
             android:textSize="30sp"
             android:padding="15dp"
-            android:textColor="#E53934"
+            style="@style/text_design"
             android:textStyle="bold"
             android:gravity="center_horizontal"
             android:id="@+id/drawer_user_nameTV"/>
 
 
         <RatingBar
+            style="@style/RatingBar"
+            android:isIndicator="true"
             android:id="@+id/rating_bar"
+            android:numStars="5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="5dp"/>
 
         <ListView
             android:id="@+id/left_drawer"

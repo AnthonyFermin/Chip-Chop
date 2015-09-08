@@ -161,6 +161,8 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
         order = activity.getCurrentOrder();
         order.setBuyerID(dbHelper.getUserID());
         order.setSellerID(seller.getUID());
+        order.setIsActive(true);
+        order.setStoreName(seller.getStoreName());
         activity.setCurrentOrder(order);
     }
 

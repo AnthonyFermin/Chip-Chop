@@ -303,7 +303,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             Log.d("Seller Profile","ImageLink: " + imageLink);
         }
 
-
+        Log.d("Seller Profile","Image Uri: " + imageFileUri);
         if (imageFileUri != null) {
             profilePhoto.setImageURI(imageFileUri);
         }

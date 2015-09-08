@@ -33,6 +33,7 @@ import madelyntav.c4q.nyc.chipchop.adapters.CartListAdapter;
 public class Fragment_Buyer_ViewCart extends Fragment {
 
     public static final String TAG = "fragment_buyer_view_cart";
+    public static final String FROM_CART = "from_cart";
 
     android.support.design.widget.FloatingActionButton checkoutButton;
     private ArrayList<Item> cartItems;
@@ -62,6 +63,10 @@ public class Fragment_Buyer_ViewCart extends Fragment {
 
                 if (!dbHelper.userIsLoggedIn()) {
                     Intent signupIntent = new Intent(getActivity(), SignupActivity1.class);
+                    SharedPreferences sPref = activity.getSharedPreferences(FROM_CART, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sPref.edit();
+                    editor.putBoolean(FROM_CART,true);
+                    editor.commit();
                     startActivity(signupIntent);
                 } else if(cartItems.size() == 0){
                     Toast.makeText(activity,"Cart is empty",Toast.LENGTH_SHORT).show();

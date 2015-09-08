@@ -154,7 +154,7 @@ public class BuyActivity extends AppCompatActivity {
 
         //if items are still in cart go to checkout
         if(currentOrder != null && currentOrder.getItemsOrdered() != null) {
-            replaceFragment(new Fragment_Buyer_Checkout());
+            replaceFragment(new Fragment_Buyer_ViewCart());
         } else if (savedInstanceState == null) {
             selectItem(0);
         }

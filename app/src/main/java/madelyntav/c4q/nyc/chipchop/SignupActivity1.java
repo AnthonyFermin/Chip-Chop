@@ -351,7 +351,8 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
                             Intent intent;
                             if(toSellActivity){
                                 intent = new Intent(SignupActivity1.this,SellActivity.class);
-                            }else{
+                            }
+                            else{
                                 intent = new Intent(SignupActivity1.this,BuyActivity.class);
                             }
                             startActivity(intent);

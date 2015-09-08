@@ -1733,6 +1733,7 @@ public class DBHelper extends Firebase {
         fRef.child(sellerId).child(orderID);
         fRef.child(orderID).child("price").setValue(order.getPrice());
         fRef.child(orderID).child("sellerID").setValue(order.getSellerID());
+        fRef.child(orderID).child("buyerID").setValue(order.getBuyerID());
         fRef.child(orderID).child("storeName").setValue(order.getStoreName());
         fRef.child(orderID).child("isActive").setValue(order.isActive());
         fRef.child(orderID).child("timeStamp").setValue(order.getTimeStamp());

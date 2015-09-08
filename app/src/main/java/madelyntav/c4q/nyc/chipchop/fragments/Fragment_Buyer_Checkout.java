@@ -34,7 +34,6 @@ public class Fragment_Buyer_Checkout extends Fragment {
     private RecyclerView cartRView;
     private TextView totalPriceTV;
 
-    private TransitionDrawable confirmDrawable;
     private BuyActivity activity;
     private Order order;
     private DBHelper dbHelper;
@@ -78,7 +77,7 @@ public class Fragment_Buyer_Checkout extends Fragment {
                                 confirmImage.setVisibility(View.GONE);
                                 activity.replaceFragment(new Fragment_Buyer_Orders());
                             }
-                        }, 2000);
+                        }, 500);
                     }
 
                     @Override

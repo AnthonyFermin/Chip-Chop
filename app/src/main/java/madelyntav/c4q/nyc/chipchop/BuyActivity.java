@@ -43,7 +43,6 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Checkout;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Orders;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_ProfileSettings;
-import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Review;
 
 public class BuyActivity extends AppCompatActivity {
 

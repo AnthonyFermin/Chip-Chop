@@ -59,8 +59,10 @@
                 android:layout_weight="1"/>
 
             <RatingBar
+                style="@style/RatingBar"
+                android:isIndicator="true"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:id="@+id/rating_bar"
                 android:numStars="5"
                 android:rating="4"

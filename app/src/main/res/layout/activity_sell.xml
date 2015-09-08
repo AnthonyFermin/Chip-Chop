@@ -44,6 +44,8 @@
             android:id="@+id/drawer_user_nameTV"/>
 
         <RatingBar
+            style="@style/RatingBar"
+            android:isIndicator="true"
             android:id="@+id/rating_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

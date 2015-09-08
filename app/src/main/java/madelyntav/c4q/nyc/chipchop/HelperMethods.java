@@ -9,11 +9,14 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
 
 /**
  * Created by c4q-anthonyf on 8/23/15.
  */
 public class HelperMethods {
+
+    public static Order currentOrder = null;
 
     public static Address parseAddressString(String addressString, String uid){
 
@@ -53,5 +56,11 @@ public class HelperMethods {
         return encodedString;
     }
 
+    public static Order getCurrentOrder() {
+        return currentOrder;
+    }
 
+    public static void setCurrentOrder(Order currentOrder) {
+        HelperMethods.currentOrder = currentOrder;
+    }
 }

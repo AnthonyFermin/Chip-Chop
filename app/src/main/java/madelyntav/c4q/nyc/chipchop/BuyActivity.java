@@ -136,7 +136,7 @@ public class BuyActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        boolean isLoggedIn = userInfoSP.getBoolean(SignupActivity1.SP_IS_LOGGED_IN,false);
+        boolean isLoggedIn = userInfoSP.getBoolean(SignupActivity1.SP_IS_LOGGED_IN, false);
         if(isLoggedIn){
 
         }
@@ -152,7 +152,7 @@ public class BuyActivity extends AppCompatActivity {
     private void selectFragmentToLoad(Bundle savedInstanceState) {
 
         //if items are still in cart go to checkout
-        if(currentOrder != null && currentOrder.getItemsOrdered() != null) {
+        if(getCurrentOrder() != null && getCurrentOrder().getItemsOrdered() != null) {
             replaceFragment(new Fragment_Buyer_ViewCart());
         } else if (savedInstanceState == null) {
             selectItem(0);
@@ -440,11 +440,11 @@ public class BuyActivity extends AppCompatActivity {
     }
 
     public Order getCurrentOrder() {
-        return currentOrder;
+        return HelperMethods.getCurrentOrder();
     }
 
     public void setCurrentOrder(Order currentOrder) {
-        this.currentOrder = currentOrder;
+        HelperMethods.setCurrentOrder(currentOrder);
     }
 
     public Order getOrderToView() {

@@ -2,6 +2,7 @@ package madelyntav.c4q.nyc.chipchop.fragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
@@ -23,7 +27,7 @@ import madelyntav.c4q.nyc.chipchop.adapters.SellerOrdersAdapter;
 
 public class Fragment_Seller_Orders extends Fragment {
 
-    private ArrayList<Order> foodOrders = null;
+    private List<Order> foodOrders = null;
     private RecyclerView orderList;
 
     public static final String TAG = "fragment_seller_orders";
@@ -111,13 +115,28 @@ public class Fragment_Seller_Orders extends Fragment {
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
 
-                if(foodOrders != null) {
+                if (foodOrders != null) {
+
+                    Collections.sort(foodOrders, new Comparator<Order>() {
+                        @Override
+                        public int compare(Order order, Order t1) {
+                            if (order.getTimeStamp() > t1.getTimeStamp()) {
+                                return -1;
+                            } else if (order.getTimeStamp() < t1.getTimeStamp()) {
+                                return 1;
+                            } else {
+                                return 0;
+                            }
+                        }
+                    });
+
                     setListAdapter();
                     Log.d("LOAD ORDERS", "Complete");
                 }
-
                 loadingPanel.setVisibility(View.GONE);
                 containingView.setVisibility(View.VISIBLE);
+
+
             }
         }.execute();
     }

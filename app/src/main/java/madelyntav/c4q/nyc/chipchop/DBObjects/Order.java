@@ -10,12 +10,12 @@ import java.util.ArrayList;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Order {
     String buyerID;
-    double price;
+    int price;
     String orderID;
     Review review;
     String sellerID;
     ArrayList<Item> itemsOrdered;
-    String timeStamp;
+    long timeStamp;
     boolean isActive;
     String storeName;
 
@@ -39,7 +39,7 @@ public class Order {
         this.sellerID=sellerID;
         this.itemsOrdered=itemsOrdered;
     }
-    public Order(String buyerID, ArrayList<Item> itemsOrdered,String sellerID, String timeStamp){
+    public Order(String buyerID, ArrayList<Item> itemsOrdered,String sellerID, long timeStamp){
         this.buyerID = buyerID;
         this.sellerID=sellerID;
         this.timeStamp=timeStamp;
@@ -51,7 +51,7 @@ public class Order {
         this.isActive=isActive;
         this.itemsOrdered=itemsOrdered;
     }
-    public Order(String buyerID, ArrayList<Item> itemsOrdered,String sellerID, String timeStamp, boolean isActive){
+    public Order(String buyerID, ArrayList<Item> itemsOrdered,String sellerID, long timeStamp, boolean isActive){
         this.buyerID = buyerID;
         this.sellerID=sellerID;
         this.timeStamp=timeStamp;
@@ -59,7 +59,7 @@ public class Order {
         this.itemsOrdered=itemsOrdered;
     }
 
-    public Order(String buyerID, double price, String orderID, Review review, String sellerID, String timeStamp, boolean isActive, String storeName) {
+    public Order(String buyerID, int price, String orderID, Review review, String sellerID, long timeStamp, boolean isActive, String storeName) {
         this.buyerID = buyerID;
         this.price = price;
         this.orderID = orderID;
@@ -70,7 +70,7 @@ public class Order {
         this.storeName = storeName;
     }
 
-    public Order(String buyerID, double price, String orderID, Review review, ArrayList<Item> itemsOrdered, String sellerID, String timeStamp, boolean isActive, String storeName) {
+    public Order(String buyerID, int price, String orderID, Review review, ArrayList<Item> itemsOrdered, String sellerID, long timeStamp, boolean isActive, String storeName) {
         this.buyerID = buyerID;
         this.price = price;
         this.orderID = orderID;
@@ -132,15 +132,15 @@ public class Order {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
-    public String getTimeStamp() {
+    public long getTimeStamp() {
         return timeStamp;
     }
 
-    public void setTimeStamp(String timeStamp) {
+    public void setTimeStamp(long timeStamp) {
         this.timeStamp = timeStamp;
     }
 

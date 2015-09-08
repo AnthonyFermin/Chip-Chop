@@ -135,7 +135,7 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
         vh.quantity.setText(sellerItem.getQuantity() + "");
         vh.description.setText(sellerItem.getDescriptionOfItem());
-        if(sellerItem.getImageLink() != null && !sellerItem.getImageLink().isEmpty()) {
+        if(sellerItem.getImageLink() != null && !sellerItem.getImageLink().isEmpty() && sellerItem.getImageLink().length() > 200) {
             final String imageLink = sellerItem.getImageLink();
             new AsyncTask<Void, Void, Bitmap>() {
                 @Override

@@ -70,7 +70,8 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
     }
 
     private void initializeViews() {
-//        Picasso.with(activity).load(seller.getPhotoLink()).fit().into(storeImage);
+        if(seller.getPhotoLink() != null && !seller.getPhotoLink().isEmpty())
+            Picasso.with(activity).load(seller.getPhotoLink()).fit().into(storeImage);
         storeName.setText(seller.getStoreName());
     }
 
@@ -145,6 +146,8 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
         activity = (BuyActivity) getActivity();
         dbHelper = DBHelper.getDbHelper(activity);
 
+        activity.setCurrentFragment(TAG);
+
         emptyCallback = new DBCallback() {
             @Override
             public void runOnSuccess() {
@@ -161,6 +164,8 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
         order = activity.getCurrentOrder();
         order.setBuyerID(dbHelper.getUserID());
         order.setSellerID(seller.getUID());
+        order.setIsActive(true);
+        order.setStoreName(seller.getStoreName());
         activity.setCurrentOrder(order);
     }
 

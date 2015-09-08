@@ -91,7 +91,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     public static final int RESULT_OK = -1;
     private Uri imageFileUri;
     Intent intent;
-    private String stringVariable;
+    private String stringVariable = "file:///sdcard/_pictureholder_id.jpg";
 
     DBCallback emptyCallback;
 
@@ -472,7 +472,6 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
         user = activity.getUser();
 
-        stringVariable = Environment.getExternalStorageDirectory().getPath() + "_pictureholder_id.jpg";
         activity.setCurrentFragment(TAG);
 
     }

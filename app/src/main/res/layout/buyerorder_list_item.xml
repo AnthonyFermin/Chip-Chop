@@ -21,11 +21,11 @@
         android:text="Name of Seller" />
 
     <TextView
-        android:id="@+id/order_id_tv"
+        android:id="@+id/order_timestamp_tv"
         style="@style/text_design"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Order ID#"
+        android:text="Time Bought"
         android:textStyle="bold"
         android:textSize="20sp"
         android:layout_below="@+id/seller_name_tv"/>
@@ -34,18 +34,9 @@
         android:id="@+id/order_cost_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/order_id_tv"
+        android:layout_below="@+id/order_timestamp_tv"
         android:text="TOTAL COST" />
 
-
-
-
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/cart_list"
-        android:layout_below="@+id/total_item_tv"
-        android:padding="5dp"/>
 
 
 </RelativeLayout>

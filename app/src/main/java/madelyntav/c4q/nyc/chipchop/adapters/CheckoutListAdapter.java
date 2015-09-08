@@ -69,7 +69,8 @@ public class CheckoutListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             vh.name.setText(checkoutItem.getNameOfItem());
             vh.price.setText("$ " + checkoutItem.getPrice() + "");
             vh.quantity.setText(checkoutItem.getQuantityWanted() + "");
-            Picasso.with(context).load(checkoutItem.getImageLink()).fit().into(vh.image);
+            if(checkoutItem.getImageLink() != null && !checkoutItem.getImageLink().isEmpty())
+                Picasso.with(context).load(checkoutItem.getImageLink()).fit().into(vh.image);
 
             setAnimation(vh.container, position);
 

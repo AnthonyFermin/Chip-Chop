@@ -70,7 +70,8 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
     }
 
     private void initializeViews() {
-        Picasso.with(activity).load(seller.getPhotoLink()).fit().into(storeImage);
+        if(seller.getPhotoLink() != null && !seller.getPhotoLink().isEmpty())
+            Picasso.with(activity).load(seller.getPhotoLink()).fit().into(storeImage);
         storeName.setText(seller.getStoreName());
     }
 
@@ -144,6 +145,8 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
     private void initializeData() {
         activity = (BuyActivity) getActivity();
         dbHelper = DBHelper.getDbHelper(activity);
+
+        activity.setCurrentFragment(TAG);
 
         emptyCallback = new DBCallback() {
             @Override

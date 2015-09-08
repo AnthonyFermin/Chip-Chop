@@ -39,7 +39,7 @@ public class Fragment_Buyer_Checkout extends Fragment {
     private BuyActivity activity;
     private Order order;
     private DBHelper dbHelper;
-    private double total;
+    private int total;
 
     public static final String TAG = "fragment_buyer_checkout";
 
@@ -65,12 +65,13 @@ public class Fragment_Buyer_Checkout extends Fragment {
             public void onClick(View view) {
                 Date date = new Date();
                 long millis = date.getTime();
-                order.setTimeStamp(millis + "");
+                order.setTimeStamp(millis);
                 order.setPrice(total);
                 Log.d("Order Info", "Seller ID: " + order.getSellerID());
                 Log.d("Order Info", "Buyer ID: " + order.getBuyerID());
                 Log.d("Order Info","Total Price: $" + order.getPrice());
                 Log.d("Order Info", "Store Name: " + order.getStoreName());
+                Log.d("Order Info", "Time Bought: " + order.getTimeStamp());
                 dbHelper.addCurrentOrderToSellerDB(order, new DBCallback() {
                     @Override
                     public void runOnSuccess() {
@@ -81,7 +82,7 @@ public class Fragment_Buyer_Checkout extends Fragment {
                                 confirmImage.setVisibility(View.GONE);
                                 activity.replaceFragment(new Fragment_Buyer_Orders());
                             }
-                        }, 2000);
+                        }, 500);
                     }
 
                     @Override

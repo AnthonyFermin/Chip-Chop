@@ -93,7 +93,6 @@ public class FoodListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 @Override
                 protected Bitmap doInBackground(Void... voids) {
                     byte[] decoded = org.apache.commons.codec.binary.Base64.decodeBase64(imageLink.getBytes());
-                    BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
                     return BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
                 }
 

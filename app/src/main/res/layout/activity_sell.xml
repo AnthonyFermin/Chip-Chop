@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             style="@style/text_design"
             android:textSize="30sp"
-            android:padding="15dp"
+            android:padding="10dp"
             android:textStyle="bold"
             android:gravity="center_horizontal"
             android:id="@+id/drawer_user_nameTV"/>
@@ -49,7 +49,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:numStars="5"
-            android:layout_marginBottom="5dp"
+            android:rating="4"
+            android:layout_marginBottom="10dp"
             android:layout_gravity="center_horizontal"/>
 
         <ListView

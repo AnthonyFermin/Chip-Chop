@@ -39,6 +39,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@drawable/chipchop"
+            android:layout_marginStart="10dp"
             app:border_width="2dp"
             app:border_color="#FFF"/>
 
@@ -67,6 +68,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/rating_bar"
                 android:numStars="5"
+                android:rating="4"
                 android:layout_gravity="center_horizontal"
                 android:clickable="false"/>
 

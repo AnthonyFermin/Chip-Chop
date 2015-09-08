@@ -1,24 +1,14 @@
 package madelyntav.c4q.nyc.chipchop.fragments;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import java.util.ArrayList;
 
@@ -28,7 +18,6 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
 import madelyntav.c4q.nyc.chipchop.R;
-import madelyntav.c4q.nyc.chipchop.SellActivity;
 import madelyntav.c4q.nyc.chipchop.adapters.CheckoutListAdapter;
 
 /**
@@ -77,7 +66,7 @@ public class Fragment_Buyer_OrderDetails extends Fragment {
         Log.d("Order to View", "TimeStamp: " + orderToView.getTimeStamp());
         Log.d("Order to View", "Price: " + orderToView.getPrice());
         Log.d("Order to View", "Buyer ID: " + orderToView.getBuyerID());
-        foodItems = dbHelper.getReceiptForSpecificOrderForBuyer(orderToView.getOrderID(), dbHelper.getUserID(), emptyCallback);
+        foodItems = dbHelper.getReceiptForSpecificOrderForBuyer(orderToView.getOrderID(), orderToView.getBuyerID(), emptyCallback);
         loadItems();
 
         foodList = (RecyclerView) root.findViewById(R.id.checkout_items_list);

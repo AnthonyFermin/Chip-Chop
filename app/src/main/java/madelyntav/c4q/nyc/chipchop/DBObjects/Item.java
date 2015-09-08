@@ -12,7 +12,6 @@ public class Item {
     String buyerID;
     String sellerID;
     String nameOfItem;
-
     int quantity;
     int price;
     String descriptionOfItem;
@@ -29,6 +28,10 @@ public class Item {
     public Item(){}
     public Item(String itemID){
         this.itemID=itemID;
+    }
+
+    public Item(boolean containsPeanuts){
+        this.containsPeanuts=containsPeanuts;
     }
 
     public String getItemID() {

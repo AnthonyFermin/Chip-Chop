@@ -77,7 +77,7 @@ public class Fragment_Buyer_OrderDetails extends Fragment {
         Log.d("Order to View", "TimeStamp: " + orderToView.getTimeStamp());
         Log.d("Order to View", "Price: " + orderToView.getPrice());
         Log.d("Order to View", "Buyer ID: " + orderToView.getBuyerID());
-        foodItems = dbHelper.getReceiptForSpecificOrderForBuyer(orderToView.getOrderID(), emptyCallback);
+        foodItems = dbHelper.getReceiptForSpecificOrderForBuyer(orderToView.getOrderID(), dbHelper.getUserID(), emptyCallback);
         loadItems();
 
         foodList = (RecyclerView) root.findViewById(R.id.checkout_items_list);

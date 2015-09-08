@@ -142,15 +142,17 @@ public class Fragment_Seller_CreateItem extends Fragment {
                     portions = Integer.parseInt(portionsET.getText().toString());
                 }
                 String price = dollarPriceET.getText().toString();
-                double decimalPrice = 1;
-                if (!price.isEmpty()) {
-                    decimalPrice = Double.parseDouble(price);
+                int numPrice = 1;
+                try{
+                    numPrice = Integer.parseInt(price);
+                }catch(NumberFormatException e){
+                    e.printStackTrace();
                 }
                 String description = descriptionET.getText().toString();
 
                 Item item = new Item(dbHelper.getUserID(), "", dishName, portions, description, imageLink);
                 Log.d("Item Created","ImageLink: " + imageLink);
-                item.setPrice(decimalPrice);
+                item.setPrice(numPrice);
                 item.setIsVegetarian(vegCB.isChecked());
                 item.setGlutenFree(glutFreeCB.isChecked());
                 item.setContainsDairy(dairyCB.isChecked());

@@ -92,6 +92,8 @@ public class Fragment_Buyer_ViewCart extends Fragment {
         activity = (BuyActivity) getActivity();
         dbHelper = DBHelper.getDbHelper(activity);
 
+        activity.setCurrentFragment(TAG);
+
         order = activity.getCurrentOrder();
         cartItems = order.getItemsOrdered();
         //debug

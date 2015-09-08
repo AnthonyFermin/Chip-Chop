@@ -14,6 +14,8 @@ import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import madelyntav.c4q.nyc.chipchop.BuyActivity;
+import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.R;
 
 /**
@@ -30,11 +32,19 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
     Intent intent;
     private String stringVariable = "file:///sdcard/_pictureholder_id.jpg";
 
+    DBHelper dbHelper;
+    BuyActivity activity;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_buyer_profile_settings, container, false);
+
+        activity = (BuyActivity) getActivity();
+        dbHelper = DBHelper.getDbHelper(activity);
+
+        activity.setCurrentFragment(TAG);
 
         profilePhoto = (ImageView) root.findViewById(R.id.profile_image);
         profilePhoto.setOnClickListener(new View.OnClickListener() {

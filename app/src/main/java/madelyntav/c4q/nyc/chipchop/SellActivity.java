@@ -188,7 +188,7 @@ public class SellActivity extends AppCompatActivity {
 
             // Create fragment manager to begin interacting with the fragments and the container
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.sellerFrameLayout, fragment).addToBackStack(null).commit();
+            fragmentManager.beginTransaction().replace(R.id.sellerFrameLayout, fragment).commit();
 
 
             // update selected item and title in nav drawer, then close the drawer

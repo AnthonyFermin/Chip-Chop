@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBCallback;
@@ -37,7 +38,7 @@ public class Fragment_Buyer_Checkout extends Fragment {
     private BuyActivity activity;
     private Order order;
     private DBHelper dbHelper;
-    private double total;
+    private int total;
 
     public static final String TAG = "fragment_buyer_checkout";
 
@@ -61,12 +62,15 @@ public class Fragment_Buyer_Checkout extends Fragment {
         confirmOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: Madelyn this the right method? I see multiple methods that can be used to send this to the DB
-                //TODO: Madelyn this can be for next weeks sprint if you like: is there a way to check the quanities wanted vs the quantities actually available on the DB inside a DBHelper method before accepting the transaction? https://www.firebase.com/docs/web/api/firebase/transaction.html
+                Date date = new Date();
+                long millis = date.getTime();
+                order.setTimeStamp(millis);
                 order.setPrice(total);
                 Log.d("Order Info", "Seller ID: " + order.getSellerID());
                 Log.d("Order Info", "Buyer ID: " + order.getBuyerID());
                 Log.d("Order Info","Total Price: $" + order.getPrice());
+                Log.d("Order Info", "Store Name: " + order.getStoreName());
+                Log.d("Order Info", "Time Bought: " + order.getTimeStamp());
                 dbHelper.addCurrentOrderToSellerDB(order, new DBCallback() {
                     @Override
                     public void runOnSuccess() {

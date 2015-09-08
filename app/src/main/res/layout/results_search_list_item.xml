@@ -35,10 +35,8 @@
             android:isIndicator="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_marginBottom="5dp"
             android:numStars="5"
-            android:rating="4"
-            android:clickable="false"
             android:layout_gravity="start"/>
 
         <TextView

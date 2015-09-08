@@ -12,7 +12,7 @@ public class Item {
     String nameOfItem;
 
     int quantity;
-    double price;
+    int price;
     String descriptionOfItem;
     String imageLink;
     boolean isVegetarian;
@@ -93,11 +93,11 @@ public class Item {
         this.quantity = quantity;
     }
 
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 

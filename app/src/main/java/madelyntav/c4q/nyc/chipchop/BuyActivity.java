@@ -41,8 +41,11 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Checkout;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_OrderDetails;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Orders;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_ProfileSettings;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_ViewCart;
 
 public class BuyActivity extends AppCompatActivity {
 
@@ -64,10 +67,12 @@ public class BuyActivity extends AppCompatActivity {
 
     private DBCallback emptyCallback;
 
+    private String lastFragment;
     private String currentFragment;
     private Seller sellerToView = null;
     private Item itemToCart = null;
     private Order currentOrder;
+    private Order orderToView;
 
     public static final String TO_SELL_ACTIVITY = "to_sell";
 
@@ -275,7 +280,7 @@ public class BuyActivity extends AppCompatActivity {
 
             // Create fragment manager to begin interacting with the fragments and the container
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.sellerFrameLayout, fragment).addToBackStack(null).commit();
+            fragmentManager.beginTransaction().replace(R.id.sellerFrameLayout, fragment).commit();
 
 
             // update selected item and title in nav drawer, then close the drawer
@@ -316,23 +321,36 @@ public class BuyActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-//        TODO: Anthony remove all backstack and use replace() to navigate between frags with back button (more efficient)
-        FragmentManager fm = getSupportFragmentManager();
-//        switch(getCurrentFragment()){
-//            case():
-//
-//                break;
-//        }
-        if (fm.getBackStackEntryCount() == 1) {
-
-        } else {
-            fm.popBackStack();
+        switch(getCurrentFragment()){
+            case(Fragment_Buyer_Checkout.TAG):
+                replaceFragment(new Fragment_Buyer_ViewCart());
+                break;
+            case(Fragment_Buyer_Map.TAG):
+                super.onBackPressed();
+                break;
+            case(Fragment_Buyer_Orders.TAG):
+                replaceFragment(new Fragment_Buyer_Map());
+                break;
+            case(Fragment_Buyer_ProfileSettings.TAG):
+                replaceFragment(new Fragment_Buyer_Map());
+                break;
+            case(Fragment_Buyer_SellerProfile.TAG):
+                replaceFragment(new Fragment_Buyer_Map());
+                break;
+            case(Fragment_Buyer_ViewCart.TAG):
+                replaceFragment(new Fragment_Buyer_SellerProfile());
+                break;
+            case(Fragment_Buyer_OrderDetails.TAG):
+                replaceFragment(new Fragment_Buyer_Orders());
+                break;
+            default:
+                super.onBackPressed();
         }
     }
 
     public void replaceFragment(Fragment fragment) {
         FragmentManager BuyFragmentManager = getSupportFragmentManager();
-        BuyFragmentManager.beginTransaction().replace(R.id.sellerFrameLayout, fragment).addToBackStack(null).commit();
+        BuyFragmentManager.beginTransaction().replace(R.id.sellerFrameLayout, fragment).commit();
 
     }
 
@@ -401,6 +419,7 @@ public class BuyActivity extends AppCompatActivity {
     }
 
     public void setCurrentFragment(String currentFragment) {
+        setLastFragment(getCurrentFragment());
         this.currentFragment = currentFragment;
     }
 
@@ -426,5 +445,21 @@ public class BuyActivity extends AppCompatActivity {
 
     public void setCurrentOrder(Order currentOrder) {
         this.currentOrder = currentOrder;
+    }
+
+    public Order getOrderToView() {
+        return orderToView;
+    }
+
+    public void setOrderToView(Order orderToView) {
+        this.orderToView = orderToView;
+    }
+
+    public String getLastFragment() {
+        return lastFragment;
+    }
+
+    private void setLastFragment(String lastFragment) {
+        this.lastFragment = lastFragment;
     }
 }

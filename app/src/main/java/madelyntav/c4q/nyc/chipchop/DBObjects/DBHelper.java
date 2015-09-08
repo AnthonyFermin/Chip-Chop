@@ -1395,8 +1395,8 @@ public class DBHelper extends Firebase {
     }
 
     //Method to get Item Details For Buyer Receipt. Only returning details needed for receipt
-    public ArrayList<Item> getReceiptForSpecificOrderForBuyer(String orderID, final DBCallback dbCallback) {
-        UID = userID;
+    public ArrayList<Item> getReceiptForSpecificOrderForBuyer(String orderID, String buyerID, final DBCallback dbCallback) {
+        this. UID = buyerID;
         this.orderID = orderID;
         Firebase fRef = new Firebase(URL + "UserProfiles/" + UID + "/Orders/" + orderID);
 
@@ -1448,7 +1448,7 @@ public class DBHelper extends Firebase {
 
     public ArrayList<Item> updateReceipt(DBCallback dbCallback) {
         if (receiptForSpecificOrder.size() < sizeofAddDBList) {
-            getReceiptForSpecificOrderForBuyer(orderID, callback);
+            getReceiptForSpecificOrderForBuyer(orderID, UID, callback);
         }
         dbCallback.runOnSuccess();
 

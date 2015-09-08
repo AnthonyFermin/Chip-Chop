@@ -3,7 +3,10 @@ package madelyntav.c4q.nyc.chipchop.fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -19,8 +22,10 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -143,15 +148,15 @@ public class Fragment_Seller_CreateItem extends Fragment {
                 }
                 String price = dollarPriceET.getText().toString();
                 int numPrice = 1;
-                try{
+                try {
                     numPrice = Integer.parseInt(price);
-                }catch(NumberFormatException e){
+                } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
                 String description = descriptionET.getText().toString();
 
                 Item item = new Item(dbHelper.getUserID(), "", dishName, portions, description, imageLink);
-                Log.d("Item Created","ImageLink: " + imageLink);
+                Log.d("Item Created", "ImageLink: " + imageLink);
                 item.setPrice(numPrice);
                 item.setIsVegetarian(vegCB.isChecked());
                 item.setGlutenFree(glutFreeCB.isChecked());
@@ -207,23 +212,51 @@ public class Fragment_Seller_CreateItem extends Fragment {
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
             imageFileUri = data.getData();
             String filePath = imageFileUri.getPath();
-            imageLink = HelperMethods.saveImageToEncodedString(filePath);
-            Log.d("Item Creation","ImageLink: " + imageLink);
+            saveImageToDB(filePath);
         }
 
         if (requestCode == 0 && resultCode == RESULT_OK) {
             imageFileUri = Uri.parse(stringVariable);
-            String filePath = imageFileUri.getPath();
-            imageLink = HelperMethods.saveImageToEncodedString(filePath);
-            Log.d("Item Creation","ImageLink: " + imageLink);
+            final String filePath = imageFileUri.getPath();
+            saveImageToDB(filePath);
         }
-
 
         if (imageFileUri != null) {
             dishPhotoButton.setImageURI(imageFileUri);
         }
     }
 
+    private void saveImageToDB(final String filePath) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+
+                Bitmap scaledBitmap =  Bitmap.createScaledBitmap(bitmap,500,333,false);
+
+                File file = new File(filePath);
+                FileOutputStream fOut = null;
+                try {
+                    fOut = new FileOutputStream(file);
+                    scaledBitmap.compress(Bitmap.CompressFormat.PNG, 85, fOut);
+                    fOut.flush();
+                    fOut.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                imageLink = HelperMethods.saveImageToEncodedString(filePath);
+                Log.d("Item Creation", "ImageLink: " + imageLink);
+            }
+        }.execute();
+    }
 
 
     //This is for the dialog box: Camera or Gallery

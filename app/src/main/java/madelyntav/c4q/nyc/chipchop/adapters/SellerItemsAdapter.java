@@ -126,13 +126,7 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         Item sellerItem = sellerItems.get(position);
         final SellersViewHolder vh = (SellersViewHolder) viewHolder;
         vh.name.setText(sellerItem.getNameOfItem());
-        try {
-            DecimalFormat df = new DecimalFormat("#.00");
-            String price = df.format(sellerItem.getPrice());
-            vh.price.setText("$ " + price);
-        }catch(NullPointerException e){
-            e.printStackTrace();
-        }
+        vh.price.setText("$ " + sellerItem.getPrice());
         vh.quantity.setText(sellerItem.getQuantity() + "");
         vh.description.setText(sellerItem.getDescriptionOfItem());
         if(sellerItem.getImageLink() != null && !sellerItem.getImageLink().isEmpty() && sellerItem.getImageLink().length() > 200) {

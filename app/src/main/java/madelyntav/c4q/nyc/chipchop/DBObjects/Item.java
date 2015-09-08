@@ -1,11 +1,13 @@
 package madelyntav.c4q.nyc.chipchop.DBObjects;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Created by c4q-madelyntavarez on 8/11/15.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
+
 public class Item {
     String buyerID;
     String sellerID;
@@ -25,6 +27,9 @@ public class Item {
     int quantityWanted;
 
     public Item(){}
+    public Item(String itemID){
+        this.itemID=itemID;
+    }
 
     public String getItemID() {
         return itemID;

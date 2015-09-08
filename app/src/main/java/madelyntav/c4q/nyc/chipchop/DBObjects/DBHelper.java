@@ -1412,7 +1412,7 @@ public class DBHelper extends Firebase {
                     Item item = dataSnapshot1.getValue(Item.class);
 
                     item.setItemID(dataSnapshot1.getKey());
-                    item.setQuantity(item.quantity);
+                    item.setQuantity(item.quantityWanted);
                     item.setSellerID(item.sellerID);
                     item.setBuyerID(item.buyerID);
                     item.setNameOfItem(item.nameOfItem);
@@ -1467,7 +1467,7 @@ public class DBHelper extends Firebase {
                     Item item = dataSnapshot1.getValue(Item.class);
 
                     item.setItemID(dataSnapshot1.getKey());
-                    item.setQuantity(item.quantity);
+                    item.setQuantity(item.quantityWanted);
                     item.setSellerID(item.sellerID);
                     item.setBuyerID(item.buyerID);
                     item.setItemID(dataSnapshot1.getKey());
@@ -1653,7 +1653,7 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child("items");
             fRef.child(orderID).child("items").child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
             fRef.child(orderID).child("items").child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
-            fRef.child(orderID).child("items").child(itemID).child(quantity).setValue(item.getQuantityWanted());
+            fRef.child(orderID).child("items").child(itemID).child("quantityWanted").setValue(item.getQuantityWanted());
             fRef.child(orderID).child("items").child(itemID).child("price").setValue(item.getPrice());
             fRef.child(orderID).child("items").child(itemID).child("imageLink").setValue(item.getImageLink());
             fRef.child(orderID).child("items").child(itemID).child("containsPeanuts").setValue(item.isContainsPeanuts());
@@ -1738,7 +1738,7 @@ public class DBHelper extends Firebase {
         fRef.child(orderID).child("items");
         fRef.child(orderID).child("items").child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
         fRef.child(orderID).child("items").child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
-        fRef.child(orderID).child("items").child(itemID).child(quantity).setValue(item.getQuantity());
+        fRef.child(orderID).child("items").child(itemID).child("quantityWanted").setValue(item.getQuantityWanted());
         fRef.child(orderID).child("items").child(itemID).child("price").setValue(item.getPrice());
         fRef.child(orderID).child("items").child(itemID).child("imageLink").setValue(item.getImageLink());
         fRef.child(orderID).child("items").child(itemID).child("containsPeanuts").setValue(item.isContainsPeanuts());

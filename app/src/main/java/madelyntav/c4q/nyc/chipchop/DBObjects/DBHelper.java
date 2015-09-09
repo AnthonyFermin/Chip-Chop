@@ -1417,6 +1417,8 @@ public class DBHelper extends Firebase {
                     item.setBuyerID(item.buyerID);
                     item.setNameOfItem(item.nameOfItem);
                     item.setPrice(item.price);
+                    item.setSellerPhoneNumber(item.sellerPhoneNumber);
+                    item.setBuyerPhoneNumber(item.buyerPhoneNumber);
                     item.setQuantity(item.quantity);
                     item.setIsVegetarian(item.isVegetarian);
                     item.setImageLink(item.imageLink);
@@ -1473,6 +1475,8 @@ public class DBHelper extends Firebase {
                     item.setItemID(dataSnapshot1.getKey());
                     item.setNameOfItem(item.nameOfItem);
                     item.setPrice(item.price);
+                    item.setSellerPhoneNumber(item.sellerPhoneNumber);
+                    item.setBuyerPhoneNumber(item.buyerPhoneNumber);
                     item.setQuantity(item.quantity);
                     item.setIsVegetarian(item.isVegetarian);
                     item.setImageLink(item.imageLink);
@@ -1649,12 +1653,16 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child("buyerID").setValue(order.getBuyerID());
             fRef.child(orderID).child("storeName").setValue(order.getStoreName());
             fRef.child(orderID).child("isActive").setValue(order.isActive());
+            fRef.child(orderID).child("sellerPhoneNumber").setValue(order.getSellerPhoneNumber());
+            fRef.child(orderID).child("buyerPhoneNumber").setValue(order.getBuyerPhoneNumber());
             fRef.child(orderID).child("timeStamp").setValue(order.getTimeStamp());
             fRef.child(orderID).child("items");
             fRef.child(orderID).child("items").child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
             fRef.child(orderID).child("items").child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
             fRef.child(orderID).child("items").child(itemID).child("quantityWanted").setValue(item.getQuantityWanted());
             fRef.child(orderID).child("items").child(itemID).child("price").setValue(item.getPrice());
+            fRef.child(orderID).child("items").child(itemID).child("sellerPhoneNumber").setValue(item.getSellerPhoneNumber());
+            fRef.child(orderID).child("items").child(itemID).child("sellerPhoneNumber").setValue(item.getSellerPhoneNumber());
             fRef.child(orderID).child("items").child(itemID).child("imageLink").setValue(item.getImageLink());
             fRef.child(orderID).child("items").child(itemID).child("containsPeanuts").setValue(item.isContainsPeanuts());
             fRef.child(orderID).child("items").child(itemID).child("isGluttenFree").setValue(item.isGlutenFree());
@@ -1734,9 +1742,12 @@ public class DBHelper extends Firebase {
         fRef.child(orderID).child("buyerID").setValue(order.getBuyerID());
         fRef.child(orderID).child("storeName").setValue(order.getStoreName());
         fRef.child(orderID).child("isActive").setValue(order.isActive());
+        fRef.child(orderID).child("sellerPhoneNumber").setValue(order.getSellerPhoneNumber());
+        fRef.child(orderID).child("buyerPhoneNumber").setValue(order.getBuyerPhoneNumber());
         fRef.child(orderID).child("timeStamp").setValue(order.getTimeStamp());
         fRef.child(orderID).child("items");
         fRef.child(orderID).child("items").child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
+        fRef.child(orderID).child("items").child(itemID).child("sellerPhoneNumber").setValue(order.getSellerPhoneNumber());
         fRef.child(orderID).child("items").child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
         fRef.child(orderID).child("items").child(itemID).child("quantityWanted").setValue(item.getQuantityWanted());
         fRef.child(orderID).child("items").child(itemID).child("price").setValue(item.getPrice());

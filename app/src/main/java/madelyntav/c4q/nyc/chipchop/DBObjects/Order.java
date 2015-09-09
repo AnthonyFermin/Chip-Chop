@@ -18,6 +18,8 @@ public class Order {
     long timeStamp;
     boolean isActive;
     String storeName;
+    String sellerPhoneNumber;
+    String buyerPhoneNumber;
 
     public Order(){
         this.itemsOrdered = new ArrayList<>();
@@ -158,5 +160,17 @@ public class Order {
 
     public void setStoreName(String storeName) {
         this.storeName = storeName;
+    }
+
+    public String getSellerPhoneNumber() { return sellerPhoneNumber; }
+
+    public void setSellerPhoneNumber(String sellerPhoneNumber) { this.sellerPhoneNumber = sellerPhoneNumber; }
+
+    public String getBuyerPhoneNumber() {
+        return buyerPhoneNumber;
+    }
+
+    public void setBuyerPhoneNumber(String buyerPhoneNumber) {
+        this.buyerPhoneNumber = buyerPhoneNumber;
     }
 }

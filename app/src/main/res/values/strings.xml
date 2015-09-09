@@ -38,4 +38,5 @@
     <string name="Cancel">Cancel</string>
     <string name="network_not_enabled">No internet connection found, check your WiFi or network connection and try again</string>
     <string name="title_activity_splash_screen">SplashScreenActivity</string>
+    <string name="title_activity_payments">PaymentsActivity</string>
 </resources>

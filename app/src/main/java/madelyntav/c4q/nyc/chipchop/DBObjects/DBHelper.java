@@ -645,7 +645,7 @@ public class DBHelper extends Firebase {
         sellerId = sellerID;
 
         Firebase fRef = new Firebase(URL + "SellerProfiles/");
-        fRef.addValueEventListener(new ValueEventListener() {
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("Number2", dataSnapshot.getChildrenCount() + "");
@@ -686,7 +686,7 @@ public class DBHelper extends Firebase {
         this.UID = userID;
         Firebase fRef = new Firebase(URL + "UserProfiles/" + userID);
 
-        fRef.addValueEventListener(new ValueEventListener() {
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("Number2", dataSnapshot.getChildrenCount() + "");
@@ -738,7 +738,7 @@ public class DBHelper extends Firebase {
 
         Firebase fRef = new Firebase(URL + "ActiveSellers/");
 
-        fRef.addValueEventListener(new ValueEventListener() {
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("ACTIVE SELLER SIZE", dataSnapshot.getChildrenCount() + "");
@@ -796,7 +796,7 @@ public class DBHelper extends Firebase {
     public Seller getSpecificActiveSeller(final String sellerID, final DBCallback callback) {
         Firebase fRef = new Firebase(URL + "ActiveSellers/");
 
-        fRef.addValueEventListener(new ValueEventListener() {
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("Number2", dataSnapshot.getChildrenCount() + "");
@@ -837,7 +837,7 @@ public class DBHelper extends Firebase {
     public Seller getSpecificSeller(final String sellerID, final DBCallback callback) {
         Firebase fRef = new Firebase(URL + "ActiveSellers/");
 
-        fRef.addValueEventListener(new ValueEventListener() {
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("Number2", dataSnapshot.getChildrenCount() + "");
@@ -1045,7 +1045,7 @@ public class DBHelper extends Firebase {
     public void removeSellersFromActiveSellers(Seller seller1, final DBCallback dbCallback) {
         final Firebase fRef = new Firebase(URL + "ActiveSellers");
         final String sellerID = seller1.getUID();
-        fRef.addValueEventListener(new ValueEventListener() {
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("Number2", dataSnapshot.getChildrenCount() + "");
@@ -1080,7 +1080,7 @@ public class DBHelper extends Firebase {
 
         final Firebase fRef = new Firebase(URL + "ActiveSellers/" + sellerId + "/itemsForSale/");
 
-        fRef.addValueEventListener(new ValueEventListener() {
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("Number2", dataSnapshot.getChildrenCount() + "");
@@ -1130,7 +1130,7 @@ public class DBHelper extends Firebase {
 
         final Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId + "/itemsForSale/");
 
-        fRef.addValueEventListener(new ValueEventListener() {
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("Number2", dataSnapshot.getChildrenCount() + "");
@@ -1178,7 +1178,7 @@ public class DBHelper extends Firebase {
         final String itemid1 = item12.getItemID();
 
         final Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId + "/itemsForSale/");
-        fRef.addValueEventListener(new ValueEventListener() {
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("Number2", dataSnapshot.getChildrenCount() + "");
@@ -1356,7 +1356,7 @@ public class DBHelper extends Firebase {
 
         Firebase fRef = new Firebase(URL + "UserProfiles/" + UID + "/Orders/");
 
-        fRef.addValueEventListener(new ValueEventListener() {
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 sizeofAddDBList = dataSnapshot.getChildrenCount();
@@ -1402,7 +1402,7 @@ public class DBHelper extends Firebase {
 
         Log.d("OrderGoing", fRef.toString());
 
-        fRef.addValueEventListener(new ValueEventListener() {
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 sizeofAddDBList = dataSnapshot.getChildrenCount();
@@ -1461,7 +1461,7 @@ public class DBHelper extends Firebase {
         this.orderID = orderID;
         Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId + "/Orders/" + orderID+"/items");
 
-        fRef.addValueEventListener(new ValueEventListener() {
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 sizeofAddDBList = dataSnapshot.getChildrenCount();
@@ -1519,7 +1519,7 @@ public class DBHelper extends Firebase {
         this.sellerId = sellerId;
 
         Firebase fRef = new Firebase(URL + "ActiveSellers/" + sellerId + "/Orders/");
-        fRef.addValueEventListener(new ValueEventListener() {
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 sizeofAddDBList = dataSnapshot.getChildrenCount();
@@ -1571,7 +1571,7 @@ public class DBHelper extends Firebase {
         this.orderID = orderID;
 
         Firebase fRef = new Firebase(URL + "ActiveSellers/" + sellerId + "/Orders/" + orderID);
-        fRef.addValueEventListener(new ValueEventListener() {
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 sizeofAddDBList = dataSnapshot.getChildrenCount();
@@ -1683,7 +1683,7 @@ public class DBHelper extends Firebase {
 
         Firebase fRef = new Firebase(URL + "UserProfiles/" + UID + "/Orders/" + orderID);
 
-        fRef.addValueEventListener(new ValueEventListener() {
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 sizeofAddDBList = dataSnapshot.getChildrenCount();
@@ -1765,7 +1765,7 @@ public class DBHelper extends Firebase {
 
         Firebase fRef = new Firebase(URL + "ActiveSellers/" + sellerId + "/itemsForSale/");
 
-        fRef.addValueEventListener(new ValueEventListener() {
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -1870,7 +1870,7 @@ public class DBHelper extends Firebase {
 
         Firebase fRef = new Firebase(URL + "UserProfiles/");
 
-        fRef.addValueEventListener(new ValueEventListener() {
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 sizeofAddDBList = dataSnapshot.getChildrenCount();
@@ -1914,7 +1914,7 @@ public class DBHelper extends Firebase {
 
         Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId + "/itemsForSale");
 
-        fRef.addValueEventListener(new ValueEventListener() {
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("Number2", dataSnapshot.getChildrenCount() + "");
@@ -1993,7 +1993,7 @@ public class DBHelper extends Firebase {
     public ArrayList<User> getAllSellers(final DBCallback dbCallback) {
         Firebase fRef = new Firebase(URL + "SellerProfiles/");
 
-        fRef.addValueEventListener(new ValueEventListener() {
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 sizeofAddDBList = dataSnapshot.getChildrenCount();
@@ -2039,7 +2039,7 @@ public class DBHelper extends Firebase {
     public User getSpecificUser(final String UID, final DBCallback dbCallback) {
         Firebase fRef = new Firebase(URL + "UserProfiles/" + UID);
 
-        fRef.addValueEventListener(new ValueEventListener() {
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -2104,7 +2104,7 @@ public class DBHelper extends Firebase {
 
         Firebase fRef = new Firebase(URL + "InviteTree/" + UID);
 
-        fRef.addValueEventListener(new ValueEventListener() {
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 sizeofAddDBList = dataSnapshot.getChildrenCount();
@@ -2240,7 +2240,7 @@ public class DBHelper extends Firebase {
 
         Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId + "/Orders/" + buyerID);
 
-        fRef.addValueEventListener(new ValueEventListener() {
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -2318,7 +2318,7 @@ public class DBHelper extends Firebase {
 
         Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId + "/Reviews/");
 
-        fRef.addValueEventListener(new ValueEventListener() {
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 sizeofAddDBList = dataSnapshot.getChildrenCount();
@@ -2353,7 +2353,7 @@ public class DBHelper extends Firebase {
         this.UID = UID;
         Firebase fRef = new Firebase(URL + "UserProfiles/" + UID + "/Reviews/");
 
-        fRef.addValueEventListener(new ValueEventListener() {
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 sizeofAddDBList = dataSnapshot.getChildrenCount();

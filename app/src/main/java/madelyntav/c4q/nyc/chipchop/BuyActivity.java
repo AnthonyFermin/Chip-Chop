@@ -152,7 +152,13 @@ public class BuyActivity extends AppCompatActivity {
     private void selectFragmentToLoad(Bundle savedInstanceState) {
 
         //if items are still in cart go to checkout
-        if(getCurrentOrder() != null && getCurrentOrder().getItemsOrdered() != null) {
+        SharedPreferences sPref = getSharedPreferences(Fragment_Buyer_ViewCart.FROM_CART, MODE_PRIVATE);
+        boolean fromCart = sPref.getBoolean(Fragment_Buyer_ViewCart.FROM_CART, false);
+        if(fromCart
+                && getCurrentOrder() != null
+                && getCurrentOrder().getItemsOrdered() != null
+                && getCurrentOrder().getItemsOrdered().size() != 0) {
+            sPref.edit().clear().commit();
             replaceFragment(new Fragment_Buyer_ViewCart());
         } else if (savedInstanceState == null) {
             selectItem(0);
@@ -338,7 +344,11 @@ public class BuyActivity extends AppCompatActivity {
                 replaceFragment(new Fragment_Buyer_Map());
                 break;
             case(Fragment_Buyer_ViewCart.TAG):
-                replaceFragment(new Fragment_Buyer_SellerProfile());
+                if(getLastFragment() != null && getLastFragment().equals(Fragment_Buyer_ViewCart.TAG)){
+                    replaceFragment(new Fragment_Buyer_Map());
+                }else {
+                    replaceFragment(new Fragment_Buyer_SellerProfile());
+                }
                 break;
             case(Fragment_Buyer_OrderDetails.TAG):
                 replaceFragment(new Fragment_Buyer_Orders());

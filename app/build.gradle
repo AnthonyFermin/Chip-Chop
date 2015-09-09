@@ -1,15 +1,21 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'ChipChopSign'
+            keyPassword 'World909'
+            storeFile file('/Users/c4q-madelyntavarez/keystores/ChipChop.jks')
+            storePassword 'Food&Comm4L!f3'
+        }
+    }
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
-
     packagingOptions {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/LICENSE-FIREBASE.txt'
         exclude 'META-INF/NOTICE'
     }
-
     defaultConfig {
         applicationId "madelyntav.c4q.nyc.chipchop"
         minSdkVersion 17
@@ -21,6 +27,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
 }

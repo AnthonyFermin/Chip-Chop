@@ -1,0 +1,96 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:wallet="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context="madelyntav.c4q.nyc.chipchop.Payments.PaymentsActivity">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Enter Payment Information"
+        android:textStyle="bold"
+        android:textSize="30dp"/>
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/Name"
+        android:gravity="center_horizontal"
+        android:hint="Full Name"/>
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/cardNum"
+        android:gravity="center_horizontal"
+        android:hint="Card Number"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:maxLength="2"
+        android:id="@+id/expirationMonth"
+        android:hint="MM"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="/"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:maxLength="4"
+        android:id="@+id/expirationYear"
+        android:hint="YYYY"/>
+
+    </LinearLayout>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cardCVC"
+        android:maxLength="3"
+        android:inputType="number"
+        android:gravity="center_horizontal"
+        android:layout_gravity="center_horizontal"
+        android:hint="CVC"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/confirm_payment"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:onClick="onClickConfirmPayment"
+        android:text="Submit Payment"/>
+
+    <!--<TextView-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:text="OR"-->
+        <!--android:textStyle="bold"-->
+        <!--android:layout_marginTop="30dp"-->
+        <!--android:layout_marginBottom="30dp"/>-->
+
+    <!--<fragment-->
+        <!--android:id="@+id/wallet_fragment"-->
+        <!--android:name="com.google.android.gms.wallet.fragment.SupportWalletFragment"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--/>-->
+
+</LinearLayout>

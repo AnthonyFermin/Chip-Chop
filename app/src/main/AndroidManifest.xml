@@ -15,65 +15,74 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
+        <meta-data
+            android:name="com.google.android.gms.wallet.api.enabled"
+            android:value="true" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAZ6ZNk_DPZN2A_0dpHb0MpWdGpEPLxom4" />
 
-        <provider android:authorities="com.facebook.app.FacebookContentProvider809448892505053"
+        <provider
             android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider809448892505053"
             android:exported="true" />
 
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
-
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
 
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:logo="@drawable/chipchop">
+            android:logo="@drawable/chipchop"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".BuyActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
+            //TODO Return Launcher
+        </activity>
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name=".SignupActivity1"
+            android:label="ChipChop"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".SignupActivity2"
+            android:label="ChipChop"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".SellActivity"
+            android:label="ChipChop"
+            android:screenOrientation="portrait" >
+        </activity>
 
+        <receiver
+            android:name=".BroadcastReceiver"
+            android:enabled="true"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="ahhhlvin.c4q.nyc.notification" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".Payments.PaymentsActivity"
+            android:label="@string/title_activity_payments" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.facebook.FacebookActivity"
-            android:configChanges=
-                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:label="@string/app_name" />
-
-        <activity
-            android:name=".SignupActivity1"
-            android:label="ChipChop"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name=".SignupActivity2"
-            android:label="ChipChop"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name=".SellActivity"
-            android:label="ChipChop"
-            android:screenOrientation="portrait">
-
-        </activity>
-
-        <receiver
-            android:name=".BroadcastReceiver"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="ahhhlvin.c4q.nyc.notification" />
-            </intent-filter>
-        </receiver>
-
     </application>
 
 </manifest>

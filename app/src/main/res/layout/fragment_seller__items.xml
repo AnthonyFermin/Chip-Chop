@@ -18,12 +18,39 @@
     </RelativeLayout>
 
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/text_design"
+        android:text="items"
+        android:textSize="40sp"
+        android:gravity="center_horizontal"
+        android:id="@+id/title_tv"/>
+
+    <android.support.v4.view.ViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/addButton">
+
+        <android.support.v4.view.PagerTitleStrip
+            android:id="@+id/pager_title_strip"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="top"
+            style="@style/text_design"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp" />
+
+    </android.support.v4.view.ViewPager>
+
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/container"
-        android:visibility="gone">
+        android:visibility="invisible">
 
         <TextView
             android:layout_width="match_parent"
@@ -32,7 +59,8 @@
             android:text="items"
             android:textSize="40sp"
             android:gravity="center_horizontal"
-            android:id="@+id/title_tv"/>
+            android:id="@+id/title"/>
+
 
         <TextView
             android:id="@+id/active_tv"
@@ -41,7 +69,7 @@
             android:text="ACTIVE ITEMS"
             android:layout_margin="5dp"
             style="@style/text_design"
-            android:layout_below="@+id/title_tv"/>
+            android:layout_below="@+id/title"/>
 
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
@@ -64,16 +92,19 @@
             android:id="@+id/seller_items_list_INACTIVE"
             android:layout_below="@+id/inactive_tv"/>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/addButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/plus"
-            app:backgroundTint="#D42028"
-            app:elevation="6dp"
-            app:pressedTranslationZ="12dp"/>
+
 
     </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/addButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/plus"
+        app:backgroundTint="#D42028"
+        android:layout_marginEnd="5dp"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"/>
 
 </RelativeLayout>

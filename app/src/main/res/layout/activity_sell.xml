@@ -59,6 +59,7 @@
             android:layout_height="0dp"
             android:layout_weight="4"
             android:choiceMode="singleChoice"
+            android:layout_gravity="start|center_vertical"
             android:divider="@android:color/transparent"
             android:dividerHeight="0dp" />
 

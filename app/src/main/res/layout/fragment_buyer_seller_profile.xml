@@ -96,6 +96,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:src="@drawable/cart"
+        android:layout_marginEnd="5dp"
         app:backgroundTint="#D42028"
         android:layout_above="@+id/seller_items_list"
         app:elevation="6dp"

@@ -16,6 +16,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -137,6 +138,7 @@ public class SellActivity extends AppCompatActivity {
 //        getSupportActionBar().setBackgroundDrawable(colorDrawable);
 
         BitmapDrawable background = new BitmapDrawable (BitmapFactory.decodeResource(getResources(), R.drawable.actionbar));
+        background.setGravity(Gravity.CENTER);
         getSupportActionBar().setBackgroundDrawable(background);
     }
 

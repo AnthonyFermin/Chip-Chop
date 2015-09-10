@@ -14,6 +14,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -104,6 +105,7 @@ public class SignupActivity2 extends AppCompatActivity {
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         BitmapDrawable background = new BitmapDrawable (BitmapFactory.decodeResource(getResources(), R.drawable.actionbar));
+        background.setGravity(Gravity.CENTER);
         getSupportActionBar().setBackgroundDrawable(background);
 
         startButton = (Button) findViewById(R.id.createUserButton);

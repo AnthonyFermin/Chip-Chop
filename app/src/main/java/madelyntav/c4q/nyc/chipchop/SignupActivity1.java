@@ -3,13 +3,16 @@ package madelyntav.c4q.nyc.chipchop;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -63,8 +66,10 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
     public static final String SP_ADDRESS = "address";
     public static final String SP_APT = "apt";
     public static final String SP_CITY = "city";
+    public static final String SP_STATE = "state";
     public static final String SP_ZIPCODE = "zipcode";
     public static final String SP_PHONE_NUMBER = "phone_number";
+    public static final String SP_PHOTO_LINK = "photo_link";
     public static final String SP_IS_LOGGED_IN = "logged_in";
 
     /* Is there a ConnectionResult resolution in progress? */
@@ -92,44 +97,17 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         setContentView(R.layout.activity_signup1);
 
-        toSellActivity = getIntent().getBooleanExtra(BuyActivity.TO_SELL_ACTIVITY,false);
+        initializeData();
+        bindViews();
+        setListeners();
 
-        dbHelper = DBHelper.getDbHelper(this);
-        callbackManager = CallbackManager.Factory.create();
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        BitmapDrawable background = new BitmapDrawable (BitmapFactory.decodeResource(getResources(), R.drawable.actionbar));
+        background.setGravity(Gravity.CENTER);
+        getSupportActionBar().setBackgroundDrawable(background);
+    }
 
-        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
-        getSupportActionBar().setBackgroundDrawable(colorDrawable);
-
-
-        emptyCallback = new DBCallback() {
-            @Override
-            public void runOnSuccess() {
-
-            }
-
-            @Override
-            public void runOnFail() {
-
-            }
-        };
-
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Plus.API)
-                .addScope(new Scope(Scopes.PROFILE))
-                .build();
-
-        containingView = (LinearLayout) findViewById(R.id.container);
-        loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
-        loadingPanel.setVisibility(View.GONE);
-        loginButton=(LoginButton) findViewById(R.id.login_button);
-
-        emailET = (EditText) findViewById(R.id.eMail);
-        passET = (EditText) findViewById(R.id.password);
-
-        signInButton = (Button) findViewById(R.id.signInButton);
+    private void setListeners() {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -154,7 +132,6 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
 
         });
 
-        newUserButton = (Button) findViewById(R.id.newUserButton);
 
         newUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,7 +161,6 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
             }
         });
         loginButton.setReadPermissions(Arrays.asList("public_profile", "user_friends", "email"));
-
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -201,11 +177,54 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
 
             }
         });
+    }
+
+    private void bindViews() {
+        containingView = (LinearLayout) findViewById(R.id.container);
+        loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
+        loadingPanel.setVisibility(View.GONE);
+        loginButton=(LoginButton) findViewById(R.id.login_button);
+
+        emailET = (EditText) findViewById(R.id.eMail);
+        passET = (EditText) findViewById(R.id.password);
+
+        signInButton = (Button) findViewById(R.id.signInButton);
+        newUserButton = (Button) findViewById(R.id.newUserButton);
 
 
     }
 
+    private void initializeData() {
+        toSellActivity = getIntent().getBooleanExtra(BuyActivity.TO_SELL_ACTIVITY,false);
 
+        dbHelper = DBHelper.getDbHelper(this);
+        callbackManager = CallbackManager.Factory.create();
+
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
+        getSupportActionBar().setBackgroundDrawable(colorDrawable);
+
+
+        emptyCallback = new DBCallback() {
+            @Override
+            public void runOnSuccess() {
+
+            }
+
+            @Override
+            public void runOnFail() {
+
+            }
+        };
+
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Plus.API)
+                .addScope(new Scope(Scopes.PROFILE))
+                .build();
+
+    }
 
 
     private void onSignInClicked() {
@@ -307,12 +326,14 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
             Log.d("SignUp - User Info","Email: " + user.geteMail());
             String addressString = user.getAddressString();
             Address address = HelperMethods.parseAddressString(addressString, dbHelper.getUserID());
-            editor.putString(SP_NAME, user.getName());
-            editor.putString(SP_ADDRESS, address.getStreetAddress());
-            editor.putString(SP_APT, address.getApartment());
-            editor.putString(SP_CITY, address.getCity());
-            editor.putString(SP_ZIPCODE, address.getZipCode());
-            editor.putString(SP_PHONE_NUMBER, user.getPhoneNumber());
+            editor.putString(SP_NAME, user.getName())
+                .putString(SP_ADDRESS, address.getStreetAddress())
+                .putString(SP_APT, address.getApartment())
+                .putString(SP_CITY, address.getCity())
+                .putString(SP_STATE, address.getState())
+                .putString(SP_ZIPCODE, address.getZipCode())
+                .putString(SP_PHONE_NUMBER, user.getPhoneNumber())
+                .putString(SP_PHOTO_LINK, user.getPhotoLink());
         }
         editor.commit();
 
@@ -336,7 +357,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
                                 break;
                             }
                             i++;
-                        } while (user == null);
+                        } while (user == null || user.getName() == null || user.getName().isEmpty() );
 
                         return null;
                     }

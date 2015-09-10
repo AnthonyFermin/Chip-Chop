@@ -2,7 +2,9 @@ package madelyntav.c4q.nyc.chipchop;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +16,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -126,11 +129,17 @@ public class SellActivity extends AppCompatActivity {
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(false);
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.navdrawer);
-        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
-        getSupportActionBar().setBackgroundDrawable(colorDrawable);
+//        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
+//        getSupportActionBar().setBackgroundDrawable(colorDrawable);
+
+        BitmapDrawable background = new BitmapDrawable (BitmapFactory.decodeResource(getResources(), R.drawable.actionbar));
+        background.setGravity(Gravity.CENTER);
+        getSupportActionBar().setBackgroundDrawable(background);
     }
 
     private void initializeData() {
@@ -275,11 +284,14 @@ public class SellActivity extends AppCompatActivity {
         String address = sp.getString(SignupActivity1.SP_ADDRESS,"");
         String apt = sp.getString(SignupActivity1.SP_APT, "");
         String city = sp.getString(SignupActivity1.SP_CITY, "");
+        String state = sp.getString(SignupActivity1.SP_STATE,"");
         String zip = sp.getString(SignupActivity1.SP_ZIPCODE, "");
         String phoneNumber = sp.getString(SignupActivity1.SP_PHONE_NUMBER, "");
+        String photoLink = sp.getString(SignupActivity1.SP_PHOTO_LINK,"");
 
-        Address userAddress = new Address(address, apt, city, "NY", zip, dbHelper.getUserID());
+        Address userAddress = new Address(address, apt, city, state, zip, dbHelper.getUserID());
         user = new User(dbHelper.getUserID(), email, name, userAddress, phoneNumber);
+        user.setPhotoLink(photoLink);
 
         drawerUserNameTV.setText(user.getName());
     }

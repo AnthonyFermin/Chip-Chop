@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -30,7 +31,7 @@ public class Fragment_Buyer_OrderDetails extends Fragment {
 
     public static final String TAG = "fragment_buyer_order_details";
 
-
+    TextView totalPrice;
     private BuyActivity activity;
     private DBHelper dbHelper;
     private DBCallback emptyCallback;
@@ -45,6 +46,7 @@ public class Fragment_Buyer_OrderDetails extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_buyer_orderdetail, container, false);
 
+        totalPrice = (TextView) root.findViewById(R.id.total_price_tv);
         activity = (BuyActivity) getActivity();
         dbHelper = DBHelper.getDbHelper(activity);
         activity.setCurrentFragment(TAG);
@@ -60,6 +62,7 @@ public class Fragment_Buyer_OrderDetails extends Fragment {
 
             }
         };
+
 
         orderToView = activity.getOrderToView();
         Log.d("Order to View", "Order ID: " + orderToView.getOrderID());
@@ -117,6 +120,14 @@ public class Fragment_Buyer_OrderDetails extends Fragment {
                 protected void onPostExecute(Void aVoid) {
                     super.onPostExecute(aVoid);
                     setAdapter();
+
+                    int total = 0;
+                    for(Item item: foodItems){
+                        item.setBuyerID(dbHelper.getUserID());
+                        total = total + (item.getPrice() * item.getQuantityWanted());
+                    }
+
+                    totalPrice.setText("$ " + String.valueOf(total) + ".00");
                 }
             }.execute();
 

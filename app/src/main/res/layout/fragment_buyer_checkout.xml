@@ -43,6 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="ITEM"
+            android:textStyle="bold"
             android:gravity="center"
             android:layout_weight="3"/>
 
@@ -50,14 +51,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="QTY"
-            android:gravity="center"
+            android:textStyle="bold"
+            android:gravity="start"
             android:layout_weight="1"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="PRICE"
-            android:gravity="center"
+            android:textStyle="bold"
+            android:gravity="start"
             android:layout_weight="1" />
 
     </LinearLayout>

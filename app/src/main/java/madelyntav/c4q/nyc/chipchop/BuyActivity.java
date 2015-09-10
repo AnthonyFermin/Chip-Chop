@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.BitmapFactory;
+import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,6 +19,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -57,7 +61,6 @@ public class BuyActivity extends AppCompatActivity {
     private Fragment fragment;
     private ActionBarDrawerToggle mDrawerToggle;
     private TextView drawerUserNameTV;
-    private RelativeLayout loadingPanel;
 
     private DBHelper dbHelper;
 
@@ -97,10 +100,7 @@ public class BuyActivity extends AppCompatActivity {
             String pass = userInfoSP.getString(SignupActivity1.SP_PASS, null);
 
             if(email != null && pass != null){
-                Log.d("AUTO LOG-IN",email + ", " + pass);
-                loadingPanel.setVisibility(View.VISIBLE);
-                frameLayout.setVisibility(View.INVISIBLE);
-                DrawerLinear.setVisibility(View.INVISIBLE);
+                Log.d("AUTO LOG-IN", "" + email);
                 dbHelper.logInUser(email,pass, new DBCallback() {
                     @Override
                     public void runOnSuccess() {
@@ -109,12 +109,8 @@ public class BuyActivity extends AppCompatActivity {
 
                     @Override
                     public void runOnFail() {
-
-                        clearLogin();
                         // clears user login info if login authentication failed
-                        loadingPanel.setVisibility(View.GONE);
-                        frameLayout.setVisibility(View.VISIBLE);
-                        DrawerLinear.setVisibility(View.VISIBLE);
+                        clearLogin();
                     }
                 });
             }
@@ -207,18 +203,21 @@ public class BuyActivity extends AppCompatActivity {
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(false);
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.navdrawer);
-        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
-        getSupportActionBar().setBackgroundDrawable(colorDrawable);
+//        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
+//        getSupportActionBar().setBackgroundDrawable(colorDrawable);
+
+        BitmapDrawable background = new BitmapDrawable (BitmapFactory.decodeResource(getResources(), R.drawable.actionbar));
+        background.setGravity(Gravity.CENTER);
+        getSupportActionBar().setBackgroundDrawable(background);
 
     }
 
     private void bindViews(){
-        loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
-
         drawerUserNameTV = (TextView) findViewById(R.id.drawer_user_nameTV);
         frameLayout = (FrameLayout) findViewById(R.id.sellerFrameLayout);
         DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
@@ -260,7 +259,13 @@ public class BuyActivity extends AppCompatActivity {
         } else if (position == 1) {
             fragment = new Fragment_Buyer_Orders();
         } else if (position == 2) {
-            fragment = new Fragment_Buyer_ProfileSettings();
+            if(dbHelper.userIsLoggedIn())
+                fragment = new Fragment_Buyer_ProfileSettings();
+            else {
+                clearLogin();
+                Toast.makeText(this,"Must log in to view profile",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(BuyActivity.this, SignupActivity1.class));
+            }
         } else if (position == 3) {
             //SIGN OUT/IN DRAWER ITEM
             boolean isLoggedIn = userInfoSP.getBoolean(SignupActivity1.SP_IS_LOGGED_IN, false);
@@ -365,60 +370,25 @@ public class BuyActivity extends AppCompatActivity {
     }
 
     private void load(){
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                user = dbHelper.getUserFromDB(dbHelper.getUserID());
-                int i = 0;
-                do{
-                    Log.d("Buy - Load User", "Attempt #" + i);
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    if (i > 10){
-                        Log.d("Buy - Load User", "DIDN'T LOAD");
-                        break;
-                    }
-                    i++;
-                }while(user == null);
 
-                return null;
-            }
+        String name = userInfoSP.getString(SignupActivity1.SP_NAME,"");
+        String email = userInfoSP.getString(SignupActivity1.SP_EMAIL,"");
+        String streetAddress = userInfoSP.getString(SignupActivity1.SP_ADDRESS,"");
+        String apt = userInfoSP.getString(SignupActivity1.SP_APT,"");
+        String city = userInfoSP.getString(SignupActivity1.SP_CITY,"");
+        String state = userInfoSP.getString(SignupActivity1.SP_STATE,"");
+        String zipcode = userInfoSP.getString(SignupActivity1.SP_ZIPCODE,"");
+        String phoneNumber = userInfoSP.getString(SignupActivity1.SP_PHONE_NUMBER, "");
+        String photoLink = userInfoSP.getString(SignupActivity1.SP_PHOTO_LINK,"");
+        Address address = new Address(streetAddress,apt,city,state,zipcode,dbHelper.getUserID());
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
+        user = new User(dbHelper.getUserID(), email, name, address,photoLink, phoneNumber);
 
-                if(user != null && user.getAddressString() != null){
-                    Address address = HelperMethods.parseAddressString(user.getAddressString(), user.getUID());
-                    userInfoSP.edit()
-                            .putString(SignupActivity1.SP_NAME, user.getName())
-                            .putString(SignupActivity1.SP_EMAIL, user.geteMail())
-                            .putString(SignupActivity1.SP_ADDRESS, address.getStreetAddress())
-                            .putString(SignupActivity1.SP_APT, address.getApartment())
-                            .putString(SignupActivity1.SP_CITY, address.getCity())
-                            .putString(SignupActivity1.SP_ZIPCODE, address.getZipCode())
-                            .putString(SignupActivity1.SP_PHONE_NUMBER, user.getPhoneNumber())
-                            .commit();
+        drawerUserNameTV.setText(user.getName());
+        mListTitles[3] = "Sign Out";
+        mDrawerList.setAdapter(new ArrayAdapter<>(BuyActivity.this,
+                R.layout.navdrawer_list_item, mListTitles));
 
-                    drawerUserNameTV.setText(user.getName());
-                    mListTitles[3] = "Sign Out";
-                    mDrawerList.setAdapter(new ArrayAdapter<>(BuyActivity.this,
-                            R.layout.navdrawer_list_item, mListTitles));
-
-                }else{
-                    Toast.makeText(BuyActivity.this,"Auto-login failed", Toast.LENGTH_SHORT).show();
-                    clearLogin();
-                }
-
-                loadingPanel.setVisibility(View.GONE);
-                frameLayout.setVisibility(View.VISIBLE);
-                DrawerLinear.setVisibility(View.VISIBLE);
-
-            }
-        }.execute();
     }
 
 
@@ -471,5 +441,13 @@ public class BuyActivity extends AppCompatActivity {
 
     private void setLastFragment(String lastFragment) {
         this.lastFragment = lastFragment;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

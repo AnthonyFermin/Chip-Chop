@@ -1,27 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
 
     <TextView
+        android:id="@+id/orderdetail_id_tv"
+        style="@style/text_design"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="25sp"
-        android:text="Order ID#"
-        android:textStyle="bold"
         android:padding="10dp"
-        style="@style/text_design"
-        android:id="@+id/orderdetail_id_tv"/>
+        android:text="Order Details"
+        android:textSize="25sp"
+        android:textStyle="bold" />
 
+    <LinearLayout
+        android:id="@+id/header_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/order_summary_divider"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:text="ITEM"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="QTY"
+            android:textStyle="bold"
+            android:gravity="start"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PRICE"
+            android:textStyle="bold"
+            android:gravity="start"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_margin="5dp"
+        android:background="@android:color/darker_gray"/>
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/checkout_items_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_below="@id/orderdetail_id_tv"
+        android:padding="10dp" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/checkout_items_list"
-        android:layout_below="@id/orderdetail_id_tv"
-        android:padding="10dp"/>
+        android:orientation="horizontal">
 
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_weight="4"
+        android:text="TOTAL: "
+        android:gravity="end"
+        style="@style/text_design"
+        android:textStyle="bold" />
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/total_price_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="end"
+        android:textSize="20sp"
+        android:layout_marginEnd="5dp"
+        android:textStyle="bold" />
+
+    </LinearLayout>
+
+</LinearLayout>

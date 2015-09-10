@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.telephony.PhoneNumberFormattingTextWatcher;
@@ -26,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import madelyntav.c4q.nyc.chipchop.DBCallback;
@@ -66,6 +66,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     EditText cityET;
     EditText zipcodeET;
     EditText phoneNumberET;
+    EditText stateET;
 
     Button saveButton;
 
@@ -73,6 +74,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     String address;
     String apt;
     String city;
+    String state;
     String zipcode;
     String phoneNumber;
     String imageLink;
@@ -118,8 +120,8 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         Log.d("Seller Profile", "LOADING SELLER INFO");
         if(activity.getSeller() == null) {
             seller = dbHelper.getSellerFromDB(dbHelper.getUserID());
+            Log.d("Load Seller Info", "LOADING FROM DB: " + dbHelper.getUserID());
             load();
-            Log.d("Load Seller Info", "LOADING FROM DB");
         }else{
             seller = activity.getSeller();
             Log.d("Load Seller Info", "PREVIOUSLY CACHED");
@@ -142,9 +144,10 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         storeName = storeNameET.getText().toString().trim();
         apt = aptET.getText().toString();
         city = cityET.getText().toString().trim().replace(' ', '+');
+        state = stateET.getText().toString().trim().replace(' ', '+');
         phoneNumber = phoneNumberET.getText().toString().replace("-", "");
 
-        String queryString = address + ",+" + city + ",+NY";// + "&key=" + APIKEY;
+        String queryString = address + ",+" + city + ",+" + state;// + "&key=" + APIKEY;
         Log.i("RETROFIT- Geocode Query", queryString);
 
         geolocationAPI.getGeolocation(queryString, new Callback<Geolocation>() {
@@ -156,7 +159,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 address = address.replace('+', ' ');
                 city = city.replace('+', ' ');
 
-                userAddress = new Address(address, apt, city, "NY", zipcode, uid);
+                userAddress = new Address(address, apt, city, state, zipcode, uid);
 
                 Log.i("RETROFIT: LatLng", "" + location.getLat() + ", " + location.getLng());
 
@@ -168,6 +171,10 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 seller.setIsCooking(false);
                 dbHelper.addSellerProfileInfoToDB(seller);
                 activity.setSeller(seller);
+
+                user.setAddress(userAddress);
+                user.setPhoneNumber(phoneNumber);
+                dbHelper.addUserProfileInfoToDB(user);
 
                 Toast.makeText(getActivity(), "Changes Saved", Toast.LENGTH_SHORT).show();
 
@@ -202,7 +209,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                         break;
                     }
                     i++;
-                }while(seller == null);
+                }while(seller == null || seller.getStoreName() == null || seller.getStoreName().isEmpty());
 
                 return null;
             }
@@ -223,7 +230,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                     Log.d("Load Seller Info", "NOT FOUND IN DB, NEW SELLER CREATED");
                     seller = new Seller(dbHelper.getUserID(),user.geteMail(),user.getName(),user.getAddress(),"",user.getPhoneNumber());
                     dbHelper.addSellerProfileInfoToDB(seller);
-                    Toast.makeText(activity,"New Seller Profile Created", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity,"New Seller Profile Created, Please add a store name", Toast.LENGTH_SHORT).show();
                 }
                 activity.setSeller(seller);
                 loadingPanel.setVisibility(View.GONE);
@@ -252,6 +259,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             addressET.setText(address.getStreetAddress());
             aptET.setText(address.getApartment());
             cityET.setText(address.getCity());
+            stateET.setText(address.getState());
             zipcodeET.setText(address.getZipCode());
         }
         phoneNumberET.setText(user.getPhoneNumber());
@@ -290,7 +298,6 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
-            imageFileUri = data.getData();
             String filePath = imageFileUri.getPath();
             imageLink = HelperMethods.saveImageToEncodedString(filePath);
             Log.d("Seller Profile","ImageLink: " + imageLink);
@@ -322,9 +329,10 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
                 if (items[which].equalsIgnoreCase("Camera")) {
                     intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.parse(stringVariable));
+                    File photo = new File(stringVariable);
+                    intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
 
-                    if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    if (intent.resolveActivity(activity.getPackageManager()) != null) {
                         startActivityForResult(intent, 0);
                     }
                 }
@@ -347,8 +355,10 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         addressET = (EditText) root.findViewById(R.id.address);
         aptET = (EditText) root.findViewById(R.id.apt);
         cityET = (EditText) root.findViewById(R.id.city);
+        stateET = (EditText) root.findViewById(R.id.state);
         zipcodeET = (EditText) root.findViewById(R.id.zipcode);
         phoneNumberET = (EditText) root.findViewById(R.id.phone_number);
+        stateET = (EditText) root.findViewById(R.id.state);
         setReadOnlyAll(true);
 
         cookingStatus = (ToggleButton) root.findViewById(R.id.cooking_status);
@@ -381,9 +391,9 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             @Override
             public void onClick(View view) {
                 if(saveButton.getText().toString().equalsIgnoreCase("save changes")) {
-                    Toast.makeText(activity,"Please save changes before continuing",Toast.LENGTH_SHORT).show();
-                    cookingStatus.setChecked(!cookingStatus.isChecked());
-                }else if (cookingStatus.getText().toString().equalsIgnoreCase("on")) {
+                    saveButton.callOnClick();
+                }
+                if (cookingStatus.getText().toString().equalsIgnoreCase("on")) {
                     //TODO: add confirmation dialog when changing cooking status mention to click save to commit changes
                     sellerItems = activity.getSellerItems();
                     if(storeNameET.getText().toString().isEmpty()){
@@ -483,6 +493,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         setReadOnly(cityET, readOnly);
         setReadOnly(zipcodeET, readOnly);
         setReadOnly(phoneNumberET, readOnly);
+        setReadOnly(stateET, readOnly);
     }
 
     private void setReadOnly(EditText view, boolean readOnly) {

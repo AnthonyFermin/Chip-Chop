@@ -92,44 +92,12 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         setContentView(R.layout.activity_signup1);
 
-        toSellActivity = getIntent().getBooleanExtra(BuyActivity.TO_SELL_ACTIVITY,false);
+        initializeData();
+        bindViews();
+        setListeners();
+    }
 
-        dbHelper = DBHelper.getDbHelper(this);
-        callbackManager = CallbackManager.Factory.create();
-
-        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
-        getSupportActionBar().setBackgroundDrawable(colorDrawable);
-
-
-        emptyCallback = new DBCallback() {
-            @Override
-            public void runOnSuccess() {
-
-            }
-
-            @Override
-            public void runOnFail() {
-
-            }
-        };
-
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Plus.API)
-                .addScope(new Scope(Scopes.PROFILE))
-                .build();
-
-        containingView = (LinearLayout) findViewById(R.id.container);
-        loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
-        loadingPanel.setVisibility(View.GONE);
-        loginButton=(LoginButton) findViewById(R.id.login_button);
-
-        emailET = (EditText) findViewById(R.id.eMail);
-        passET = (EditText) findViewById(R.id.password);
-
-        signInButton = (Button) findViewById(R.id.signInButton);
+    private void setListeners() {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -154,7 +122,6 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
 
         });
 
-        newUserButton = (Button) findViewById(R.id.newUserButton);
 
         newUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,7 +151,6 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
             }
         });
         loginButton.setReadPermissions(Arrays.asList("public_profile", "user_friends", "email"));
-
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -201,11 +167,54 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
 
             }
         });
+    }
+
+    private void bindViews() {
+        containingView = (LinearLayout) findViewById(R.id.container);
+        loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
+        loadingPanel.setVisibility(View.GONE);
+        loginButton=(LoginButton) findViewById(R.id.login_button);
+
+        emailET = (EditText) findViewById(R.id.eMail);
+        passET = (EditText) findViewById(R.id.password);
+
+        signInButton = (Button) findViewById(R.id.signInButton);
+        newUserButton = (Button) findViewById(R.id.newUserButton);
 
 
     }
 
+    private void initializeData() {
+        toSellActivity = getIntent().getBooleanExtra(BuyActivity.TO_SELL_ACTIVITY,false);
 
+        dbHelper = DBHelper.getDbHelper(this);
+        callbackManager = CallbackManager.Factory.create();
+
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
+        getSupportActionBar().setBackgroundDrawable(colorDrawable);
+
+
+        emptyCallback = new DBCallback() {
+            @Override
+            public void runOnSuccess() {
+
+            }
+
+            @Override
+            public void runOnFail() {
+
+            }
+        };
+
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Plus.API)
+                .addScope(new Scope(Scopes.PROFILE))
+                .build();
+
+    }
 
 
     private void onSignInClicked() {
@@ -336,7 +345,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
                                 break;
                             }
                             i++;
-                        } while (user == null);
+                        } while (user == null || user.getName() == null || user.getName().isEmpty() );
 
                         return null;
                     }

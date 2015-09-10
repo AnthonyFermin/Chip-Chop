@@ -97,7 +97,7 @@ public class BuyActivity extends AppCompatActivity {
             String pass = userInfoSP.getString(SignupActivity1.SP_PASS, null);
 
             if(email != null && pass != null){
-                Log.d("AUTO LOG-IN",email + ", " + pass);
+                Log.d("AUTO LOG-IN","" + email);
                 loadingPanel.setVisibility(View.VISIBLE);
                 frameLayout.setVisibility(View.INVISIBLE);
                 DrawerLinear.setVisibility(View.INVISIBLE);
@@ -260,7 +260,13 @@ public class BuyActivity extends AppCompatActivity {
         } else if (position == 1) {
             fragment = new Fragment_Buyer_Orders();
         } else if (position == 2) {
-            fragment = new Fragment_Buyer_ProfileSettings();
+            if(dbHelper.userIsLoggedIn())
+                fragment = new Fragment_Buyer_ProfileSettings();
+            else {
+                clearLogin();
+                Toast.makeText(this,"Must log in to view profile",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(BuyActivity.this, SignupActivity1.class));
+            }
         } else if (position == 3) {
             //SIGN OUT/IN DRAWER ITEM
             boolean isLoggedIn = userInfoSP.getBoolean(SignupActivity1.SP_IS_LOGGED_IN, false);
@@ -382,7 +388,7 @@ public class BuyActivity extends AppCompatActivity {
                         break;
                     }
                     i++;
-                }while(user == null);
+                }while(user == null || user.getAddressString() == null || user.getAddressString().isEmpty());
 
                 return null;
             }

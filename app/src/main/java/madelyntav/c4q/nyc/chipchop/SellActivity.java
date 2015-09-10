@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.Intent;
@@ -46,6 +47,7 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Orders;
 
 public class SellActivity extends AppCompatActivity {
 
+    View coordinatorLayoutView;
     FrameLayout frameLayout;
     LinearLayout DrawerLinear;
     private DrawerLayout mDrawerLayout;
@@ -165,6 +167,8 @@ public class SellActivity extends AppCompatActivity {
         DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        coordinatorLayoutView = findViewById(R.id.snackbarPosition);
+
     }
 
 
@@ -192,6 +196,9 @@ public class SellActivity extends AppCompatActivity {
             Intent intent = new Intent(this,BuyActivity.class);
             startActivity(intent);
             Toast.makeText(this,"Sign out successful",Toast.LENGTH_SHORT).show();
+            Snackbar
+                    .make(coordinatorLayoutView, "Sign out successful", Snackbar.LENGTH_SHORT)
+                    .show();
             finish();
         }
 

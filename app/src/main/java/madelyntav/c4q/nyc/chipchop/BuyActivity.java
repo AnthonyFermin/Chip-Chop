@@ -9,6 +9,7 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -76,6 +77,7 @@ public class BuyActivity extends AppCompatActivity {
     private Item itemToCart = null;
     private Order currentOrder;
     private Order orderToView;
+    View coordinatorLayoutView;
 
     public static final String TO_SELL_ACTIVITY = "to_sell";
 
@@ -190,6 +192,9 @@ public class BuyActivity extends AppCompatActivity {
                             Intent sellIntent = new Intent(getApplicationContext(), SellActivity.class);
                             startActivity(sellIntent);
                         }else{
+                            Snackbar
+                                    .make(coordinatorLayoutView, "Must be logged for this feature", Snackbar.LENGTH_SHORT)
+                                    .show();
                             Toast.makeText(BuyActivity.this,"Must be logged for this feature", Toast.LENGTH_SHORT).show();
                             Intent signUpIntent = new Intent(getApplicationContext(), SignupActivity1.class);
                             signUpIntent.putExtra(TO_SELL_ACTIVITY,true);
@@ -224,6 +229,8 @@ public class BuyActivity extends AppCompatActivity {
         DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        coordinatorLayoutView = findViewById(R.id.snackbarPosition);
+
     }
 
     private void initializeData() {
@@ -264,6 +271,9 @@ public class BuyActivity extends AppCompatActivity {
                 fragment = new Fragment_Buyer_ProfileSettings();
             else {
                 clearLogin();
+                Snackbar
+                        .make(coordinatorLayoutView, "Must log in to view profile", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(this,"Must log in to view profile",Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(BuyActivity.this, SignupActivity1.class));
             }
@@ -274,7 +284,9 @@ public class BuyActivity extends AppCompatActivity {
                 clearLogin();
                 user = null;
                 LoginManager.getInstance().logOut();
-                Toast.makeText(this, "Sign out successful", Toast.LENGTH_SHORT).show();
+                Snackbar
+                        .make(coordinatorLayoutView, "Sign out successful", Snackbar.LENGTH_SHORT)
+                        .show();
 
                 //if not currently in fragment_buyer_map, replace current fragment with buyer_map fragment
                 if (!getCurrentFragment().equals(Fragment_Buyer_Map.TAG)) {

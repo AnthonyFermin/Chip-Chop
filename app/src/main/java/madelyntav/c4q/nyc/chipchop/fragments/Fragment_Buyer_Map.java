@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
@@ -69,6 +70,7 @@ import static android.content.res.Resources.*;
 
 public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
+    View coordinatorLayoutView;
     FloatingActionButton refreshButton;
     ImageView arrowImage;
     public SlidingUpPanelLayout slidingPanel;
@@ -215,6 +217,8 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         slidingPanel = (SlidingUpPanelLayout) root.findViewById(R.id.slidinglayout);
         itemsRView = (RecyclerView) root.findViewById(R.id.buyers_orders_list);
         refreshButton = (FloatingActionButton) root.findViewById(R.id.refresh_button);
+        coordinatorLayoutView = root.findViewById(R.id.snackbarPosition);
+
 
     }
 
@@ -289,6 +293,9 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
                 @Override
                 public void onClick(DialogInterface paramDialogInterface, int paramInt) {
                     Toast.makeText(getActivity(), "Location Services disabled", Toast.LENGTH_LONG).show();
+                    Snackbar
+                            .make(coordinatorLayoutView, "Location Services disabled", Snackbar.LENGTH_LONG)
+                            .show();
                 }
             });
             dialog.show();
@@ -459,6 +466,9 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             protected void onPostExecute (Void aVoid){
                 super.onPostExecute(aVoid);
                 if (sellers == null) {
+                    Snackbar
+                            .make(coordinatorLayoutView, "No sellers found in area", Snackbar.LENGTH_SHORT)
+                            .show();
                     Toast.makeText(activity, "No sellers found in area", Toast.LENGTH_SHORT).show();
                 } else {
                     SellerListAdapter sellersListAdapter = new SellerListAdapter(getActivity(), sellers);

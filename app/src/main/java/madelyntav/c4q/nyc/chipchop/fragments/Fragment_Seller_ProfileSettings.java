@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
@@ -73,6 +74,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     EditText zipcodeET;
     EditText phoneNumberET;
     EditText stateET;
+    View coordinatorLayoutView;
 
     Button saveButton;
 
@@ -183,7 +185,9 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 user.setPhoneNumber(phoneNumber);
                 dbHelper.addUserProfileInfoToDB(user);
 
-                Toast.makeText(getActivity(), "Changes Saved", Toast.LENGTH_SHORT).show();
+                Snackbar
+                        .make(coordinatorLayoutView, "Changes Saved", Snackbar.LENGTH_SHORT)
+                        .show();
 
                 setReadOnlyAll(true);
                 saveButton.setText("Edit Profile");
@@ -191,7 +195,9 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
             @Override
             public void failure(RetrofitError error) {
-                Toast.makeText(getActivity(), "Invalid Address", Toast.LENGTH_SHORT).show();
+                Snackbar
+                        .make(coordinatorLayoutView, "Invalid Address", Snackbar.LENGTH_SHORT)
+                        .show();
             }
         });
 
@@ -238,6 +244,9 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                     seller = new Seller(dbHelper.getUserID(),user.geteMail(),user.getName(),user.getAddress(),"",user.getPhoneNumber());
                     dbHelper.addSellerProfileInfoToDB(seller);
                     Toast.makeText(activity,"New Seller Profile Created, Please add a store name", Toast.LENGTH_SHORT).show();
+                    Snackbar
+                            .make(coordinatorLayoutView, "New Seller Profile Created, Please add a store name", Snackbar.LENGTH_SHORT)
+                            .show();
                 }
                 activity.setSeller(seller);
                 loadingPanel.setVisibility(View.GONE);
@@ -444,6 +453,8 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         cookingStatus = (ToggleButton) root.findViewById(R.id.cooking_status);
         cookingStatusTV = (TextView) root.findViewById(R.id.cooking_status_text);
         saveButton = (Button) root.findViewById(R.id.save_button);
+        coordinatorLayoutView = root.findViewById(R.id.snackbarPosition);
+
 
         if(activity.isCurrentlyCooking()){
             cookingStatus.setChecked(true);
@@ -477,7 +488,9 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                     //TODO: add confirmation dialog when changing cooking status mention to click save to commit changes
                     sellerItems = activity.getSellerItems();
                     if(storeNameET.getText().toString().isEmpty()){
-                        Toast.makeText(activity,"Please add a store name",Toast.LENGTH_SHORT).show();
+                        Snackbar
+                                .make(coordinatorLayoutView, "Please add a store name", Snackbar.LENGTH_SHORT)
+                                .show();
                         cookingStatus.setChecked(false);
                     }else if (sellerItems != null && hasOneItemWithPosQuant()) {
                         seller.setUID(dbHelper.getUserID());
@@ -494,10 +507,14 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                         activity.setCookingStatus(true);
                         saveButton.setEnabled(false);
                         cookingStatusTV.setVisibility(View.VISIBLE);
-                        Toast.makeText(activity, "Cooking Status Active", Toast.LENGTH_SHORT).show();
+                        Snackbar
+                                .make(coordinatorLayoutView, "Cooking Status Active", Snackbar.LENGTH_SHORT)
+                                .show();
                     } else {
                         cookingStatusTV.setVisibility(View.INVISIBLE);
-                        Toast.makeText(activity, "Please add an item with positive quantity", Toast.LENGTH_LONG).show();
+                        Snackbar
+                                .make(coordinatorLayoutView, "Please add an item with positive quantity", Snackbar.LENGTH_SHORT)
+                                .show();
                         activity.replaceSellerFragment(new Fragment_Seller_Items());
                     }
 
@@ -509,7 +526,10 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                     seller.setIsCooking(false);
                     activity.setSeller(seller);
                     dbHelper.setSellerCookingStatus(false);
-                    Toast.makeText(activity,"Cooking Status Deactivated", Toast.LENGTH_SHORT).show();
+                    Snackbar
+                            .make(coordinatorLayoutView, "Cooking Status Deactivated", Snackbar.LENGTH_SHORT)
+                            .show();
+
                 }
             }
         });
@@ -522,7 +542,9 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                     getGeoLocation();
                 }else{
                     if(activity.isCurrentlyCooking()){
-                        Toast.makeText(activity,"Cannot edit seller profile while actively cooking",Toast.LENGTH_SHORT).show();
+                        Snackbar
+                                .make(coordinatorLayoutView, "Cannot edit seller profile while actively cooking", Snackbar.LENGTH_SHORT)
+                                .show();
                     }else {
                         saveButton.setText("Save Changes");
                         setReadOnlyAll(false);

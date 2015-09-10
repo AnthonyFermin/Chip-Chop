@@ -11,6 +11,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
@@ -67,6 +68,7 @@ public class SignupActivity2 extends AppCompatActivity {
 
     DBHelper dbHelper;
 
+    View coordinatorLayoutView;
     ImageView profilePhoto;
     public static final int RESULT_OK = -1;
     private Uri imageFileUri;
@@ -101,6 +103,7 @@ public class SignupActivity2 extends AppCompatActivity {
         phoneNumberET = (EditText) findViewById(R.id.phone_number);
         phoneNumberET.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
+        coordinatorLayoutView = findViewById(R.id.snackbarPosition);
 
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -241,7 +244,9 @@ public class SignupActivity2 extends AppCompatActivity {
 
             @Override
             public void failure(RetrofitError error) {
-                Toast.makeText(SignupActivity2.this, "Invalid Address", Toast.LENGTH_SHORT).show();
+                Snackbar
+                        .make(coordinatorLayoutView, "Invalid Address", Snackbar.LENGTH_SHORT)
+                        .show();
             }
         });
 
@@ -268,7 +273,9 @@ public class SignupActivity2 extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(this, "Failed to create account", Toast.LENGTH_SHORT).show();
+        Snackbar
+                .make(coordinatorLayoutView, "Failed to create account", Snackbar.LENGTH_SHORT)
+                .show();
         dbHelper.removeUser(email, password, new Firebase.ResultHandler() {
             @Override
             public void onSuccess() {

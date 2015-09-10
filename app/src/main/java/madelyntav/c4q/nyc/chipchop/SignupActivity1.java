@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -78,6 +79,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
     /* Should we automatically resolve ConnectionResults when possible? */
     private boolean mShouldResolve = false;
 
+    public static View coordinatorLayoutView;
     String email;
     String password;
     LinearLayout containingView;
@@ -105,6 +107,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         BitmapDrawable background = new BitmapDrawable (BitmapFactory.decodeResource(getResources(), R.drawable.actionbar));
         background.setGravity(Gravity.CENTER);
         getSupportActionBar().setBackgroundDrawable(background);
+
     }
 
     private void setListeners() {
@@ -191,6 +194,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         signInButton = (Button) findViewById(R.id.signInButton);
         newUserButton = (Button) findViewById(R.id.newUserButton);
 
+        coordinatorLayoutView = findViewById(R.id.snackbarPosition);
 
     }
 
@@ -256,6 +260,9 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
             Log.d("request Code", String.valueOf(resultCode));
         }
         else{
+            Snackbar
+                    .make(coordinatorLayoutView, "Login Failed", Snackbar.LENGTH_SHORT)
+                    .show();
             Toast.makeText(this,"Login Failed",Toast.LENGTH_LONG).show();
         }
     }
@@ -289,6 +296,9 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         mShouldResolve = false;
 
         // Show the signed-in UI
+        Snackbar
+                .make(coordinatorLayoutView, "Signed In", Snackbar.LENGTH_SHORT)
+                .show();
         Toast.makeText(getApplicationContext(), "Signed In", Toast.LENGTH_SHORT).show();
         Intent intent1 = new Intent(SignupActivity1.this, SignupActivity2.class);
         dbHelper.onGmailAccessTokenChange(AccessToken.getCurrentAccessToken(), intent1);
@@ -380,6 +390,9 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
                             finish();
                         } else {
                             //TODO:display cannot connect to internet error message
+                            Snackbar
+                                    .make(coordinatorLayoutView, "Failed to load account, please try again", Snackbar.LENGTH_SHORT)
+                                    .show();
                             Toast.makeText(SignupActivity1.this, "Failed to load account, please try again", Toast.LENGTH_SHORT).show();
                             loadingPanel.setVisibility(View.GONE);
                             containingView.setVisibility(View.VISIBLE);
@@ -412,6 +425,9 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
                 // Could not resolve the connection result, show the user an
                 // error dialog.
                 Toast.makeText(getApplicationContext(), "Error with connection", Toast.LENGTH_SHORT).show();
+                Snackbar
+                        .make(coordinatorLayoutView, "Error with connection", Snackbar.LENGTH_SHORT)
+                        .show();
             }
         } else {
             // Show the signed-out UI

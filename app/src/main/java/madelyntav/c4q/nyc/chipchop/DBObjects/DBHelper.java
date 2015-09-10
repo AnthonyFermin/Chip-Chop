@@ -3,6 +3,7 @@ package madelyntav.c4q.nyc.chipchop.DBObjects;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.widget.Toast;
 import com.facebook.AccessToken;
@@ -278,10 +279,16 @@ public class DBHelper extends Firebase {
                         // Something went wrong :(
                         switch (error.getCode()) {
                             case FirebaseError.USER_DOES_NOT_EXIST:
+                                Snackbar
+                                        .make(SignupActivity1.coordinatorLayoutView, "E-mail or Password Invalid", Snackbar.LENGTH_SHORT)
+                                        .show();
                                 Toast.makeText(mContext, "E-mail or Password Invalid", Toast.LENGTH_LONG).show();
                                 mSuccess = false;
                                 break;
                             case FirebaseError.INVALID_PASSWORD:
+                                Snackbar
+                                        .make(SignupActivity1.coordinatorLayoutView, "Invalid Password", Snackbar.LENGTH_SHORT)
+                                        .show();
                                 Toast.makeText(mContext, "Invalid Password", Toast.LENGTH_LONG).show();
                                 mSuccess = false;
                                 break;

@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
 import android.util.Log;
@@ -114,6 +115,9 @@ public class Fragment_Seller_CreateItem extends Fragment {
         itemAddCallback = new DBCallback() {
             @Override
             public void runOnSuccess() {
+                Snackbar
+                        .make(Fragment_Seller_Items.coordinatorLayoutView, "Item added", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(activity,"Item added", Toast.LENGTH_SHORT).show();
                 activity.replaceSellerFragment(new Fragment_Seller_Items());
 
@@ -121,6 +125,9 @@ public class Fragment_Seller_CreateItem extends Fragment {
 
             @Override
             public void runOnFail() {
+                Snackbar
+                        .make(Fragment_Seller_Items.coordinatorLayoutView, "Failed to add item", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(activity,"Failed to add item", Toast.LENGTH_SHORT).show();
                 activity.replaceSellerFragment(new Fragment_Seller_Items());
             }
@@ -194,6 +201,7 @@ public class Fragment_Seller_CreateItem extends Fragment {
 //        centPriceET = (EditText) root.findViewById(R.id.price_cents_amount);
 
         dishPhotoButton = (ImageButton) root.findViewById(R.id.dish_image);
+
 
         vegCB = (CheckBox) root.findViewById(R.id.veg_cb);
         glutFreeCB = (CheckBox) root.findViewById(R.id.glut_free_cb);

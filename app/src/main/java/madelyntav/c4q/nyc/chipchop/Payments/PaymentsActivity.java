@@ -2,6 +2,7 @@ package madelyntav.c4q.nyc.chipchop.Payments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -33,9 +34,7 @@ import com.stripe.exception.APIException;
 import com.stripe.exception.AuthenticationException;
 import com.stripe.exception.CardException;
 import com.stripe.exception.InvalidRequestException;
-import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
-import com.stripe.net.RequestOptions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -70,6 +69,7 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
     EditText nameView;
     Button confirmPaymentButton;
     DBHelper dbHelper;
+    Charge charge;
     String stripeUserID;
     //TODO transfer all Order and userInfo
     Order order;
@@ -81,7 +81,7 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payments);
-        com.stripe.Stripe.apiKey = secretPublishableTestKey;
+        com.stripe.Stripe.apiKey = "sk_test_6hJykZdli4Tw6ALzNEyHSePR";
 
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -106,12 +106,12 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
         confirmPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cardNum=cardNumView.getText().toString();
-                cardMonth= Integer.parseInt(cardMonthView.getText().toString());
-                cardYear= Integer.parseInt(cardYearView.getText().toString());
-                cardCVC=cardCVCView.getText().toString();
+                cardNum = cardNumView.getText().toString();
+                cardMonth = Integer.parseInt(cardMonthView.getText().toString());
+                cardYear = Integer.parseInt(cardYearView.getText().toString());
+                cardCVC = cardCVCView.getText().toString();
 
-                onClickConfirmPayment(cardNum, cardMonth, cardYear, cardCVC, name, streetAddress, addressLineTwo, city, state, zipCode,country);
+                onClickConfirmPayment(cardNum, cardMonth, cardYear, cardCVC, name, streetAddress, addressLineTwo, city, state, zipCode, country);
             }
         });
     }
@@ -147,22 +147,7 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
                     public void onSuccess(Token token) {
                         Toast.makeText(PaymentsActivity.this, "Payment Info Submitted Successfully", Toast.LENGTH_LONG).show();
                         Log.d("TokenIS", token.toString());
-                        try {
-                            Charge ch= Charge.retrieve(createCharge("100",token, cardNum, cardMonth, cardYear, cardCVC));
-                            ch.capture();
-                            Log.d("PaymentCaptured",ch.toString());
-                            Toast.makeText(PaymentsActivity.this,"Payment Captured",Toast.LENGTH_LONG).show();
-                        } catch (AuthenticationException e) {
-                            e.printStackTrace();
-                        } catch (InvalidRequestException e) {
-                            e.printStackTrace();
-                        } catch (APIConnectionException e) {
-                            e.printStackTrace();
-                        } catch (CardException e) {
-                            e.printStackTrace();
-                        } catch (APIException e) {
-                            e.printStackTrace();
-                        }
+                        createCharge("100", token, cardNum, cardMonth, cardYear, cardCVC);
                     }
 
                     public void onError(Exception error) {
@@ -176,38 +161,120 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
 
     }
 
-    private String createCharge(String price, Token token, String cardNum, int cardMonth, int cardYear, String cardCVC){
+    private void createCharge(String price, final Token token, String cardNum, int cardMonth, int cardYear, final String cardCVC) {
 
-        Map<String, Object> chargeMap = new HashMap<String, Object>();
+        final Map<String, Object> chargeMap = new HashMap<String, Object>();
         //amount charged is in cents!!!
         chargeMap.put("amount", price);
         chargeMap.put("currency", "usd");
-        chargeMap.put("source", token);
+        //  chargeMap.put("description", order.getStoreName());
 
         Map<String, Object> cardMap = new HashMap<String, Object>();
         cardMap.put("number", cardNum);
         cardMap.put("exp_month", cardMonth);
         cardMap.put("exp_year", cardYear);
         chargeMap.put("card", cardMap);
-        //  chargeMap.put("description", order.getStoreName());
+        Log.d("CreatedChargeMap", "1");
 
-        RequestOptions options = RequestOptions
-                .builder()
-                .setIdempotencyKey(secretPublishableTestKey)
-                .build();
 
-        try {
-            Charge charge = Charge.create( chargeMap , options);
-            Log.d("CHARGEINFO",charge.toString());
-            stripeUserID=charge.getId();
 
-        } catch (StripeException e) {
-            e.printStackTrace();
-            Log.d("ERROR",e.toString());
-        }
 
-        return stripeUserID;
+
+
+        new AsyncTask<Void, Void, Charge>() {
+            String id;
+            @Override
+            protected Charge doInBackground(Void... params) {
+
+                try {
+                    charge= Charge.create(chargeMap);
+                    Log.d("CHARGE",charge.toString());
+                } catch (AuthenticationException e) {
+                    e.printStackTrace();
+                } catch (InvalidRequestException e) {
+                    e.printStackTrace();
+                } catch (APIConnectionException e) {
+                    e.printStackTrace();
+                } catch (CardException e) {
+                    e.printStackTrace();
+                } catch (APIException e) {
+                    e.printStackTrace();
+                    Log.e("stripe err" , e.getCause().toString());
+                }
+
+                return charge;
+            }
+
+            @Override
+            protected void onPostExecute(Charge charge) {
+                super.onPostExecute(charge);
+                id = charge.getId();
+                Log.d("ChargeID", id.toString());
+                retrieveCharge(id);
+            }
+        }.execute();
+}
+
+    public void retrieveCharge(final String id){
+
+        new AsyncTask<String, Void, Charge>() {
+            @Override
+            protected Charge doInBackground(String... params) {
+                try{
+                    charge=Charge.retrieve(id);
+                    Log.d("Charge Retrieved","I");
+
+                } catch (AuthenticationException e) {
+                    e.printStackTrace();
+                } catch (InvalidRequestException e) {
+                    e.printStackTrace();
+                } catch (APIConnectionException e) {
+                    e.printStackTrace();
+                } catch (CardException e) {
+                    e.printStackTrace();
+                } catch (APIException e) {
+                    e.printStackTrace();
+                }
+                return charge;
+            }
+            @Override
+            protected void onPostExecute(Charge charge) {
+                super.onPostExecute(charge);
+                captureCharge(charge);
+            }
+        }.execute(id);
     }
+
+    public void captureCharge(final Charge charge){
+
+        new AsyncTask<Charge, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Charge... params) {
+                try {
+                    charge.capture();
+                } catch (AuthenticationException e) {
+                    e.printStackTrace();
+                } catch (InvalidRequestException e) {
+                    e.printStackTrace();
+                } catch (APIConnectionException e) {
+                    e.printStackTrace();
+                } catch (CardException e) {
+                    e.printStackTrace();
+                } catch (APIException e) {
+                    e.printStackTrace();
+                }
+                Log.d("Charge Captured", "I");
+                return charge.getCaptured();
+            }
+
+            @Override
+            protected void onPostExecute(Boolean aVoid) {
+                super.onPostExecute(aVoid);
+                Log.d("Complete",aVoid.toString());
+            }
+        }.execute(charge);
+    }
+
 
     public void onStart() {
         super.onStart();

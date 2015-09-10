@@ -10,6 +10,7 @@ import java.io.InputStream;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
+import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 
 /**
  * Created by c4q-anthonyf on 8/23/15.

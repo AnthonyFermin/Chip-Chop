@@ -275,11 +275,14 @@ public class SellActivity extends AppCompatActivity {
         String address = sp.getString(SignupActivity1.SP_ADDRESS,"");
         String apt = sp.getString(SignupActivity1.SP_APT, "");
         String city = sp.getString(SignupActivity1.SP_CITY, "");
+        String state = sp.getString(SignupActivity1.SP_STATE,"");
         String zip = sp.getString(SignupActivity1.SP_ZIPCODE, "");
         String phoneNumber = sp.getString(SignupActivity1.SP_PHONE_NUMBER, "");
+        String photoLink = sp.getString(SignupActivity1.SP_PHOTO_LINK,"");
 
-        Address userAddress = new Address(address, apt, city, "NY", zip, dbHelper.getUserID());
+        Address userAddress = new Address(address, apt, city, state, zip, dbHelper.getUserID());
         user = new User(dbHelper.getUserID(), email, name, userAddress, phoneNumber);
+        user.setPhotoLink(photoLink);
 
         drawerUserNameTV.setText(user.getName());
     }

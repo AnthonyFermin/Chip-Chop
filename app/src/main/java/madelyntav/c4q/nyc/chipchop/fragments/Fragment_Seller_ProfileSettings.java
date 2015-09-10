@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.telephony.PhoneNumberFormattingTextWatcher;
@@ -26,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import madelyntav.c4q.nyc.chipchop.DBCallback;
@@ -200,7 +200,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 do{
                     Log.d("Load Seller Info", "Attempt #" + i);
                     try {
-                        Thread.sleep(800);
+                        Thread.sleep(500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -298,7 +298,6 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
-            imageFileUri = data.getData();
             String filePath = imageFileUri.getPath();
             imageLink = HelperMethods.saveImageToEncodedString(filePath);
             Log.d("Seller Profile","ImageLink: " + imageLink);
@@ -330,9 +329,10 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
                 if (items[which].equalsIgnoreCase("Camera")) {
                     intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.parse(stringVariable));
+                    File photo = new File(stringVariable);
+                    intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
 
-                    if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    if (intent.resolveActivity(activity.getPackageManager()) != null) {
                         startActivityForResult(intent, 0);
                     }
                 }

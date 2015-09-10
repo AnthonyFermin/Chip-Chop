@@ -202,9 +202,6 @@ public class Seller {
         return isCooking;
     }
 
-    public void setIsCooking(boolean isCooking) {
-        this.isCooking = isCooking;
-    }
 
     public String getCardNumber() {
         return cardNumber;

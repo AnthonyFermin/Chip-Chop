@@ -43,6 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="ITEM"
+            android:textStyle="bold"
             android:gravity="center"
             android:layout_weight="3"/>
 
@@ -50,6 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="QTY"
+            android:textStyle="bold"
             android:gravity="start"
             android:layout_weight="1"/>
 
@@ -57,6 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="PRICE"
+            android:textStyle="bold"
             android:gravity="start"
             android:layout_weight="1" />
 

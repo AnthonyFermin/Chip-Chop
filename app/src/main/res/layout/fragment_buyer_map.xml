@@ -46,7 +46,12 @@
             android:id="@+id/arrow_image"
             android:src="@drawable/up"/>
 
-
+        <TextView
+            android:id="@+id/no_sellers_tv"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:visibility="gone"
+            android:text="There are currenly no active sellers, try checking back later!"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/buyers_orders_list"

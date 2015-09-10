@@ -64,7 +64,6 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     EditText addressET;
     EditText aptET;
     EditText cityET;
-    EditText stateET;
     EditText zipcodeET;
     EditText phoneNumberET;
     EditText stateET;

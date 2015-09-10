@@ -127,8 +127,7 @@ public class Fragment_Buyer_OrderDetails extends Fragment {
                         total = total + (item.getPrice() * item.getQuantityWanted());
                     }
 
-//                    totalPrice.setText(total);
-
+                    totalPrice.setText("$ " + String.valueOf(total) + ".00");
                 }
             }.execute();
 

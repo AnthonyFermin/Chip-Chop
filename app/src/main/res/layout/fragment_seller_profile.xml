@@ -170,15 +170,6 @@
                     </android.support.design.widget.TextInputLayout>
 
                     <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="70dp"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:visibility="gone"
-                        android:text=", NY "
-                        android:textSize="20sp" />
-
-                    <TextView
                         android:layout_width="30dp"
                         android:layout_height="70dp"
                         android:gravity="bottom|center"

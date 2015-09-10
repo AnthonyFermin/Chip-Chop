@@ -1,6 +1,5 @@
 package madelyntav.c4q.nyc.chipchop.DBObjects;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
@@ -24,6 +23,8 @@ public class Item {
     boolean containsPeanuts;
     String itemID;
     int quantityWanted;
+    String sellerPhoneNumber;
+    String buyerPhoneNumber;
 
     public Item(){}
     public Item(String itemID){
@@ -179,6 +180,22 @@ public class Item {
 
     public void setQuantityWanted(int quantityWanted) {
         this.quantityWanted = quantityWanted;
+    }
+
+    public String getSellerPhoneNumber() {
+        return sellerPhoneNumber;
+    }
+
+    public String getBuyerPhoneNumber() {
+        return buyerPhoneNumber;
+    }
+
+    public void setBuyerPhoneNumber(String buyerPhoneNumber) {
+        this.buyerPhoneNumber = buyerPhoneNumber;
+    }
+
+    public void setSellerPhoneNumber(String sellerPhoneNumber) {
+        this.sellerPhoneNumber = sellerPhoneNumber;
     }
 
     @Override

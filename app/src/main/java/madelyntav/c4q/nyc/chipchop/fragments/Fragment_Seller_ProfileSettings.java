@@ -64,6 +64,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     EditText addressET;
     EditText aptET;
     EditText cityET;
+    EditText stateET;
     EditText zipcodeET;
     EditText phoneNumberET;
     EditText stateET;
@@ -74,6 +75,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     String address;
     String apt;
     String city;
+    String state;
     String zipcode;
     String phoneNumber;
     String imageLink;
@@ -143,9 +145,10 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         storeName = storeNameET.getText().toString().trim();
         apt = aptET.getText().toString();
         city = cityET.getText().toString().trim().replace(' ', '+');
+        state = stateET.getText().toString().trim().replace(' ', '+');
         phoneNumber = phoneNumberET.getText().toString().replace("-", "");
 
-        String queryString = address + ",+" + city + ",+NY";// + "&key=" + APIKEY;
+        String queryString = address + ",+" + city + ",+" + state;// + "&key=" + APIKEY;
         Log.i("RETROFIT- Geocode Query", queryString);
 
         geolocationAPI.getGeolocation(queryString, new Callback<Geolocation>() {
@@ -157,7 +160,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 address = address.replace('+', ' ');
                 city = city.replace('+', ' ');
 
-                userAddress = new Address(address, apt, city, "NY", zipcode, uid);
+                userAddress = new Address(address, apt, city, state, zipcode, uid);
 
                 Log.i("RETROFIT: LatLng", "" + location.getLat() + ", " + location.getLng());
 
@@ -169,6 +172,10 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 seller.setIsCooking(false);
                 dbHelper.addSellerProfileInfoToDB(seller);
                 activity.setSeller(seller);
+
+                user.setAddress(userAddress);
+                user.setPhoneNumber(phoneNumber);
+                dbHelper.addUserProfileInfoToDB(user);
 
                 Toast.makeText(getActivity(), "Changes Saved", Toast.LENGTH_SHORT).show();
 
@@ -194,7 +201,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 do{
                     Log.d("Load Seller Info", "Attempt #" + i);
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(800);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -203,7 +210,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                         break;
                     }
                     i++;
-                }while(seller == null);
+                }while(seller == null || seller.getStoreName() == null || seller.getStoreName().isEmpty());
 
                 return null;
             }
@@ -224,7 +231,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                     Log.d("Load Seller Info", "NOT FOUND IN DB, NEW SELLER CREATED");
                     seller = new Seller(dbHelper.getUserID(),user.geteMail(),user.getName(),user.getAddress(),"",user.getPhoneNumber());
                     dbHelper.addSellerProfileInfoToDB(seller);
-                    Toast.makeText(activity,"New Seller Profile Created", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity,"New Seller Profile Created, Please add a store name", Toast.LENGTH_SHORT).show();
                 }
                 activity.setSeller(seller);
                 loadingPanel.setVisibility(View.GONE);
@@ -352,6 +359,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         stateET = (EditText) root.findViewById(R.id.state);
         zipcodeET = (EditText) root.findViewById(R.id.zipcode);
         phoneNumberET = (EditText) root.findViewById(R.id.phone_number);
+        stateET = (EditText) root.findViewById(R.id.state);
         setReadOnlyAll(true);
 
         cookingStatus = (ToggleButton) root.findViewById(R.id.cooking_status);
@@ -384,9 +392,9 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             @Override
             public void onClick(View view) {
                 if(saveButton.getText().toString().equalsIgnoreCase("save changes")) {
-                    Toast.makeText(activity,"Please save changes before continuing",Toast.LENGTH_SHORT).show();
-                    cookingStatus.setChecked(!cookingStatus.isChecked());
-                }else if (cookingStatus.getText().toString().equalsIgnoreCase("on")) {
+                    saveButton.callOnClick();
+                }
+                if (cookingStatus.getText().toString().equalsIgnoreCase("on")) {
                     //TODO: add confirmation dialog when changing cooking status mention to click save to commit changes
                     sellerItems = activity.getSellerItems();
                     if(storeNameET.getText().toString().isEmpty()){
@@ -486,6 +494,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         setReadOnly(cityET, readOnly);
         setReadOnly(zipcodeET, readOnly);
         setReadOnly(phoneNumberET, readOnly);
+        setReadOnly(stateET, readOnly);
     }
 
     private void setReadOnly(EditText view, boolean readOnly) {

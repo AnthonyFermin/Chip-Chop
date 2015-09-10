@@ -45,12 +45,14 @@ public class SignupActivity2 extends AppCompatActivity {
     private EditText addressET;
     private EditText aptET;
     private EditText cityET;
+    private EditText stateET;
     private EditText zipET;
     private EditText phoneNumberET;
 
     private String address;
     private String apt;
     private String city;
+    private String state;
     private String zipcode;
 
     private String email;
@@ -58,6 +60,7 @@ public class SignupActivity2 extends AppCompatActivity {
 
     private String name;
     private String phoneNumber;
+    private String photoLink;
 
     private Address userAddress;
 
@@ -85,6 +88,7 @@ public class SignupActivity2 extends AppCompatActivity {
         Intent prevIntent = getIntent();
         email = prevIntent.getStringExtra("email");
         password = prevIntent.getStringExtra("pass");
+        photoLink = "";
         toSellActivity = prevIntent.getBooleanExtra(BuyActivity.TO_SELL_ACTIVITY, false);
 
         nameET = (EditText) findViewById(R.id.name);
@@ -92,6 +96,7 @@ public class SignupActivity2 extends AppCompatActivity {
         aptET = (EditText) findViewById(R.id.apt);
         cityET = (EditText) findViewById(R.id.city);
         zipET = (EditText) findViewById(R.id.zipcode);
+        stateET = (EditText) findViewById(R.id.state);
         phoneNumberET = (EditText) findViewById(R.id.phone_number);
         phoneNumberET.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
@@ -186,12 +191,13 @@ public class SignupActivity2 extends AppCompatActivity {
         address = address.trim().replace(" ", "+");
         name = nameET.getText().toString().trim();
         apt = aptET.getText().toString().trim();
-        city = cityET.getText().toString().trim().replace(' ','+');
+        city = cityET.getText().toString().trim().replace(' ', '+');
+        state = stateET.getText().toString().trim().replace(' ','+');
         phoneNumber = phoneNumberET.getText().toString().trim().replace(" ", "");
         zipcode = zipET.getText().toString().trim();
 
 
-        String queryString = address + ",+" + city + ",+NY";// + "&key=" + APIKEY;
+        String queryString = address + ",+" + city + "," + state;// + "&key=" + APIKEY;
         Log.i("RETROFIT- Geocode Query",queryString);
 
         geolocationAPI.getGeolocation(queryString, new Callback<Geolocation>() {
@@ -202,8 +208,9 @@ public class SignupActivity2 extends AppCompatActivity {
 
                 address = address.replace('+', ' ');
                 city = city.replace('+', ' ');
+                state = state.replace('+',' ');
 
-                userAddress = new Address(address, apt, city, "NY", zipcode, uid);
+                userAddress = new Address(address, apt, city, state, zipcode, uid);
 
                 Log.i("RETROFIT: LatLng", "" + location.getLat() + ", " + location.getLng());
 
@@ -247,8 +254,10 @@ public class SignupActivity2 extends AppCompatActivity {
                 .putString(SignupActivity1.SP_NAME, name)
                 .putString(SignupActivity1.SP_APT, apt)
                 .putString(SignupActivity1.SP_CITY,city)
+                .putString(SignupActivity1.SP_STATE, state)
                 .putString(SignupActivity1.SP_ZIPCODE, zipcode)
                 .putString(SignupActivity1.SP_PHONE_NUMBER, phoneNumber)
+                .putString(SignupActivity1.SP_PHOTO_LINK,photoLink)
                 .putString(SignupActivity1.SP_PASS, password)
                 .putString(SignupActivity1.SP_EMAIL, email)
                 .putBoolean(SignupActivity1.SP_IS_LOGGED_IN, true)

@@ -65,8 +65,10 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
     public static final String SP_ADDRESS = "address";
     public static final String SP_APT = "apt";
     public static final String SP_CITY = "city";
+    public static final String SP_STATE = "state";
     public static final String SP_ZIPCODE = "zipcode";
     public static final String SP_PHONE_NUMBER = "phone_number";
+    public static final String SP_PHOTO_LINK = "photo_link";
     public static final String SP_IS_LOGGED_IN = "logged_in";
 
     /* Is there a ConnectionResult resolution in progress? */
@@ -322,12 +324,14 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
             Log.d("SignUp - User Info","Email: " + user.geteMail());
             String addressString = user.getAddressString();
             Address address = HelperMethods.parseAddressString(addressString, dbHelper.getUserID());
-            editor.putString(SP_NAME, user.getName());
-            editor.putString(SP_ADDRESS, address.getStreetAddress());
-            editor.putString(SP_APT, address.getApartment());
-            editor.putString(SP_CITY, address.getCity());
-            editor.putString(SP_ZIPCODE, address.getZipCode());
-            editor.putString(SP_PHONE_NUMBER, user.getPhoneNumber());
+            editor.putString(SP_NAME, user.getName())
+                .putString(SP_ADDRESS, address.getStreetAddress())
+                .putString(SP_APT, address.getApartment())
+                .putString(SP_CITY, address.getCity())
+                .putString(SP_STATE, address.getState())
+                .putString(SP_ZIPCODE, address.getZipCode())
+                .putString(SP_PHONE_NUMBER, user.getPhoneNumber())
+                .putString(SP_PHOTO_LINK, user.getPhotoLink());
         }
         editor.commit();
 

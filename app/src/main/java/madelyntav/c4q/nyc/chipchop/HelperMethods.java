@@ -1,6 +1,7 @@
 package madelyntav.c4q.nyc.chipchop;
 
 import android.util.Base64;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -10,6 +11,7 @@ import java.io.InputStream;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
+import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 
 /**
  * Created by c4q-anthonyf on 8/23/15.
@@ -20,14 +22,17 @@ public class HelperMethods {
 
     public static Address parseAddressString(String addressString, String uid){
 
-        String streetAddress, apt, city, zip;
+        String streetAddress, apt, city, zip, state;
         String[] addressLines = addressString.split(",");
-        streetAddress = addressLines[0];
-        apt = addressLines[1];
-        city = addressLines[2];
-        zip = addressLines[3].split(" ")[1];
+        streetAddress = addressLines[0].trim();
+        apt = addressLines[1].trim();
+        city = addressLines[2].trim();
+        zip = addressLines[3].trim().split(" ")[1];
+        state = addressLines[3].trim().split(" ")[0];
 
-        Address address = new Address(streetAddress, apt, city, "NY", zip, uid);
+        Log.d("Address","" + streetAddress + " " + apt + " " + city + ", " + state + " " + zip);
+
+        Address address = new Address(streetAddress, apt, city, state, zip, uid);
 
 
         return address;

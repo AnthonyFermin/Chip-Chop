@@ -42,6 +42,7 @@ import java.util.Map;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
+import madelyntav.c4q.nyc.chipchop.HelperMethods;
 import madelyntav.c4q.nyc.chipchop.R;
 
 public class PaymentsActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -54,19 +55,24 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
     String cardNum;
     int cardMonth;
     int cardYear;
-    String streetAddress="570 West 189 Street";
-    String addressLineTwo="Apt 5E";
-    String city= "New York";
-    String state="NY";
-    String zipCode="10040";
-    String country="United States";
-    String name="Madelyn Tavarez";
+    String streetAddress;
+    String addressLineTwo;
+    String city;
+    String state;
+    String zipCode;
+    String country;
+    String name;
     String cardCVC;
     EditText cardNumView;
     EditText cardMonthView;
     EditText cardYearView;
     EditText cardCVCView;
     EditText nameView;
+    EditText streetAddressView;
+    EditText aptView;
+    EditText cityView;
+    EditText stateView;
+    EditText zipCodeView;
     Button confirmPaymentButton;
     DBHelper dbHelper;
     Charge charge;
@@ -92,6 +98,17 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
                         .build())
                 .build();
 
+        user= HelperMethods.getUser();
+
+        name=user.getName();
+        streetAddress=user.getAddress().getStreetAddress();
+        addressLineTwo=user.getAddress().getApartment();
+        city=user.getAddress().getCity();
+        state=user.getAddress().getState();
+        zipCode=user.getAddress().getZipCode();
+
+        order=HelperMethods.getCurrentOrder();
+
         nameView=(EditText) findViewById(R.id.Name);
         nameView.setText(name);
         cardNumView=(EditText) findViewById(R.id.cardNum);
@@ -100,6 +117,16 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
         cardCVCView=(EditText) findViewById(R.id.cardCVC);
         confirmPaymentButton=(Button) findViewById(R.id.confirm_payment);
 
+        streetAddressView=(EditText) findViewById(R.id.address);
+        streetAddressView.setText(streetAddress);
+        aptView= (EditText) findViewById(R.id.apt);
+        aptView.setText(addressLineTwo);
+        cityView=(EditText) findViewById(R.id.city);
+        cityView.setText(city);
+        stateView=(EditText) findViewById(R.id.state);
+        stateView.setText(state);
+        zipCodeView=(EditText) findViewById(R.id.zipcode);
+        zipCodeView.setText(zipCode);
 
 
         //Button to confirm payment with credit card through stripe
@@ -166,7 +193,7 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
         //amount charged is in cents!!!
         chargeMap.put("amount", price);
         chargeMap.put("currency", "usd");
-        //  chargeMap.put("description", order.getStoreName());
+        chargeMap.put("description", order.getStoreName());
 
         Map<String, Object> cardMap = new HashMap<String, Object>();
         cardMap.put("number", cardNum);
@@ -174,11 +201,6 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
         cardMap.put("exp_year", cardYear);
         chargeMap.put("card", cardMap);
         Log.d("CreatedChargeMap", "1");
-
-
-
-
-
 
         new AsyncTask<Void, Void, Charge>() {
             String id;
@@ -269,7 +291,7 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
             @Override
             protected void onPostExecute(Boolean aVoid) {
                 super.onPostExecute(aVoid);
-                Log.d("Complete",aVoid.toString());
+                Log.d("Complete", aVoid.toString());
             }
         }.execute(charge);
     }

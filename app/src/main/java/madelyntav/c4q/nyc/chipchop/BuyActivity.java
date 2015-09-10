@@ -126,6 +126,7 @@ public class BuyActivity extends AppCompatActivity {
                 R.layout.navdrawer_list_item, mListTitles));
         dbHelper.signOutUser(emptyCallback);
         drawerUserNameTV.setText("");
+        HelperMethods.setUser(null);
     }
 
     @Override
@@ -383,6 +384,7 @@ public class BuyActivity extends AppCompatActivity {
         Address address = new Address(streetAddress,apt,city,state,zipcode,dbHelper.getUserID());
 
         user = new User(dbHelper.getUserID(), email, name, address,photoLink, phoneNumber);
+        HelperMethods.setUser(user);
 
         drawerUserNameTV.setText(user.getName());
         mListTitles[3] = "Sign Out";

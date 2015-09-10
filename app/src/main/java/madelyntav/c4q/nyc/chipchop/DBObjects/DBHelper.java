@@ -665,6 +665,7 @@ public class DBHelper extends Firebase {
                         seller.setLongitude(seller1.longitude);
                         seller.setLatitude(seller1.latitude);
                         seller.setIsCooking(seller1.getIsCooking());
+                        seller.setPhotoLink(seller1.getPhotoLink());
 
                         Log.d("Seller", seller.name + "");
 

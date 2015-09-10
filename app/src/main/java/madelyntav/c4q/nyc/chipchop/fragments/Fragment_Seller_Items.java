@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.andexert.library.RippleView;
@@ -30,6 +31,23 @@ import madelyntav.c4q.nyc.chipchop.SellActivity;
 import madelyntav.c4q.nyc.chipchop.adapters.SellerItemsAdapter;
 
 public class Fragment_Seller_Items extends Fragment {
+
+    /**
+     * The number of pages (wizard steps) to show in this demo.
+     */
+    private static final int NUM_PAGES = 2;
+
+    /**
+     * The pager widget, which handles animation and allows swiping horizontally to access previous
+     * and next wizard steps.
+     */
+    private ViewPager mPager;
+
+    /**
+     * The pager adapter, which provides the pages to the view pager widget.
+     */
+    private PagerAdapter mPagerAdapter;
+    Fragment fragment;
 
     private android.support.design.widget.FloatingActionButton addButton;
     private RecyclerView foodList;
@@ -55,6 +73,12 @@ public class Fragment_Seller_Items extends Fragment {
         initializeViews(root);
         setListeners();
         loadList();
+
+
+        // Instantiate a ViewPager and a PagerAdapter.
+        mPager = (ViewPager) root.findViewById(R.id.pager);
+        mPagerAdapter = new ScreenSlidePagerAdapter(getActivity().getSupportFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
 
         return root;
     }
@@ -114,24 +138,24 @@ public class Fragment_Seller_Items extends Fragment {
                 activity.setSellerItems(sellerItems);
 
                 SellerItemsAdapter sellerItemsAdapter = new SellerItemsAdapter(getActivity(),sellerItems);
-                foodList.setLayoutManager(new LinearLayoutManager(getActivity()));
-                foodList.setAdapter(sellerItemsAdapter);
+//                foodList.setLayoutManager(new LinearLayoutManager(getActivity()));
+//                foodList.setAdapter(sellerItemsAdapter);
                 Log.d("LOAD SELLER ITEMS LIST", sellerItems.toString());
 
                 loadingPanel.setVisibility(View.GONE);
-                containingView.setVisibility(View.VISIBLE);
+//                containingView.setVisibility(View.VISIBLE);
             }
         }.execute();
     }
 
     private void initializeViews(View root){
-
+//
         loadingPanel = (RelativeLayout) root.findViewById(R.id.loadingPanel);
-        containingView = (RelativeLayout) root.findViewById(R.id.container);
-
-        containingView.setVisibility(View.INVISIBLE);
-
-        foodList = (RecyclerView) root.findViewById(R.id.seller_items_list);
+//        containingView = (RelativeLayout) root.findViewById(R.id.container);
+//
+//        containingView.setVisibility(View.INVISIBLE);
+//
+//        foodList = (RecyclerView) root.findViewById(R.id.seller_items_list);
 
         addButton = (android.support.design.widget.FloatingActionButton) root.findViewById(R.id.addButton);
 
@@ -146,6 +170,80 @@ public class Fragment_Seller_Items extends Fragment {
             }
         });
 
+    }
+
+
+    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+        public ScreenSlidePagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+
+            if (position == 0) {
+                fragment = new ActiveSellerItems();
+                Bundle args = new Bundle();
+                args.putInt(ActiveSellerItems.ARG_OBJECT, position);
+            } else if (position == 1) {
+                fragment = new InactiveSellerItems();
+                Bundle args = new Bundle();
+                args.putInt(InactiveSellerItems.ARG_OBJECT, position + 1);
+            }
+
+//            fragment.setArguments(args);
+            return fragment;
+        }
+
+        @Override
+        public int getCount() {
+            return NUM_PAGES;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return "OBJECT " + (position + 1);
+        }
+
+
+
+    }
+
+
+
+
+    public static class ActiveSellerItems extends Fragment {
+        public static final String ARG_OBJECT = "object";
+
+        @Override
+        public View onCreateView(LayoutInflater inflater,
+                                 ViewGroup container, Bundle savedInstanceState) {
+            // The last two arguments ensure LayoutParams are inflated
+            // properly.
+            View rootView = inflater.inflate(
+                    R.layout.active_seller_items, container, false);
+//            Bundle args = getArguments();
+//            ((TextView) rootView.findViewById(android.R.id.text1)).setText(
+//                    Integer.toString(args.getInt(ARG_OBJECT)));
+            return rootView;
+        }
+    }
+
+    public static class InactiveSellerItems extends Fragment {
+        public static final String ARG_OBJECT = "object";
+
+        @Override
+        public View onCreateView(LayoutInflater inflater,
+                                 ViewGroup container, Bundle savedInstanceState) {
+            // The last two arguments ensure LayoutParams are inflated
+            // properly.
+            View rootView = inflater.inflate(
+                    R.layout.inactive_seller_items, container, false);
+//            Bundle args = getArguments();
+//            ((TextView) rootView.findViewById(android.R.id.text1)).setText(
+//                    Integer.toString(args.getInt(ARG_OBJECT)));
+            return rootView;
+        }
     }
 
 

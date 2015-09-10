@@ -69,8 +69,8 @@ public class PaymentDialog extends android.support.v4.app.DialogFragment {
                                 confirmImage.setVisibility(View.GONE);
 //                                activity.replaceFragment(new Fragment_Buyer_Orders());
                                 // TODO: finish the flow after merge with 'payments' branch !
-                                Intent paymentIntent = new Intent(getActivity(), PaymentsActivity.class);
-                                startActivity(paymentIntent);
+                                Intent paymentIntent = new Intent(activity.getApplicationContext(), PaymentsActivity.class);
+                                activity.startActivity(paymentIntent);
                             }
                         }, 1000);
                         getDialog().dismiss();

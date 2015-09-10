@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -36,9 +37,12 @@ import com.stripe.exception.CardException;
 import com.stripe.exception.InvalidRequestException;
 import com.stripe.model.Charge;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import madelyntav.c4q.nyc.chipchop.BuyActivity;
+import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
@@ -60,8 +64,9 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
     String city;
     String state;
     String zipCode;
-    String country;
+    String country="US";
     String name;
+    int price;
     String cardCVC;
     EditText cardNumView;
     EditText cardMonthView;
@@ -88,6 +93,8 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payments);
         com.stripe.Stripe.apiKey = "sk_test_6hJykZdli4Tw6ALzNEyHSePR";
+
+        dbHelper=DBHelper.getDbHelper(this);
 
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -173,7 +180,9 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
                     public void onSuccess(Token token) {
                         Toast.makeText(PaymentsActivity.this, "Payment Info Submitted Successfully", Toast.LENGTH_LONG).show();
                         Log.d("TokenIS", token.toString());
-                        createCharge(String.valueOf(order.getPrice()), token, cardNum, cardMonth, cardYear, cardCVC);
+                        price= order.getPrice()*100;
+
+                        createCharge(price, token, cardNum, cardMonth, cardYear, cardCVC);
                     }
 
                     public void onError(Exception error) {
@@ -187,13 +196,13 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
 
     }
 
-    private void createCharge(String price, final Token token, String cardNum, int cardMonth, int cardYear, final String cardCVC) {
+    private void createCharge(int price, final Token token, String cardNum, int cardMonth, int cardYear, final String cardCVC) {
 
         final Map<String, Object> chargeMap = new HashMap<String, Object>();
         //amount charged is in cents!!!
         chargeMap.put("amount", price);
         chargeMap.put("currency", "usd");
-        chargeMap.put("description", order.getStoreName());
+        //chargeMap.put("description", order.getStoreName());
 
         Map<String, Object> cardMap = new HashMap<String, Object>();
         cardMap.put("number", cardNum);
@@ -229,9 +238,14 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
             @Override
             protected void onPostExecute(Charge charge) {
                 super.onPostExecute(charge);
-                id = charge.getId();
-                Log.d("ChargeID", id.toString());
-                retrieveCharge(id);
+                if(charge!=null) {
+                    id = charge.getId();
+
+                    Log.d("ChargeID", id.toString());
+                    retrieveCharge(id);
+                }else{
+                    Toast.makeText(PaymentsActivity.this,"Charge Not Processed",Toast.LENGTH_SHORT).show();
+                }
             }
         }.execute();
 }
@@ -243,7 +257,7 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
             protected Charge doInBackground(String... params) {
                 try{
                     charge=Charge.retrieve(id);
-                    Log.d("Charge Retrieved","I");
+                    Log.d("Charge Retrieved", "I");
 
                 } catch (AuthenticationException e) {
                     e.printStackTrace();
@@ -291,11 +305,36 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
             @Override
             protected void onPostExecute(Boolean aVoid) {
                 super.onPostExecute(aVoid);
-                Log.d("Complete", aVoid.toString());
+                if (aVoid) {
+                    Log.d("Complete", aVoid.toString());
+                    Date date = new Date();
+                    long millis = date.getTime();
+                    order.setTimeStamp(millis);
+
+                    dbHelper.addCurrentOrderToSellerDB(order, new DBCallback() {
+                        @Override
+                        public void runOnSuccess() {
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(PaymentsActivity.this, "Order and Payment Confirmed", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(PaymentsActivity.this, BuyActivity.class);
+                                    intent.putExtra("To Orders View", true);
+                                    startActivity(intent);
+                                }
+                            }, 1000);
+                        }
+
+                        @Override
+                        public void runOnFail() {
+                            Toast.makeText(PaymentsActivity.this, "Items are no longer available", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                }
             }
         }.execute(charge);
     }
-
 
     public void onStart() {
         super.onStart();

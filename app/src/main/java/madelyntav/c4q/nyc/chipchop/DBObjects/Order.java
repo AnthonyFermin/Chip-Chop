@@ -131,7 +131,7 @@ public class Order {
         this.review = review;
     }
 
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 

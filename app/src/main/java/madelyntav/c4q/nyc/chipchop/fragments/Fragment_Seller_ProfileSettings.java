@@ -7,6 +7,8 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -323,7 +325,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             Log.d("Seller Profile","ImageLink: " + imageLink);
         }
 
-        Log.d("Seller Profile","Image Uri: " + imageFileUri);
+        Log.d("Seller Profile", "Image Uri: " + imageFileUri);
         if (imageFileUri != null) {
             profilePhoto.setImageURI(imageFileUri);
         }
@@ -334,8 +336,14 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             @Override
             protected Bitmap doInBackground(Void... voids) {
                 Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+                Bitmap rotatedBitmap = rotateBitmap(bitmap,filePath);
+                Bitmap scaledBitmap = null;
+                if(rotatedBitmap != null) {
+                    scaledBitmap = Bitmap.createScaledBitmap(rotatedBitmap, 500, 333, false);
+                }else{
+                    scaledBitmap = Bitmap.createScaledBitmap(bitmap, 500,333, false);
+                }
 
-                Bitmap scaledBitmap =  Bitmap.createScaledBitmap(bitmap,500,333,false);
 
                 File file = new File(filePath);
                 FileOutputStream fOut = null;
@@ -362,6 +370,34 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         }.execute();
     }
 
+    private Bitmap rotateBitmap(Bitmap bitmap, String filePath){
+        Bitmap rotatedBitmap = null;
+
+        try {
+            ExifInterface exif = new ExifInterface(filePath);
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,1);
+            Matrix matrix = new Matrix();
+
+            switch(orientation){
+                case 3:
+                    matrix.postRotate(180);
+                    break;
+                case 6:
+                    matrix.postRotate(90);
+                    break;
+                case 8:
+                    matrix.postRotate(270);
+                    break;
+            }
+
+            rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return rotatedBitmap;
+    }
 
     //This is for the dialog box: Camera or Gallery
     private void showListViewDialog() {

@@ -209,8 +209,8 @@ public class Fragment_Seller_CreateItem extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
-            imageFileUri = data.getData();
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            imageFileUri = Uri.parse(stringVariable);
             String filePath = imageFileUri.getPath();
             saveImageToDB(filePath);
         }

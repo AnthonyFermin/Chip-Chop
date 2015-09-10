@@ -3,6 +3,7 @@ package madelyntav.c4q.nyc.chipchop.fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -26,6 +27,9 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import madelyntav.c4q.nyc.chipchop.DBCallback;
@@ -169,6 +173,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 seller.setLatitude(location.getLat() + "");
                 seller.setLongitude(location.getLng() + "");
                 seller.setIsCooking(false);
+                seller.setPhotoLink(imageLink);
                 dbHelper.addSellerProfileInfoToDB(seller);
                 activity.setSeller(seller);
 
@@ -200,7 +205,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 do{
                     Log.d("Load Seller Info", "Attempt #" + i);
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(700);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -298,15 +303,23 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
-            String filePath = imageFileUri.getPath();
-            imageLink = HelperMethods.saveImageToEncodedString(filePath);
+            imageFileUri = data.getData();
+
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            Cursor cursor = activity.getContentResolver().query(imageFileUri,filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String filePath = cursor.getString(columnIndex);
+            cursor.close();
+
+            rescaleImageForDb(filePath);
             Log.d("Seller Profile","ImageLink: " + imageLink);
         }
 
-        if (requestCode == 0 && resultCode == RESULT_OK && data != null) {
+        if (requestCode == 0 && resultCode == RESULT_OK) {
             imageFileUri = Uri.parse(stringVariable);
             String filePath = imageFileUri.getPath();
-            imageLink = HelperMethods.saveImageToEncodedString(filePath);
+            rescaleImageForDb(filePath);
             Log.d("Seller Profile","ImageLink: " + imageLink);
         }
 
@@ -316,6 +329,37 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         }
     }
 
+    private void rescaleImageForDb(final String filePath) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+
+                Bitmap scaledBitmap =  Bitmap.createScaledBitmap(bitmap,500,333,false);
+
+                File file = new File(filePath);
+                FileOutputStream fOut = null;
+                try {
+                    fOut = new FileOutputStream(file);
+                    scaledBitmap.compress(Bitmap.CompressFormat.PNG, 85, fOut);
+                    fOut.flush();
+                    fOut.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                imageLink = HelperMethods.saveImageToEncodedString(filePath);
+                Log.d("Item Creation", "ImageLink: " + imageLink);
+            }
+        }.execute();
+    }
 
 
     //This is for the dialog box: Camera or Gallery

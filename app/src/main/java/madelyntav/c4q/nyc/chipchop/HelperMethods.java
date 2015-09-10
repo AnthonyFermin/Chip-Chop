@@ -19,6 +19,7 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 public class HelperMethods {
 
     public static Order currentOrder = null;
+    public static User user = null;
 
     public static Address parseAddressString(String addressString, String uid){
 
@@ -67,5 +68,13 @@ public class HelperMethods {
 
     public static void setCurrentOrder(Order currentOrder) {
         HelperMethods.currentOrder = currentOrder;
+    }
+
+    public static User getUser() {
+        return user;
+    }
+
+    public static void setUser(User user) {
+        HelperMethods.user = user;
     }
 }

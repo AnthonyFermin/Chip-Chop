@@ -393,6 +393,7 @@ public class BuyActivity extends AppCompatActivity {
 
                 if(user != null && user.getAddressString() != null){
                     Address address = HelperMethods.parseAddressString(user.getAddressString(), user.getUID());
+                    user.setAddress(address);
                     userInfoSP.edit()
                             .putString(SignupActivity1.SP_NAME, user.getName())
                             .putString(SignupActivity1.SP_EMAIL, user.geteMail())
@@ -402,6 +403,8 @@ public class BuyActivity extends AppCompatActivity {
                             .putString(SignupActivity1.SP_ZIPCODE, address.getZipCode())
                             .putString(SignupActivity1.SP_PHONE_NUMBER, user.getPhoneNumber())
                             .commit();
+
+
 
                     drawerUserNameTV.setText(user.getName());
                     mListTitles[3] = "Sign Out";
@@ -471,5 +474,13 @@ public class BuyActivity extends AppCompatActivity {
 
     private void setLastFragment(String lastFragment) {
         this.lastFragment = lastFragment;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

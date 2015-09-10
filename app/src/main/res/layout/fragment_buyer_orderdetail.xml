@@ -6,43 +6,59 @@
 
 
     <TextView
+        android:id="@+id/orderdetail_id_tv"
+        style="@style/text_design"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="25sp"
-        android:text="Order ID#"
-        android:textStyle="bold"
         android:padding="10dp"
-        style="@style/text_design"
-        android:id="@+id/orderdetail_id_tv"/>
+        android:text="Order ID#"
+        android:textSize="25sp"
+        android:textStyle="bold" />
 
     <LinearLayout
+        android:id="@+id/header_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_below="@id/order_summary_divider"
-        android:id="@+id/header_linear_layout">
+        android:orientation="horizontal">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ITEM"
-        android:gravity="center"
-        android:layout_weight="3"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:text="ITEM" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="QTY"
-        android:gravity="center" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="QTY"
+            android:gravity="start"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PRICE"
+            android:gravity="start"
+            android:layout_weight="1" />
 
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/checkout_items_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/checkout_items_list"
         android:layout_below="@id/orderdetail_id_tv"
-        android:padding="10dp"/>
+        android:padding="10dp" />
+
+    <TextView
+        android:id="@+id/total_price_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
 
 </LinearLayout>

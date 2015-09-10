@@ -103,7 +103,7 @@ public class Fragment_Buyer_Checkout extends Fragment {
     }
 
     private void initializeViews() {
-        totalPriceTV.setText(total + "");
+        totalPriceTV.setText("$ " + total + "");
 
     }
 

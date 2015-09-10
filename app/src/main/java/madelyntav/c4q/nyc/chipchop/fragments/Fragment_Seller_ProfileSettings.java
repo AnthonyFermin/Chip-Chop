@@ -66,6 +66,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     EditText cityET;
     EditText zipcodeET;
     EditText phoneNumberET;
+    EditText stateET;
 
     Button saveButton;
 
@@ -252,6 +253,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             addressET.setText(address.getStreetAddress());
             aptET.setText(address.getApartment());
             cityET.setText(address.getCity());
+            stateET.setText(address.getState());
             zipcodeET.setText(address.getZipCode());
         }
         phoneNumberET.setText(user.getPhoneNumber());
@@ -347,6 +349,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         addressET = (EditText) root.findViewById(R.id.address);
         aptET = (EditText) root.findViewById(R.id.apt);
         cityET = (EditText) root.findViewById(R.id.city);
+        stateET = (EditText) root.findViewById(R.id.state);
         zipcodeET = (EditText) root.findViewById(R.id.zipcode);
         phoneNumberET = (EditText) root.findViewById(R.id.phone_number);
         setReadOnlyAll(true);

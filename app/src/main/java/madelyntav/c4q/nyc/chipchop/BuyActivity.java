@@ -5,17 +5,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
-import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -31,7 +26,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -153,7 +147,17 @@ public class BuyActivity extends AppCompatActivity {
         //if items are still in cart go to checkout
         SharedPreferences sPref = getSharedPreferences(Fragment_Buyer_ViewCart.FROM_CART, MODE_PRIVATE);
         boolean fromCart = sPref.getBoolean(Fragment_Buyer_ViewCart.FROM_CART, false);
-        if(fromCart
+        Intent intent=getIntent();
+        boolean toOrder = false;
+
+        if(intent!=null) {
+             toOrder = getIntent().getBooleanExtra("To Orders View", false);
+        }
+            if(toOrder){
+                orderToView=HelperMethods.getCurrentOrder();
+                replaceFragment(new Fragment_Buyer_OrderDetails());
+            }
+            else if(fromCart
                 && getCurrentOrder() != null
                 && getCurrentOrder().getItemsOrdered() != null
                 && getCurrentOrder().getItemsOrdered().size() != 0) {

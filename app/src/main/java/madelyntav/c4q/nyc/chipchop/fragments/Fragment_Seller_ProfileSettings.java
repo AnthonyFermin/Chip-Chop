@@ -120,8 +120,8 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         Log.d("Seller Profile", "LOADING SELLER INFO");
         if(activity.getSeller() == null) {
             seller = dbHelper.getSellerFromDB(dbHelper.getUserID());
+            Log.d("Load Seller Info", "LOADING FROM DB: " + dbHelper.getUserID());
             load();
-            Log.d("Load Seller Info", "LOADING FROM DB");
         }else{
             seller = activity.getSeller();
             Log.d("Load Seller Info", "PREVIOUSLY CACHED");

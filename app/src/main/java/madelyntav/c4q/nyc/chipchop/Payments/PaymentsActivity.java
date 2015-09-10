@@ -116,7 +116,6 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
         });
     }
 
-
     public void onClickConfirmPayment(final String cardNum, final int cardMonth, final int cardYear, final String cardCVC, String name, String streetAddress, String apt, String city, String state, String zipCode, String Country ){
 
         final Card card= new Card(cardNum, cardMonth, cardYear, cardCVC, name, streetAddress, apt, city, state, zipCode,country);

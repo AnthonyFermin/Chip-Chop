@@ -70,10 +70,6 @@ public class Fragment_Buyer_ViewCart extends Fragment {
                     startActivity(signupIntent);
                 } else if(cartItems.size() == 0){
                     Toast.makeText(activity,"Cart is empty",Toast.LENGTH_SHORT).show();
-                    FragmentActivity activity = getActivity();
-                    FragmentManager fm = activity.getSupportFragmentManager();
-                    ReviewDialogFragment alertDialog = new ReviewDialogFragment();
-                    alertDialog.show(fm, "fragment_alert");
                 }else {
                     activity.replaceFragment(new Fragment_Buyer_Checkout());
                 }

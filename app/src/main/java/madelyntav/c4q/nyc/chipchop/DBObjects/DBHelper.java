@@ -89,7 +89,7 @@ public class DBHelper extends Firebase {
     public static DBHelper getDbHelper(Context context) {
         mContext = context;
         if (fireBaseRef == null) {
-            Firebase.setAndroidContext(context);
+            Firebase.setAndroidContext(context.getApplicationContext());
             fireBaseRef = new DBHelper();
         }
         userList = new ArrayList<>();

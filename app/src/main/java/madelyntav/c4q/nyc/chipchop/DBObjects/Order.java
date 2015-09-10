@@ -20,6 +20,7 @@ public class Order {
     String storeName;
     String sellerPhoneNumber;
     String buyerPhoneNumber;
+    String transactionToken;
 
     public Order(){
         this.itemsOrdered = new ArrayList<>();
@@ -173,4 +174,13 @@ public class Order {
     public void setBuyerPhoneNumber(String buyerPhoneNumber) {
         this.buyerPhoneNumber = buyerPhoneNumber;
     }
+
+    public String getTransactionToken() {
+        return transactionToken;
+    }
+
+    public void setTransactionToken(String transactionToken) {
+        this.transactionToken = transactionToken;
+    }
 }
+

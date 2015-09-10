@@ -6,7 +6,6 @@
     android:orientation="vertical"
     tools:context="madelyntav.c4q.nyc.chipchop.Payments.PaymentsActivity">
 
-
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -14,24 +13,28 @@
         android:text="Enter Payment Information"
         android:textStyle="bold"
         android:textSize="30dp"/>
+
     <EditText
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/Name"
         android:gravity="center_horizontal"
         android:hint="Full Name"/>
+
     <EditText
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/cardNum"
         android:gravity="center_horizontal"
-        android:hint="Card Num"/>
+        android:hint="Card Number"/>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"
         android:orientation="horizontal">
+
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,6 +42,7 @@
         android:maxLength="2"
         android:id="@+id/expirationMonth"
         android:hint="MM"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -52,7 +56,9 @@
         android:maxLength="4"
         android:id="@+id/expirationYear"
         android:hint="YYYY"/>
+
     </LinearLayout>
+
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -71,20 +77,20 @@
         android:onClick="onClickConfirmPayment"
         android:text="Submit Payment"/>
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="OR"
-        android:textStyle="bold"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp"/>
+    <!--<TextView-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:text="OR"-->
+        <!--android:textStyle="bold"-->
+        <!--android:layout_marginTop="30dp"-->
+        <!--android:layout_marginBottom="30dp"/>-->
 
-    <fragment
-        android:id="@+id/wallet_fragment"
-        android:name="com.google.android.gms.wallet.fragment.SupportWalletFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+    <!--<fragment-->
+        <!--android:id="@+id/wallet_fragment"-->
+        <!--android:name="com.google.android.gms.wallet.fragment.SupportWalletFragment"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--/>-->
 
 </LinearLayout>

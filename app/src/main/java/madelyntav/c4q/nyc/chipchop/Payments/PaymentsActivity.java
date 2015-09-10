@@ -28,8 +28,21 @@ import com.stripe.android.Stripe;
 import com.stripe.android.TokenCallback;
 import com.stripe.android.model.Card;
 import com.stripe.android.model.Token;
+import com.stripe.exception.APIConnectionException;
+import com.stripe.exception.APIException;
 import com.stripe.exception.AuthenticationException;
+import com.stripe.exception.CardException;
+import com.stripe.exception.InvalidRequestException;
+import com.stripe.exception.StripeException;
+import com.stripe.model.Charge;
+import com.stripe.net.RequestOptions;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
+import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.R;
 
 public class PaymentsActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -56,12 +69,28 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
     EditText cardCVCView;
     EditText nameView;
     Button confirmPaymentButton;
+    DBHelper dbHelper;
+    String stripeUserID;
+    //TODO transfer all Order and userInfo
+    Order order;
+    User user;
+    static Map<String, Object> defaultCardParams   = new HashMap<String, Object>();
+    static Map<String, Object> defaultChargeParams = new HashMap<String, Object>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_payments);
+        com.stripe.Stripe.apiKey = secretPublishableTestKey;
+
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Wallet.API, new Wallet.WalletOptions.Builder()
+                        .setEnvironment(WalletConstants.ENVIRONMENT_SANDBOX)
+                        .setTheme(WalletConstants.THEME_HOLO_LIGHT)
+                        .build())
+                .build();
 
         nameView=(EditText) findViewById(R.id.Name);
         nameView.setText(name);
@@ -71,8 +100,131 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
         cardCVCView=(EditText) findViewById(R.id.cardCVC);
         confirmPaymentButton=(Button) findViewById(R.id.confirm_payment);
 
-        walletFragment =
-                (SupportWalletFragment) getSupportFragmentManager().findFragmentById(R.id.wallet_fragment);
+
+
+        //Button to confirm payment with credit card through stripe
+        confirmPaymentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cardNum=cardNumView.getText().toString();
+                cardMonth= Integer.parseInt(cardMonthView.getText().toString());
+                cardYear= Integer.parseInt(cardYearView.getText().toString());
+                cardCVC=cardCVCView.getText().toString();
+
+                onClickConfirmPayment(cardNum, cardMonth, cardYear, cardCVC, name, streetAddress, addressLineTwo, city, state, zipCode,country);
+            }
+        });
+    }
+
+
+    public void onClickConfirmPayment(final String cardNum, final int cardMonth, final int cardYear, final String cardCVC, String name, String streetAddress, String apt, String city, String state, String zipCode, String Country ){
+
+        final Card card= new Card(cardNum, cardMonth, cardYear, cardCVC, name, streetAddress, apt, city, state, zipCode,country);
+
+        if ( !card.validateCard() ) {
+            // Show errors
+            Toast.makeText(this,"Invalid Payment Information",Toast.LENGTH_SHORT).show();
+        }
+        else {
+            //TODO activate once we have Encrypted Info and SSL Certificate has been added and we have user Info transfered in (UID, NAME, FULL Address)
+//            user.setCardNumber(cardNum);
+//            user.setCardExpirationMonth(cardMonth);
+//            user.setCardExpirationYear(cardYear);
+//            user.setCardCVC(cardCVC);
+//            dbHelper.addUserProfileInfoToDB(user);
+        }
+
+        card.validateNumber();
+        card.validateCVC();
+
+        try {
+        Stripe stripe = new Stripe(secretPublishableTestKey);
+            stripe.setDefaultPublishableKey(secretPublishableTestKey);
+
+        stripe.createToken(
+                card,
+                new TokenCallback() {
+                    public void onSuccess(Token token) {
+                        Toast.makeText(PaymentsActivity.this, "Payment Info Submitted Successfully", Toast.LENGTH_LONG).show();
+                        Log.d("TokenIS", token.toString());
+                        try {
+                            Charge ch= Charge.retrieve(createCharge("100",token, cardNum, cardMonth, cardYear, cardCVC));
+                            ch.capture();
+                            Log.d("PaymentCaptured",ch.toString());
+                            Toast.makeText(PaymentsActivity.this,"Payment Captured",Toast.LENGTH_LONG).show();
+                        } catch (AuthenticationException e) {
+                            e.printStackTrace();
+                        } catch (InvalidRequestException e) {
+                            e.printStackTrace();
+                        } catch (APIConnectionException e) {
+                            e.printStackTrace();
+                        } catch (CardException e) {
+                            e.printStackTrace();
+                        } catch (APIException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void onError(Exception error) {
+                        // Show localized error message
+                        Toast.makeText(PaymentsActivity.this, "Error Retrieving Token", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        } catch (AuthenticationException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private String createCharge(String price, Token token, String cardNum, int cardMonth, int cardYear, String cardCVC){
+
+        Map<String, Object> chargeMap = new HashMap<String, Object>();
+        //amount charged is in cents!!!
+        chargeMap.put("amount", price);
+        chargeMap.put("currency", "usd");
+        chargeMap.put("source", token);
+
+        Map<String, Object> cardMap = new HashMap<String, Object>();
+        cardMap.put("number", cardNum);
+        cardMap.put("exp_month", cardMonth);
+        cardMap.put("exp_year", cardYear);
+        chargeMap.put("card", cardMap);
+        //  chargeMap.put("description", order.getStoreName());
+
+        RequestOptions options = RequestOptions
+                .builder()
+                .setIdempotencyKey(secretPublishableTestKey)
+                .build();
+
+        try {
+            Charge charge = Charge.create( chargeMap , options);
+            Log.d("CHARGEINFO",charge.toString());
+            stripeUserID=charge.getId();
+
+        } catch (StripeException e) {
+            e.printStackTrace();
+            Log.d("ERROR",e.toString());
+        }
+
+        return stripeUserID;
+    }
+
+    public void onStart() {
+        super.onStart();
+        //TODO connect when adding AndroidPay
+        //googleApiClient.connect();
+    }
+
+    public void onStop() {
+        super.onStop();
+        //TODO disconnect when adding AndroidPay
+        googleApiClient.disconnect();
+    }
+
+    //Code Below For When Android Pay Is Released from Beta Mode
+    public void androidPay(){
+//        walletFragment =
+//                (SupportWalletFragment) getSupportFragmentManager().findFragmentById(R.id.wallet_fragment);
 
         MaskedWalletRequest maskedWalletRequest = MaskedWalletRequest.newBuilder()
 
@@ -88,7 +240,6 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
                 .setShippingAddressRequired(true)
 
                         // Price set as a decimal:
-                //TODO: transfer price
                 .setEstimatedTotalPrice("20.00")
                 .setCurrencyCode("USD")
                 .build();
@@ -101,77 +252,7 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
 
         // Initialize the fragment:
         walletFragment.initialize(initParams);
-
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Wallet.API, new Wallet.WalletOptions.Builder()
-                        .setEnvironment(WalletConstants.ENVIRONMENT_SANDBOX)
-                        .setTheme(WalletConstants.THEME_HOLO_LIGHT)
-                        .build())
-                .build();
-
-
-        confirmPaymentButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cardNum=cardNumView.getText().toString();
-                cardMonth= Integer.parseInt(cardMonthView.getText().toString());
-                cardYear= Integer.parseInt(cardYearView.getText().toString());
-                cardCVC=cardCVCView.getText().toString();
-
-                onClickConfirmPayment(cardNum, cardMonth, cardYear, cardCVC, name, streetAddress, addressLineTwo, city, state, zipCode,country);
-            }
-        });
     }
-
-
-    public void onClickConfirmPayment(String cardNum, int cardMonth, int cardYear, String cardCVC, String name, String streetAddress, String apt, String city, String state, String zipCode, String Country ){
-
-//        com.stripe.android.model.Card card = new com.stripe.android.model.Card(cardNum, cardMonth, cardYear, cardCVC);
-
-        Card card= new Card(cardNum, cardMonth, cardYear, cardCVC, name, streetAddress, apt, city, state, zipCode,country);
-
-
-        card.validateNumber();
-        card.validateCVC();
-
-        if ( !card.validateCard() ) {
-            // Show errors
-            Toast.makeText(this,"Invalid Payment Information",Toast.LENGTH_SHORT).show();
-        }
-        try {
-        Stripe stripe = new Stripe(secretPublishableTestKey);
-
-        stripe.createToken(
-                card,
-                new TokenCallback() {
-                    public void onSuccess(Token token) {
-                        Toast.makeText(PaymentsActivity.this, "Payment Submitted Successfully",Toast.LENGTH_LONG).show();
-                        Log.d("TokenIS",token.toString());
-                    }
-
-                    public void onError(Exception error) {
-                        // Show localized error message
-                        Toast.makeText(PaymentsActivity.this,"Error Retrieving Token",Toast.LENGTH_SHORT).show();
-                    }
-                });
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public void onStart() {
-        super.onStart();
-        googleApiClient.connect();
-    }
-
-    public void onStop() {
-        super.onStop();
-        googleApiClient.disconnect();
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -195,13 +276,14 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
                         .build();
                 Wallet.Payments.loadFullWallet(googleApiClient, fullWalletRequest, LOAD_FULL_WALLET_REQUEST_CODE);
             }
+
         } else if (requestCode == LOAD_FULL_WALLET_REQUEST_CODE) {
             // Unique, identifying constant
             FullWallet fullWallet = data.getParcelableExtra(WalletConstants.EXTRA_FULL_WALLET);
             String tokenJSON = fullWallet.getPaymentMethodToken().getToken();
 
             com.stripe.model.Token token = com.stripe.model.Token.GSON.fromJson(tokenJSON, com.stripe.model.Token.class);
-
+                Log.d("UserToken",token.toString());
             // TODO: send token to your server
 
     } else {

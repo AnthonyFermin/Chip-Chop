@@ -173,7 +173,7 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
                     public void onSuccess(Token token) {
                         Toast.makeText(PaymentsActivity.this, "Payment Info Submitted Successfully", Toast.LENGTH_LONG).show();
                         Log.d("TokenIS", token.toString());
-                        createCharge("100", token, cardNum, cardMonth, cardYear, cardCVC);
+                        createCharge(String.valueOf(order.getPrice()), token, cardNum, cardMonth, cardYear, cardCVC);
                     }
 
                     public void onError(Exception error) {

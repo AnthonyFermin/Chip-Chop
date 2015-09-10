@@ -3,7 +3,9 @@ package madelyntav.c4q.nyc.chipchop;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -95,6 +97,10 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         initializeData();
         bindViews();
         setListeners();
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        BitmapDrawable background = new BitmapDrawable (BitmapFactory.decodeResource(getResources(), R.drawable.actionbar));
+        getSupportActionBar().setBackgroundDrawable(background);
     }
 
     private void setListeners() {

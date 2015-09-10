@@ -4,7 +4,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -94,6 +96,10 @@ public class SignupActivity2 extends AppCompatActivity {
         phoneNumberET.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
 
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        BitmapDrawable background = new BitmapDrawable (BitmapFactory.decodeResource(getResources(), R.drawable.actionbar));
+        getSupportActionBar().setBackgroundDrawable(background);
 
         startButton = (Button) findViewById(R.id.createUserButton);
         startButton.setOnClickListener(new View.OnClickListener() {

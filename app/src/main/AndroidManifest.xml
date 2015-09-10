@@ -42,11 +42,7 @@
         <activity
             android:name=".BuyActivity"
             android:screenOrientation="portrait" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            //TODO Return Launcher
         </activity>
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -81,6 +77,11 @@
         <activity
             android:name=".Payments.PaymentsActivity"
             android:label="@string/title_activity_payments" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

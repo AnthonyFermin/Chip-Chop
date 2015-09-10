@@ -4,6 +4,8 @@ import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,7 +25,9 @@ import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
+import madelyntav.c4q.nyc.chipchop.PaymentDialog;
 import madelyntav.c4q.nyc.chipchop.R;
+import madelyntav.c4q.nyc.chipchop.ReviewDialogFragment;
 import madelyntav.c4q.nyc.chipchop.adapters.CheckoutListAdapter;
 
 
@@ -62,34 +66,12 @@ public class Fragment_Buyer_Checkout extends Fragment {
         confirmOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Date date = new Date();
-                long millis = date.getTime();
-                order.setTimeStamp(millis);
-                order.setPrice(total);
-                Log.d("Order Info", "Seller ID: " + order.getSellerID());
-                Log.d("Order Info", "Buyer ID: " + order.getBuyerID());
-                Log.d("Order Info","Total Price: $" + order.getPrice());
-                Log.d("Order Info", "Store Name: " + order.getStoreName());
-                Log.d("Order Info", "Time Bought: " + order.getTimeStamp());
-                dbHelper.addCurrentOrderToSellerDB(order, new DBCallback() {
-                    @Override
-                    public void runOnSuccess() {
-                        confirmImage.setVisibility(View.VISIBLE);
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                confirmImage.setVisibility(View.GONE);
-                                activity.replaceFragment(new Fragment_Buyer_Orders());
-                            }
-                        }, 500);
-                    }
 
-                    @Override
-                    public void runOnFail() {
-                        Toast.makeText(activity, "Items are no longer available", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                //TODO: Check if Signed in, else go into signup activity - Sign in should just be a pop up dialog
+                FragmentManager fm = activity.getSupportFragmentManager();
+                PaymentDialog alertDialog = new PaymentDialog();
+                alertDialog.show(fm, "fragment_alert");
+
+
             }
         });
     }

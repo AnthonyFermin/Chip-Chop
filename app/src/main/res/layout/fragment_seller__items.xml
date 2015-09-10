@@ -17,10 +17,13 @@
             android:background="@android:color/transparent"/>
     </RelativeLayout>
 
+
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/container">
+        android:id="@+id/container"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="match_parent"

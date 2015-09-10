@@ -44,6 +44,7 @@ public class PaymentDialog extends android.support.v4.app.DialogFragment {
 
         initializeData();
 
+        confirmImage = (ImageView) activity.findViewById(R.id.confirm_image);
         cardButton = (Button) root.findViewById(R.id.cardButton);
         cardButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,7 +55,7 @@ public class PaymentDialog extends android.support.v4.app.DialogFragment {
                 order.setPrice(total);
                 Log.d("Order Info", "Seller ID: " + order.getSellerID());
                 Log.d("Order Info", "Buyer ID: " + order.getBuyerID());
-                Log.d("Order Info","Total Price: $" + order.getPrice());
+                Log.d("Order Info", "Total Price: $" + order.getPrice());
                 Log.d("Order Info", "Store Name: " + order.getStoreName());
                 Log.d("Order Info", "Time Bought: " + order.getTimeStamp());
                 dbHelper.addCurrentOrderToSellerDB(order, new DBCallback() {
@@ -70,7 +71,7 @@ public class PaymentDialog extends android.support.v4.app.DialogFragment {
 //                                Intent paymentIntent = new Intent(getActivity(), PaymentActivity.class);
 //                                startActivity(paymentIntent);
                             }
-                        }, 500);
+                        }, 1000);
                         getDialog().dismiss();
                     }
 
@@ -111,12 +112,14 @@ public class PaymentDialog extends android.support.v4.app.DialogFragment {
                                 confirmImage.setVisibility(View.GONE);
                                 activity.replaceFragment(new Fragment_Buyer_Orders());
                             }
-                        }, 500);
+                        }, 1000);
+                        getDialog().dismiss();
                     }
 
                     @Override
                     public void runOnFail() {
                         Toast.makeText(activity, "Items are no longer available", Toast.LENGTH_SHORT).show();
+                        getDialog().dismiss();
                     }
                 });
                 //TODO: Check if Signed in, else go into signup activity - Sign in should just be a pop up dialog

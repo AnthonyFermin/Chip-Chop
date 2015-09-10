@@ -9,13 +9,15 @@
     app:umanoScrollableView="@id/buyers_orders_list"
     sothree:umanoPanelHeight="68dp"
     sothree:umanoShadowHeight="4dp"
-    app:umanoParalaxOffset="200dp">
+    app:umanoParalaxOffset="200dp"
+    android:background="#FFF">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <ImageView
             android:layout_width="wrap_content"

@@ -211,6 +211,7 @@ public class BuyActivity extends AppCompatActivity {
                             Intent sellIntent = new Intent(getApplicationContext(), SellActivity.class);
                             startActivity(sellIntent);
                         }else{
+                            mDrawerLayout.closeDrawer(DrawerLinear);
                             Snackbar
                                     .make(coordinatorLayoutView, "Must be logged for this feature", Snackbar.LENGTH_SHORT)
                                     .show();
@@ -220,11 +221,11 @@ public class BuyActivity extends AppCompatActivity {
                                     Intent signUpIntent = new Intent(getApplicationContext(), SignupActivity1.class);
                                     signUpIntent.putExtra(TO_SELL_ACTIVITY, true);
                                     startActivity(signUpIntent);
+                                    finish();
                                 }
-                            }, 2000);
+                            }, 1500);
 
                         }
-                        finish();
                     }
                 });
 

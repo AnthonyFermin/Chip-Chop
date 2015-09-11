@@ -93,12 +93,14 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 @Override
                 public void onClick(View view) {
                     //TODO: add popup dialog asking user to confirm deletion
-                    if(activity.isCurrentlyCooking()) {
-                        dbHelper.removeItemFromSale(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
-                    }else {
-                    //TODO: Madelyn: are these the correct methods to remove items from the seller profile in the DB?
-                        dbHelper.removeItemFromSellerProfile(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
-                        Log.d("ITEMID REMOVED", sellerItems.get(getAdapterPosition()).getItemID() + "");
+                    if(isActive) {
+                        if (activity.isCurrentlyCooking()) {
+                            dbHelper.removeItemFromSale(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
+                        } else {
+                            //TODO: Madelyn: are these the correct methods to remove items from the seller profile in the DB?
+                            dbHelper.removeItemFromSellerProfile(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
+                            Log.d("ITEMID REMOVED", sellerItems.get(getAdapterPosition()).getItemID() + "");
+                        }
                     }
 
                     sellerItems.remove(getAdapterPosition());

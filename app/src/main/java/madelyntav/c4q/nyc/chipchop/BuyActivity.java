@@ -433,7 +433,7 @@ public class BuyActivity extends AppCompatActivity {
         HelperMethods.setUser(user);
 
         drawerUserNameTV.setText(user.getName());
-        ratingBar.setVisibility(View.VISIBLE);
+//        ratingBar.setVisibility(View.VISIBLE);
         mListTitles[3] = "Sign Out";
         mDrawerList.setAdapter(new ArrayAdapter<>(BuyActivity.this,
                 R.layout.navdrawer_list_item, mListTitles));

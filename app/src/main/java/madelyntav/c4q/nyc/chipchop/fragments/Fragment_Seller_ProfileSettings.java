@@ -179,6 +179,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 seller.setIsCooking(false);
                 seller.setPhotoLink(imageLink);
                 dbHelper.addSellerProfileInfoToDB(seller);
+                dbHelper.setSellerCookingStatus(seller.getIsCooking());
                 activity.setSeller(seller);
 
                 user.setAddress(userAddress);

@@ -48,6 +48,7 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Orders;
 
 public class SellActivity extends AppCompatActivity {
 
+    Button contactButton;
     View coordinatorLayoutView;
     FrameLayout frameLayout;
     LinearLayout DrawerLinear;
@@ -94,6 +95,16 @@ public class SellActivity extends AppCompatActivity {
     }
 
     private void setUpNavActionBar() {
+        contactButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent contactIntent = new Intent(Intent.ACTION_SEND);
+                contactIntent.setType("text/html");
+                contactIntent.putExtra(Intent.EXTRA_EMAIL, "chipchopcontact@gmail.com");
+                startActivity(Intent.createChooser(contactIntent, "Create Email"));
+            }
+        });
+
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.navdrawer_list_item, mListTitles));
 
@@ -169,6 +180,7 @@ public class SellActivity extends AppCompatActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         coordinatorLayoutView = findViewById(R.id.snackbarPosition);
+        contactButton = (Button) findViewById(R.id.contact_button);
 
     }
 

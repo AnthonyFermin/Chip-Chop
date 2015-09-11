@@ -52,6 +52,7 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_ViewCart;
 
 public class BuyActivity extends AppCompatActivity {
 
+    private Button contactButton;
     private FrameLayout frameLayout;
     private LinearLayout DrawerLinear;
     private DrawerLayout mDrawerLayout;
@@ -173,6 +174,16 @@ public class BuyActivity extends AppCompatActivity {
     }
 
     private void setUpDrawer() {
+        contactButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent contactIntent = new Intent(Intent.ACTION_SEND);
+                contactIntent.setType("text/html");
+                contactIntent.putExtra(Intent.EXTRA_EMAIL, "chipchopcontact@gmail.com");
+                startActivity(Intent.createChooser(contactIntent, "Create Email"));
+            }
+        });
+
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.navdrawer_list_item, mListTitles));
 
@@ -243,6 +254,7 @@ public class BuyActivity extends AppCompatActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         coordinatorLayoutView = findViewById(R.id.snackbarPosition);
+        contactButton = (Button) findViewById(R.id.contact_button);
 
     }
 
@@ -250,6 +262,7 @@ public class BuyActivity extends AppCompatActivity {
         dbHelper = DBHelper.getDbHelper(this);
 
         mListTitles = getResources().getStringArray(R.array.BUYER_nav_drawer_titles);
+
 
         emptyCallback = new DBCallback() {
             @Override

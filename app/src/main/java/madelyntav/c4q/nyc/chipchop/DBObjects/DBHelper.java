@@ -409,9 +409,21 @@ public class DBHelper extends Firebase {
         return mSuccess;
     }
 
-    public Boolean changeUserEmail(String oldEmail, String newEmail, String password) {
-        fireBaseRef.changeUserEmail(oldEmail, newEmail, password);
-        //TODO check if successful or not and dispay toast
+    public Boolean changeUserEmail(String oldEmail, String newEmail, String password, ResultHandler resultHandler) {
+
+        fireBaseRef.changeUserEmail(oldEmail, newEmail, password,
+                new ResultHandler() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError(FirebaseError firebaseError) {
+
+                    }
+                });
+
         return mSuccess;
 
     }
@@ -709,14 +721,16 @@ public class DBHelper extends Firebase {
     public Seller getSellerFromDB(final String sellerID) {
         sellerId = sellerID;
 
-        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId);
+        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerID);
+        Log.d("profile", fRef.toString());
         fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("Number2", dataSnapshot.getChildrenCount() + "");
 
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    Seller seller1 = dataSnapshot1.getValue(Seller.class);
+//                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+//                    if (dataSnapshot1.getKey().equals( sellerID)) {
+                        Seller seller1 = dataSnapshot.getValue(Seller.class);
 
                         seller.setName(seller1.name);
                         seller.setStoreName(seller1.storeName);
@@ -727,16 +741,17 @@ public class DBHelper extends Firebase {
                         seller.setCardNumber(seller1.cardNumber);
                         seller.setDescription(seller1.description);
                         seller.seteMail(seller1.eMail);
-                        seller.setUID(dataSnapshot1.getKey());
+                        seller.setUID(dataSnapshot.getKey());
                         seller.setPhoneNumber(seller1.phoneNumber);
                         seller.setItems(seller1.items);
                         seller.setLongitude(seller1.longitude);
                         seller.setLatitude(seller1.latitude);
-                        seller.setIsCooking(seller1.getIsCooking());
+                        seller.setIsCooking(seller1.isCooking);
 
                         Log.d("Seller", seller.name + "");
-                }
-            }
+                    }
+
+
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {

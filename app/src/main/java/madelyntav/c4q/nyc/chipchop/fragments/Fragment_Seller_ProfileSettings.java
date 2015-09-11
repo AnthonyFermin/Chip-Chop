@@ -242,7 +242,9 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                     //TODO:display cannot connect to internet error message
                     Log.d("Load Seller Info", "NOT FOUND IN DB, NEW SELLER CREATED");
                     seller = new Seller(dbHelper.getUserID(),user.geteMail(),user.getName(),user.getAddress(),"",user.getPhoneNumber());
+                    seller.setIsCooking(false);
                     dbHelper.addSellerProfileInfoToDB(seller);
+                    dbHelper.setSellerCookingStatus(false);
                     Toast.makeText(activity,"New Seller Profile Created, Please add a store name", Toast.LENGTH_SHORT).show();
                     Snackbar
                             .make(coordinatorLayoutView, "New Seller Profile Created, Please add a store name", Snackbar.LENGTH_SHORT)

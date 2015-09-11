@@ -20,6 +20,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -70,7 +71,7 @@ public class SignupActivity2 extends AppCompatActivity {
     DBHelper dbHelper;
 
     View coordinatorLayoutView;
-    ImageView profilePhoto;
+    ImageButton profilePhoto;
     public static final int RESULT_OK = -1;
     private Uri imageFileUri;
     Intent intent;
@@ -124,7 +125,7 @@ public class SignupActivity2 extends AppCompatActivity {
         });
 
 
-        profilePhoto = (ImageView) findViewById(R.id.profile_image);
+        profilePhoto = (ImageButton) findViewById(R.id.profile_image);
         profilePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -24,11 +24,21 @@ android:layout_height="match_parent">
         android:textSize="30sp" />
 
 
-    <ImageView
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="PROFILE PHOTO"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_horizontal"
+        android:textStyle="bold"
+        style="@style/text_design"/>
+
+    <ImageButton
         android:id="@+id/profile_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:scaleType="centerInside"
+        android:scaleType="centerCrop"
+        android:background="@android:color/transparent"
         android:layout_gravity="center_horizontal"
         android:src="@drawable/chipchop"/>
 
@@ -43,6 +53,17 @@ android:layout_height="match_parent">
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="PROFILE INFO"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center_horizontal"
+                android:textStyle="bold"
+                style="@style/text_design"/>
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"

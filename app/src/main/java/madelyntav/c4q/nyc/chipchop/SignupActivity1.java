@@ -225,10 +225,6 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         dbHelper = DBHelper.getDbHelper(this);
         callbackManager = CallbackManager.Factory.create();
 
-        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
-        getSupportActionBar().setBackgroundDrawable(colorDrawable);
-
-
         emptyCallback = new DBCallback() {
             @Override
             public void runOnSuccess() {

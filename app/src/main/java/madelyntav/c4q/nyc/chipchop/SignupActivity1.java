@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -78,6 +79,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
     /* Should we automatically resolve ConnectionResults when possible? */
     private boolean mShouldResolve = false;
 
+    public static View coordinatorLayoutView;
     String email;
     String password;
     LinearLayout containingView;
@@ -101,33 +103,47 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         bindViews();
         setListeners();
 
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        BitmapDrawable background = new BitmapDrawable (BitmapFactory.decodeResource(getResources(), R.drawable.actionbar));
-        background.setGravity(Gravity.CENTER);
-        getSupportActionBar().setBackgroundDrawable(background);
+//        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
+        getSupportActionBar().setBackgroundDrawable(colorDrawable);
+
+//        BitmapDrawable background = new BitmapDrawable (BitmapFactory.decodeResource(getResources(), R.drawable.actionbar));
+//        background.setGravity(Gravity.CENTER);
+//        getSupportActionBar().setBackgroundDrawable(background);
+
+
+
     }
 
     private void setListeners() {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                email = emailET.getText().toString().trim();
-                password = passET.getText().toString();
 
-                dbHelper.logInUser(email, password, new DBCallback() {
-                    @Override
-                    public void runOnSuccess() {
-                        user = dbHelper.getUserFromDB(dbHelper.getUserID());
-                        loadingPanel.setVisibility(View.VISIBLE);
-                        containingView.setVisibility(View.GONE);
-                        load();
-                    }
+                if (emailET.getText().toString().equals("") || passET.getText().toString().equals("")) {
+                    Snackbar
+                            .make(coordinatorLayoutView, "Please enter in all fields", Snackbar.LENGTH_SHORT)
+                            .show();
+                } else {
 
-                    @Override
-                    public void runOnFail() {
-                    }
-                });
+                    email = emailET.getText().toString().trim();
+                    password = passET.getText().toString();
 
+                    dbHelper.logInUser(email, password, new DBCallback() {
+                        @Override
+                        public void runOnSuccess() {
+                            user = dbHelper.getUserFromDB(dbHelper.getUserID());
+                            loadingPanel.setVisibility(View.VISIBLE);
+                            containingView.setVisibility(View.GONE);
+                            load();
+                        }
+
+                        @Override
+                        public void runOnFail() {
+                        }
+                    });
+
+                }
             }
 
         });
@@ -136,28 +152,36 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         newUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                email = emailET.getText().toString().trim();
-                password = passET.getText().toString();
 
-                dbHelper.createUserAndCallback(email, password, new DBCallback() {
-                    @Override
-                    public void runOnSuccess() {
-                        storeUserInfo();
-                        Intent intent1 = new Intent(SignupActivity1.this, SignupActivity2.class);
-                        intent1.putExtra("email", email);
-                        intent1.putExtra("pass", password);
-                        if(toSellActivity){
-                            intent1.putExtra(BuyActivity.TO_SELL_ACTIVITY, true);
+                if (emailET.getText().toString().equals("") || passET.getText().toString().equals("")) {
+                    Snackbar
+                            .make(coordinatorLayoutView, "Please set an Email and Password", Snackbar.LENGTH_SHORT)
+                            .show();
+                } else {
+
+                    email = emailET.getText().toString().trim();
+                    password = passET.getText().toString();
+
+                    dbHelper.createUserAndCallback(email, password, new DBCallback() {
+                        @Override
+                        public void runOnSuccess() {
+                            storeUserInfo();
+                            Intent intent1 = new Intent(SignupActivity1.this, SignupActivity2.class);
+                            intent1.putExtra("email", email);
+                            intent1.putExtra("pass", password);
+                            if (toSellActivity) {
+                                intent1.putExtra(BuyActivity.TO_SELL_ACTIVITY, true);
+                            }
+                            startActivity(intent1);
+                            finish();
                         }
-                        startActivity(intent1);
-                        finish();
-                    }
 
-                    @Override
-                    public void runOnFail() {
+                        @Override
+                        public void runOnFail() {
 
-                    }
-                });
+                        }
+                    });
+                }
             }
         });
         loginButton.setReadPermissions(Arrays.asList("public_profile", "user_friends", "email"));
@@ -191,6 +215,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         signInButton = (Button) findViewById(R.id.signInButton);
         newUserButton = (Button) findViewById(R.id.newUserButton);
 
+        coordinatorLayoutView = findViewById(R.id.snackbarPosition);
 
     }
 
@@ -199,10 +224,6 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
 
         dbHelper = DBHelper.getDbHelper(this);
         callbackManager = CallbackManager.Factory.create();
-
-        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
-        getSupportActionBar().setBackgroundDrawable(colorDrawable);
-
 
         emptyCallback = new DBCallback() {
             @Override
@@ -256,6 +277,9 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
             Log.d("request Code", String.valueOf(resultCode));
         }
         else{
+            Snackbar
+                    .make(coordinatorLayoutView, "Login Failed", Snackbar.LENGTH_SHORT)
+                    .show();
             Toast.makeText(this,"Login Failed",Toast.LENGTH_LONG).show();
         }
     }
@@ -289,6 +313,9 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         mShouldResolve = false;
 
         // Show the signed-in UI
+        Snackbar
+                .make(coordinatorLayoutView, "Signed In", Snackbar.LENGTH_SHORT)
+                .show();
         Toast.makeText(getApplicationContext(), "Signed In", Toast.LENGTH_SHORT).show();
         Intent intent1 = new Intent(SignupActivity1.this, SignupActivity2.class);
         dbHelper.onGmailAccessTokenChange(AccessToken.getCurrentAccessToken(), intent1);
@@ -380,7 +407,9 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
                             finish();
                         } else {
                             //TODO:display cannot connect to internet error message
-                            Toast.makeText(SignupActivity1.this, "Failed to load account, please try again", Toast.LENGTH_SHORT).show();
+                            Snackbar
+                                    .make(coordinatorLayoutView, "Failed to load account, please try again", Snackbar.LENGTH_SHORT)
+                                    .show();
                             loadingPanel.setVisibility(View.GONE);
                             containingView.setVisibility(View.VISIBLE);
                             dbHelper.signOutUser(emptyCallback);
@@ -411,7 +440,9 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
             } else {
                 // Could not resolve the connection result, show the user an
                 // error dialog.
-                Toast.makeText(getApplicationContext(), "Error with connection", Toast.LENGTH_SHORT).show();
+                Snackbar
+                        .make(coordinatorLayoutView, "Error with connection", Snackbar.LENGTH_SHORT)
+                        .show();
             }
         } else {
             // Show the signed-out UI

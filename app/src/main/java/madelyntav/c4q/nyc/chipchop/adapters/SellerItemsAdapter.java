@@ -4,7 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
+
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
@@ -19,9 +20,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-
-import java.text.DecimalFormat;
 import java.util.List;
 
 import madelyntav.c4q.nyc.chipchop.DBCallback;
@@ -81,12 +79,18 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 @Override
                 public void runOnSuccess() {
                     Toast.makeText(context,"Item removed successfully", Toast.LENGTH_SHORT).show();
+                    Snackbar
+                            .make(Fragment_Seller_Items.coordinatorLayoutView, "Item removed successfully", Snackbar.LENGTH_SHORT)
+                            .show();
 
                 }
 
                 @Override
                 public void runOnFail() {
                     Toast.makeText(context,"Unable to remove item", Toast.LENGTH_SHORT).show();
+                    Snackbar
+                            .make(Fragment_Seller_Items.coordinatorLayoutView, "Unable to remove item", Snackbar.LENGTH_SHORT)
+                            .show();
                 }
             };
 

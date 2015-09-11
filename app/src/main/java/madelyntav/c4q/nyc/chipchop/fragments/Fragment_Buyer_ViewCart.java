@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -41,6 +42,7 @@ public class Fragment_Buyer_ViewCart extends Fragment {
     private DBHelper dbHelper;
     private Order order;
     private BuyActivity activity;
+    View coordinatorLayoutView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,7 +71,10 @@ public class Fragment_Buyer_ViewCart extends Fragment {
                     editor.commit();
                     startActivity(signupIntent);
                 } else if(cartItems.size() == 0){
-                    Toast.makeText(activity,"Cart is empty",Toast.LENGTH_SHORT).show();
+                    Snackbar
+                            .make(coordinatorLayoutView, "Cart is empty", Snackbar.LENGTH_SHORT)
+                            .show();
+
                 }else {
                     activity.replaceFragment(new Fragment_Buyer_Checkout());
                 }
@@ -87,6 +92,8 @@ public class Fragment_Buyer_ViewCart extends Fragment {
     private void bindViews(View root) {
         checkoutButton = (android.support.design.widget.FloatingActionButton) root.findViewById(R.id.checkoutButton);
         cartList = (RecyclerView) root.findViewById(R.id.cart_list);
+        coordinatorLayoutView = root.findViewById(R.id.snackbarPosition);
+
     }
 
     private void initializeData() {

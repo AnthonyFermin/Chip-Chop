@@ -28,6 +28,10 @@ public class Seller {
     int numOfTotalStars;
     int newReviewNumOfStars;
     String addressString;
+    String cardNumber;
+    int cardExpirationMonth;
+    int cardExpirationYear;
+    String cardCVC;
 
     public Seller(){}
 
@@ -58,6 +62,25 @@ public class Seller {
         this.storeName=storeName;
         this.photoLink=photoLink;
         this.phoneNumber=phoneNumber;
+    }
+    public Seller(String UID, String eMail, String name, Address address, String photoLink,String storeName, String phoneNumber, Boolean isCooking){
+        this.UID=UID;
+        this.eMail = eMail;
+        this.name=name;
+        this.address=address;
+        this.storeName=storeName;
+        this.photoLink=photoLink;
+        this.phoneNumber=phoneNumber;
+        this.isCooking=isCooking;
+    }
+
+
+    public Seller(String UID, String cardNumber, int cardExpirationMonth, int cardExpirationYear, String cardCVC) {
+        this.UID = UID;
+        this.cardNumber = cardNumber;
+        this.cardExpirationMonth = cardExpirationMonth;
+        this.cardExpirationYear = cardExpirationYear;
+        this.cardCVC = cardCVC;
     }
 
     public String getPhoneNumber() {
@@ -184,6 +207,38 @@ public class Seller {
         phoneNumber=null;
         UID=null;
         photoLink=null;
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    public int getCardExpirationMonth() {
+        return cardExpirationMonth;
+    }
+
+    public void setCardExpirationMonth(int cardExpirationMonth) {
+        this.cardExpirationMonth = cardExpirationMonth;
+    }
+
+    public String getCardCVC() {
+        return cardCVC;
+    }
+
+    public void setCardCVC(String cardCVC) {
+        this.cardCVC = cardCVC;
+    }
+
+    public int getCardExpirationYear() {
+        return cardExpirationYear;
+    }
+
+    public void setCardExpirationYear(int cardExpirationYear) {
+        this.cardExpirationYear = cardExpirationYear;
     }
 
     public String getAddressString() {

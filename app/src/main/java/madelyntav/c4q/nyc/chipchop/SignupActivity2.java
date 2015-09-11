@@ -10,7 +10,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
@@ -18,6 +20,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -67,7 +70,8 @@ public class SignupActivity2 extends AppCompatActivity {
 
     DBHelper dbHelper;
 
-    ImageView profilePhoto;
+    View coordinatorLayoutView;
+    ImageButton profilePhoto;
     public static final int RESULT_OK = -1;
     private Uri imageFileUri;
     Intent intent;
@@ -101,12 +105,13 @@ public class SignupActivity2 extends AppCompatActivity {
         phoneNumberET = (EditText) findViewById(R.id.phone_number);
         phoneNumberET.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
+        coordinatorLayoutView = findViewById(R.id.snackbarPosition);
 
 
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        BitmapDrawable background = new BitmapDrawable (BitmapFactory.decodeResource(getResources(), R.drawable.actionbar));
-        background.setGravity(Gravity.CENTER);
-        getSupportActionBar().setBackgroundDrawable(background);
+//        getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        BitmapDrawable background = new BitmapDrawable (BitmapFactory.decodeResource(getResources(), R.drawable.actionbar));
+//        background.setGravity(Gravity.CENTER);
+//        getSupportActionBar().setBackgroundDrawable(background);
 
         startButton = (Button) findViewById(R.id.createUserButton);
         startButton.setOnClickListener(new View.OnClickListener() {
@@ -120,7 +125,7 @@ public class SignupActivity2 extends AppCompatActivity {
         });
 
 
-        profilePhoto = (ImageView) findViewById(R.id.profile_image);
+        profilePhoto = (ImageButton) findViewById(R.id.profile_image);
         profilePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -241,7 +246,9 @@ public class SignupActivity2 extends AppCompatActivity {
 
             @Override
             public void failure(RetrofitError error) {
-                Toast.makeText(SignupActivity2.this, "Invalid Address", Toast.LENGTH_SHORT).show();
+                Snackbar
+                        .make(coordinatorLayoutView, "Invalid Address", Snackbar.LENGTH_SHORT)
+                        .show();
             }
         });
 
@@ -268,7 +275,9 @@ public class SignupActivity2 extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(this, "Failed to create account", Toast.LENGTH_SHORT).show();
+        Snackbar
+                .make(coordinatorLayoutView, "Failed to create account", Snackbar.LENGTH_SHORT)
+                .show();
         dbHelper.removeUser(email, password, new Firebase.ResultHandler() {
             @Override
             public void onSuccess() {
@@ -280,7 +289,14 @@ public class SignupActivity2 extends AppCompatActivity {
 
             }
         });
-        startActivity(new Intent(this, BuyActivity.class));
-        finish();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(new Intent(getApplicationContext(), BuyActivity.class));
+                finish();
+            }
+        }, 2000);
+
     }
 }

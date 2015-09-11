@@ -2,6 +2,7 @@ package madelyntav.c4q.nyc.chipchop.fragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -41,6 +42,7 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
     RelativeLayout loadingPanel;
     LinearLayout containingView;
 
+    View coordinatorLayoutView;
     CircleImageView storeImage;
     TextView storeName,storeDescription;
 
@@ -105,6 +107,9 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
                 if(foodItems != null) {
                     setAdapter();
                 }else{
+                    Snackbar
+                            .make(coordinatorLayoutView, "Seller food items not found", Snackbar.LENGTH_SHORT)
+                            .show();
                     Toast.makeText(activity,"Seller food items not found",Toast.LENGTH_SHORT).show();
                 }
                 loadingPanel.setVisibility(View.GONE);
@@ -140,6 +145,8 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
         storeImage = (CircleImageView) root.findViewById(R.id.profile_image);
         storeName = (TextView) root.findViewById(R.id.seller_name);
         storeDescription = (TextView) root.findViewById(R.id.store_description);
+        coordinatorLayoutView = root.findViewById(R.id.snackbarPosition);
+
     }
 
     private void initializeData() {

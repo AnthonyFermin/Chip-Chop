@@ -50,6 +50,8 @@ public class Fragment_Seller_Items extends Fragment {
     private PagerAdapter mPagerAdapter;
     Fragment fragment;
 
+    public static View coordinatorLayoutView;
+
     private android.support.design.widget.FloatingActionButton addButton;
     private RelativeLayout loadingPanel;
 
@@ -178,6 +180,7 @@ public class Fragment_Seller_Items extends Fragment {
         mPagerAdapter = new ScreenSlidePagerAdapter(getChildFragmentManager());
         mPager.setAdapter(mPagerAdapter);
 
+        coordinatorLayoutView = root.findViewById(R.id.snackbarPosition);
         addButton = (android.support.design.widget.FloatingActionButton) root.findViewById(R.id.addButton);
 
     }

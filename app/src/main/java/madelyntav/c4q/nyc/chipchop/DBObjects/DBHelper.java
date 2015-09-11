@@ -3,6 +3,8 @@ package madelyntav.c4q.nyc.chipchop.DBObjects;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.widget.Toast;
 import com.facebook.AccessToken;
@@ -47,6 +49,10 @@ public class DBHelper extends Firebase {
     private static final String sAddress = "addressString";
     private static final String sPhotoLink = "photoLink";
     private static final String sUID = "UID";
+    private static final String sCardNumber="cardNumber";
+    private static final String sCardExpirationMonth="cardExpirationMonth";
+    private static final String sCardExpirationYear="cardExpirationYear";
+    private static final String sCardCVC="cardCVC";
     private static final String sIsCooking = "isCooking";
     public static User user;
     public static final String sLatitude = "latitude";
@@ -156,6 +162,9 @@ public class DBHelper extends Firebase {
             @Override
             public void onSuccess(Map<String, Object> stringObjectMap) {
                 Toast.makeText(mContext, "Account Created", Toast.LENGTH_SHORT).show();
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Must log in to view profile", Snackbar.LENGTH_SHORT)
+                        .show();
                 mSuccess = true;
 
                 UID = String.valueOf(stringObjectMap.get("uid"));
@@ -176,6 +185,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onError(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Account Creation Failed", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Account Creation Failed", Toast.LENGTH_SHORT).show();
                 Log.d("Firebase", firebaseError.toString());
                 mSuccess = false;
@@ -190,6 +202,9 @@ public class DBHelper extends Firebase {
         fireBaseRef.createUser(email, password, new ValueResultHandler<Map<String, Object>>() {
             @Override
             public void onSuccess(Map<String, Object> stringObjectMap) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Account Created", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Account Created", Toast.LENGTH_SHORT).show();
                 mSuccess = true;
 
@@ -208,12 +223,16 @@ public class DBHelper extends Firebase {
                 fRef.child(UID);
                 fRef.child(UID).child(sEmailAddress).setValue(email);
 
-                mContext.startActivity(intent);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mContext.startActivity(intent);
+                    }
+                }, 2000);
             }
 
             @Override
             public void onError(FirebaseError firebaseError) {
-                Toast.makeText(mContext, "Please set Email and Password", Toast.LENGTH_SHORT).show();
                 Log.d("Firebase", firebaseError.toString());
                 mSuccess = false;
             }
@@ -227,6 +246,9 @@ public class DBHelper extends Firebase {
         fireBaseRef.createUser(email, password, new ValueResultHandler<Map<String, Object>>() {
             @Override
             public void onSuccess(Map<String, Object> stringObjectMap) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Account Created", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Account Created", Toast.LENGTH_SHORT).show();
                 mSuccess = true;
 
@@ -251,6 +273,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onError(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Please set Email and Password", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Please set Email and Password", Toast.LENGTH_SHORT).show();
                 Log.d("Firebase", firebaseError.toString());
                 mSuccess = false;
@@ -278,10 +303,16 @@ public class DBHelper extends Firebase {
                         // Something went wrong :(
                         switch (error.getCode()) {
                             case FirebaseError.USER_DOES_NOT_EXIST:
+                                Snackbar
+                                        .make(SignupActivity1.coordinatorLayoutView, "E-mail or Password Invalid", Snackbar.LENGTH_SHORT)
+                                        .show();
                                 Toast.makeText(mContext, "E-mail or Password Invalid", Toast.LENGTH_LONG).show();
                                 mSuccess = false;
                                 break;
                             case FirebaseError.INVALID_PASSWORD:
+                                Snackbar
+                                        .make(SignupActivity1.coordinatorLayoutView, "Invalid Password", Snackbar.LENGTH_SHORT)
+                                        .show();
                                 Toast.makeText(mContext, "Invalid Password", Toast.LENGTH_LONG).show();
                                 mSuccess = false;
                                 break;
@@ -314,10 +345,16 @@ public class DBHelper extends Firebase {
                         // Something went wrong :(
                         switch (error.getCode()) {
                             case FirebaseError.USER_DOES_NOT_EXIST:
+                                Snackbar
+                                        .make(SignupActivity1.coordinatorLayoutView, "E-mail or Password Invalid", Snackbar.LENGTH_SHORT)
+                                        .show();
                                 Toast.makeText(mContext, "E-mail or Password Invalid", Toast.LENGTH_LONG).show();
                                 mSuccess = false;
                                 break;
                             case FirebaseError.INVALID_PASSWORD:
+                                Snackbar
+                                        .make(SignupActivity1.coordinatorLayoutView, "Invalid Password", Snackbar.LENGTH_SHORT)
+                                        .show();
                                 Toast.makeText(mContext, "Invalid Password", Toast.LENGTH_LONG).show();
                                 mSuccess = false;
                                 break;
@@ -349,10 +386,16 @@ public class DBHelper extends Firebase {
                         // Something went wrong :(
                         switch (error.getCode()) {
                             case FirebaseError.USER_DOES_NOT_EXIST:
+                                Snackbar
+                                        .make(SignupActivity1.coordinatorLayoutView, "E-mail or Password Invalid", Snackbar.LENGTH_SHORT)
+                                        .show();
                                 Toast.makeText(mContext, "E-mail or Password Invalid", Toast.LENGTH_LONG).show();
                                 mSuccess = false;
                                 break;
                             case FirebaseError.INVALID_PASSWORD:
+                                Snackbar
+                                        .make(SignupActivity1.coordinatorLayoutView, "Invalid Password", Snackbar.LENGTH_SHORT)
+                                        .show();
                                 Toast.makeText(mContext, "Invalid Password", Toast.LENGTH_LONG).show();
                                 mSuccess = false;
                                 break;
@@ -366,9 +409,21 @@ public class DBHelper extends Firebase {
         return mSuccess;
     }
 
-    public Boolean changeUserEmail(String oldEmail, String newEmail, String password) {
-        fireBaseRef.changeUserEmail(oldEmail, newEmail, password);
-        //TODO check if successful or not and dispay toast
+    public Boolean changeUserEmail(String oldEmail, String newEmail, String password, ResultHandler resultHandler) {
+
+        fireBaseRef.changeUserEmail(oldEmail, newEmail, password,
+                new ResultHandler() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError(FirebaseError firebaseError) {
+
+                    }
+                });
+
         return mSuccess;
 
     }
@@ -462,6 +517,9 @@ public class DBHelper extends Firebase {
                         // Something went wrong :(
                         switch (error.getCode()) {
                             case FirebaseError.USER_DOES_NOT_EXIST:
+                                Snackbar
+                                        .make(SignupActivity1.coordinatorLayoutView, "E-mail or Password Invalid", Snackbar.LENGTH_SHORT)
+                                        .show();
                                 Toast.makeText(mContext, "E-mail or Password Invalid", Toast.LENGTH_LONG).show();
                                 break;
                             case FirebaseError.INVALID_PASSWORD:
@@ -563,6 +621,9 @@ public class DBHelper extends Firebase {
                         // Something went wrong :(
                         switch (error.getCode()) {
                             case FirebaseError.USER_DOES_NOT_EXIST:
+                                Snackbar
+                                        .make(SignupActivity1.coordinatorLayoutView, "E-mail or Password Invalid", Snackbar.LENGTH_SHORT)
+                                        .show();
                                 Toast.makeText(mContext, "E-mail or Password Invalid", Toast.LENGTH_LONG).show();
                                 break;
                             case FirebaseError.INVALID_PASSWORD:
@@ -585,6 +646,10 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
         fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
         fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
+        fRef.child(UID).child(sCardNumber).setValue(seller.getCardNumber());
+        fRef.child(UID).child(sCardExpirationMonth).setValue(seller.getCardExpirationMonth());
+        fRef.child(UID).child(sCardExpirationYear).setValue(seller.getCardExpirationYear());
+        fRef.child(UID).child(sCardCVC).setValue(seller.getCardCVC());
         fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
 
     }
@@ -596,6 +661,10 @@ public class DBHelper extends Firebase {
         fRef.child(UID).push();
         fRef.child(UID).child(sName).setValue(user.getName());
         fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
+        fRef.child(UID).child(sCardNumber).setValue(user.getCardNumber());
+        fRef.child(UID).child(sCardExpirationMonth).setValue(user.getCardExpirationMonth());
+        fRef.child(UID).child(sCardExpirationYear).setValue(user.getCardExpirationYear());
+        fRef.child(UID).child(sCardCVC).setValue(user.getCardCVC());
         fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
         fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
         fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
@@ -613,6 +682,10 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
         fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
         fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
+        fRef.child(UID).child(sCardNumber).setValue(user.getCardNumber());
+        fRef.child(UID).child(sCardExpirationMonth).setValue(user.getCardExpirationMonth());
+        fRef.child(UID).child(sCardExpirationYear).setValue(user.getCardExpirationYear());
+        fRef.child(UID).child(sCardCVC).setValue(user.getCardCVC());
         fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
         fRef.child(UID).child(sLatitude).setValue(user.getAddress().getLatitude());
         fRef.child(UID).child(sLongitude).setValue(user.getAddress().getLongitude());
@@ -624,39 +697,44 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child("isCooking").setValue(isCooking);
     }
 
-    public void addSellerProfileInfoToDB(Seller user, final DBCallback callback) {
+    public void addSellerProfileInfoToDB(Seller seller, final DBCallback callback) {
         Firebase fRef = new Firebase(URL + "SellerProfiles/");
-        UID = user.getUID();
+        UID = seller.getUID();
 
         fRef.child(UID).push();
-        fRef.child(UID).child(sName).setValue(user.getName());
-        fRef.child(UID).child("storeName").setValue(user.getStoreName());
-        fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
-        fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
-        fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
-        fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
-        fRef.child(UID).child(sLatitude).setValue(user.getAddress().getLatitude());
-        fRef.child(UID).child(sLongitude).setValue(user.getAddress().getLongitude());
+        fRef.child(UID).child(sName).setValue(seller.getName());
+        fRef.child(UID).child("storeName").setValue(seller.getStoreName());
+        fRef.child(UID).child(sEmailAddress).setValue(seller.geteMail());
+        fRef.child(UID).child(sCardNumber).setValue(seller.getCardNumber());
+        fRef.child(UID).child(sCardExpirationMonth).setValue(seller.getCardExpirationMonth());
+        fRef.child(UID).child(sCardExpirationYear).setValue(seller.getCardExpirationYear());
+        fRef.child(UID).child(sCardCVC).setValue(seller.getCardCVC());
+        fRef.child(UID).child(sPhoneNumber).setValue(seller.getPhoneNumber());
+        fRef.child(UID).child(sPhotoLink).setValue(seller.getPhotoLink());
+        fRef.child(UID).child(sAddress).setValue(seller.getAddress().toString());
+        fRef.child(UID).child(sLatitude).setValue(seller.getAddress().getLatitude());
+        fRef.child(UID).child(sLongitude).setValue(seller.getAddress().getLongitude());
 
         callback.runOnSuccess();
     }
 
     public Seller getSellerFromDB(final String sellerID) {
         sellerId = sellerID;
-
         Firebase fRef = new Firebase(URL + "SellerProfiles/");
         fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("Number2", dataSnapshot.getChildrenCount() + "");
-
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     Seller seller1 = dataSnapshot1.getValue(Seller.class);
-
                     if (dataSnapshot1.getKey().equals(sellerID)) {
                         seller.setName(seller1.name);
                         seller.setStoreName(seller1.storeName);
                         seller.setAddress(seller1.address);
+                        seller.setCardCVC(seller1.cardCVC);
+                        seller.setCardExpirationMonth(seller1.cardExpirationMonth);
+                        seller.setCardExpirationYear(seller1.cardExpirationYear);
+                        seller.setCardNumber(seller1.cardNumber);
                         seller.setDescription(seller1.description);
                         seller.seteMail(seller1.eMail);
                         seller.setUID(dataSnapshot1.getKey());
@@ -666,20 +744,16 @@ public class DBHelper extends Firebase {
                         seller.setLatitude(seller1.latitude);
                         seller.setIsCooking(seller1.getIsCooking());
                         seller.setPhotoLink(seller1.getPhotoLink());
-
                         Log.d("Seller", seller.name + "");
-
                     }
                 }
             }
-
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 Toast.makeText(mContext, "Error: Please Try Again", Toast.LENGTH_SHORT).show();
                 seller = null;
             }
         });
-
         return seller;
     }
 
@@ -692,25 +766,28 @@ public class DBHelper extends Firebase {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("Number2", dataSnapshot.getChildrenCount() + "");
 
-                if (dataSnapshot.getKey().equals(UID)) {
-
                     User user1 = dataSnapshot.getValue(User.class);
 
                     user.setName(user1.name);
                     user.setAddressString(user1.addressString);
                     user.seteMail(user1.eMail);
                     user.setUID(user1.UID);
+                    user.setCardNumber(user1.cardNumber);
+                    user.setCardExpirationYear(user1.cardExpirationYear);
+                    user.setCardExpirationMonth(user1.cardExpirationMonth);
+                    user.setCardCVC(user1.cardCVC);
                     user.setPhoneNumber(user1.phoneNumber);
                     user.setUserItems(user1.userItems);
                     user.setLongitude(user1.longitude);
                     user.setLatitude(user1.latitude);
                 }
 
-            }
-
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-                Toast.makeText(mContext, "Error: Please Try Again", Toast.LENGTH_SHORT).show();
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Please Try Again", Snackbar.LENGTH_SHORT)
+                        .show();
+                Toast.makeText(mContext, "Please Try Again", Toast.LENGTH_SHORT).show();
                 user = null;
             }
         });
@@ -759,6 +836,10 @@ public class DBHelper extends Firebase {
                     seller.setPhoneNumber(seller1.phoneNumber);
                     seller.setAddress(seller1.address);
                     seller.seteMail(seller1.eMail);
+                    seller.setCardCVC(seller1.cardCVC);
+                    seller.setCardExpirationMonth(seller1.cardExpirationMonth);
+                    seller.setCardExpirationYear(seller1.cardExpirationYear);
+                    seller.setCardNumber(seller1.cardNumber);
                     seller.setDescription(seller1.description);
                     seller.setPhotoLink(seller1.photoLink);
                     seller.setStoreName(seller1.storeName);
@@ -772,7 +853,10 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-                Toast.makeText(mContext, "Error: Please Try Again", Toast.LENGTH_SHORT).show();
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Please Try Again", Snackbar.LENGTH_SHORT)
+                        .show();
+                Toast.makeText(mContext, "Please Try Again", Toast.LENGTH_SHORT).show();
                 user = null;
             }
         });
@@ -813,6 +897,10 @@ public class DBHelper extends Firebase {
                         seller.setDescription(seller1.description);
                         seller.seteMail(seller1.eMail);
                         seller.setUID(seller1.UID);
+                        seller.setCardCVC(seller1.cardCVC);
+                        seller.setCardExpirationMonth(seller1.cardExpirationMonth);
+                        seller.setCardExpirationYear(seller1.cardExpirationYear);
+                        seller.setCardNumber(seller1.cardNumber);
                         seller.setStoreName(seller1.storeName);
                         seller.setPhoneNumber(seller1.phoneNumber);
                         seller.setItems(seller1.items);
@@ -826,6 +914,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Seller not found", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Error: Seller not found", Toast.LENGTH_SHORT).show();
                 seller = null;
                 callback.runOnFail();
@@ -854,6 +945,10 @@ public class DBHelper extends Firebase {
                         seller.setDescription(seller1.description);
                         seller.seteMail(seller1.eMail);
                         seller.setUID(seller1.UID);
+                        seller.setCardCVC(seller1.cardCVC);
+                        seller.setCardExpirationMonth(seller1.cardExpirationMonth);
+                        seller.setCardExpirationYear(seller1.cardExpirationYear);
+                        seller.setCardNumber(seller1.cardNumber);
                         seller.setStoreName(seller1.storeName);
                         seller.setPhoneNumber(seller1.phoneNumber);
                         seller.setItems(seller1.items);
@@ -867,6 +962,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Seller not found", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Error: Seller not found", Toast.LENGTH_SHORT).show();
                 seller = null;
                 callback.runOnFail();
@@ -887,6 +985,10 @@ public class DBHelper extends Firebase {
         fRef.child(sellerId).child(sName).setValue(seller.getName());
         fRef.child(sellerId).child(descriptionOfItem).setValue(seller.getDescription());
         fRef.child(sellerId).child("storeName").setValue(seller.getStoreName());
+        fRef.child(sellerId).child(sCardNumber).setValue(seller.getCardNumber());
+        fRef.child(sellerId).child(sCardExpirationMonth).setValue(seller.getCardExpirationMonth());
+        fRef.child(sellerId).child(sCardExpirationYear).setValue(seller.getCardExpirationYear());
+        fRef.child(sellerId).child(sCardCVC).setValue(seller.getCardCVC());
         fRef.child(sellerId).child(sIsCooking).setValue(seller.getIsCooking());
         fRef.child(sellerId).child(sEmailAddress).setValue(seller.geteMail());
         fRef.child(sellerId).child(sPhoneNumber).setValue(seller.getPhoneNumber());
@@ -1067,6 +1169,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Seller not found", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Error: Seller not found", Toast.LENGTH_SHORT).show();
                 seller = null;
                 dbCallback.runOnFail();
@@ -1116,6 +1221,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Seller not found", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Error: Seller not found", Toast.LENGTH_SHORT).show();
                 seller = null;
                 dbCallback.runOnFail();
@@ -1168,6 +1276,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Seller not found", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Error: Seller not found", Toast.LENGTH_SHORT).show();
                 seller = null;
                 dbCallback.runOnFail();
@@ -1207,6 +1318,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Seller not found", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Error: Seller not found", Toast.LENGTH_SHORT).show();
                 seller = null;
                 dbCallback.runOnFail();
@@ -1372,6 +1486,7 @@ public class DBHelper extends Firebase {
                         order.setItemsOrdered(order.itemsOrdered);
                         order.setReview(order.review);
                         order.setTimeStamp(order.timeStamp);
+                        order.setTransactionToken(order.transactionToken);
                         order.setIsActive(order.isActive);
                         order.setStoreName(order.storeName);
 
@@ -1384,6 +1499,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Unable To Retrieve Orders Please Try Again", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Unable To Retrieve Orders Please Try Again", Toast.LENGTH_SHORT).show();
                 dbCallback.runOnFail();
             }
@@ -1434,6 +1552,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Unable To Retrieve Orders Please Try Again", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Unable To Retrieve Orders Please Try Again", Toast.LENGTH_SHORT).show();
                 dbCallback.runOnFail();
             }
@@ -1496,6 +1617,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Unable To Retrieve Orders Please Try Again", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Unable To Retrieve Orders Please Try Again", Toast.LENGTH_SHORT).show();
                 dbCallback.runOnFail();
             }
@@ -1529,6 +1653,7 @@ public class DBHelper extends Firebase {
                     Order order = dataSnapshot1.getValue(Order.class);
                     order.setOrderID(dataSnapshot1.getKey());
                     order.setPrice(order.price);
+                    order.setTransactionToken(order.transactionToken);
                     order.setSellerID(order.sellerID);
                     order.setBuyerID(order.buyerID);
                     order.setItemsOrdered(order.itemsOrdered);
@@ -1545,6 +1670,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Unable To Retrieve Orders Please Try Again", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Unable To Retrieve Orders Please Try Again", Toast.LENGTH_SHORT).show();
                 dbCallback.runOnFail();
             }
@@ -1596,6 +1724,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Unable To Retrieve Orders Please Try Again", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Unable To Retrieve Items For Order Please Try Again", Toast.LENGTH_SHORT).show();
                 dbCallback.runOnFail();
             }
@@ -1651,9 +1782,11 @@ public class DBHelper extends Firebase {
 
             fRef.child(UID).child(orderID);
             fRef.child(orderID).child("price").setValue(order.getPrice());
+            fRef.child(orderID).child("transactionToken").setValue(order.getTransactionToken());
             fRef.child(orderID).child("buyerID").setValue(order.getBuyerID());
             fRef.child(orderID).child("storeName").setValue(order.getStoreName());
             fRef.child(orderID).child("isActive").setValue(order.isActive());
+            fRef.child(orderID).child("paymentType").setValue(order.getPaymentType());
             fRef.child(orderID).child("sellerPhoneNumber").setValue(order.getSellerPhoneNumber());
             fRef.child(orderID).child("buyerPhoneNumber").setValue(order.getBuyerPhoneNumber());
             fRef.child(orderID).child("timeStamp").setValue(order.getTimeStamp());
@@ -1708,6 +1841,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Unable To Retrieve Items For Order Please Try Again", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Unable To Retrieve Items For Order Please Try Again", Toast.LENGTH_SHORT).show();
                 dbCallback.runOnFail();
             }
@@ -1742,6 +1878,7 @@ public class DBHelper extends Firebase {
         fRef.child(orderID).child("sellerID").setValue(order.getSellerID());
         fRef.child(orderID).child("buyerID").setValue(order.getBuyerID());
         fRef.child(orderID).child("storeName").setValue(order.getStoreName());
+        fRef.child(orderID).child("paymentType").setValue(order.getPaymentType());
         fRef.child(orderID).child("isActive").setValue(order.isActive());
         fRef.child(orderID).child("sellerPhoneNumber").setValue(order.getSellerPhoneNumber());
         fRef.child(orderID).child("buyerPhoneNumber").setValue(order.getBuyerPhoneNumber());
@@ -2262,6 +2399,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Unable To Send Order To Seller, Please Try Again", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Unable To Send Order To Seller, Please Try Again", Toast.LENGTH_SHORT).show();
                 dbCallback.runOnFail();
 
@@ -2339,6 +2479,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Unable To Retrieve Reviews Please Try Again", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Unable To Retrieve Reviews Please Try Again", Toast.LENGTH_SHORT).show();
                 dbCallback.runOnFail();
             }
@@ -2374,6 +2517,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Unable To Retrieve Reviews Please Try Again", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Unable To Retrieve Reviews Please Try Again", Toast.LENGTH_SHORT).show();
             }
         });

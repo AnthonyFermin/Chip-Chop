@@ -20,6 +20,8 @@ public class Order {
     String storeName;
     String sellerPhoneNumber;
     String buyerPhoneNumber;
+    String transactionToken;
+    String paymentType;
 
     public Order(){
         this.itemsOrdered = new ArrayList<>();
@@ -84,6 +86,20 @@ public class Order {
         this.storeName = storeName;
     }
 
+    public Order(String buyerID, int price, String orderID, String sellerID, long timeStamp, ArrayList<Item> itemsOrdered, String storeName, String sellerPhoneNumber, String buyerPhoneNumber, String transactionToken, String paymentType) {
+        this.buyerID = buyerID;
+        this.price = price;
+        this.orderID = orderID;
+        this.sellerID = sellerID;
+        this.timeStamp = timeStamp;
+        this.itemsOrdered = itemsOrdered;
+        this.storeName = storeName;
+        this.sellerPhoneNumber = sellerPhoneNumber;
+        this.buyerPhoneNumber = buyerPhoneNumber;
+        this.transactionToken = transactionToken;
+        this.paymentType = paymentType;
+    }
+
     public Order(String buyerID, String sellerID){
         this.buyerID = buyerID;
         this.sellerID=sellerID;
@@ -130,7 +146,7 @@ public class Order {
         this.review = review;
     }
 
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 
@@ -173,4 +189,21 @@ public class Order {
     public void setBuyerPhoneNumber(String buyerPhoneNumber) {
         this.buyerPhoneNumber = buyerPhoneNumber;
     }
+
+    public String getTransactionToken() {
+        return transactionToken;
+    }
+
+    public void setTransactionToken(String transactionToken) {
+        this.transactionToken = transactionToken;
+    }
+
+    public String getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(String paymentType) {
+        this.paymentType = paymentType;
+    }
 }
+

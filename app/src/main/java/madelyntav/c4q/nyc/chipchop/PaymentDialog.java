@@ -3,6 +3,7 @@ package madelyntav.c4q.nyc.chipchop;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import java.util.Date;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
+import madelyntav.c4q.nyc.chipchop.Payments.PaymentsActivity;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Orders;
 
 /**
@@ -25,6 +27,7 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Orders;
  */
 public class PaymentDialog extends android.support.v4.app.DialogFragment {
 
+    View coordinatorLayoutView;
     ImageView confirmImage;
     Button cardButton, cashButton;
     private BuyActivity activity;
@@ -68,8 +71,8 @@ public class PaymentDialog extends android.support.v4.app.DialogFragment {
                                 confirmImage.setVisibility(View.GONE);
 //                                activity.replaceFragment(new Fragment_Buyer_Orders());
                                 // TODO: finish the flow after merge with 'payments' branch !
-//                                Intent paymentIntent = new Intent(getActivity(), PaymentActivity.class);
-//                                startActivity(paymentIntent);
+                                Intent paymentIntent = new Intent(activity.getApplicationContext(), PaymentsActivity.class);
+                                activity.startActivity(paymentIntent);
                             }
                         }, 1000);
                         getDialog().dismiss();
@@ -78,15 +81,15 @@ public class PaymentDialog extends android.support.v4.app.DialogFragment {
                     @Override
                     public void runOnFail() {
                         Toast.makeText(activity, "Items are no longer available", Toast.LENGTH_SHORT).show();
+                        Snackbar
+                                .make(coordinatorLayoutView, "Items are no longer available", Snackbar.LENGTH_SHORT)
+                                .show();
                         getDialog().dismiss();
                     }
                 });
                 //TODO: Check if Signed in, else go into signup activity - Sign in should just be a pop up dialog
             }
         });
-
-
-
 
 
         cashButton = (Button) root.findViewById(R.id.cashButton);
@@ -119,6 +122,9 @@ public class PaymentDialog extends android.support.v4.app.DialogFragment {
                     @Override
                     public void runOnFail() {
                         Toast.makeText(activity, "Items are no longer available", Toast.LENGTH_SHORT).show();
+                        Snackbar
+                                .make(coordinatorLayoutView, "Items are no longer available", Snackbar.LENGTH_SHORT)
+                                .show();
                         getDialog().dismiss();
                     }
                 });

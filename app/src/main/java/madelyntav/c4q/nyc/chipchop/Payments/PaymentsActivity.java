@@ -323,7 +323,7 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
                     dbHelper.addCurrentOrderToSellerDB(order, new DBCallback() {
                         @Override
                         public void runOnSuccess() {
-                            new Handler().postDelayed(new Runnable() {
+                            new Handler().post(new Runnable() {
                                 @Override
                                 public void run() {
                                     Toast.makeText(PaymentsActivity.this, "Order and Payment Confirmed", Toast.LENGTH_SHORT).show();
@@ -331,7 +331,7 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
                                     intent.putExtra("To Orders View", true);
                                     startActivity(intent);
                                 }
-                            }, 2000);
+                            });
                         }
 
                         @Override

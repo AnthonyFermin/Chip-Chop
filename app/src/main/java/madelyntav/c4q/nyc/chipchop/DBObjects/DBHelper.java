@@ -709,7 +709,7 @@ public class DBHelper extends Firebase {
     public Seller getSellerFromDB(final String sellerID) {
         sellerId = sellerID;
 
-        Firebase fRef = new Firebase(URL + "SellerProfiles/");
+        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId);
         fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -718,7 +718,6 @@ public class DBHelper extends Firebase {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     Seller seller1 = dataSnapshot1.getValue(Seller.class);
 
-                    if (dataSnapshot1.getKey().equals(sellerID)) {
                         seller.setName(seller1.name);
                         seller.setStoreName(seller1.storeName);
                         seller.setAddress(seller1.address);
@@ -736,8 +735,6 @@ public class DBHelper extends Firebase {
                         seller.setIsCooking(seller1.getIsCooking());
 
                         Log.d("Seller", seller.name + "");
-
-                    }
                 }
             }
 
@@ -763,8 +760,6 @@ public class DBHelper extends Firebase {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("Number2", dataSnapshot.getChildrenCount() + "");
 
-                if (dataSnapshot.getKey().equals(UID)) {
-
                     User user1 = dataSnapshot.getValue(User.class);
 
                     user.setName(user1.name);
@@ -780,8 +775,6 @@ public class DBHelper extends Firebase {
                     user.setLongitude(user1.longitude);
                     user.setLatitude(user1.latitude);
                 }
-
-            }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {

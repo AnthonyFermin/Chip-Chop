@@ -108,29 +108,39 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         background.setGravity(Gravity.CENTER);
         getSupportActionBar().setBackgroundDrawable(background);
 
+
+
     }
 
     private void setListeners() {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                email = emailET.getText().toString().trim();
-                password = passET.getText().toString();
 
-                dbHelper.logInUser(email, password, new DBCallback() {
-                    @Override
-                    public void runOnSuccess() {
-                        user = dbHelper.getUserFromDB(dbHelper.getUserID());
-                        loadingPanel.setVisibility(View.VISIBLE);
-                        containingView.setVisibility(View.GONE);
-                        load();
-                    }
+                if (emailET.getText().toString().equals("") || passET.getText().toString().equals("")) {
+                    Snackbar
+                            .make(coordinatorLayoutView, "Please enter in all fields", Snackbar.LENGTH_SHORT)
+                            .show();
+                } else {
 
-                    @Override
-                    public void runOnFail() {
-                    }
-                });
+                    email = emailET.getText().toString().trim();
+                    password = passET.getText().toString();
 
+                    dbHelper.logInUser(email, password, new DBCallback() {
+                        @Override
+                        public void runOnSuccess() {
+                            user = dbHelper.getUserFromDB(dbHelper.getUserID());
+                            loadingPanel.setVisibility(View.VISIBLE);
+                            containingView.setVisibility(View.GONE);
+                            load();
+                        }
+
+                        @Override
+                        public void runOnFail() {
+                        }
+                    });
+
+                }
             }
 
         });
@@ -139,28 +149,36 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         newUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                email = emailET.getText().toString().trim();
-                password = passET.getText().toString();
 
-                dbHelper.createUserAndCallback(email, password, new DBCallback() {
-                    @Override
-                    public void runOnSuccess() {
-                        storeUserInfo();
-                        Intent intent1 = new Intent(SignupActivity1.this, SignupActivity2.class);
-                        intent1.putExtra("email", email);
-                        intent1.putExtra("pass", password);
-                        if(toSellActivity){
-                            intent1.putExtra(BuyActivity.TO_SELL_ACTIVITY, true);
+                if (emailET.getText().toString().equals("") || passET.getText().toString().equals("")) {
+                    Snackbar
+                            .make(coordinatorLayoutView, "Please set an Email and Password", Snackbar.LENGTH_SHORT)
+                            .show();
+                } else {
+
+                    email = emailET.getText().toString().trim();
+                    password = passET.getText().toString();
+
+                    dbHelper.createUserAndCallback(email, password, new DBCallback() {
+                        @Override
+                        public void runOnSuccess() {
+                            storeUserInfo();
+                            Intent intent1 = new Intent(SignupActivity1.this, SignupActivity2.class);
+                            intent1.putExtra("email", email);
+                            intent1.putExtra("pass", password);
+                            if (toSellActivity) {
+                                intent1.putExtra(BuyActivity.TO_SELL_ACTIVITY, true);
+                            }
+                            startActivity(intent1);
+                            finish();
                         }
-                        startActivity(intent1);
-                        finish();
-                    }
 
-                    @Override
-                    public void runOnFail() {
+                        @Override
+                        public void runOnFail() {
 
-                    }
-                });
+                        }
+                    });
+                }
             }
         });
         loginButton.setReadPermissions(Arrays.asList("public_profile", "user_friends", "email"));

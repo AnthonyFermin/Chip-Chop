@@ -89,6 +89,15 @@
             android:textStyle="bold"
             android:layout_margin="6dp"/>
 
+        <Button
+            android:id="@+id/contact_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/text_design"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:color/transparent"
+            android:text="Contact Us"/>
+
     </LinearLayout>
 
 

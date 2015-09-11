@@ -3,6 +3,7 @@ package madelyntav.c4q.nyc.chipchop.DBObjects;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.widget.Toast;
@@ -161,6 +162,9 @@ public class DBHelper extends Firebase {
             @Override
             public void onSuccess(Map<String, Object> stringObjectMap) {
                 Toast.makeText(mContext, "Account Created", Toast.LENGTH_SHORT).show();
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Must log in to view profile", Snackbar.LENGTH_SHORT)
+                        .show();
                 mSuccess = true;
 
                 UID = String.valueOf(stringObjectMap.get("uid"));
@@ -181,6 +185,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onError(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Account Creation Failed", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Account Creation Failed", Toast.LENGTH_SHORT).show();
                 Log.d("Firebase", firebaseError.toString());
                 mSuccess = false;
@@ -195,6 +202,9 @@ public class DBHelper extends Firebase {
         fireBaseRef.createUser(email, password, new ValueResultHandler<Map<String, Object>>() {
             @Override
             public void onSuccess(Map<String, Object> stringObjectMap) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Account Created", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Account Created", Toast.LENGTH_SHORT).show();
                 mSuccess = true;
 
@@ -213,12 +223,16 @@ public class DBHelper extends Firebase {
                 fRef.child(UID);
                 fRef.child(UID).child(sEmailAddress).setValue(email);
 
-                mContext.startActivity(intent);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mContext.startActivity(intent);
+                    }
+                }, 2000);
             }
 
             @Override
             public void onError(FirebaseError firebaseError) {
-                Toast.makeText(mContext, "Please set Email and Password", Toast.LENGTH_SHORT).show();
                 Log.d("Firebase", firebaseError.toString());
                 mSuccess = false;
             }
@@ -232,6 +246,9 @@ public class DBHelper extends Firebase {
         fireBaseRef.createUser(email, password, new ValueResultHandler<Map<String, Object>>() {
             @Override
             public void onSuccess(Map<String, Object> stringObjectMap) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Account Created", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Account Created", Toast.LENGTH_SHORT).show();
                 mSuccess = true;
 
@@ -256,6 +273,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onError(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Please set Email and Password", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Please set Email and Password", Toast.LENGTH_SHORT).show();
                 Log.d("Firebase", firebaseError.toString());
                 mSuccess = false;
@@ -325,10 +345,16 @@ public class DBHelper extends Firebase {
                         // Something went wrong :(
                         switch (error.getCode()) {
                             case FirebaseError.USER_DOES_NOT_EXIST:
+                                Snackbar
+                                        .make(SignupActivity1.coordinatorLayoutView, "E-mail or Password Invalid", Snackbar.LENGTH_SHORT)
+                                        .show();
                                 Toast.makeText(mContext, "E-mail or Password Invalid", Toast.LENGTH_LONG).show();
                                 mSuccess = false;
                                 break;
                             case FirebaseError.INVALID_PASSWORD:
+                                Snackbar
+                                        .make(SignupActivity1.coordinatorLayoutView, "Invalid Password", Snackbar.LENGTH_SHORT)
+                                        .show();
                                 Toast.makeText(mContext, "Invalid Password", Toast.LENGTH_LONG).show();
                                 mSuccess = false;
                                 break;
@@ -360,10 +386,16 @@ public class DBHelper extends Firebase {
                         // Something went wrong :(
                         switch (error.getCode()) {
                             case FirebaseError.USER_DOES_NOT_EXIST:
+                                Snackbar
+                                        .make(SignupActivity1.coordinatorLayoutView, "E-mail or Password Invalid", Snackbar.LENGTH_SHORT)
+                                        .show();
                                 Toast.makeText(mContext, "E-mail or Password Invalid", Toast.LENGTH_LONG).show();
                                 mSuccess = false;
                                 break;
                             case FirebaseError.INVALID_PASSWORD:
+                                Snackbar
+                                        .make(SignupActivity1.coordinatorLayoutView, "Invalid Password", Snackbar.LENGTH_SHORT)
+                                        .show();
                                 Toast.makeText(mContext, "Invalid Password", Toast.LENGTH_LONG).show();
                                 mSuccess = false;
                                 break;
@@ -473,6 +505,9 @@ public class DBHelper extends Firebase {
                         // Something went wrong :(
                         switch (error.getCode()) {
                             case FirebaseError.USER_DOES_NOT_EXIST:
+                                Snackbar
+                                        .make(SignupActivity1.coordinatorLayoutView, "E-mail or Password Invalid", Snackbar.LENGTH_SHORT)
+                                        .show();
                                 Toast.makeText(mContext, "E-mail or Password Invalid", Toast.LENGTH_LONG).show();
                                 break;
                             case FirebaseError.INVALID_PASSWORD:
@@ -574,6 +609,9 @@ public class DBHelper extends Firebase {
                         // Something went wrong :(
                         switch (error.getCode()) {
                             case FirebaseError.USER_DOES_NOT_EXIST:
+                                Snackbar
+                                        .make(SignupActivity1.coordinatorLayoutView, "E-mail or Password Invalid", Snackbar.LENGTH_SHORT)
+                                        .show();
                                 Toast.makeText(mContext, "E-mail or Password Invalid", Toast.LENGTH_LONG).show();
                                 break;
                             case FirebaseError.INVALID_PASSWORD:
@@ -705,7 +743,10 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-                Toast.makeText(mContext, "Error: Please Try Again", Toast.LENGTH_SHORT).show();
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Please Try Again", Snackbar.LENGTH_SHORT)
+                        .show();
+                Toast.makeText(mContext, "Please Try Again", Toast.LENGTH_SHORT).show();
                 seller = null;
             }
         });
@@ -744,7 +785,10 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-                Toast.makeText(mContext, "Error: Please Try Again", Toast.LENGTH_SHORT).show();
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Please Try Again", Snackbar.LENGTH_SHORT)
+                        .show();
+                Toast.makeText(mContext, "Please Try Again", Toast.LENGTH_SHORT).show();
                 user = null;
             }
         });
@@ -810,7 +854,10 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-                Toast.makeText(mContext, "Error: Please Try Again", Toast.LENGTH_SHORT).show();
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Please Try Again", Snackbar.LENGTH_SHORT)
+                        .show();
+                Toast.makeText(mContext, "Please Try Again", Toast.LENGTH_SHORT).show();
                 user = null;
             }
         });
@@ -868,6 +915,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Seller not found", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Error: Seller not found", Toast.LENGTH_SHORT).show();
                 seller = null;
                 callback.runOnFail();
@@ -913,6 +963,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Seller not found", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Error: Seller not found", Toast.LENGTH_SHORT).show();
                 seller = null;
                 callback.runOnFail();
@@ -1117,6 +1170,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Seller not found", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Error: Seller not found", Toast.LENGTH_SHORT).show();
                 seller = null;
                 dbCallback.runOnFail();
@@ -1166,6 +1222,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Seller not found", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Error: Seller not found", Toast.LENGTH_SHORT).show();
                 seller = null;
                 dbCallback.runOnFail();
@@ -1218,6 +1277,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Seller not found", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Error: Seller not found", Toast.LENGTH_SHORT).show();
                 seller = null;
                 dbCallback.runOnFail();
@@ -1257,6 +1319,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Seller not found", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Error: Seller not found", Toast.LENGTH_SHORT).show();
                 seller = null;
                 dbCallback.runOnFail();
@@ -1435,6 +1500,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Unable To Retrieve Orders Please Try Again", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Unable To Retrieve Orders Please Try Again", Toast.LENGTH_SHORT).show();
                 dbCallback.runOnFail();
             }
@@ -1485,6 +1553,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Unable To Retrieve Orders Please Try Again", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Unable To Retrieve Orders Please Try Again", Toast.LENGTH_SHORT).show();
                 dbCallback.runOnFail();
             }
@@ -1547,6 +1618,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Unable To Retrieve Orders Please Try Again", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Unable To Retrieve Orders Please Try Again", Toast.LENGTH_SHORT).show();
                 dbCallback.runOnFail();
             }
@@ -1597,6 +1671,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Unable To Retrieve Orders Please Try Again", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Unable To Retrieve Orders Please Try Again", Toast.LENGTH_SHORT).show();
                 dbCallback.runOnFail();
             }
@@ -1648,6 +1725,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Unable To Retrieve Orders Please Try Again", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Unable To Retrieve Items For Order Please Try Again", Toast.LENGTH_SHORT).show();
                 dbCallback.runOnFail();
             }
@@ -1761,6 +1841,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Unable To Retrieve Items For Order Please Try Again", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Unable To Retrieve Items For Order Please Try Again", Toast.LENGTH_SHORT).show();
                 dbCallback.runOnFail();
             }
@@ -2315,6 +2398,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Unable To Send Order To Seller, Please Try Again", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Unable To Send Order To Seller, Please Try Again", Toast.LENGTH_SHORT).show();
                 dbCallback.runOnFail();
 
@@ -2392,6 +2478,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Unable To Retrieve Reviews Please Try Again", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Unable To Retrieve Reviews Please Try Again", Toast.LENGTH_SHORT).show();
                 dbCallback.runOnFail();
             }
@@ -2427,6 +2516,9 @@ public class DBHelper extends Firebase {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Unable To Retrieve Reviews Please Try Again", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(mContext, "Unable To Retrieve Reviews Please Try Again", Toast.LENGTH_SHORT).show();
             }
         });

@@ -10,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -287,7 +288,14 @@ public class SignupActivity2 extends AppCompatActivity {
 
             }
         });
-        startActivity(new Intent(this, BuyActivity.class));
-        finish();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(new Intent(getApplicationContext(), BuyActivity.class));
+                finish();
+            }
+        }, 2000);
+
     }
 }

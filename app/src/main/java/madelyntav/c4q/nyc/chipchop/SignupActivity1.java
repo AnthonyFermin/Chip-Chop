@@ -393,7 +393,6 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
                             Snackbar
                                     .make(coordinatorLayoutView, "Failed to load account, please try again", Snackbar.LENGTH_SHORT)
                                     .show();
-                            Toast.makeText(SignupActivity1.this, "Failed to load account, please try again", Toast.LENGTH_SHORT).show();
                             loadingPanel.setVisibility(View.GONE);
                             containingView.setVisibility(View.VISIBLE);
                             dbHelper.signOutUser(emptyCallback);
@@ -424,7 +423,6 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
             } else {
                 // Could not resolve the connection result, show the user an
                 // error dialog.
-                Toast.makeText(getApplicationContext(), "Error with connection", Toast.LENGTH_SHORT).show();
                 Snackbar
                         .make(coordinatorLayoutView, "Error with connection", Snackbar.LENGTH_SHORT)
                         .show();

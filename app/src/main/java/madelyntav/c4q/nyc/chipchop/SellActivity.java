@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -193,13 +194,20 @@ public class SellActivity extends AppCompatActivity {
         } else if (position == 3) {
             clearLogin();
 
-            Intent intent = new Intent(this,BuyActivity.class);
-            startActivity(intent);
-            Toast.makeText(this,"Sign out successful",Toast.LENGTH_SHORT).show();
             Snackbar
                     .make(coordinatorLayoutView, "Sign out successful", Snackbar.LENGTH_SHORT)
                     .show();
-            finish();
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(getApplicationContext(), BuyActivity.class);
+                    startActivity(intent);
+
+                    finish();
+                }
+            }, 2000);
+
         }
 
             // Create fragment manager to begin interacting with the fragments and the container

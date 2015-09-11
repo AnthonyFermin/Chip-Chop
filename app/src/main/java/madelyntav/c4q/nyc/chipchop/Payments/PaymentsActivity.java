@@ -322,7 +322,7 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
                                     intent.putExtra("To Orders View", true);
                                     startActivity(intent);
                                 }
-                            }, 1000);
+                            }, 2000);
                         }
 
                         @Override

@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -199,10 +200,15 @@ public class BuyActivity extends AppCompatActivity {
                             Snackbar
                                     .make(coordinatorLayoutView, "Must be logged for this feature", Snackbar.LENGTH_SHORT)
                                     .show();
-                            Toast.makeText(BuyActivity.this,"Must be logged for this feature", Toast.LENGTH_SHORT).show();
-                            Intent signUpIntent = new Intent(getApplicationContext(), SignupActivity1.class);
-                            signUpIntent.putExtra(TO_SELL_ACTIVITY,true);
-                            startActivity(signUpIntent);
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent signUpIntent = new Intent(getApplicationContext(), SignupActivity1.class);
+                                    signUpIntent.putExtra(TO_SELL_ACTIVITY, true);
+                                    startActivity(signUpIntent);
+                                }
+                            }, 2000);
+
                         }
                         finish();
                     }
@@ -278,8 +284,12 @@ public class BuyActivity extends AppCompatActivity {
                 Snackbar
                         .make(coordinatorLayoutView, "Must log in to view profile", Snackbar.LENGTH_SHORT)
                         .show();
-                Toast.makeText(this,"Must log in to view profile",Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(BuyActivity.this, SignupActivity1.class));
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        startActivity(new Intent(BuyActivity.this, SignupActivity1.class));
+                    }
+                }, 2000);
             }
         } else if (position == 3) {
             //SIGN OUT/IN DRAWER ITEM

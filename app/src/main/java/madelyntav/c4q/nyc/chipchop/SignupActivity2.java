@@ -107,7 +107,7 @@ public class SignupActivity2 extends AppCompatActivity {
         coordinatorLayoutView = findViewById(R.id.snackbarPosition);
 
 
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        getSupportActionBar().setDisplayShowTitleEnabled(false);
 //        BitmapDrawable background = new BitmapDrawable (BitmapFactory.decodeResource(getResources(), R.drawable.actionbar));
 //        background.setGravity(Gravity.CENTER);
 //        getSupportActionBar().setBackgroundDrawable(background);

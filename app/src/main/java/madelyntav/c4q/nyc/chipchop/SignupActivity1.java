@@ -103,7 +103,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         bindViews();
         setListeners();
 
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        getSupportActionBar().setDisplayShowTitleEnabled(false);
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
         getSupportActionBar().setBackgroundDrawable(colorDrawable);
 

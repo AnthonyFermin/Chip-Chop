@@ -32,7 +32,7 @@ public class Fragment_Seller_Items_Active extends Fragment {
         fragment = (Fragment_Seller_Items) getParentFragment();
         activeList = (RecyclerView) rootView.findViewById(R.id.seller_items_list_ACTIVE);
         activeList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        activeList.setAdapter(new SellerItemsAdapter(fragment.getActivity(), fragment.getActiveItems(),true));
+        activeList.setAdapter(new SellerItemsAdapter(fragment.getActivity(),fragment, fragment.getActiveItems(),true));
 
         fragment.setActiveList(activeList);
 

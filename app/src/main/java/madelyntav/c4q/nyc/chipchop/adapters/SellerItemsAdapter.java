@@ -44,13 +44,15 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private DBHelper dbHelper;
     private SellActivity activity;
     private boolean isActive;
+    Fragment_Seller_Items fragment;
 
-    public SellerItemsAdapter(final Context context, final List<Item> sellerItems, boolean isActive) {
+    public SellerItemsAdapter(final Context context, Fragment_Seller_Items fragment, final List<Item> sellerItems, boolean isActive) {
         this.context = context;
         this.sellerItems = sellerItems;
         dbHelper = DBHelper.getDbHelper(context);
         activity = (SellActivity) context;
         this.isActive = isActive;
+        this.fragment = fragment;
     }
 
     private class SellersViewHolder extends RecyclerView.ViewHolder {
@@ -93,6 +95,10 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 @Override
                 public void onClick(View view) {
                     //TODO: add popup dialog asking user to confirm deletion
+
+                    Item item = sellerItems.remove(getAdapterPosition());
+                    notifyItemRemoved(getAdapterPosition());
+
                     if(isActive) {
                         if (activity.isCurrentlyCooking()) {
                             dbHelper.removeItemFromSale(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
@@ -101,10 +107,10 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             dbHelper.removeItemFromSellerProfile(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
                             Log.d("ITEMID REMOVED", sellerItems.get(getAdapterPosition()).getItemID() + "");
                         }
-                    }
 
-                    sellerItems.remove(getAdapterPosition());
-                    notifyItemRemoved(getAdapterPosition());
+                        activity.getInactiveSellerItems().add(item);
+                        fragment.getInactiveList().getAdapter().notifyDataSetChanged();
+                    }
                 }
             });
 

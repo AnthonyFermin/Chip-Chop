@@ -30,7 +30,7 @@ public class Fragment_Seller_Items_Inactive extends Fragment {
 
         inactiveList = (RecyclerView) rootView.findViewById(R.id.seller_items_list_INACTIVE);
         inactiveList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        inactiveList.setAdapter(new SellerItemsAdapter(fragment.getActivity(), fragment.getInActiveItems(), false));
+        inactiveList.setAdapter(new SellerItemsAdapter(fragment.getActivity(),fragment, fragment.getInActiveItems(), false));
 
         fragment.setInactiveList(inactiveList);
 

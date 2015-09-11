@@ -95,7 +95,7 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
                         break;
                     }
                     i++;
-                }while(foodItems == null);
+                }while(foodItems == null || foodItems.size() == 0);
 
                 return null;
             }

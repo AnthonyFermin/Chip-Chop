@@ -100,8 +100,7 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 public void onClick(View view) {
                     //TODO: add popup dialog asking user to confirm deletion
 
-                    Item item = sellerItems.remove(getAdapterPosition());
-                    notifyItemRemoved(getAdapterPosition());
+                    Item item = sellerItems.get(getAdapterPosition());
 
                     if(isActive) {
                         if (activity.isCurrentlyCooking()) {
@@ -115,6 +114,9 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         activity.getInactiveSellerItems().add(item);
                         fragment.getInactiveList().getAdapter().notifyDataSetChanged();
                     }
+
+                    sellerItems.remove(getAdapterPosition());
+                    notifyItemRemoved(getAdapterPosition());
                 }
             });
 

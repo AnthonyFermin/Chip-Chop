@@ -162,7 +162,7 @@ public class Fragment_Seller_Items extends Fragment {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-
+                
                 activity.setSellerItems(sellerItems);
 
                 activeList.getAdapter().notifyDataSetChanged();

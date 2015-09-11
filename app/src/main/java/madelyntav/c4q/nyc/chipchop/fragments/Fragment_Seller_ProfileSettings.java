@@ -344,9 +344,9 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     }
 
     private void rescaleImageForDb(final String filePath) {
-        new AsyncTask<Void, Void, Void>() {
+        new AsyncTask<Void, Void, Bitmap>() {
             @Override
-            protected Void doInBackground(Void... voids) {
+            protected Bitmap doInBackground(Void... voids) {
                 Bitmap bitmap = BitmapFactory.decodeFile(filePath);
                 Bitmap rotatedBitmap = rotateBitmap(bitmap,filePath);
                 Bitmap scaledBitmap = null;
@@ -369,13 +369,14 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                return null;
+                return scaledBitmap;
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
+            protected void onPostExecute(Bitmap bitmap) {
+                super.onPostExecute(bitmap);
                 imageLink = HelperMethods.saveImageToEncodedString(filePath);
+                profilePhoto.setImageBitmap(bitmap);
                 Log.d("Item Creation", "ImageLink: " + imageLink);
             }
         }.execute();

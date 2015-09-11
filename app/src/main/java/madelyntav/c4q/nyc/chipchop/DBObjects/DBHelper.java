@@ -32,7 +32,6 @@ public class DBHelper extends Firebase {
     public static Context mContext;
     public static Item item;
     public static Item item2;
-
     String UID;
     public static ArrayList<User> allUsers;
     public static ArrayList<Item> items;
@@ -732,9 +731,9 @@ public class DBHelper extends Firebase {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("Number2", dataSnapshot.getChildrenCount() + "");
 
+
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     Seller seller1 = dataSnapshot1.getValue(Seller.class);
-
                     if (dataSnapshot1.getKey().equals(sellerID)) {
                         seller.setName(seller1.name);
                         seller.setStoreName(seller1.storeName);
@@ -757,14 +756,12 @@ public class DBHelper extends Firebase {
                     }
                 }
             }
-
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 Toast.makeText(mContext, "Error: Please Try Again", Toast.LENGTH_SHORT).show();
                 seller = null;
             }
         });
-
         return seller;
     }
 
@@ -2058,85 +2055,57 @@ public class DBHelper extends Firebase {
     }
 
     public ArrayList<Item> getSellerItems(final String sellerID, final DBCallback dbCallback) {
-        items = new ArrayList<>();
-        sizeofAddDBList=0;
+        sellerId = sellerID;
 
         Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerID + "/itemsForSale");
 
         fRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("Number2", dataSnapshot.getChildrenCount() + "");
                 sizeofAddDBList = dataSnapshot.getChildrenCount();
+                Log.d("Number2", dataSnapshot.getChildrenCount() + "");
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     Item item = dataSnapshot1.getValue(Item.class);
 
-                    item.setItemID(dataSnapshot1.getKey());
-                    item.setQuantity(item.quantity);
-                    item.setSellerID(sellerId);
-                    item.setItemID(dataSnapshot1.getKey());
-                    item.setNameOfItem(item.nameOfItem);
-                    item.setPrice(item.price);
-                    item.setQuantity(item.quantity);
-                    item.setIsVegetarian(item.isVegetarian);
-                    item.setImageLink(item.imageLink);
-                    item.setContainsDairy(item.containsDairy);
-                    item.setContainsEggs(item.containsEggs);
-                    item.setContainsPeanuts(item.containsPeanuts);
-                    item.setContainsShellfish(item.containsShellfish);
-                    item.setGlutenFree(item.glutenFree);
+                    item2.setItemID(dataSnapshot1.getKey());
+                    item2.setQuantity(item.quantity);
+                    item2.setSellerID(sellerId);
+                    item2.setItemID(dataSnapshot1.getKey());
+                    item2.setNameOfItem(item.nameOfItem);
+                    item2.setPrice(item.price);
+                    item2.setQuantity(item.quantity);
+                    item2.setIsVegetarian(item.isVegetarian);
+                    item2.setImageLink(item.imageLink);
+                    item2.setContainsDairy(item.containsDairy);
+                    item2.setContainsEggs(item.containsEggs);
+                    item2.setContainsPeanuts(item.containsPeanuts);
+                    item2.setContainsShellfish(item.containsShellfish);
+                    item2.setGlutenFree(item.glutenFree);
 
                     if (items.size() < sizeofAddDBList) {
-                        items.add(item);
+                        items.add(item2);
+                        Log.d("ITEMSLIST", items.toString());
                     }
-                    Log.d("SNAPSHOT", "Got Snapshot");
-                    String key = dataSnapshot1.getKey();
-                    Log.d(itemID, key + "");
-                    String nameOfItem1 = item.nameOfItem;
-                    Log.d(nameOfItem, nameOfItem1 + "");
-
-                    String descriptionOfItem1 = item.descriptionOfItem;
-                    Log.d(descriptionOfItem, descriptionOfItem1 + "");
-
-                    int quantityAvailable1 = item.quantity;
-                    Log.d(quantity, quantityAvailable1 + "");
-
-                    String imageLink1 = item.imageLink;
-                    Log.d(imageLink, imageLink1 + "");
-
-                    boolean isVegetarian = item.isVegetarian;
-                    boolean containsDairy = item.containsDairy;
-                    boolean containsPeanuts = item.containsPeanuts;
-                    boolean gluttenFree = item.glutenFree;
-                    boolean containsShellfish = item.containsShellfish;
-                    int quantity = item.quantity;
-                    double price = item.price;
-
                 }
             }
-
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-                dbCallback.runOnFail();
             }
         });
 
-        if (items.size() == sizeofAddDBList) {
-            updateItemsList2(dbCallback);
-        }
+        Log.d("catchThis", items.toString());
         return items;
     }
 
-    public ArrayList<Item> updateItemsList2(DBCallback dbCallback) {
+    public ArrayList<Item> updateItemsList2(String sellerId, DBCallback dbCallback) {
 
         if (items.size() < sizeofAddDBList) {
             getSellersOnSaleItems(sellerId, dbCallback);
         }
-
+        Log.d("catchThisATR", items.toString());
         return items;
     }
-
 
     public ArrayList<User> getAllSellers(final DBCallback dbCallback) {
         Firebase fRef = new Firebase(URL + "SellerProfiles/");

@@ -62,11 +62,12 @@ public class SellActivity extends AppCompatActivity {
     // for storing data between fragments in SellActivity
 
     private ArrayList<Item> sellerItems = null;
+    private ArrayList<Item> inactiveSellerItems = null;
     private boolean currentlyCooking = false;
     private User user = null;
     private Seller seller = null;
-    private boolean fromItemCreation = false;
     private Item itemToEdit = null;
+    private Item inactiveItemToEdit = null;
     private String currentFragment;
 
     private DBHelper dbHelper;
@@ -333,6 +334,14 @@ public class SellActivity extends AppCompatActivity {
         this.sellerItems = sellerItems;
     }
 
+    public ArrayList<Item> getInactiveSellerItems() {
+        return inactiveSellerItems;
+    }
+
+    public void setInactiveSellerItems(ArrayList<Item> inactiveSellerItems) {
+        this.inactiveSellerItems = inactiveSellerItems;
+    }
+
     public void setCookingStatus(boolean condition){
         currentlyCooking = condition;
     }
@@ -357,20 +366,20 @@ public class SellActivity extends AppCompatActivity {
         return user;
     }
 
-    public boolean isFromItemCreation(){
-        return fromItemCreation;
-    }
-
-    public void setFromItemCreation(boolean condition){
-        fromItemCreation = condition;
-    }
-
     public Item getItemToEdit() {
         return itemToEdit;
     }
 
     public void setItemToEdit(Item itemToEdit) {
         this.itemToEdit = itemToEdit;
+    }
+
+    public Item getInactiveItemToEdit() {
+        return inactiveItemToEdit;
+    }
+
+    public void setInactiveItemToEdit(Item inactiveItemToEdit) {
+        this.inactiveItemToEdit = inactiveItemToEdit;
     }
 
     public String getCurrentFragment() {

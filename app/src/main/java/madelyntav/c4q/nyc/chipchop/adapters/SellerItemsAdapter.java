@@ -4,9 +4,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +20,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-
-import java.text.DecimalFormat;
 import java.util.List;
 
 import madelyntav.c4q.nyc.chipchop.DBCallback;
@@ -42,12 +41,16 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private int lastPosition = -1;
     private DBHelper dbHelper;
     private SellActivity activity;
+    private boolean isActive;
+    Fragment_Seller_Items fragment;
 
-    public SellerItemsAdapter(final Context context, final List<Item> sellerItems) {
+    public SellerItemsAdapter(final Context context, Fragment_Seller_Items fragment, final List<Item> sellerItems, boolean isActive) {
         this.context = context;
         this.sellerItems = sellerItems;
         dbHelper = DBHelper.getDbHelper(context);
         activity = (SellActivity) context;
+        this.isActive = isActive;
+        this.fragment = fragment;
     }
 
     private class SellersViewHolder extends RecyclerView.ViewHolder {
@@ -59,6 +62,7 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         TextView price;
         TextView quantity;
         TextView description;
+        SwitchCompat activeSwitch;
 
         public SellersViewHolder(View itemView) {
             super(itemView);
@@ -69,6 +73,7 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             price = (TextView) itemView.findViewById(R.id.food_price_tv);
             quantity = (TextView) itemView.findViewById(R.id.food_quantity_tv);
             description = (TextView) itemView.findViewById(R.id.food_description_tv);
+            activeSwitch = (SwitchCompat) itemView.findViewById(R.id.active_toggle);
 
             itemRemovalCallback = new DBCallback() {
                 @Override
@@ -94,16 +99,22 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 @Override
                 public void onClick(View view) {
                     //TODO: add popup dialog asking user to confirm deletion
-                    if(activity.isCurrentlyCooking()) {
-                        dbHelper.removeItemFromSale(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
-                    }else {
-                    //TODO: Madelyn: are these the correct methods to remove items from the seller profile in the DB?
-                        dbHelper.removeItemFromSellerProfile(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
-                        Log.d("ITEMID REMOVED", sellerItems.get(getAdapterPosition()).getItemID() + "");
-                    }
 
-                    sellerItems.remove(getAdapterPosition());
+                    Item item = sellerItems.remove(getAdapterPosition());
                     notifyItemRemoved(getAdapterPosition());
+
+                    if(isActive) {
+                        if (activity.isCurrentlyCooking()) {
+                            dbHelper.removeItemFromSale(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
+                        } else {
+                            //TODO: Madelyn: are these the correct methods to remove items from the seller profile in the DB?
+                            dbHelper.removeItemFromSellerProfile(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
+                            Log.d("ITEMID REMOVED", sellerItems.get(getAdapterPosition()).getItemID() + "");
+                        }
+
+                        activity.getInactiveSellerItems().add(item);
+                        fragment.getInactiveList().getAdapter().notifyDataSetChanged();
+                    }
                 }
             });
 
@@ -115,6 +126,12 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                     activity.setItemToEdit(itemToEdit);
                     activity.replaceSellerFragment(new Fragment_Seller_CreateItem());
+                }
+            });
+
+            activeSwitch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
                 }
             });
         }

@@ -30,6 +30,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +53,7 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_ViewCart;
 
 public class BuyActivity extends AppCompatActivity {
 
+    private RatingBar ratingBar;
     private Button contactButton;
     private FrameLayout frameLayout;
     private LinearLayout DrawerLinear;
@@ -256,6 +258,7 @@ public class BuyActivity extends AppCompatActivity {
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         coordinatorLayoutView = findViewById(R.id.snackbarPosition);
         contactButton = (Button) findViewById(R.id.contact_button);
+        ratingBar = (RatingBar) findViewById(R.id.ratingBar);
 
     }
 
@@ -430,6 +433,7 @@ public class BuyActivity extends AppCompatActivity {
         HelperMethods.setUser(user);
 
         drawerUserNameTV.setText(user.getName());
+        ratingBar.setVisibility(View.VISIBLE);
         mListTitles[3] = "Sign Out";
         mDrawerList.setAdapter(new ArrayAdapter<>(BuyActivity.this,
                 R.layout.navdrawer_list_item, mListTitles));

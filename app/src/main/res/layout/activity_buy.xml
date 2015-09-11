@@ -58,6 +58,7 @@
 
 
         <RatingBar
+            android:visibility="gone"
             style="@style/RatingBar"
             android:isIndicator="true"
             android:id="@+id/rating_bar"

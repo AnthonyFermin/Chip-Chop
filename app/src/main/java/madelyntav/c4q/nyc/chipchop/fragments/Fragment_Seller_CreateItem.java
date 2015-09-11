@@ -28,6 +28,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
@@ -42,7 +43,7 @@ import madelyntav.c4q.nyc.chipchop.SellActivity;
  */
 public class Fragment_Seller_CreateItem extends Fragment {
 
-    EditText dollarPriceET, centPriceET;
+    EditText dollarPriceET;
     ImageButton dishPhotoButton;
     Button addButton;
     EditText dishNameET;
@@ -75,22 +76,11 @@ public class Fragment_Seller_CreateItem extends Fragment {
         return root;
     }
 
-    private void editItem(){
-        Item itemToEdit = activity.getItemToEdit();
+    private void editItem(Item itemToEdit){
         dishNameET.setText(itemToEdit.getNameOfItem());
         portionsET.setText(itemToEdit.getQuantity() + "");
         descriptionET.setText(itemToEdit.getDescriptionOfItem());
-        String price = itemToEdit.getPrice() + "";
-        if(price.contains(".") && price.length() > 2){
-            int decInd = price.indexOf('.');
-            String dollarAmt = price.substring(0, decInd);
-//            String centAmt = price.substring(decInd + 1);
-            dollarPriceET.setText(dollarAmt);
-//            centPriceET.setText(centAmt);
-        }else{
-            dollarPriceET.setText(price);
-//            centPriceET.setText("00");
-        }
+        dollarPriceET.setText(itemToEdit.getPrice() + "");
 
         vegCB.setChecked(itemToEdit.isVegetarian());
         glutFreeCB.setChecked(itemToEdit.isGlutenFree());
@@ -108,7 +98,9 @@ public class Fragment_Seller_CreateItem extends Fragment {
         imageLink = "";
 
         if(activity.getItemToEdit() != null){
-            editItem();
+            editItem(activity.getItemToEdit());
+        }else if(activity.getInactiveItemToEdit() != null){
+            editItem(activity.getInactiveItemToEdit());
         }
 
         itemAddCallback = new DBCallback() {
@@ -116,7 +108,6 @@ public class Fragment_Seller_CreateItem extends Fragment {
             public void runOnSuccess() {
                 Toast.makeText(activity,"Item added", Toast.LENGTH_SHORT).show();
                 activity.replaceSellerFragment(new Fragment_Seller_Items());
-
             }
 
             @Override
@@ -140,42 +131,65 @@ public class Fragment_Seller_CreateItem extends Fragment {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: add item to sellers items in db and arraylist displayed in profile/items fragment recycler views
-                String dishName = dishNameET.getText().toString();
-                int portions = 0;
-                if (!portionsET.getText().toString().isEmpty()) {
-                    portions = Integer.parseInt(portionsET.getText().toString());
-                }
-                String price = dollarPriceET.getText().toString();
-                int numPrice = 1;
-                try {
-                    numPrice = Integer.parseInt(price);
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                }
-                String description = descriptionET.getText().toString();
-
-                Item item = new Item(dbHelper.getUserID(), "", dishName, portions, description, imageLink);
-                Log.d("Item Created", "ImageLink: " + imageLink);
-                item.setPrice(numPrice);
-                item.setIsVegetarian(vegCB.isChecked());
-                item.setGlutenFree(glutFreeCB.isChecked());
-                item.setContainsDairy(dairyCB.isChecked());
-                item.setContainsEggs(eggsCB.isChecked());
-                item.setContainsPeanuts(peanutsCB.isChecked());
-                item.setContainsShellfish(shellfishCB.isChecked());
-
-                if (activity.getItemToEdit() == null) {
-                    if (activity.isCurrentlyCooking()) {
-                        dbHelper.addItemToActiveSellerProfile(item, itemAddCallback);
-                    } else {
-                        dbHelper.addItemToSellerProfileDB(item, itemAddCallback);
-                    }
+                if (dishNameET.getText().toString().isEmpty()
+                        || dollarPriceET.getText().toString().isEmpty()
+                        || Integer.parseInt(dollarPriceET.getText().toString()) == 0
+                        || portionsET.getText().toString().isEmpty()
+                        || Integer.parseInt(portionsET.getText().toString()) == 0
+                        || descriptionET.getText().toString().isEmpty()) {
+                    Toast.makeText(activity, "Please fill in all required fields", Toast.LENGTH_SHORT).show();
                 } else {
-                    if (activity.isCurrentlyCooking()) {
-                        dbHelper.editItemInActiveSellerProfile(item, itemAddCallback);
+
+                    String dishName = dishNameET.getText().toString();
+                    int portions = 0;
+                    if (!portionsET.getText().toString().isEmpty()) {
+                        portions = Integer.parseInt(portionsET.getText().toString());
+                    }
+                    String price = dollarPriceET.getText().toString();
+                    int numPrice = 1;
+                    try {
+                        numPrice = Integer.parseInt(price);
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                    String description = descriptionET.getText().toString();
+
+                    Item item = new Item(dbHelper.getUserID(), "", dishName, portions, description, imageLink);
+                    Log.d("Item Created", "ImageLink: " + imageLink);
+                    item.setPrice(numPrice);
+                    item.setIsVegetarian(vegCB.isChecked());
+                    item.setGlutenFree(glutFreeCB.isChecked());
+                    item.setContainsDairy(dairyCB.isChecked());
+                    item.setContainsEggs(eggsCB.isChecked());
+                    item.setContainsPeanuts(peanutsCB.isChecked());
+                    item.setContainsShellfish(shellfishCB.isChecked());
+
+                    if (activity.getInactiveItemToEdit() != null) {
+                        ArrayList<Item> inactiveItems = activity.getInactiveSellerItems();
+                        boolean itemAdded = false;
+                        for (int i = 0; i < inactiveItems.size(); i++) {
+                            Item item1 = inactiveItems.get(i);
+                            if (activity.getInactiveItemToEdit().getNameOfItem().equalsIgnoreCase(item1.getNameOfItem())) {
+                                inactiveItems.remove(i);
+                                inactiveItems.add(i, item);
+                                itemAdded = true;
+                            }
+                        }
+                        if(!itemAdded){
+                            inactiveItems.add(item);
+                        }
+                    } else if (activity.getItemToEdit() != null) {
+                        if (activity.isCurrentlyCooking()) {
+                            dbHelper.editItemInActiveSellerProfile(item, itemAddCallback);
+                        } else {
+                            dbHelper.editItemInSellerProfile(item, itemAddCallback);
+                        }
                     } else {
-                        dbHelper.editItemInSellerProfile(item, itemAddCallback);
+                        if (activity.isCurrentlyCooking()) {
+                            dbHelper.addItemToActiveSellerProfile(item, itemAddCallback);
+                        } else {
+                            dbHelper.addItemToSellerProfileDB(item, itemAddCallback);
+                        }
                     }
                 }
             }
@@ -191,7 +205,6 @@ public class Fragment_Seller_CreateItem extends Fragment {
         portionsET = (EditText) root.findViewById(R.id.portions);
         descriptionET = (EditText) root.findViewById(R.id.description);
         dollarPriceET = (EditText) root.findViewById(R.id.price_dollar_amount);
-//        centPriceET = (EditText) root.findViewById(R.id.price_cents_amount);
 
         dishPhotoButton = (ImageButton) root.findViewById(R.id.dish_image);
 
@@ -290,6 +303,7 @@ public class Fragment_Seller_CreateItem extends Fragment {
     @Override
     public void onDetach() {
         activity.setItemToEdit(null);
+        activity.setInactiveItemToEdit(null);
         super.onDetach();
     }
 }

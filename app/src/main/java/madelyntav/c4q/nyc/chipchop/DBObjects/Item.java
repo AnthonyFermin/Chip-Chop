@@ -2,12 +2,14 @@ package madelyntav.c4q.nyc.chipchop.DBObjects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.io.Serializable;
+
 /**
  * Created by c4q-madelyntavarez on 8/11/15.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 
-public class Item {
+public class Item implements Serializable{
     String buyerID;
     String sellerID;
     String nameOfItem;

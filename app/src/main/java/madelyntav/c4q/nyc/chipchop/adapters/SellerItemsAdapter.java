@@ -4,8 +4,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +30,7 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.SellActivity;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_CreateItem;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Items;
 
 /**
  * Created by c4q-anthonyf on 8/14/15.
@@ -40,12 +43,14 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private int lastPosition = -1;
     private DBHelper dbHelper;
     private SellActivity activity;
+    private boolean isActive;
 
-    public SellerItemsAdapter(final Context context, final List<Item> sellerItems) {
+    public SellerItemsAdapter(final Context context, final List<Item> sellerItems, boolean isActive) {
         this.context = context;
         this.sellerItems = sellerItems;
         dbHelper = DBHelper.getDbHelper(context);
         activity = (SellActivity) context;
+        this.isActive = isActive;
     }
 
     private class SellersViewHolder extends RecyclerView.ViewHolder {
@@ -57,6 +62,7 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         TextView price;
         TextView quantity;
         TextView description;
+        SwitchCompat activeSwitch;
 
         public SellersViewHolder(View itemView) {
             super(itemView);
@@ -67,6 +73,7 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             price = (TextView) itemView.findViewById(R.id.food_price_tv);
             quantity = (TextView) itemView.findViewById(R.id.food_quantity_tv);
             description = (TextView) itemView.findViewById(R.id.food_description_tv);
+            activeSwitch = (SwitchCompat) itemView.findViewById(R.id.active_toggle);
 
             itemRemovalCallback = new DBCallback() {
                 @Override
@@ -107,6 +114,12 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                     activity.setItemToEdit(itemToEdit);
                     activity.replaceSellerFragment(new Fragment_Seller_CreateItem());
+                }
+            });
+
+            activeSwitch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
                 }
             });
         }

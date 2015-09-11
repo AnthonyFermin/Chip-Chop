@@ -664,7 +664,7 @@ public class DBHelper extends Firebase {
     public Seller getSellerFromDB(final String sellerID) {
         sellerId = sellerID;
 
-        Firebase fRef = new Firebase(URL + "SellerProfiles/");
+        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId);
         fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -673,7 +673,6 @@ public class DBHelper extends Firebase {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     Seller seller1 = dataSnapshot1.getValue(Seller.class);
 
-                    if (dataSnapshot1.getKey().equals(sellerID)) {
                         seller.setName(seller1.name);
                         seller.setStoreName(seller1.storeName);
                         seller.setAddress(seller1.address);
@@ -691,8 +690,6 @@ public class DBHelper extends Firebase {
                         seller.setIsCooking(seller1.getIsCooking());
 
                         Log.d("Seller", seller.name + "");
-
-                    }
                 }
             }
 

@@ -712,8 +712,6 @@ public class DBHelper extends Firebase {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("Number2", dataSnapshot.getChildrenCount() + "");
 
-                if (dataSnapshot.getKey().equals(UID)) {
-
                     User user1 = dataSnapshot.getValue(User.class);
 
                     user.setName(user1.name);
@@ -729,8 +727,6 @@ public class DBHelper extends Firebase {
                     user.setLongitude(user1.longitude);
                     user.setLatitude(user1.latitude);
                 }
-
-            }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {

@@ -104,9 +104,12 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         setListeners();
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        BitmapDrawable background = new BitmapDrawable (BitmapFactory.decodeResource(getResources(), R.drawable.actionbar));
-        background.setGravity(Gravity.CENTER);
-        getSupportActionBar().setBackgroundDrawable(background);
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
+        getSupportActionBar().setBackgroundDrawable(colorDrawable);
+
+//        BitmapDrawable background = new BitmapDrawable (BitmapFactory.decodeResource(getResources(), R.drawable.actionbar));
+//        background.setGravity(Gravity.CENTER);
+//        getSupportActionBar().setBackgroundDrawable(background);
 
 
 

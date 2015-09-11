@@ -108,9 +108,9 @@ public class SignupActivity2 extends AppCompatActivity {
 
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        BitmapDrawable background = new BitmapDrawable (BitmapFactory.decodeResource(getResources(), R.drawable.actionbar));
-        background.setGravity(Gravity.CENTER);
-        getSupportActionBar().setBackgroundDrawable(background);
+//        BitmapDrawable background = new BitmapDrawable (BitmapFactory.decodeResource(getResources(), R.drawable.actionbar));
+//        background.setGravity(Gravity.CENTER);
+//        getSupportActionBar().setBackgroundDrawable(background);
 
         startButton = (Button) findViewById(R.id.createUserButton);
         startButton.setOnClickListener(new View.OnClickListener() {

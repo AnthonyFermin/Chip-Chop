@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.Intent;
@@ -46,6 +48,8 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Orders;
 
 public class SellActivity extends AppCompatActivity {
 
+    Button contactButton;
+    View coordinatorLayoutView;
     FrameLayout frameLayout;
     LinearLayout DrawerLinear;
     private DrawerLayout mDrawerLayout;
@@ -91,6 +95,16 @@ public class SellActivity extends AppCompatActivity {
     }
 
     private void setUpNavActionBar() {
+        contactButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent contactIntent = new Intent(Intent.ACTION_SEND);
+                contactIntent.setType("text/html");
+                contactIntent.putExtra(Intent.EXTRA_EMAIL, "chipchopcontact@gmail.com");
+                startActivity(Intent.createChooser(contactIntent, "Create Email"));
+            }
+        });
+
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.navdrawer_list_item, mListTitles));
 
@@ -129,17 +143,17 @@ public class SellActivity extends AppCompatActivity {
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(false);
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.navdrawer);
-//        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
-//        getSupportActionBar().setBackgroundDrawable(colorDrawable);
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
+        getSupportActionBar().setBackgroundDrawable(colorDrawable);
 
-        BitmapDrawable background = new BitmapDrawable (BitmapFactory.decodeResource(getResources(), R.drawable.actionbar));
-        background.setGravity(Gravity.CENTER);
-        getSupportActionBar().setBackgroundDrawable(background);
+//        BitmapDrawable background = new BitmapDrawable (BitmapFactory.decodeResource(getResources(), R.drawable.actionbar));
+//        background.setGravity(Gravity.CENTER);
+//        getSupportActionBar().setBackgroundDrawable(background);
     }
 
     private void initializeData() {
@@ -165,6 +179,9 @@ public class SellActivity extends AppCompatActivity {
         DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        coordinatorLayoutView = findViewById(R.id.snackbarPosition);
+        contactButton = (Button) findViewById(R.id.contact_button);
+
     }
 
 
@@ -189,10 +206,20 @@ public class SellActivity extends AppCompatActivity {
         } else if (position == 3) {
             clearLogin();
 
-            Intent intent = new Intent(this,BuyActivity.class);
-            startActivity(intent);
-            Toast.makeText(this,"Sign out successful",Toast.LENGTH_SHORT).show();
-            finish();
+            Snackbar
+                    .make(coordinatorLayoutView, "Sign out successful", Snackbar.LENGTH_SHORT)
+                    .show();
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(getApplicationContext(), BuyActivity.class);
+                    startActivity(intent);
+
+                    finish();
+                }
+            }, 2000);
+
         }
 
             // Create fragment manager to begin interacting with the fragments and the container

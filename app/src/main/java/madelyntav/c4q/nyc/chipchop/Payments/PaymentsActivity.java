@@ -2,6 +2,8 @@ package madelyntav.c4q.nyc.chipchop.Payments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -133,6 +135,9 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
         zipCodeView = (EditText) findViewById(R.id.zipcode);
         zipCodeView.setText(zipCode);
 
+
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
+        getSupportActionBar().setBackgroundDrawable(colorDrawable);
 
         //Button to confirm payment with credit card through stripe
         confirmPaymentButton.setOnClickListener(new View.OnClickListener() {

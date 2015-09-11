@@ -1,5 +1,9 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -11,6 +15,7 @@
         android:id="@+id/loadingPanel"
         >
         <ProgressBar
+            android:progressDrawable="@drawable/progressbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -69,6 +74,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
+                            android:textStyle="bold"
                             android:text="Chip Chopper"
                             android:textSize="35sp" />
                         <TextView
@@ -83,13 +89,40 @@
                             android:textSize="18sp" />
                     </LinearLayout>
                 </LinearLayout>
-                <Switch
-                    android:id="@+id/switch1"
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="DELIVERY METHOD"
+                    android:gravity="center_horizontal"
+                    android:textStyle="bold"
+                    style="@style/text_design"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="PICK UP"/>
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/delivery_switch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="DELIVERY"
-                    android:visibility="gone" />
+                    android:layout_gravity="center_horizontal"/>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="DELIVER"/>
+
+                </LinearLayout>
+
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -222,6 +255,48 @@
 
                 </android.support.design.widget.TextInputLayout>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="ROUTING INFO"
+                    android:gravity="center_horizontal"
+                    android:textStyle="bold"
+                    style="@style/text_design"/>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Account Number"
+                    android:inputType="number"
+                    android:textSize="20sp"
+                    android:maxLength="9"
+                    android:id="@+id/account_number"/>
+
+                </android.support.design.widget.TextInputLayout>
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Routing Number"
+                        android:inputType="number"
+                        android:textSize="20sp"
+                        android:maxLength="9"
+                        android:id="@+id/routing_number"/>
+
+                </android.support.design.widget.TextInputLayout>
+
+
+
+
             </LinearLayout>
         </ScrollView>
         <Button
@@ -235,3 +310,12 @@
 
 
 </LinearLayout>
+
+<android.support.design.widget.CoordinatorLayout
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:layout_alignParentBottom="true"
+android:id="@+id/snackbarPosition">
+</android.support.design.widget.CoordinatorLayout>
+
+</RelativeLayout>

@@ -3,6 +3,7 @@ package madelyntav.c4q.nyc.chipchop;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Orders;
  */
 public class PaymentDialog extends android.support.v4.app.DialogFragment {
 
+    View coordinatorLayoutView;
     ImageView confirmImage;
     Button cardButton, cashButton;
     private BuyActivity activity;
@@ -79,6 +81,9 @@ public class PaymentDialog extends android.support.v4.app.DialogFragment {
                     @Override
                     public void runOnFail() {
                         Toast.makeText(activity, "Items are no longer available", Toast.LENGTH_SHORT).show();
+                        Snackbar
+                                .make(coordinatorLayoutView, "Items are no longer available", Snackbar.LENGTH_SHORT)
+                                .show();
                         getDialog().dismiss();
                     }
                 });
@@ -117,6 +122,9 @@ public class PaymentDialog extends android.support.v4.app.DialogFragment {
                     @Override
                     public void runOnFail() {
                         Toast.makeText(activity, "Items are no longer available", Toast.LENGTH_SHORT).show();
+                        Snackbar
+                                .make(coordinatorLayoutView, "Items are no longer available", Snackbar.LENGTH_SHORT)
+                                .show();
                         getDialog().dismiss();
                     }
                 });

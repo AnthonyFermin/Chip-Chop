@@ -63,6 +63,17 @@ public class Seller {
         this.photoLink=photoLink;
         this.phoneNumber=phoneNumber;
     }
+    public Seller(String UID, String eMail, String name, Address address, String photoLink,String storeName, String phoneNumber, Boolean isCooking){
+        this.UID=UID;
+        this.eMail = eMail;
+        this.name=name;
+        this.address=address;
+        this.storeName=storeName;
+        this.photoLink=photoLink;
+        this.phoneNumber=phoneNumber;
+        this.isCooking=isCooking;
+    }
+
 
     public Seller(String UID, String cardNumber, int cardExpirationMonth, int cardExpirationYear, String cardCVC) {
         this.UID = UID;
@@ -197,11 +208,6 @@ public class Seller {
         UID=null;
         photoLink=null;
     }
-
-    public boolean isCooking() {
-        return isCooking;
-    }
-
 
     public String getCardNumber() {
         return cardNumber;

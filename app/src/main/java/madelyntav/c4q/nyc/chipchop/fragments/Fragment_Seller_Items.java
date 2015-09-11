@@ -7,19 +7,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.andexert.library.RippleView;
 
 import java.util.ArrayList;
 
@@ -48,6 +41,8 @@ public class Fragment_Seller_Items extends Fragment {
      */
     private PagerAdapter mPagerAdapter;
     Fragment fragment;
+
+    public static View coordinatorLayoutView;
 
     private android.support.design.widget.FloatingActionButton addButton;
     private RecyclerView foodList;
@@ -156,7 +151,7 @@ public class Fragment_Seller_Items extends Fragment {
 //        containingView.setVisibility(View.INVISIBLE);
 //
 //        foodList = (RecyclerView) root.findViewById(R.id.seller_items_list);
-
+        coordinatorLayoutView = root.findViewById(R.id.snackbarPosition);
         addButton = (android.support.design.widget.FloatingActionButton) root.findViewById(R.id.addButton);
 
     }

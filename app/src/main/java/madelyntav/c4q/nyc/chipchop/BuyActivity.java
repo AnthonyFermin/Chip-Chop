@@ -1,12 +1,17 @@
 package madelyntav.c4q.nyc.chipchop;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -25,6 +30,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +53,8 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_ViewCart;
 
 public class BuyActivity extends AppCompatActivity {
 
+    private RatingBar ratingBar;
+    private Button contactButton;
     private FrameLayout frameLayout;
     private LinearLayout DrawerLinear;
     private DrawerLayout mDrawerLayout;
@@ -70,6 +78,7 @@ public class BuyActivity extends AppCompatActivity {
     private Item itemToCart = null;
     private Order currentOrder;
     private Order orderToView;
+    View coordinatorLayoutView;
 
     public static final String TO_SELL_ACTIVITY = "to_sell";
 
@@ -167,6 +176,16 @@ public class BuyActivity extends AppCompatActivity {
     }
 
     private void setUpDrawer() {
+        contactButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent contactIntent = new Intent(Intent.ACTION_SEND);
+                contactIntent.setType("text/html");
+                contactIntent.putExtra(Intent.EXTRA_EMAIL, "chipchopcontact@gmail.com");
+                startActivity(Intent.createChooser(contactIntent, "Create Email"));
+            }
+        });
+
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.navdrawer_list_item, mListTitles));
 
@@ -194,12 +213,21 @@ public class BuyActivity extends AppCompatActivity {
                             Intent sellIntent = new Intent(getApplicationContext(), SellActivity.class);
                             startActivity(sellIntent);
                         }else{
-                            Toast.makeText(BuyActivity.this,"Must be logged for this feature", Toast.LENGTH_SHORT).show();
-                            Intent signUpIntent = new Intent(getApplicationContext(), SignupActivity1.class);
-                            signUpIntent.putExtra(TO_SELL_ACTIVITY,true);
-                            startActivity(signUpIntent);
+                            mDrawerLayout.closeDrawer(DrawerLinear);
+                            Snackbar
+                                    .make(coordinatorLayoutView, "Must be logged for this feature", Snackbar.LENGTH_SHORT)
+                                    .show();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent signUpIntent = new Intent(getApplicationContext(), SignupActivity1.class);
+                                    signUpIntent.putExtra(TO_SELL_ACTIVITY, true);
+                                    startActivity(signUpIntent);
+                                    finish();
+                                }
+                            }, 1500);
+
                         }
-                        finish();
                     }
                 });
 
@@ -208,17 +236,17 @@ public class BuyActivity extends AppCompatActivity {
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(false);
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.navdrawer);
-//        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
-//        getSupportActionBar().setBackgroundDrawable(colorDrawable);
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
+        getSupportActionBar().setBackgroundDrawable(colorDrawable);
 
-        BitmapDrawable background = new BitmapDrawable (BitmapFactory.decodeResource(getResources(), R.drawable.actionbar));
-        background.setGravity(Gravity.CENTER);
-        getSupportActionBar().setBackgroundDrawable(background);
+//        BitmapDrawable background = new BitmapDrawable (BitmapFactory.decodeResource(getResources(), R.drawable.actionbar));
+//        background.setGravity(Gravity.CENTER);
+//        getSupportActionBar().setBackgroundDrawable(background);
 
     }
 
@@ -228,12 +256,17 @@ public class BuyActivity extends AppCompatActivity {
         DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        coordinatorLayoutView = findViewById(R.id.snackbarPosition);
+        contactButton = (Button) findViewById(R.id.contact_button);
+        ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+
     }
 
     private void initializeData() {
         dbHelper = DBHelper.getDbHelper(this);
 
         mListTitles = getResources().getStringArray(R.array.BUYER_nav_drawer_titles);
+
 
         emptyCallback = new DBCallback() {
             @Override
@@ -268,8 +301,15 @@ public class BuyActivity extends AppCompatActivity {
                 fragment = new Fragment_Buyer_ProfileSettings();
             else {
                 clearLogin();
-                Toast.makeText(this,"Must log in to view profile",Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(BuyActivity.this, SignupActivity1.class));
+                Snackbar
+                        .make(coordinatorLayoutView, "Must log in to view profile", Snackbar.LENGTH_SHORT)
+                        .show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        startActivity(new Intent(BuyActivity.this, SignupActivity1.class));
+                    }
+                }, 2000);
             }
         } else if (position == 3) {
             //SIGN OUT/IN DRAWER ITEM
@@ -278,7 +318,9 @@ public class BuyActivity extends AppCompatActivity {
                 clearLogin();
                 user = null;
                 LoginManager.getInstance().logOut();
-                Toast.makeText(this, "Sign out successful", Toast.LENGTH_SHORT).show();
+                Snackbar
+                        .make(coordinatorLayoutView, "Sign out successful", Snackbar.LENGTH_SHORT)
+                        .show();
 
                 //if not currently in fragment_buyer_map, replace current fragment with buyer_map fragment
                 if (!getCurrentFragment().equals(Fragment_Buyer_Map.TAG)) {
@@ -391,6 +433,7 @@ public class BuyActivity extends AppCompatActivity {
         HelperMethods.setUser(user);
 
         drawerUserNameTV.setText(user.getName());
+//        ratingBar.setVisibility(View.VISIBLE);
         mListTitles[3] = "Sign Out";
         mDrawerList.setAdapter(new ArrayAdapter<>(BuyActivity.this,
                 R.layout.navdrawer_list_item, mListTitles));

@@ -5,13 +5,29 @@
 
 
     <!-- The container for fragments -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <FrameLayout
         android:id="@+id/sellerFrameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/snackbarPosition">
+    </android.support.design.widget.CoordinatorLayout>
+
+</RelativeLayout>
+
+
 
     <!-- The navigation drawer -->
+
+
     <LinearLayout
         android:id="@+id/DrawerLinear"
         android:layout_width="match_parent"
@@ -59,6 +75,7 @@
             android:layout_height="0dp"
             android:layout_weight="4"
             android:choiceMode="singleChoice"
+            android:scrollbars="none"
             android:layout_gravity="start|center_vertical"
             android:divider="@android:color/transparent"
             android:dividerHeight="0dp" />
@@ -73,8 +90,16 @@
             android:textStyle="bold"
             android:layout_margin="6dp"/>
 
-    </LinearLayout>
+        <Button
+            android:id="@+id/contact_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/text_design"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:color/transparent"
+            android:text="Contact Us"/>
 
+    </LinearLayout>
 
 
 </android.support.v4.widget.DrawerLayout>

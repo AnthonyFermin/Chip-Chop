@@ -671,6 +671,7 @@ public class DBHelper extends Firebase {
                 Log.d("Number2", dataSnapshot.getChildrenCount() + "");
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
                     Seller seller1 = dataSnapshot1.getValue(Seller.class);
 
                     if (dataSnapshot1.getKey().equals(sellerID)) {

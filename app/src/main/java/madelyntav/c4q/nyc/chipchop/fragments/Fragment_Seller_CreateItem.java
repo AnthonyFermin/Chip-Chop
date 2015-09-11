@@ -174,9 +174,10 @@ public class Fragment_Seller_CreateItem extends Fragment {
                     if (activity.getInactiveItemToEdit() != null) {
                         ArrayList<Item> inactiveItems = activity.getInactiveSellerItems();
                         boolean itemAdded = false;
+                        item.setItemID(activity.getInactiveItemToEdit().getItemID());
                         for (int i = 0; i < inactiveItems.size(); i++) {
                             Item item1 = inactiveItems.get(i);
-                            if (activity.getInactiveItemToEdit().getNameOfItem().equalsIgnoreCase(item1.getNameOfItem())) {
+                            if (activity.getInactiveItemToEdit().getItemID().equalsIgnoreCase(item1.getItemID())) {
                                 inactiveItems.remove(i);
                                 inactiveItems.add(i, item);
                                 itemAdded = true;

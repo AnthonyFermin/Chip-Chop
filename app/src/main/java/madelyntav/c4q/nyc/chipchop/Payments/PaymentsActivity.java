@@ -24,7 +24,6 @@ import com.google.android.gms.wallet.PaymentMethodTokenizationParameters;
 import com.google.android.gms.wallet.PaymentMethodTokenizationType;
 import com.google.android.gms.wallet.Wallet;
 import com.google.android.gms.wallet.WalletConstants;
-import com.google.android.gms.wallet.fragment.SupportWalletFragment;
 import com.google.android.gms.wallet.fragment.WalletFragmentInitParams;
 import com.stripe.android.Stripe;
 import com.stripe.android.TokenCallback;
@@ -53,7 +52,6 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
     // Unique identifiers for asynchronous requests:
     private static final int LOAD_MASKED_WALLET_REQUEST_CODE = 1000;
     private static final int LOAD_FULL_WALLET_REQUEST_CODE = 1001;
-    private SupportWalletFragment walletFragment;
     GoogleApiClient googleApiClient;
     private String secretPublishableTestKey = "pk_test_AzaPoEV6yirFsSW63owmbRh9";
     String cardNum;
@@ -64,7 +62,7 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
     String city;
     String state;
     String zipCode;
-    String country="US";
+    String country = "US";
     String name;
     int price;
     String cardCVC;
@@ -85,7 +83,7 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
     //TODO transfer all Order and userInfo
     Order order;
     User user;
-    static Map<String, Object> defaultCardParams   = new HashMap<String, Object>();
+    static Map<String, Object> defaultCardParams = new HashMap<String, Object>();
     static Map<String, Object> defaultChargeParams = new HashMap<String, Object>();
 
     @Override
@@ -94,7 +92,7 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
         setContentView(R.layout.activity_payments);
         com.stripe.Stripe.apiKey = "sk_test_6hJykZdli4Tw6ALzNEyHSePR";
 
-        dbHelper=DBHelper.getDbHelper(this);
+        dbHelper = DBHelper.getDbHelper(this);
 
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -105,34 +103,34 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
                         .build())
                 .build();
 
-        user= HelperMethods.getUser();
+        user = HelperMethods.getUser();
 
-        name=user.getName();
-        streetAddress=user.getAddress().getStreetAddress();
-        addressLineTwo=user.getAddress().getApartment();
-        city=user.getAddress().getCity();
-        state=user.getAddress().getState();
-        zipCode=user.getAddress().getZipCode();
+        name = user.getName();
+        streetAddress = user.getAddress().getStreetAddress();
+        addressLineTwo = user.getAddress().getApartment();
+        city = user.getAddress().getCity();
+        state = user.getAddress().getState();
+        zipCode = user.getAddress().getZipCode();
 
-        order=HelperMethods.getCurrentOrder();
+        order = HelperMethods.getCurrentOrder();
 
-        nameView=(EditText) findViewById(R.id.Name);
+        nameView = (EditText) findViewById(R.id.Name);
         nameView.setText(name);
-        cardNumView=(EditText) findViewById(R.id.cardNum);
-        cardMonthView=(EditText) findViewById(R.id.expirationMonth);
-        cardYearView=(EditText) findViewById(R.id.expirationYear);
-        cardCVCView=(EditText) findViewById(R.id.cardCVC);
-        confirmPaymentButton=(Button) findViewById(R.id.confirm_payment);
+        cardNumView = (EditText) findViewById(R.id.cardNum);
+        cardMonthView = (EditText) findViewById(R.id.expirationMonth);
+        cardYearView = (EditText) findViewById(R.id.expirationYear);
+        cardCVCView = (EditText) findViewById(R.id.cardCVC);
+        confirmPaymentButton = (Button) findViewById(R.id.confirm_payment);
 
-        streetAddressView=(EditText) findViewById(R.id.address);
+        streetAddressView = (EditText) findViewById(R.id.address);
         streetAddressView.setText(streetAddress);
-        aptView= (EditText) findViewById(R.id.apt);
+        aptView = (EditText) findViewById(R.id.apt);
         aptView.setText(addressLineTwo);
-        cityView=(EditText) findViewById(R.id.city);
+        cityView = (EditText) findViewById(R.id.city);
         cityView.setText(city);
-        stateView=(EditText) findViewById(R.id.state);
+        stateView = (EditText) findViewById(R.id.state);
         stateView.setText(state);
-        zipCodeView=(EditText) findViewById(R.id.zipcode);
+        zipCodeView = (EditText) findViewById(R.id.zipcode);
         zipCodeView.setText(zipCode);
 
 
@@ -145,20 +143,31 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
                 cardYear = Integer.parseInt(cardYearView.getText().toString());
                 cardCVC = cardCVCView.getText().toString();
 
-                onClickConfirmPayment(cardNum, cardMonth, cardYear, cardCVC, name, streetAddress, addressLineTwo, city, state, zipCode, country);
+                name = nameView.getText().toString();
+                streetAddress = streetAddressView.getText().toString();
+                addressLineTwo = aptView.getText().toString();
+                city = cityView.getText().toString();
+                state = stateView.getText().toString();
+                zipCode = zipCodeView.getText().toString();
+
+                if (name.isEmpty() || streetAddress.isEmpty() || addressLineTwo.isEmpty() || city.isEmpty() || state.isEmpty() || zipCode.isEmpty()) {
+                    Toast.makeText(PaymentsActivity.this, "Please Fill In All Address Fields", Toast.LENGTH_SHORT).show();
+                } else {
+
+                    onClickConfirmPayment(cardNum, cardMonth, cardYear, cardCVC, name, streetAddress, addressLineTwo, city, state, zipCode, country);
+                }
             }
         });
     }
 
-    public void onClickConfirmPayment(final String cardNum, final int cardMonth, final int cardYear, final String cardCVC, String name, String streetAddress, String apt, String city, String state, String zipCode, String Country ){
+    public void onClickConfirmPayment(final String cardNum, final int cardMonth, final int cardYear, final String cardCVC, String name, String streetAddress, String apt, String city, String state, String zipCode, String country) {
 
-        final Card card= new Card(cardNum, cardMonth, cardYear, cardCVC, name, streetAddress, apt, city, state, zipCode,country);
+        final Card card = new Card(cardNum, cardMonth, cardYear, cardCVC, name, streetAddress, apt, city, state, zipCode, country);
 
-        if ( !card.validateCard() ) {
+        if (!card.validateCard()) {
             // Show errors
-            Toast.makeText(this,"Invalid Payment Information",Toast.LENGTH_SHORT).show();
-        }
-        else {
+            Toast.makeText(this, "Invalid Payment Information", Toast.LENGTH_SHORT).show();
+        } else {
             //TODO activate once we have Encrypted Info and SSL Certificate has been added and we have user Info transfered in (UID, NAME, FULL Address)
 //            user.setCardNumber(cardNum);
 //            user.setCardExpirationMonth(cardMonth);
@@ -171,30 +180,30 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
         card.validateCVC();
 
         try {
-        Stripe stripe = new Stripe(secretPublishableTestKey);
+            Stripe stripe = new Stripe(secretPublishableTestKey);
             stripe.setDefaultPublishableKey(secretPublishableTestKey);
 
-        stripe.createToken(
-                card,
-                new TokenCallback() {
-                    public void onSuccess(Token token) {
-                        Toast.makeText(PaymentsActivity.this, "Payment Info Submitted Successfully", Toast.LENGTH_LONG).show();
-                        Log.d("TokenIS", token.toString());
-                        price= order.getPrice()*100;
+            stripe.createToken(
+                    card,
+                    new TokenCallback() {
+                        public void onSuccess(Token token) {
+                            Toast.makeText(PaymentsActivity.this, "Payment Info Submitted Successfully", Toast.LENGTH_LONG).show();
+                            Log.d("TokenIS", token.toString());
+                            price = order.getPrice() * 100;
 
-                        createCharge(price, token, cardNum, cardMonth, cardYear, cardCVC);
-                    }
+                            createCharge(price, token, cardNum, cardMonth, cardYear, cardCVC);
+                        }
 
-                    public void onError(Exception error) {
-                        // Show localized error message
-                        Toast.makeText(PaymentsActivity.this, "Error Retrieving Token", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                        public void onError(Exception error) {
+                            // Show localized error message
+                            Toast.makeText(PaymentsActivity.this, "Error Retrieving Token", Toast.LENGTH_SHORT).show();
+                        }
+                    });
         } catch (AuthenticationException e) {
             e.printStackTrace();
         }
-
     }
+
 
     private void createCharge(int price, final Token token, String cardNum, int cardMonth, int cardYear, final String cardCVC) {
 
@@ -213,12 +222,12 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
 
         new AsyncTask<Void, Void, Charge>() {
             String id;
+
             @Override
             protected Charge doInBackground(Void... params) {
-
                 try {
-                    charge= Charge.create(chargeMap);
-                    Log.d("CHARGE",charge.toString());
+                    charge = Charge.create(chargeMap);
+                    Log.d("CHARGE", charge.toString());
                 } catch (AuthenticationException e) {
                     e.printStackTrace();
                 } catch (InvalidRequestException e) {
@@ -229,34 +238,33 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
                     e.printStackTrace();
                 } catch (APIException e) {
                     e.printStackTrace();
-                    Log.e("stripe err" , e.getCause().toString());
+                    Log.e("stripe err", e.getCause().toString());
                 }
-
                 return charge;
             }
 
             @Override
             protected void onPostExecute(Charge charge) {
                 super.onPostExecute(charge);
-                if(charge!=null) {
+                if (charge != null) {
                     id = charge.getId();
 
                     Log.d("ChargeID", id.toString());
                     retrieveCharge(id);
-                }else{
-                    Toast.makeText(PaymentsActivity.this,"Charge Not Processed",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(PaymentsActivity.this, "Charge Not Processed", Toast.LENGTH_SHORT).show();
                 }
             }
         }.execute();
-}
+    }
 
-    public void retrieveCharge(final String id){
+    public void retrieveCharge(final String id) {
 
         new AsyncTask<String, Void, Charge>() {
             @Override
             protected Charge doInBackground(String... params) {
-                try{
-                    charge=Charge.retrieve(id);
+                try {
+                    charge = Charge.retrieve(id);
                     Log.d("Charge Retrieved", "I");
 
                 } catch (AuthenticationException e) {
@@ -272,6 +280,7 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
                 }
                 return charge;
             }
+
             @Override
             protected void onPostExecute(Charge charge) {
                 super.onPostExecute(charge);
@@ -280,7 +289,7 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
         }.execute(id);
     }
 
-    public void captureCharge(final Charge charge){
+    public void captureCharge(final Charge charge) {
 
         new AsyncTask<Charge, Void, Boolean>() {
             @Override
@@ -349,7 +358,7 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
     }
 
     //Code Below For When Android Pay Is Released from Beta Mode
-    public void androidPay(){
+    public void androidPay() {
 //        walletFragment =
 //                (SupportWalletFragment) getSupportFragmentManager().findFragmentById(R.id.wallet_fragment);
 
@@ -378,8 +387,9 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
                 .build();
 
         // Initialize the fragment:
-        walletFragment.initialize(initParams);
+        //walletFragment.initialize(initParams);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -410,13 +420,13 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
             String tokenJSON = fullWallet.getPaymentMethodToken().getToken();
 
             com.stripe.model.Token token = com.stripe.model.Token.GSON.fromJson(tokenJSON, com.stripe.model.Token.class);
-                Log.d("UserToken",token.toString());
+            Log.d("UserToken", token.toString());
             // TODO: send token to your server
 
-    } else {
-        super.onActivityResult(requestCode, resultCode, data);
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
-}
 
 
     @Override

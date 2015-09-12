@@ -726,6 +726,7 @@ public class DBHelper extends Firebase {
 
     public Seller getSellerFromDB(final String sellerID, final DBCallback callback) {
         sellerId = sellerID;
+        seller = new Seller();
 
         Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId);
         fRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -738,10 +739,7 @@ public class DBHelper extends Firebase {
 //                    if (dataSnapshot1.getKey().equals(sellerID)) {
                 if (seller1 == null) {
                     callback.runOnFail();
-                    return;
                 } else {
-
-                    seller = new Seller();
                     seller.setName(seller1.name);
                     seller.setStoreName(seller1.storeName);
                     seller.setAddress(seller1.address);

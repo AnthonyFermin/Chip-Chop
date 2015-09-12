@@ -232,7 +232,6 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             seller.setIsCooking(false);
             dbHelper.addSellerProfileInfoToDB(seller);
             dbHelper.setSellerCookingStatus(false);
-            Toast.makeText(activity,"New Seller Profile Created, Please add a store name", Toast.LENGTH_SHORT).show();
             Snackbar
                     .make(coordinatorLayoutView, "New Seller Profile Created, Please add a store name", Snackbar.LENGTH_SHORT)
                     .show();

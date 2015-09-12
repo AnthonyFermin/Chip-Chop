@@ -6,18 +6,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -27,9 +25,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -44,7 +39,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -56,16 +50,11 @@ import java.util.ArrayList;
 
 import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBCallback;
-import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
-import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
-import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.adapters.SellerListAdapter;
-
-import static android.content.res.Resources.*;
 
 
 public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -91,6 +80,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     private ArrayList<Seller> sellers;
     private RecyclerView itemsRView;
     private View root;
+    private String distanceToShow;
 
     private DBCallback emptyCallback;
 
@@ -428,6 +418,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             Log.d("Buyer Map Fragment","User Long: " + lng);
 
             if (distance[0] < circle.getRadius()) {
+                distanceToShow= String.valueOf(distance[0]);
                 Log.d("Fragment Buyer Map", "MARKER ADDED");
                 map.addMarker(new MarkerOptions()
                         .position(new LatLng(gLat, gLng))

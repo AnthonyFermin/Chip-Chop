@@ -758,6 +758,7 @@ public class DBHelper extends Firebase {
                     }
                 }
             }
+
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 Toast.makeText(mContext, "Error: Please Try Again", Toast.LENGTH_SHORT).show();
@@ -2056,7 +2057,80 @@ public class DBHelper extends Firebase {
         return userList;
     }
 
-    public ArrayList<Item> getSellerItems(final String sellerID, final DBCallback dbCallback) {
+    public ArrayList<Item> getSellerItems(String sellerID, final DBCallback dbCallback) {
+        sellerId=sellerID;
+
+        Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerID + "/itemsForSale");
+
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("ACTIVE SELLER SIZE", dataSnapshot.getChildrenCount() + "");
+
+                sizeofAddDBList = dataSnapshot.getChildrenCount();
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Item item1 = dataSnapshot1.getValue(Item.class);
+
+                    Item item3 = new Item();
+                    item3.setItemID(dataSnapshot1.getKey());
+                    Log.d("NAMEOFITEM", item1.nameOfItem);
+                    item3.setQuantity(item1.quantity);
+                    item3.setSellerID(sellerId);
+                    item3.setNameOfItem(item1.nameOfItem);
+                    item3.setPrice(item1.price);
+                    item3.setQuantity(item1.quantity);
+                    item3.setIsVegetarian(item1.isVegetarian);
+                    item3.setImageLink(item1.imageLink);
+                    item3.setContainsDairy(item1.containsDairy);
+                    item3.setContainsEggs(item1.containsEggs);
+                    item3.setContainsPeanuts(item1.containsPeanuts);
+                    item3.setContainsShellfish(item1.containsShellfish);
+                    item3.setGlutenFree(item1.glutenFree);
+
+
+
+                    if (items.size() < sizeofAddDBList) {
+                        items.add(item3);
+                        Log.d("LISTING", items.toString());
+                    } else
+                        return;
+                }
+
+                Log.d("GotHere",items.toString());
+                dbCallback.runOnSuccess();
+            }
+
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Toast.makeText(mContext, "Please Try Again", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+//        if (items.size() == sizeofAddDBList) {
+//            Log.d("LISTINGINIT", items.toString());
+//
+//            return items;
+//            //updateSellersItemsNow(dbCallback);
+//
+//        }
+        Log.d("LISTINGB4Out", items.toString());
+
+        return items;
+    }
+
+    //Returns list of all users
+    public ArrayList<Item> updateSellersItemsNow(DBCallback dbCallback) {
+
+        if (items.size() < sizeofAddDBList) {
+            getSellerItems(sellerId, dbCallback);
+        }
+        return items;
+    }
+
+
+    public ArrayList<Item> getSellerItemsOLD(final String sellerID, final DBCallback dbCallback) {
         sellerId = sellerID;
 
         Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerID + "/itemsForSale");

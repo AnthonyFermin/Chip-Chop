@@ -77,7 +77,7 @@ public class Fragment_Seller_Items extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_seller__items, container, false);
 
-
+        sellerItems= new ArrayList<>();
         // Instantiate a ViewPager and a PagerAdapter.
         initializeData();
         initializeViews(root);
@@ -107,7 +107,17 @@ public class Fragment_Seller_Items extends Fragment {
         if(activity.isCurrentlyCooking()) {
             sellerItems = dbHelper.getSellersOnSaleItems(dbHelper.getUserID(),emptyCallback);
         }else{
-            sellerItems = dbHelper.getSellerItems(dbHelper.getUserID(), emptyCallback);
+            dbHelper.getSellerItems(dbHelper.getUserID(), new DBCallback() {
+                @Override
+                public void runOnSuccess() {
+                    sellerItems.addAll(dbHelper.getSellerItems(dbHelper.getUserID(),emptyCallback));
+                }
+
+                @Override
+                public void runOnFail() {
+                Toast.makeText(activity,"Unable To Load Items, Please Try Again",Toast.LENGTH_SHORT).show();
+                }
+            });
         }
         inActiveItems = loadInactiveItems();
         activity.setInactiveSellerItems(inActiveItems);

@@ -2059,6 +2059,7 @@ public class DBHelper extends Firebase {
 
     public ArrayList<Item> getSellerItems(String sellerID, final DBCallback dbCallback) {
         sellerId = sellerID;
+        Item item3=new Item();
 
         Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerID + "/itemsForSale");
 
@@ -2071,7 +2072,7 @@ public class DBHelper extends Firebase {
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     Item item1 = dataSnapshot1.getValue(Item.class);
-
+                    item2 = new Item();
                     item2.setItemID(dataSnapshot1.getKey());
                     Log.d("NAMEOFITEM", item1.nameOfItem);
                     item2.setQuantity(item1.quantity);
@@ -2087,16 +2088,14 @@ public class DBHelper extends Firebase {
                     item2.setContainsShellfish(item1.containsShellfish);
                     item2.setGlutenFree(item1.glutenFree);
 
-
                     if (items.size() < sizeofAddDBList) {
                         items.add(item2);
                         Log.d("LISTING", items.toString());
-                    } else
-                        return;
+                    }
                 }
-
                 Log.d("GotHere", items.toString());
                 dbCallback.runOnSuccess();
+
             }
 
 

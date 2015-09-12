@@ -652,11 +652,9 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
         fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
         fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
-        fRef.child(UID).child(sCardNumber).setValue(seller.getCardNumber());
-        fRef.child(UID).child(sCardExpirationMonth).setValue(seller.getCardExpirationMonth());
-        fRef.child(UID).child(sCardExpirationYear).setValue(seller.getCardExpirationYear());
-        fRef.child(UID).child(sCardCVC).setValue(seller.getCardCVC());
         fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
+        fRef.child(UID).child("routingNumber").setValue(seller.getRoutingNumber());
+        fRef.child(UID).child("accountNumber").setValue(seller.getAccountNumber());
 
     }
 
@@ -683,13 +681,13 @@ public class DBHelper extends Firebase {
         ref.changeEmail(oldeMail, neweMail, passWord, new Firebase.ResultHandler() {
             @Override
             public void onSuccess() {
-                Toast.makeText(mContext,"E-mail Successfully Changed",Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "E-mail Successfully Changed", Toast.LENGTH_SHORT).show();
                 dbCallback.runOnSuccess();
             }
 
             @Override
             public void onError(FirebaseError firebaseError) {
-                Toast.makeText(mContext,"Error Changing E-mail, Please Try Again",Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Error Changing E-mail, Please Try Again", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -752,6 +750,8 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sAddress).setValue(seller.getAddress().toString());
         fRef.child(UID).child(sLatitude).setValue(seller.getAddress().getLatitude());
         fRef.child(UID).child(sLongitude).setValue(seller.getAddress().getLongitude());
+        fRef.child(UID).child("routingNumber").setValue(seller.getRoutingNumber());
+        fRef.child(UID).child("accountNumber").setValue(seller.getAccountNumber());
 
         callback.runOnSuccess();
     }
@@ -784,7 +784,9 @@ public class DBHelper extends Firebase {
                     seller.setItems(seller1.items);
                     seller.setLongitude(seller1.longitude);
                     seller.setLatitude(seller1.latitude);
-                    seller.setIsCooking(seller1.getIsCooking());
+                    seller.setIsCooking(seller1.isCooking);
+                    seller.setAccountNumber(seller1.getAccountNumber());
+                    seller.setRoutingNumber(seller1.routingNumber);
 
                     Log.d("Seller", seller.name + "");
                     callback.runOnSuccess();
@@ -854,6 +856,8 @@ public class DBHelper extends Firebase {
         fRef.child(sellerId).child(sAddress).setValue(seller.getAddressString());
         fRef.child(sellerId).child(sLatitude).setValue(seller.getLatitude());
         fRef.child(sellerId).child(sLongitude).setValue(seller.getLatitude());
+        fRef.child(sellerId).child("routingNumber").setValue(seller.getRoutingNumber());
+        fRef.child(sellerId).child("accountNumber").setValue(seller.getAccountNumber());
     }
 
     public ArrayList<Seller> getAllActiveSellers(DBCallback dbCallback) {
@@ -887,6 +891,8 @@ public class DBHelper extends Firebase {
                     seller.setDescription(seller1.description);
                     seller.setPhotoLink(seller1.photoLink);
                     seller.setStoreName(seller1.storeName);
+                    seller.setAccountNumber(seller1.accountNumber);
+                    seller.setRoutingNumber(seller1.routingNumber);
 
                     if (allActiveSellers.size() < sizeofAddDBList) {
 
@@ -949,6 +955,8 @@ public class DBHelper extends Firebase {
                         seller.setPhoneNumber(seller1.phoneNumber);
                         seller.setItems(seller1.items);
                         seller.setLongitude(seller1.latitude);
+                        seller.setRoutingNumber(seller1.routingNumber);
+                        seller.setAccountNumber(seller1.accountNumber);
                         seller.setLatitude(seller1.longitude);
                     }
                     Log.d("SellerOne", seller.name + "");
@@ -998,6 +1006,8 @@ public class DBHelper extends Firebase {
                         seller.setItems(seller1.items);
                         seller.setLongitude(seller1.latitude);
                         seller.setLatitude(seller1.longitude);
+                        seller.setRoutingNumber(seller1.routingNumber);
+                        seller.setAccountNumber(seller1.accountNumber);
                     }
                     Log.d("SellerOne", seller.name + "");
                 }
@@ -1029,10 +1039,8 @@ public class DBHelper extends Firebase {
         fRef.child(sellerId).child(sName).setValue(seller.getName());
         fRef.child(sellerId).child(descriptionOfItem).setValue(seller.getDescription());
         fRef.child(sellerId).child("storeName").setValue(seller.getStoreName());
-        fRef.child(sellerId).child(sCardNumber).setValue(seller.getCardNumber());
-        fRef.child(sellerId).child(sCardExpirationMonth).setValue(seller.getCardExpirationMonth());
-        fRef.child(sellerId).child(sCardExpirationYear).setValue(seller.getCardExpirationYear());
-        fRef.child(sellerId).child(sCardCVC).setValue(seller.getCardCVC());
+        fRef.child(sellerId).child("routingNumber").setValue(seller.getRoutingNumber());
+        fRef.child(sellerId).child("accountNumber").setValue(seller.getAccountNumber());
         fRef.child(sellerId).child(sIsCooking).setValue(seller.getIsCooking());
         fRef.child(sellerId).child(sEmailAddress).setValue(seller.geteMail());
         fRef.child(sellerId).child(sPhoneNumber).setValue(seller.getPhoneNumber());
@@ -2526,14 +2534,13 @@ public class DBHelper extends Firebase {
 
     }
 
-    public void addReviewToSellerProfile(User buyer, User seller, int numOfStars, DBCallback dbCallback) {
-        sellerId = seller.getUID();
-        UID = buyer.getUID();
+    public void addReviewToSellerProfile(String buyerID, String sellerID, int numOfStars) {
+        sellerId = sellerID;
+        UID = buyerID;
         Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId + "/Reviews/");
 
         fRef.child(UID).push();
         fRef.child(UID).child("numOfStars").setValue(numOfStars);
-        dbCallback.runOnSuccess();
     }
 
     public void addReviewToSellerProfile(User buyer, User seller, int numOfStars, String details, DBCallback dbCallback) {
@@ -2638,7 +2645,7 @@ public class DBHelper extends Firebase {
         return sellersReviewArrayList;
     }
 
-    public int increaseNumOfTotalStarsAndCalculateAvg(Seller seller, Review review, DBCallback dbCallback) {
+    public int increaseNumOfTotalStarsAndCalculateAvg(String sellerID, Review review) {
         int numOfReviews = seller.getNumOfReviews();
         numOfReviews = numOfReviews + 1;
         seller.setNumOfReviews(numOfReviews);
@@ -2647,18 +2654,21 @@ public class DBHelper extends Firebase {
         int newStars = review.getNumOfStars();
         int newNumofTotalstars = numOfTotalStars + newStars;
         int newAvg = newNumofTotalstars / numOfReviews;
-
-        updateSellerProfileWithNewAvg(seller, newAvg, dbCallback);
+        char newAvgS = 0;
+        for(int i=0;i<1;i++){
+            newAvgS=String.valueOf(newAvgS).charAt(i);
+        }
+        updateSellerProfileWithNewAvg(seller, newAvgS);
 
         return newAvg;
     }
 
-    public void updateSellerProfileWithNewAvg(Seller seller, int newAvg, DBCallback dbCallback) {
+    public void updateSellerProfileWithNewAvg(Seller seller, char newAvg) {
         sellerId = seller.getUID();
 
         Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId + "/Reviews/");
         fRef.child(UID).push();
-        fRef.child(UID).child("AvgNumOfStars").setValue(newAvg);
+        fRef.child(UID).child("AvgNumOfStars").setValue(String.valueOf(newAvg));
     }
 
     //May want to implement this later

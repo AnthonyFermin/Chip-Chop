@@ -136,7 +136,9 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
                 @Override
                 public void runOnFail() {
-
+                    //new seller
+                    seller = null;
+                    load();
                 }
             });
 
@@ -216,56 +218,29 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     }
 
     private void load(){
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
+        if(seller != null) {
+            Log.d("Load Seller Info", "LOAD FROM DB SUCCESSFUL");
+            Log.d("SELLER INFO", "UID: " + seller.getUID());
+            Log.d("SELLER INFO", "Name: " + seller.getName());
+            Log.d("SELLER INFO", "Store Name: " + seller.getStoreName());
+            Log.d("SELLER INFO", "isCooking: " + seller.getIsCooking());
+            setEditTexts();
+        }else{
+            //TODO:display cannot connect to internet error message
+            Log.d("Load Seller Info", "NOT FOUND IN DB, NEW SELLER CREATED");
+            seller = new Seller(dbHelper.getUserID(),user.geteMail(),user.getName(),user.getAddress(),"",user.getPhoneNumber());
+            seller.setIsCooking(false);
+            dbHelper.addSellerProfileInfoToDB(seller);
+            dbHelper.setSellerCookingStatus(false);
+            Toast.makeText(activity,"New Seller Profile Created, Please add a store name", Toast.LENGTH_SHORT).show();
+            Snackbar
+                    .make(coordinatorLayoutView, "New Seller Profile Created, Please add a store name", Snackbar.LENGTH_SHORT)
+                    .show();
+        }
+        activity.setSeller(seller);
+        loadingPanel.setVisibility(View.GONE);
+        containingView.setVisibility(View.VISIBLE);
 
-                int i = 0;
-                do{
-                    Log.d("Load Seller Info", "Attempt #" + i);
-                    try {
-                        Thread.sleep(700);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    if (i > 10){
-                        Log.d("Load Seller Info", "DIDN'T LOAD");
-                        break;
-                    }
-                    i++;
-                }while(seller == null || seller.getStoreName() == null || seller.getStoreName().isEmpty());
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-
-                if(seller != null) {
-                    Log.d("Load Seller Info", "LOAD FROM DB SUCCESSFUL");
-                    Log.d("SELLER INFO", "UID: " + seller.getUID());
-                    Log.d("SELLER INFO", "Name: " + seller.getName());
-                    Log.d("SELLER INFO", "Store Name: " + seller.getStoreName());
-                    Log.d("SELLER INFO", "isCooking: " + seller.getIsCooking());
-                    setEditTexts();
-                }else{
-                    //TODO:display cannot connect to internet error message
-                    Log.d("Load Seller Info", "NOT FOUND IN DB, NEW SELLER CREATED");
-                    seller = new Seller(dbHelper.getUserID(),user.geteMail(),user.getName(),user.getAddress(),"",user.getPhoneNumber());
-                    seller.setIsCooking(false);
-                    dbHelper.addSellerProfileInfoToDB(seller);
-                    dbHelper.setSellerCookingStatus(false);
-                    Toast.makeText(activity,"New Seller Profile Created, Please add a store name", Toast.LENGTH_SHORT).show();
-                    Snackbar
-                            .make(coordinatorLayoutView, "New Seller Profile Created, Please add a store name", Snackbar.LENGTH_SHORT)
-                            .show();
-                }
-                activity.setSeller(seller);
-                loadingPanel.setVisibility(View.GONE);
-                containingView.setVisibility(View.VISIBLE);
-            }
-        }.execute();
     }
 
     private void setEditTexts(){

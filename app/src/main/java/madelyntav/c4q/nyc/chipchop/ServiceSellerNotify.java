@@ -51,7 +51,7 @@ public class ServiceSellerNotify extends Service {
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         Firebase.setAndroidContext(this);
         mainTask();
-        return START_REDELIVER_INTENT;
+        return START_STICKY;
     }
 
     private void mainTask(){
@@ -107,7 +107,6 @@ public class ServiceSellerNotify extends Service {
                 stopSelf();
             }
         });
-
     }
 
     @Override

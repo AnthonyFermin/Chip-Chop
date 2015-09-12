@@ -727,16 +727,16 @@ public class DBHelper extends Firebase {
     public Seller getSellerFromDB(final String sellerID, final DBCallback callback) {
         sellerId = sellerID;
 
-        Firebase fRef = new Firebase(URL + "SellerProfiles/");
+        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId);
         fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("Number2", dataSnapshot.getChildrenCount() + "");
 
 
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    Seller seller1 = dataSnapshot1.getValue(Seller.class);
-                    if (dataSnapshot1.getKey().equals(sellerID)) {
+               // for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Seller seller1 = dataSnapshot.getValue(Seller.class);
+//                    if (dataSnapshot1.getKey().equals(sellerID)) {
                         seller.setName(seller1.name);
                         seller.setStoreName(seller1.storeName);
                         seller.setAddress(seller1.address);
@@ -746,7 +746,7 @@ public class DBHelper extends Firebase {
                         seller.setCardNumber(seller1.cardNumber);
                         seller.setDescription(seller1.description);
                         seller.seteMail(seller1.eMail);
-                        seller.setUID(dataSnapshot1.getKey());
+                        seller.setUID(dataSnapshot.getKey());
                         seller.setPhoneNumber(seller1.phoneNumber);
                         seller.setItems(seller1.items);
                         seller.setLongitude(seller1.longitude);
@@ -757,8 +757,6 @@ public class DBHelper extends Firebase {
                         callback.runOnSuccess();
 
                     }
-                }
-            }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {

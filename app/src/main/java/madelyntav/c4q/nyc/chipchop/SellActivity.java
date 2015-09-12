@@ -62,12 +62,14 @@ public class SellActivity extends AppCompatActivity {
     // for storing data between fragments in SellActivity
 
     private ArrayList<Item> sellerItems = null;
+    private ArrayList<Item> inactiveSellerItems = null;
     private boolean currentlyCooking = false;
     private User user = null;
     private Seller seller = null;
-    private boolean fromItemCreation = false;
     private Item itemToEdit = null;
+    private Item inactiveItemToEdit = null;
     private String currentFragment;
+    private Intent serviceIntent;
 
     private DBHelper dbHelper;
 
@@ -170,7 +172,7 @@ public class SellActivity extends AppCompatActivity {
             }
         };
         mListTitles = getResources().getStringArray(R.array.SELLER_nav_drawer_titles);
-
+        serviceIntent = new Intent(this,ServiceSellerNotify.class).putExtra(ServiceSellerNotify.SELLER_ID,dbHelper.getUserID());
     }
 
     private void bindViews(){
@@ -234,9 +236,13 @@ public class SellActivity extends AppCompatActivity {
     }
 
     private void clearLogin() {
+        dbHelper.setSellerCookingStatus(false);
+        dbHelper.removeSellersFromActiveSellers(seller, emptyCallback);
         userInfoSP.edit().clear().commit();
         dbHelper.signOutUser(emptyCallback);
         drawerUserNameTV.setText("");
+        stopService(serviceIntent);
+        stopService(new Intent(this,ServiceBuyerNotify.class));
     }
 
     @Override
@@ -333,6 +339,14 @@ public class SellActivity extends AppCompatActivity {
         this.sellerItems = sellerItems;
     }
 
+    public ArrayList<Item> getInactiveSellerItems() {
+        return inactiveSellerItems;
+    }
+
+    public void setInactiveSellerItems(ArrayList<Item> inactiveSellerItems) {
+        this.inactiveSellerItems = inactiveSellerItems;
+    }
+
     public void setCookingStatus(boolean condition){
         currentlyCooking = condition;
     }
@@ -357,14 +371,6 @@ public class SellActivity extends AppCompatActivity {
         return user;
     }
 
-    public boolean isFromItemCreation(){
-        return fromItemCreation;
-    }
-
-    public void setFromItemCreation(boolean condition){
-        fromItemCreation = condition;
-    }
-
     public Item getItemToEdit() {
         return itemToEdit;
     }
@@ -373,11 +379,27 @@ public class SellActivity extends AppCompatActivity {
         this.itemToEdit = itemToEdit;
     }
 
+    public Item getInactiveItemToEdit() {
+        return inactiveItemToEdit;
+    }
+
+    public void setInactiveItemToEdit(Item inactiveItemToEdit) {
+        this.inactiveItemToEdit = inactiveItemToEdit;
+    }
+
     public String getCurrentFragment() {
         return currentFragment;
     }
 
     public void setCurrentFragment(String currentFragment) {
         this.currentFragment = currentFragment;
+    }
+
+    public Intent getServiceIntent() {
+        return serviceIntent;
+    }
+
+    public void setServiceIntent(Intent serviceIntent) {
+        this.serviceIntent = serviceIntent;
     }
 }

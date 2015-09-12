@@ -1,6 +1,7 @@
 package madelyntav.c4q.nyc.chipchop.fragments;
 
 import android.app.AlertDialog;
+import android.app.Service;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -47,6 +48,7 @@ import madelyntav.c4q.nyc.chipchop.GeolocationAPI.Location;
 import madelyntav.c4q.nyc.chipchop.HelperMethods;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.SellActivity;
+import madelyntav.c4q.nyc.chipchop.ServiceSellerNotify;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -127,9 +129,21 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
         Log.d("Seller Profile", "LOADING SELLER INFO");
         if(activity.getSeller() == null) {
-            seller = dbHelper.getSellerFromDB(dbHelper.getUserID());
-            Log.d("Load Seller Info", "LOADING FROM DB: " + dbHelper.getUserID());
-            load();
+            seller = dbHelper.getSellerFromDB(dbHelper.getUserID(), new DBCallback() {
+                @Override
+                public void runOnSuccess() {
+                    Log.d("Load Seller Info", "LOADING FROM DB: " + dbHelper.getUserID());
+                    load();
+                }
+
+                @Override
+                public void runOnFail() {
+                    //new seller
+                    seller = null;
+                    load();
+                }
+            });
+
         }else{
             seller = activity.getSeller();
             Log.d("Load Seller Info", "PREVIOUSLY CACHED");
@@ -206,56 +220,27 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     }
 
     private void load(){
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-
-                int i = 0;
-                do{
-                    Log.d("Load Seller Info", "Attempt #" + i);
-                    try {
-                        Thread.sleep(700);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    if (i > 10){
-                        Log.d("Load Seller Info", "DIDN'T LOAD");
-                        break;
-                    }
-                    i++;
-                }while(seller == null || seller.getStoreName() == null || seller.getStoreName().isEmpty());
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-
-                if(seller != null) {
-                    Log.d("Load Seller Info", "LOAD FROM DB SUCCESSFUL");
-                    Log.d("SELLER INFO", "UID: " + seller.getUID());
-                    Log.d("SELLER INFO", "Name: " + seller.getName());
-                    Log.d("SELLER INFO", "Store Name: " + seller.getStoreName());
-                    Log.d("SELLER INFO", "isCooking: " + seller.getIsCooking());
-                    setEditTexts();
-                }else{
-                    //TODO:display cannot connect to internet error message
-                    Log.d("Load Seller Info", "NOT FOUND IN DB, NEW SELLER CREATED");
-                    seller = new Seller(dbHelper.getUserID(),user.geteMail(),user.getName(),user.getAddress(),"",user.getPhoneNumber());
-                    seller.setIsCooking(false);
-                    dbHelper.addSellerProfileInfoToDB(seller);
-                    dbHelper.setSellerCookingStatus(false);
-                    Toast.makeText(activity,"New Seller Profile Created, Please add a store name", Toast.LENGTH_SHORT).show();
-                    Snackbar
-                            .make(coordinatorLayoutView, "New Seller Profile Created, Please add a store name", Snackbar.LENGTH_SHORT)
-                            .show();
-                }
-                activity.setSeller(seller);
-                loadingPanel.setVisibility(View.GONE);
-                containingView.setVisibility(View.VISIBLE);
-            }
-        }.execute();
+        if(seller != null) {
+            Log.d("Load Seller Info", "LOAD FROM DB SUCCESSFUL");
+            Log.d("SELLER INFO", "UID: " + seller.getUID());
+            Log.d("SELLER INFO", "Name: " + seller.getName());
+            Log.d("SELLER INFO", "Store Name: " + seller.getStoreName());
+            Log.d("SELLER INFO", "isCooking: " + seller.getIsCooking());
+            setEditTexts();
+        }else{
+            //TODO:display cannot connect to internet error message
+            Log.d("Load Seller Info", "NOT FOUND IN DB, NEW SELLER CREATED");
+            seller = new Seller(dbHelper.getUserID(),user.geteMail(),user.getName(),user.getAddress(),"",user.getPhoneNumber());
+            seller.setIsCooking(false);
+            dbHelper.addSellerProfileInfoToDB(seller);
+            dbHelper.setSellerCookingStatus(false);
+            Snackbar
+                    .make(coordinatorLayoutView, "New Seller Profile Created, Please add a store name", Snackbar.LENGTH_SHORT)
+                    .show();
+        }
+        activity.setSeller(seller);
+        loadingPanel.setVisibility(View.GONE);
+        containingView.setVisibility(View.VISIBLE);
     }
 
     private void setEditTexts(){
@@ -265,10 +250,12 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             cookingStatus.setChecked(true);
             cookingStatusTV.setVisibility(View.VISIBLE);
             saveButton.setEnabled(false);
+            activity.startService(activity.getServiceIntent());
         }else{
             cookingStatus.setChecked(false);
             cookingStatusTV.setVisibility(View.INVISIBLE);
             saveButton.setEnabled(true);
+            activity.stopService(activity.getServiceIntent());
         }
 
         Address address = user.getAddress();
@@ -344,9 +331,9 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     }
 
     private void rescaleImageForDb(final String filePath) {
-        new AsyncTask<Void, Void, Void>() {
+        new AsyncTask<Void, Void, Bitmap>() {
             @Override
-            protected Void doInBackground(Void... voids) {
+            protected Bitmap doInBackground(Void... voids) {
                 Bitmap bitmap = BitmapFactory.decodeFile(filePath);
                 Bitmap rotatedBitmap = rotateBitmap(bitmap,filePath);
                 Bitmap scaledBitmap = null;
@@ -369,13 +356,14 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                return null;
+                return scaledBitmap;
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
+            protected void onPostExecute(Bitmap bitmap) {
+                super.onPostExecute(bitmap);
                 imageLink = HelperMethods.saveImageToEncodedString(filePath);
+                profilePhoto.setImageBitmap(bitmap);
                 Log.d("Item Creation", "ImageLink: " + imageLink);
             }
         }.execute();
@@ -513,6 +501,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                         Snackbar
                                 .make(coordinatorLayoutView, "Cooking Status Active", Snackbar.LENGTH_SHORT)
                                 .show();
+                        activity.startService(activity.getServiceIntent());
                     } else {
                         cookingStatusTV.setVisibility(View.INVISIBLE);
                         Snackbar
@@ -529,6 +518,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                     seller.setIsCooking(false);
                     activity.setSeller(seller);
                     dbHelper.setSellerCookingStatus(false);
+                    activity.stopService(activity.getServiceIntent());
                     Snackbar
                             .make(coordinatorLayoutView, "Cooking Status Deactivated", Snackbar.LENGTH_SHORT)
                             .show();

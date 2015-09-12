@@ -31,9 +31,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:padding="10dp"
         android:id="@+id/container">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_image"
@@ -86,7 +91,6 @@
                 android:gravity="start"
                 android:layout_weight="1"/>
 
-
         </LinearLayout>
 
     </LinearLayout>
@@ -119,12 +123,13 @@
         android:layout_below="@+id/deliver_tv"
         android:text="PICKUP"/>
 
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/pickup_tv"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/container"
         android:id="@+id/seller_items_list"/>
 
     <android.support.design.widget.CoordinatorLayout

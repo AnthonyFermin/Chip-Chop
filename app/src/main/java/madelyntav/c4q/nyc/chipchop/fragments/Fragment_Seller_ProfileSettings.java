@@ -250,12 +250,12 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             cookingStatus.setChecked(true);
             cookingStatusTV.setVisibility(View.VISIBLE);
             saveButton.setEnabled(false);
-            Intent intent = new Intent(activity,ServiceSellerNotify.class).putExtra(ServiceSellerNotify.SELLER_ID,seller.getUID());
-            activity.startService(intent);
+            activity.startService(activity.getServiceIntent());
         }else{
             cookingStatus.setChecked(false);
             cookingStatusTV.setVisibility(View.INVISIBLE);
             saveButton.setEnabled(true);
+            activity.stopService(activity.getServiceIntent());
         }
 
         Address address = user.getAddress();
@@ -501,8 +501,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                         Snackbar
                                 .make(coordinatorLayoutView, "Cooking Status Active", Snackbar.LENGTH_SHORT)
                                 .show();
-                        Intent intent = new Intent(activity,ServiceSellerNotify.class).putExtra(ServiceSellerNotify.SELLER_ID,seller.getUID());
-                        activity.startService(intent);
+                        activity.startService(activity.getServiceIntent());
                     } else {
                         cookingStatusTV.setVisibility(View.INVISIBLE);
                         Snackbar
@@ -519,6 +518,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                     seller.setIsCooking(false);
                     activity.setSeller(seller);
                     dbHelper.setSellerCookingStatus(false);
+                    activity.stopService(activity.getServiceIntent());
                     Snackbar
                             .make(coordinatorLayoutView, "Cooking Status Deactivated", Snackbar.LENGTH_SHORT)
                             .show();

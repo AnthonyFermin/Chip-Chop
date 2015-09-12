@@ -30,12 +30,10 @@ public class ServiceSellerNotify extends Service {
 
     private static final String URL = "https://chipchop.firebaseio.com/";
     private String sellerID;
-    private Seller seller;
     private Order order;
 
     private Firebase sellerOrdersRef;
-    private Firebase sellerRef;
-    private ChildEventListener orderCEL, sellerCEL;
+    private ChildEventListener orderCEL;
 
     private NotificationManager notificationManager;
     private Notification notification;
@@ -104,42 +102,8 @@ public class ServiceSellerNotify extends Service {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-                sellerRef.removeEventListener(sellerCEL);
                 sellerOrdersRef.removeEventListener(orderCEL);
                 stopSelf();
-            }
-        });
-
-        sellerRef = new Firebase(URL + "ActiveSellers/");
-        sellerCEL = sellerRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                seller = dataSnapshot.getValue(Seller.class);
-                if(seller.getUID().equals(sellerID)){
-                    sellerRef.removeEventListener(sellerCEL);
-                    sellerOrdersRef.removeEventListener(orderCEL);
-                    stopSelf();
-                }
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
             }
         });
 

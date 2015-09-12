@@ -89,6 +89,7 @@ public class ServiceBuyerNotify extends Service {
                     notification.flags |= Notification.FLAG_AUTO_CANCEL;
                     notificationManager.notify(123,notification);
                     Log.d(TAG, "ORDER COMPLETE");
+                    stopSelf();
                 }
             }
             @Override
@@ -98,39 +99,5 @@ public class ServiceBuyerNotify extends Service {
             }
         });
 
-
-
-        sellerRef = new Firebase(URL + "ActiveSellers/");
-        sellerCEL = sellerRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Seller seller = dataSnapshot.getValue(Seller.class);
-                if (seller.getUID().equals(sellerID)) {
-                    sellerRef.removeEventListener(sellerCEL);
-                    buyerOrderRef.removeEventListener(orderVEL);
-                    stopSelf();
-                }
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
     }
 }

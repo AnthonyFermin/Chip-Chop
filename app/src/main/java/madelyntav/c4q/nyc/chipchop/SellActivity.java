@@ -69,6 +69,7 @@ public class SellActivity extends AppCompatActivity {
     private Item itemToEdit = null;
     private Item inactiveItemToEdit = null;
     private String currentFragment;
+    private Intent serviceIntent;
 
     private DBHelper dbHelper;
 
@@ -171,7 +172,7 @@ public class SellActivity extends AppCompatActivity {
             }
         };
         mListTitles = getResources().getStringArray(R.array.SELLER_nav_drawer_titles);
-
+        serviceIntent = new Intent(this,ServiceSellerNotify.class).putExtra(ServiceSellerNotify.SELLER_ID,dbHelper.getUserID());
     }
 
     private void bindViews(){
@@ -388,5 +389,13 @@ public class SellActivity extends AppCompatActivity {
 
     public void setCurrentFragment(String currentFragment) {
         this.currentFragment = currentFragment;
+    }
+
+    public Intent getServiceIntent() {
+        return serviceIntent;
+    }
+
+    public void setServiceIntent(Intent serviceIntent) {
+        this.serviceIntent = serviceIntent;
     }
 }

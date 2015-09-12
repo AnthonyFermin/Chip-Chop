@@ -1,7 +1,6 @@
 package madelyntav.c4q.nyc.chipchop.fragments;
 
 import android.app.AlertDialog;
-import android.app.Service;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -27,7 +26,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.io.File;
@@ -48,7 +46,6 @@ import madelyntav.c4q.nyc.chipchop.GeolocationAPI.Location;
 import madelyntav.c4q.nyc.chipchop.HelperMethods;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.SellActivity;
-import madelyntav.c4q.nyc.chipchop.ServiceSellerNotify;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -336,7 +333,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             protected Bitmap doInBackground(Void... voids) {
                 Bitmap bitmap = BitmapFactory.decodeFile(filePath);
                 Bitmap rotatedBitmap = rotateBitmap(bitmap,filePath);
-                Bitmap scaledBitmap = null;
+                Bitmap scaledBitmap;
                 if(rotatedBitmap != null) {
                     scaledBitmap = Bitmap.createScaledBitmap(rotatedBitmap, 500, 333, false);
                 }else{

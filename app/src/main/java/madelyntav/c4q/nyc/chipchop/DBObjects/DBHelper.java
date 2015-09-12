@@ -697,12 +697,13 @@ public class DBHelper extends Firebase {
         ref.changePassword(email, oldPassword, newPassowrd, new Firebase.ResultHandler() {
             @Override
             public void onSuccess() {
-                Toast.makeText(mContext,"Password Successfully Changed",Toast.LENGTH_SHORT).show();
-                dbCallback.runOnSuccess();            }
+                Toast.makeText(mContext, "Password Successfully Changed", Toast.LENGTH_SHORT).show();
+                dbCallback.runOnSuccess();
+            }
 
             @Override
             public void onError(FirebaseError firebaseError) {
-                Toast.makeText(mContext,"Error Changing Password, Please Try Again",Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Error Changing Password, Please Try Again", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -1616,6 +1617,14 @@ public class DBHelper extends Firebase {
         }
 
         return receiptForSpecificOrder;
+    }
+
+    public void updateBuyerWhenSellerConfirmsOrderIsReady(Order order){
+        UID=order.getBuyerID();
+        orderID=order.getOrderID();
+
+        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID + "/Orders/" + orderID );
+        fRef.child(orderID).child("isActive").setValue(order.isActive());
     }
 
 

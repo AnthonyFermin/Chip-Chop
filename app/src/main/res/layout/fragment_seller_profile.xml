@@ -72,7 +72,7 @@
                             android:id="@+id/seller_name_tv"
                             style="@style/text_design"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:gravity="center"
                             android:textStyle="bold"
                             android:text="Chip Chopper"
@@ -93,35 +93,63 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="DELIVERY METHOD"
+                    android:text="DELIVERY METHODS"
                     android:gravity="center_horizontal"
                     android:textStyle="bold"
+                    android:layout_marginBottom="20dp"
                     style="@style/text_design"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="20dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_marginBottom="15dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="PICK UP"/>
 
-                <android.support.v7.widget.SwitchCompat
-                    android:id="@+id/delivery_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"/>
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/pickup_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"/>
 
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:layout_marginBottom="15dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="DELIVER"/>
 
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/delivery_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"/>
+
                 </LinearLayout>
 
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -236,6 +264,7 @@
                         android:maxLength="5"
                         android:inputType="number"
                         android:hint="Zipcode"
+                        android:visibility="gone"
                         android:textSize="20sp" />
 
                 </android.support.design.widget.TextInputLayout>
@@ -261,6 +290,7 @@
                     android:text="ROUTING INFO"
                     android:gravity="center_horizontal"
                     android:textStyle="bold"
+                    android:layout_marginTop="20dp"
                     style="@style/text_design"/>
 
                 <android.support.design.widget.TextInputLayout

@@ -37,6 +37,28 @@
         android:layout_below="@+id/order_timestamp_tv"
         android:text="TOTAL COST" />
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_margin="5dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@+id/order_cost_tv"
+        android:id="@+id/divider"/>
+
+    <TextView
+        android:id="@+id/delivery_method_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/divider"
+        android:text="DELIVERY METHOD" />
+
+    <TextView
+        android:id="@+id/buyer_address_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/delivery_method_tv"
+        android:text="BUYER ADDRESS" />
+
 
 
 </RelativeLayout>

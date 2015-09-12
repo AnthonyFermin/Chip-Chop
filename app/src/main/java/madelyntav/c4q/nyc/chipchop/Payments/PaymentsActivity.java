@@ -331,10 +331,10 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
                             new Handler().post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(PaymentsActivity.this, "Order and Payment Confirmed", Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(PaymentsActivity.this, BuyActivity.class);
                                     intent.putExtra("To Orders View", true);
                                     startActivity(intent);
+                                    Toast.makeText(PaymentsActivity.this, "Order and Payment Confirmed", Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -342,7 +342,6 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
                         @Override
                         public void runOnFail() {
                             //Toast.makeText(PaymentsActivity.this, "Items are no longer available", Toast.LENGTH_SHORT).show();
-
                         }
                     });
 

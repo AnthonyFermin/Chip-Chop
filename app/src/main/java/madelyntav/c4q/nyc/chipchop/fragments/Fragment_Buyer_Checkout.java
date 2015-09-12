@@ -25,6 +25,7 @@ import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
+import madelyntav.c4q.nyc.chipchop.DeliveryDialog;
 import madelyntav.c4q.nyc.chipchop.PaymentDialog;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.ReviewDialogFragment;
@@ -68,7 +69,7 @@ public class Fragment_Buyer_Checkout extends Fragment {
             public void onClick(View view) {
 
                 FragmentManager fm = activity.getSupportFragmentManager();
-                PaymentDialog alertDialog = new PaymentDialog();
+                DeliveryDialog alertDialog = new DeliveryDialog();
                 alertDialog.show(fm, "fragment_alert");
 
 

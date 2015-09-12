@@ -3,6 +3,7 @@ package madelyntav.c4q.nyc.chipchop.fragments;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -15,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -78,7 +78,7 @@ public class Fragment_Seller_Items extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_seller__items, container, false);
 
-        sellerItems= new ArrayList<>();
+        sellerItems = new ArrayList<>();
         // Instantiate a ViewPager and a PagerAdapter.
         initializeData();
         initializeViews(root);
@@ -88,7 +88,7 @@ public class Fragment_Seller_Items extends Fragment {
         return root;
     }
 
-    private void initializeData(){
+    private void initializeData() {
         dbHelper = DBHelper.getDbHelper(getActivity());
         activity = (SellActivity) getActivity();
 
@@ -105,18 +105,20 @@ public class Fragment_Seller_Items extends Fragment {
         };
 
         //seller items
-        if(activity.isCurrentlyCooking()) {
-            sellerItems = dbHelper.getSellersOnSaleItems(dbHelper.getUserID(),emptyCallback);
-        }else{
+        if (activity.isCurrentlyCooking()) {
+            sellerItems = dbHelper.getSellersOnSaleItems(dbHelper.getUserID(), emptyCallback);
+        } else {
             dbHelper.getSellerItems(dbHelper.getUserID(), new DBCallback() {
                 @Override
                 public void runOnSuccess() {
-                    sellerItems.addAll(dbHelper.getSellerItems(dbHelper.getUserID(),emptyCallback));
+                    sellerItems.addAll(dbHelper.getSellerItems(dbHelper.getUserID(), emptyCallback));
                 }
 
                 @Override
                 public void runOnFail() {
-                Toast.makeText(activity,"Unable To Load Items, Please Try Again",Toast.LENGTH_SHORT).show();
+                    Snackbar
+                            .make(coordinatorLayoutView, "Unable To Load Items, Please Try Again", Snackbar.LENGTH_SHORT)
+                            .show();
                 }
             });
         }
@@ -148,26 +150,26 @@ public class Fragment_Seller_Items extends Fragment {
         return items;
     }
 
-    private void loadActiveItems(){
+    private void loadActiveItems() {
 
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
 
                 int i = 0;
-                do{
+                do {
                     Log.d("LOAD SELLER ITEMS", "Attempt #" + i);
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    if (i > 20){
+                    if (i > 20) {
                         Log.d("LOAD SELLER ITEMS", "DIDN'T LOAD");
                         break;
                     }
                     i++;
-                }while(sellerItems == null || sellerItems.size() == 0);
+                } while (sellerItems == null || sellerItems.size() == 0);
 
                 return null;
             }
@@ -176,9 +178,6 @@ public class Fragment_Seller_Items extends Fragment {
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
 
-                Item item = new Item(dbHelper.getUserID(),"Pizza",99,"A Heavenly Home Slice","");
-                item.setPrice(2);
-                sellerItems.add(item);
                 activity.setSellerItems(sellerItems);
 
                 activeList.getAdapter().notifyDataSetChanged();
@@ -192,7 +191,7 @@ public class Fragment_Seller_Items extends Fragment {
         }.execute();
     }
 
-    private void initializeViews(View root){
+    private void initializeViews(View root) {
         loadingPanel = (RelativeLayout) root.findViewById(R.id.loadingPanel);
 
         mPager = (ViewPager) root.findViewById(R.id.pager);
@@ -204,7 +203,7 @@ public class Fragment_Seller_Items extends Fragment {
 
     }
 
-    private void setListeners(){
+    private void setListeners() {
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -240,19 +239,17 @@ public class Fragment_Seller_Items extends Fragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            if(position == 0){
+            if (position == 0) {
                 return "Active Dishes";
             }
-            if(position == 1){
-                return "InActive Dishes";
+            if (position == 1) {
+                return "Inactive Dishes";
             }
             return "";
         }
 
 
-
     }
-
 
 
     public ArrayList<Item> getActiveItems() {
@@ -304,7 +301,9 @@ public class Fragment_Seller_Items extends Fragment {
             fout.close();
             oos.close();
 
-            Toast.makeText(activity,"Inactive dishes saved to device",Toast.LENGTH_SHORT).show();
+            Snackbar
+                    .make(coordinatorLayoutView, "Inactive dishes saved to device", Snackbar.LENGTH_SHORT)
+                    .show();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

@@ -5,7 +5,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="400dp"
         android:layout_margin="20dp"
         android:gravity="center_vertical"
         android:orientation="vertical">
@@ -16,25 +16,26 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:gravity="center_horizontal"
-            android:text="select payment method"
+            android:text="how do you wish to get your food?"
             android:textSize="35sp" />
 
         <Button
-            android:id="@+id/cardButton"
+            android:id="@+id/delivery_button"
             style="@style/button_design"
             android:layout_width="match_parent"
             android:layout_height="90dp"
             android:layout_margin="20dp"
-            android:text="CREDIT / DEBIT CARD" />
+            android:text="DELIVERY"
+            android:visibility="gone"/>
 
 
         <Button
-            android:id="@+id/cashButton"
+            android:id="@+id/pickup_button"
             style="@style/button_design"
             android:layout_width="match_parent"
             android:layout_height="90dp"
             android:layout_margin="20dp"
-            android:text="CASH" />
+            android:text="PICK-UP" />
 
 
     </LinearLayout>

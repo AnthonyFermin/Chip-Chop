@@ -392,9 +392,9 @@ public class DBHelper extends Firebase {
                         // Something went wrong :(
                         switch (error.getCode()) {
                             case FirebaseError.USER_DOES_NOT_EXIST:
-                                Snackbar
-                                        .make(SignupActivity1.coordinatorLayoutView, "E-mail or Password Invalid", Snackbar.LENGTH_SHORT)
-                                        .show();
+//                                Snackbar
+//                                        .make(SignupActivity1.coordinatorLayoutView, "E-mail or Password Invalid", Snackbar.LENGTH_SHORT)
+//                                        .show();
                                 Toast.makeText(mContext, "E-mail or Password Invalid", Toast.LENGTH_LONG).show();
                                 mSuccess = false;
                                 break;
@@ -678,6 +678,38 @@ public class DBHelper extends Firebase {
         callback.runOnSuccess();
     }
 
+    public void changeUserEmail(String oldeMail, String neweMail, String passWord, final DBCallback dbCallback){
+        Firebase ref = new Firebase(URL);
+        ref.changeEmail(oldeMail, neweMail, passWord, new Firebase.ResultHandler() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(mContext,"E-mail Successfully Changed",Toast.LENGTH_SHORT).show();
+                dbCallback.runOnSuccess();
+            }
+
+            @Override
+            public void onError(FirebaseError firebaseError) {
+                Toast.makeText(mContext,"Error Changing E-mail, Please Try Again",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void changeUserPassword(String email, String oldPassword, String newPassowrd, final DBCallback dbCallback){
+        Firebase ref = new Firebase(URL);
+        ref.changePassword(email, oldPassword, newPassowrd, new Firebase.ResultHandler() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(mContext,"Password Successfully Changed",Toast.LENGTH_SHORT).show();
+                dbCallback.runOnSuccess();            }
+
+            @Override
+            public void onError(FirebaseError firebaseError) {
+                Toast.makeText(mContext,"Error Changing Password, Please Try Again",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
     public void addSellerProfileInfoToDB(Seller user) {
         Firebase fRef = new Firebase(URL + "SellerProfiles/");
         UID = user.getUID();
@@ -727,7 +759,7 @@ public class DBHelper extends Firebase {
     public Seller getSellerFromDB(final String sellerID, final DBCallback callback) {
         sellerId = sellerID;
         seller = new Seller();
-        
+
         Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId);
         fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -2350,7 +2382,7 @@ public class DBHelper extends Firebase {
                                     subtractBoughtQuantityFromQuantityInDB(item, item.getSellerID(), item.getItemID(), updateQuantityAvailable, dbCallback);
                                 } else {
                                     Toast.makeText(mContext, "Only " + item.quantity + item.getNameOfItem() + "'s Available for Sale, Please Choose A Lower Quantity", Toast.LENGTH_SHORT).show();
-                                    dbCallback.runOnFail();//TODO: Callback sends user back to cart
+                                    dbCallback.runOnFail();//TODO: Test Callback sends user back to cart
                                 }
                                 return Transaction.success(mutableData);
                             }

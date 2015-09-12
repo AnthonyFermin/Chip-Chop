@@ -13,6 +13,8 @@ import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.MutableData;
+import com.firebase.client.Transaction;
 import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -2261,7 +2263,7 @@ public class DBHelper extends Firebase {
 
         Log.d("ITEMID2", item.getItemID() + "");
 
-        Firebase fRef = new Firebase(URL + "ActiveSellers/" + sellerId + "/itemsForSale/");
+        final Firebase fRef = new Firebase(URL + "ActiveSellers/" + sellerId + "/itemsForSale/");
 
         Log.d("In UpdateSeller", "IM IN HERE");
 
@@ -2270,14 +2272,32 @@ public class DBHelper extends Firebase {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    Item item = dataSnapshot1.getValue(Item.class);
+                    final Item item = dataSnapshot1.getValue(Item.class);
                     if (item1.getItemID().equals(dataSnapshot1.getKey())) {
-                        int oldQuantity = item.quantity;
-                        int updateQuantityAvailable = oldQuantity - quantityWanted;
 
-                        Log.d("Quantity Available", updateQuantityAvailable + "");
+                            fRef.child(itemID).runTransaction(new Transaction.Handler() {
+                                @Override
+                                public Transaction.Result doTransaction(MutableData mutableData) {
+                                    int oldQuantity = item.quantity;
+                                    final int updateQuantityAvailable = oldQuantity - quantityWanted;
+                                    if (updateQuantityAvailable>0) {
+                                        Log.d("Quantity Available", updateQuantityAvailable + "");
+                                        item.setQuantity(updateQuantityAvailable);
+                                        subtractBoughtQuantityFromQuantityInDB(item, item.getSellerID(), item.getItemID(), updateQuantityAvailable, dbCallback);
+                                    }
+                                    else {
+                                        Toast.makeText(mContext,"Only "+item.quantity+item.getNameOfItem()+"'s Available for Sale, Please Choose A Lower Quantity",Toast.LENGTH_SHORT).show();
+                                        dbCallback.runOnFail();//TODO: Callback sends user back to cart
+                                    }
+                                    return Transaction.success(mutableData);
+                                }
+                                @Override
+                                public void onComplete(FirebaseError firebaseError, boolean b, DataSnapshot dataSnapshot) {
+                                dbCallback.runOnFail();
+                                }
+                            });
+                        }
 
-                        item.setQuantity(updateQuantityAvailable);
                         item.setItemID(dataSnapshot1.getKey());
                         item.setPrice(item1.price);
                         item.setContainsDairy(item1.containsDairy);
@@ -2289,7 +2309,6 @@ public class DBHelper extends Firebase {
                         item.setImageLink(item1.imageLink);
                         item.setIsVegetarian(item1.isVegetarian());
                         item.setSellerID(item1.sellerID);
-                        subtractBoughtQuantityFromQuantityInDB(item, item.getSellerID(), item.getItemID(), updateQuantityAvailable, dbCallback);
                     }
                 }
             }

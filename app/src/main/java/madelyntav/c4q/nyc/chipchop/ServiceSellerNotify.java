@@ -108,4 +108,10 @@ public class ServiceSellerNotify extends Service {
         });
 
     }
+
+    @Override
+    public void onDestroy() {
+        Log.d(TAG,"DESTROYED");
+        super.onDestroy();
+    }
 }

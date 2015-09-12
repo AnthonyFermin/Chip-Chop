@@ -236,9 +236,13 @@ public class SellActivity extends AppCompatActivity {
     }
 
     private void clearLogin() {
+        dbHelper.setSellerCookingStatus(false);
+        dbHelper.removeSellersFromActiveSellers(seller, emptyCallback);
         userInfoSP.edit().clear().commit();
         dbHelper.signOutUser(emptyCallback);
         drawerUserNameTV.setText("");
+        stopService(serviceIntent);
+        stopService(new Intent(this,ServiceBuyerNotify.class));
     }
 
     @Override

@@ -66,11 +66,11 @@ public class ServiceBuyerNotify extends Service {
         orderVEL = buyerOrderRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(!dataSnapshot.getValue(Boolean.class)){
+                if (!dataSnapshot.getValue(Boolean.class)) {
                     //send Notification
                     Intent intent = new Intent(ServiceBuyerNotify.this, BuyActivity.class)
-                            .putExtra("fromService",true)
-                            .putExtra("orderid",orderID);
+                            .putExtra("fromService", true)
+                            .putExtra("orderid", orderID);
 
                     PendingIntent pendingIntent = PendingIntent.getActivity(ServiceBuyerNotify.this,
                             0,
@@ -87,11 +87,12 @@ public class ServiceBuyerNotify extends Service {
                     mBuilder.setAutoCancel(true);
                     notification = mBuilder.build();
                     notification.flags |= Notification.FLAG_AUTO_CANCEL;
-                    notificationManager.notify(123,notification);
+                    notificationManager.notify(123, notification);
                     Log.d(TAG, "ORDER COMPLETE");
                     stopSelf();
                 }
             }
+
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 buyerOrderRef.removeEventListener(orderVEL);
@@ -99,5 +100,11 @@ public class ServiceBuyerNotify extends Service {
             }
         });
 
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d(TAG,"DESTROYED");
+        super.onDestroy();
     }
 }

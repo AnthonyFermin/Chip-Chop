@@ -61,32 +61,9 @@ public class PaymentDialog extends android.support.v4.app.DialogFragment {
                 Log.d("Order Info", "Total Price: $" + order.getPrice());
                 Log.d("Order Info", "Store Name: " + order.getStoreName());
                 Log.d("Order Info", "Time Bought: " + order.getTimeStamp());
-                dbHelper.addCurrentOrderToSellerDB(order, new DBCallback() {
-                    @Override
-                    public void runOnSuccess() {
-                        confirmImage.setVisibility(View.VISIBLE);
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                confirmImage.setVisibility(View.GONE);
-//                                activity.replaceFragment(new Fragment_Buyer_Orders());
-                                // TODO: finish the flow after merge with 'payments' branch !
-                                Intent paymentIntent = new Intent(activity.getApplicationContext(), PaymentsActivity.class);
-                                activity.startActivity(paymentIntent);
-                            }
-                        }, 1000);
-                        getDialog().dismiss();
-                    }
+                Intent paymentIntent = new Intent(activity.getApplicationContext(), PaymentsActivity.class);
+                activity.startActivity(paymentIntent);
 
-                    @Override
-                    public void runOnFail() {
-                        Toast.makeText(activity, "Items are no longer available", Toast.LENGTH_SHORT).show();
-                        Snackbar
-                                .make(coordinatorLayoutView, "Items are no longer available", Snackbar.LENGTH_SHORT)
-                                .show();
-                        getDialog().dismiss();
-                    }
-                });
                 //TODO: Check if Signed in, else go into signup activity - Sign in should just be a pop up dialog
             }
         });

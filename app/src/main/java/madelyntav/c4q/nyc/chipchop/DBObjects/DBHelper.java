@@ -726,7 +726,8 @@ public class DBHelper extends Firebase {
 
     public Seller getSellerFromDB(final String sellerID, final DBCallback callback) {
         sellerId = sellerID;
-
+        seller = new Seller();
+        
         Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId);
         fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -2096,7 +2097,7 @@ public class DBHelper extends Firebase {
                 dbCallback.runOnSuccess();
 
             }
-            
+
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 Toast.makeText(mContext, "Please Try Again", Toast.LENGTH_SHORT).show();

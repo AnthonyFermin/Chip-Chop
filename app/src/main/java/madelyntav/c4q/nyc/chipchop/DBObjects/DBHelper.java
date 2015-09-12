@@ -724,7 +724,7 @@ public class DBHelper extends Firebase {
         callback.runOnSuccess();
     }
 
-    public Seller getSellerFromDB(final String sellerID) {
+    public Seller getSellerFromDB(final String sellerID, final DBCallback callback) {
         sellerId = sellerID;
 
         Firebase fRef = new Firebase(URL + "SellerProfiles/");
@@ -754,6 +754,7 @@ public class DBHelper extends Firebase {
                         seller.setIsCooking(seller1.getIsCooking());
 
                         Log.d("Seller", seller.name + "");
+                        callback.runOnSuccess();
 
                     }
                 }

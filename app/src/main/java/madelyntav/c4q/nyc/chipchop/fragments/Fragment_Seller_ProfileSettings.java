@@ -127,9 +127,19 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
         Log.d("Seller Profile", "LOADING SELLER INFO");
         if(activity.getSeller() == null) {
-            seller = dbHelper.getSellerFromDB(dbHelper.getUserID());
-            Log.d("Load Seller Info", "LOADING FROM DB: " + dbHelper.getUserID());
-            load();
+            seller = dbHelper.getSellerFromDB(dbHelper.getUserID(), new DBCallback() {
+                @Override
+                public void runOnSuccess() {
+                    Log.d("Load Seller Info", "LOADING FROM DB: " + dbHelper.getUserID());
+                    load();
+                }
+
+                @Override
+                public void runOnFail() {
+
+                }
+            });
+
         }else{
             seller = activity.getSeller();
             Log.d("Load Seller Info", "PREVIOUSLY CACHED");

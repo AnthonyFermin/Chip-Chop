@@ -34,7 +34,7 @@
                 android:layout_height="210dp"
                 android:layout_gravity="center_horizontal"
                 android:adjustViewBounds="true"
-                android:background="#FFF"
+                android:background="@android:color/transparent"
                 android:scaleType="centerCrop"
                 android:src="@drawable/addphoto" />
 
@@ -91,7 +91,7 @@
                         android:id="@+id/portions"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Number of Portions"
+                        android:hint="# of Portions"
                         android:inputType="number"
                         android:maxLength="3"
                         android:textSize="20sp" />

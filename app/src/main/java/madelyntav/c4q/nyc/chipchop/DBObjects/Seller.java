@@ -32,6 +32,8 @@ public class Seller {
     int cardExpirationMonth;
     int cardExpirationYear;
     String cardCVC;
+    String routingNumber;
+    String accountNumber;
     String distanceFromBuyer;
 
     public Seller(){}
@@ -256,5 +258,21 @@ public class Seller {
 
     public void setDistanceFromBuyer(String distanceFromBuyer) {
         this.distanceFromBuyer = distanceFromBuyer;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public String getRoutingNumber() {
+        return routingNumber;
+    }
+
+    public void setRoutingNumber(String routingNumber) {
+        this.routingNumber = routingNumber;
     }
 }

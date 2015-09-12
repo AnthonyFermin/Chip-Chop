@@ -652,11 +652,9 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
         fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
         fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
-        fRef.child(UID).child(sCardNumber).setValue(seller.getCardNumber());
-        fRef.child(UID).child(sCardExpirationMonth).setValue(seller.getCardExpirationMonth());
-        fRef.child(UID).child(sCardExpirationYear).setValue(seller.getCardExpirationYear());
-        fRef.child(UID).child(sCardCVC).setValue(seller.getCardCVC());
         fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
+        fRef.child(UID).child("routingNumber").setValue(seller.getRoutingNumber());
+        fRef.child(UID).child("accountNumber").setValue(seller.getAccountNumber());
 
     }
 
@@ -752,6 +750,8 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sAddress).setValue(seller.getAddress().toString());
         fRef.child(UID).child(sLatitude).setValue(seller.getAddress().getLatitude());
         fRef.child(UID).child(sLongitude).setValue(seller.getAddress().getLongitude());
+        fRef.child(UID).child("routingNumber").setValue(seller.getRoutingNumber());
+        fRef.child(UID).child("accountNumber").setValue(seller.getAccountNumber());
 
         callback.runOnSuccess();
     }
@@ -784,7 +784,9 @@ public class DBHelper extends Firebase {
                     seller.setItems(seller1.items);
                     seller.setLongitude(seller1.longitude);
                     seller.setLatitude(seller1.latitude);
-                    seller.setIsCooking(seller1.getIsCooking());
+                    seller.setIsCooking(seller1.isCooking);
+                    seller.setAccountNumber(seller1.getAccountNumber());
+                    seller.setRoutingNumber(seller1.routingNumber);
 
                     Log.d("Seller", seller.name + "");
                     callback.runOnSuccess();
@@ -854,6 +856,8 @@ public class DBHelper extends Firebase {
         fRef.child(sellerId).child(sAddress).setValue(seller.getAddressString());
         fRef.child(sellerId).child(sLatitude).setValue(seller.getLatitude());
         fRef.child(sellerId).child(sLongitude).setValue(seller.getLatitude());
+        fRef.child(sellerId).child("routingNumber").setValue(seller.getRoutingNumber());
+        fRef.child(sellerId).child("accountNumber").setValue(seller.getAccountNumber());
     }
 
     public ArrayList<Seller> getAllActiveSellers(DBCallback dbCallback) {
@@ -887,6 +891,8 @@ public class DBHelper extends Firebase {
                     seller.setDescription(seller1.description);
                     seller.setPhotoLink(seller1.photoLink);
                     seller.setStoreName(seller1.storeName);
+                    seller.setAccountNumber(seller1.accountNumber);
+                    seller.setRoutingNumber(seller1.routingNumber);
 
                     if (allActiveSellers.size() < sizeofAddDBList) {
 
@@ -949,6 +955,8 @@ public class DBHelper extends Firebase {
                         seller.setPhoneNumber(seller1.phoneNumber);
                         seller.setItems(seller1.items);
                         seller.setLongitude(seller1.latitude);
+                        seller.setRoutingNumber(seller1.routingNumber);
+                        seller.setAccountNumber(seller1.accountNumber);
                         seller.setLatitude(seller1.longitude);
                     }
                     Log.d("SellerOne", seller.name + "");
@@ -998,6 +1006,8 @@ public class DBHelper extends Firebase {
                         seller.setItems(seller1.items);
                         seller.setLongitude(seller1.latitude);
                         seller.setLatitude(seller1.longitude);
+                        seller.setRoutingNumber(seller1.routingNumber);
+                        seller.setAccountNumber(seller1.accountNumber);
                     }
                     Log.d("SellerOne", seller.name + "");
                 }
@@ -1029,10 +1039,8 @@ public class DBHelper extends Firebase {
         fRef.child(sellerId).child(sName).setValue(seller.getName());
         fRef.child(sellerId).child(descriptionOfItem).setValue(seller.getDescription());
         fRef.child(sellerId).child("storeName").setValue(seller.getStoreName());
-        fRef.child(sellerId).child(sCardNumber).setValue(seller.getCardNumber());
-        fRef.child(sellerId).child(sCardExpirationMonth).setValue(seller.getCardExpirationMonth());
-        fRef.child(sellerId).child(sCardExpirationYear).setValue(seller.getCardExpirationYear());
-        fRef.child(sellerId).child(sCardCVC).setValue(seller.getCardCVC());
+        fRef.child(sellerId).child("routingNumber").setValue(seller.getRoutingNumber());
+        fRef.child(sellerId).child("accountNumber").setValue(seller.getAccountNumber());
         fRef.child(sellerId).child(sIsCooking).setValue(seller.getIsCooking());
         fRef.child(sellerId).child(sEmailAddress).setValue(seller.geteMail());
         fRef.child(sellerId).child(sPhoneNumber).setValue(seller.getPhoneNumber());

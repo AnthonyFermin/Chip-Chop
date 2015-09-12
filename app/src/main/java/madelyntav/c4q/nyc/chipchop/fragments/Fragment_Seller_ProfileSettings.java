@@ -1,6 +1,7 @@
 package madelyntav.c4q.nyc.chipchop.fragments;
 
 import android.app.AlertDialog;
+import android.app.Service;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -47,6 +48,7 @@ import madelyntav.c4q.nyc.chipchop.GeolocationAPI.Location;
 import madelyntav.c4q.nyc.chipchop.HelperMethods;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.SellActivity;
+import madelyntav.c4q.nyc.chipchop.ServiceSellerNotify;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -239,7 +241,6 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         activity.setSeller(seller);
         loadingPanel.setVisibility(View.GONE);
         containingView.setVisibility(View.VISIBLE);
-
     }
 
     private void setEditTexts(){
@@ -249,10 +250,12 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             cookingStatus.setChecked(true);
             cookingStatusTV.setVisibility(View.VISIBLE);
             saveButton.setEnabled(false);
+            activity.startService(activity.getServiceIntent());
         }else{
             cookingStatus.setChecked(false);
             cookingStatusTV.setVisibility(View.INVISIBLE);
             saveButton.setEnabled(true);
+            activity.stopService(activity.getServiceIntent());
         }
 
         Address address = user.getAddress();
@@ -498,6 +501,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                         Snackbar
                                 .make(coordinatorLayoutView, "Cooking Status Active", Snackbar.LENGTH_SHORT)
                                 .show();
+                        activity.startService(activity.getServiceIntent());
                     } else {
                         cookingStatusTV.setVisibility(View.INVISIBLE);
                         Snackbar
@@ -514,6 +518,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                     seller.setIsCooking(false);
                     activity.setSeller(seller);
                     dbHelper.setSellerCookingStatus(false);
+                    activity.stopService(activity.getServiceIntent());
                     Snackbar
                             .make(coordinatorLayoutView, "Cooking Status Deactivated", Snackbar.LENGTH_SHORT)
                             .show();

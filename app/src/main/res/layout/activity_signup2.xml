@@ -178,6 +178,7 @@ android:layout_height="match_parent">
             android:layout_width="150dp"
             android:layout_height="match_parent"
             android:hint="Zipcode"
+            android:visibility="gone"
             android:inputType="number"
             android:maxLength="5"
             android:textSize="20sp" />

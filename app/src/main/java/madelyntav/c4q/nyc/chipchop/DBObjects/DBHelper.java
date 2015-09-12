@@ -392,9 +392,9 @@ public class DBHelper extends Firebase {
                         // Something went wrong :(
                         switch (error.getCode()) {
                             case FirebaseError.USER_DOES_NOT_EXIST:
-                                Snackbar
-                                        .make(SignupActivity1.coordinatorLayoutView, "E-mail or Password Invalid", Snackbar.LENGTH_SHORT)
-                                        .show();
+//                                Snackbar
+//                                        .make(SignupActivity1.coordinatorLayoutView, "E-mail or Password Invalid", Snackbar.LENGTH_SHORT)
+//                                        .show();
                                 Toast.makeText(mContext, "E-mail or Password Invalid", Toast.LENGTH_LONG).show();
                                 mSuccess = false;
                                 break;

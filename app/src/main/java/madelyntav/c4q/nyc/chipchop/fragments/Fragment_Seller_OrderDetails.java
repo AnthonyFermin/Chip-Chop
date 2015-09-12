@@ -82,7 +82,7 @@ public class Fragment_Seller_OrderDetails extends Fragment {
                 new NotificationCompat.Builder(getActivity().getApplicationContext())
                         .setSmallIcon(R.drawable.chipchop_small)
                         .setContentTitle("ChipChop")
-                        .setContentText("Your order is ready!");
+                        .setContentText("New Order Received");
 
         mBuilder.setAutoCancel(true);
         notification = mBuilder.build();

@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="com.android.vending.BILLING" />
+    <uses-permission android:name="ANDROID.PERMISSION.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="ANDROID.PERMISSION.WRITE_EXTERNAL_STORAGE" />
 
 
     <application
@@ -78,6 +80,12 @@
                 <action android:name="ahhhlvin.c4q.nyc.notification" />
             </intent-filter>
         </receiver>
+
+        <service android:name=".ServiceSellerNotify"
+            android:exported="false"/>
+
+        <service android:name=".ServiceBuyerNotify"
+            android:exported="false" />
 
         <activity
             android:name=".Payments.PaymentsActivity"

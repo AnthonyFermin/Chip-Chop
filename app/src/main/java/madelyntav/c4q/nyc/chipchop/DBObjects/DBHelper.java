@@ -736,28 +736,31 @@ public class DBHelper extends Firebase {
                 // for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                 Seller seller1 = dataSnapshot.getValue(Seller.class);
 //                    if (dataSnapshot1.getKey().equals(sellerID)) {
-                if (seller1.name == null) {
+                if (seller1 == null) {
                     callback.runOnFail();
-                }
-                seller = new Seller();
-                seller.setName(seller1.name);
-                seller.setStoreName(seller1.storeName);
-                seller.setAddress(seller1.address);
-                seller.setCardCVC(seller1.cardCVC);
-                seller.setCardExpirationMonth(seller1.cardExpirationMonth);
-                seller.setCardExpirationYear(seller1.cardExpirationYear);
-                seller.setCardNumber(seller1.cardNumber);
-                seller.setDescription(seller1.description);
-                seller.seteMail(seller1.eMail);
-                seller.setUID(dataSnapshot.getKey());
-                seller.setPhoneNumber(seller1.phoneNumber);
-                seller.setItems(seller1.items);
-                seller.setLongitude(seller1.longitude);
-                seller.setLatitude(seller1.latitude);
-                seller.setIsCooking(seller1.getIsCooking());
+                    return;
+                } else {
 
-                Log.d("Seller", seller.name + "");
-                callback.runOnSuccess();
+                    seller = new Seller();
+                    seller.setName(seller1.name);
+                    seller.setStoreName(seller1.storeName);
+                    seller.setAddress(seller1.address);
+                    seller.setCardCVC(seller1.cardCVC);
+                    seller.setCardExpirationMonth(seller1.cardExpirationMonth);
+                    seller.setCardExpirationYear(seller1.cardExpirationYear);
+                    seller.setCardNumber(seller1.cardNumber);
+                    seller.setDescription(seller1.description);
+                    seller.seteMail(seller1.eMail);
+                    seller.setUID(dataSnapshot.getKey());
+                    seller.setPhoneNumber(seller1.phoneNumber);
+                    seller.setItems(seller1.items);
+                    seller.setLongitude(seller1.longitude);
+                    seller.setLatitude(seller1.latitude);
+                    seller.setIsCooking(seller1.getIsCooking());
+
+                    Log.d("Seller", seller.name + "");
+                    callback.runOnSuccess();
+                }
 
             }
 

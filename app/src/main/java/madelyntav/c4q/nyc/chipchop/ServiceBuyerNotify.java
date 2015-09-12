@@ -86,6 +86,7 @@ public class ServiceBuyerNotify extends Service {
 
                     mBuilder.setAutoCancel(true);
                     notification = mBuilder.build();
+                    notification.defaults |= Notification.DEFAULT_SOUND;
                     notification.flags |= Notification.FLAG_AUTO_CANCEL;
                     notificationManager.notify(123, notification);
                     Log.d(TAG, "ORDER COMPLETE");

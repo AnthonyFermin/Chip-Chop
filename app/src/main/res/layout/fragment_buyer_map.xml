@@ -86,6 +86,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="5dp"
+            android:padding="8dp"
             android:src="@drawable/refresh"
             app:backgroundTint="#D42028"
             app:elevation="6dp"

@@ -93,6 +93,7 @@
             android:id="@+id/cooking_status"
             android:padding="2dp"
             android:layout_marginTop="4dp"
+            android:layout_marginBottom="5dp"
             android:gravity="center_horizontal"
             android:layout_weight="1"/>
 

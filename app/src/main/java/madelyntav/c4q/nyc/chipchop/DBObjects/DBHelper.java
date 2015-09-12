@@ -116,7 +116,7 @@ public class DBHelper extends Firebase {
         allActiveSellers = new ArrayList<>();
         seller = new Seller();
         item = new Item();
-        item2= new Item();
+        item2 = new Item();
         allSellersInDB = new ArrayList<>();
         receiptForSpecificOrder = new ArrayList<>();
         itemsInSpecificOrder = new ArrayList<>();
@@ -727,36 +727,39 @@ public class DBHelper extends Firebase {
     public Seller getSellerFromDB(final String sellerID, final DBCallback callback) {
         sellerId = sellerID;
 
-        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId);
+        Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId);
         fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("Number2", dataSnapshot.getChildrenCount() + "");
 
-
-               // for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    Seller seller1 = dataSnapshot.getValue(Seller.class);
+                // for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                Seller seller1 = dataSnapshot.getValue(Seller.class);
 //                    if (dataSnapshot1.getKey().equals(sellerID)) {
-                        seller.setName(seller1.name);
-                        seller.setStoreName(seller1.storeName);
-                        seller.setAddress(seller1.address);
-                        seller.setCardCVC(seller1.cardCVC);
-                        seller.setCardExpirationMonth(seller1.cardExpirationMonth);
-                        seller.setCardExpirationYear(seller1.cardExpirationYear);
-                        seller.setCardNumber(seller1.cardNumber);
-                        seller.setDescription(seller1.description);
-                        seller.seteMail(seller1.eMail);
-                        seller.setUID(dataSnapshot.getKey());
-                        seller.setPhoneNumber(seller1.phoneNumber);
-                        seller.setItems(seller1.items);
-                        seller.setLongitude(seller1.longitude);
-                        seller.setLatitude(seller1.latitude);
-                        seller.setIsCooking(seller1.getIsCooking());
+                if (seller1.name == null) {
+                    callback.runOnFail();
+                }
+                seller = new Seller();
+                seller.setName(seller1.name);
+                seller.setStoreName(seller1.storeName);
+                seller.setAddress(seller1.address);
+                seller.setCardCVC(seller1.cardCVC);
+                seller.setCardExpirationMonth(seller1.cardExpirationMonth);
+                seller.setCardExpirationYear(seller1.cardExpirationYear);
+                seller.setCardNumber(seller1.cardNumber);
+                seller.setDescription(seller1.description);
+                seller.seteMail(seller1.eMail);
+                seller.setUID(dataSnapshot.getKey());
+                seller.setPhoneNumber(seller1.phoneNumber);
+                seller.setItems(seller1.items);
+                seller.setLongitude(seller1.longitude);
+                seller.setLatitude(seller1.latitude);
+                seller.setIsCooking(seller1.getIsCooking());
 
-                        Log.d("Seller", seller.name + "");
-                        callback.runOnSuccess();
+                Log.d("Seller", seller.name + "");
+                callback.runOnSuccess();
 
-                    }
+            }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
@@ -2057,7 +2060,7 @@ public class DBHelper extends Firebase {
     }
 
     public ArrayList<Item> getSellerItems(String sellerID, final DBCallback dbCallback) {
-        sellerId=sellerID;
+        sellerId = sellerID;
 
         Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerID + "/itemsForSale");
 
@@ -2088,7 +2091,6 @@ public class DBHelper extends Firebase {
                     item3.setGlutenFree(item1.glutenFree);
 
 
-
                     if (items.size() < sizeofAddDBList) {
                         items.add(item3);
                         Log.d("LISTING", items.toString());
@@ -2096,7 +2098,7 @@ public class DBHelper extends Firebase {
                         return;
                 }
 
-                Log.d("GotHere",items.toString());
+                Log.d("GotHere", items.toString());
                 dbCallback.runOnSuccess();
             }
 
@@ -2164,6 +2166,7 @@ public class DBHelper extends Firebase {
                     }
                 }
             }
+
             @Override
             public void onCancelled(FirebaseError firebaseError) {
             }
@@ -2348,42 +2351,42 @@ public class DBHelper extends Firebase {
                     final Item item = dataSnapshot1.getValue(Item.class);
                     if (item1.getItemID().equals(dataSnapshot1.getKey())) {
 
-                            fRef.child(itemID).runTransaction(new Transaction.Handler() {
-                                @Override
-                                public Transaction.Result doTransaction(MutableData mutableData) {
-                                    int oldQuantity = item.quantity;
-                                    final int updateQuantityAvailable = oldQuantity - quantityWanted;
-                                    if (updateQuantityAvailable>0) {
-                                        Log.d("Quantity Available", updateQuantityAvailable + "");
-                                        item.setQuantity(updateQuantityAvailable);
-                                        subtractBoughtQuantityFromQuantityInDB(item, item.getSellerID(), item.getItemID(), updateQuantityAvailable, dbCallback);
-                                    }
-                                    else {
-                                        Toast.makeText(mContext,"Only "+item.quantity+item.getNameOfItem()+"'s Available for Sale, Please Choose A Lower Quantity",Toast.LENGTH_SHORT).show();
-                                        dbCallback.runOnFail();//TODO: Callback sends user back to cart
-                                    }
-                                    return Transaction.success(mutableData);
+                        fRef.child(itemID).runTransaction(new Transaction.Handler() {
+                            @Override
+                            public Transaction.Result doTransaction(MutableData mutableData) {
+                                int oldQuantity = item.quantity;
+                                final int updateQuantityAvailable = oldQuantity - quantityWanted;
+                                if (updateQuantityAvailable > 0) {
+                                    Log.d("Quantity Available", updateQuantityAvailable + "");
+                                    item.setQuantity(updateQuantityAvailable);
+                                    subtractBoughtQuantityFromQuantityInDB(item, item.getSellerID(), item.getItemID(), updateQuantityAvailable, dbCallback);
+                                } else {
+                                    Toast.makeText(mContext, "Only " + item.quantity + item.getNameOfItem() + "'s Available for Sale, Please Choose A Lower Quantity", Toast.LENGTH_SHORT).show();
+                                    dbCallback.runOnFail();//TODO: Callback sends user back to cart
                                 }
-                                @Override
-                                public void onComplete(FirebaseError firebaseError, boolean b, DataSnapshot dataSnapshot) {
-                                dbCallback.runOnFail();
-                                }
-                            });
-                        }
+                                return Transaction.success(mutableData);
+                            }
 
-                        item.setItemID(dataSnapshot1.getKey());
-                        item.setPrice(item1.price);
-                        item.setContainsDairy(item1.containsDairy);
-                        item.setContainsEggs(item1.containsEggs);
-                        item.setContainsPeanuts(item1.containsPeanuts);
-                        item.setContainsShellfish(item1.containsShellfish);
-                        item.setGlutenFree(item1.glutenFree);
-                        item.setDescriptionOfItem(item1.descriptionOfItem);
-                        item.setImageLink(item1.imageLink);
-                        item.setIsVegetarian(item1.isVegetarian());
-                        item.setSellerID(item1.sellerID);
+                            @Override
+                            public void onComplete(FirebaseError firebaseError, boolean b, DataSnapshot dataSnapshot) {
+                                dbCallback.runOnFail();
+                            }
+                        });
                     }
+
+                    item.setItemID(dataSnapshot1.getKey());
+                    item.setPrice(item1.price);
+                    item.setContainsDairy(item1.containsDairy);
+                    item.setContainsEggs(item1.containsEggs);
+                    item.setContainsPeanuts(item1.containsPeanuts);
+                    item.setContainsShellfish(item1.containsShellfish);
+                    item.setGlutenFree(item1.glutenFree);
+                    item.setDescriptionOfItem(item1.descriptionOfItem);
+                    item.setImageLink(item1.imageLink);
+                    item.setIsVegetarian(item1.isVegetarian());
+                    item.setSellerID(item1.sellerID);
                 }
+            }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {

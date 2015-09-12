@@ -5,15 +5,16 @@
     android:orientation="vertical">
 
 
-    <TextView
+      <TextView
         android:id="@+id/orderdetail_id_tv"
         style="@style/text_design"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="Order Details"
-        android:textSize="25sp"
-        android:textStyle="bold" />
+        android:layout_marginBottom="20dp"
+          android:layout_marginTop="15dp"
+        android:gravity="center_horizontal"
+        android:text="order details"
+        android:textSize="35sp" />
 
     <LinearLayout
         android:id="@+id/header_linear_layout"
@@ -79,7 +80,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:layout_weight="4"
+        android:layout_weight="3"
         android:text="TOTAL: "
         android:gravity="end"
         style="@style/text_design"

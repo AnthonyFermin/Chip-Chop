@@ -13,7 +13,7 @@
         <item>Seller Items</item>
         <item>Orders</item>
         <item>Profile Settings</item>
-        <item>Sign In</item>
+        <item>Sign Out</item>
     </string-array>
 
 
@@ -38,4 +38,5 @@
     <string name="Cancel">Cancel</string>
     <string name="network_not_enabled">No internet connection found, check your WiFi or network connection and try again</string>
     <string name="title_activity_splash_screen">SplashScreenActivity</string>
+    <string name="title_activity_payments">PaymentsActivity</string>
 </resources>

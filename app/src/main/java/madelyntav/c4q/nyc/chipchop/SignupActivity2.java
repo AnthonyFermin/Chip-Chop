@@ -4,17 +4,28 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
@@ -38,29 +49,34 @@ public class SignupActivity2 extends AppCompatActivity {
     private EditText addressET;
     private EditText aptET;
     private EditText cityET;
+    private EditText stateET;
     private EditText zipET;
     private EditText phoneNumberET;
 
     private String address;
     private String apt;
     private String city;
+    private String state;
     private String zipcode;
 
     private String email;
+    private String password;
 
     private String name;
     private String phoneNumber;
+    private String photoLink;
 
     private Address userAddress;
 
     DBHelper dbHelper;
 
-    ImageView profilePhoto;
+    View coordinatorLayoutView;
+    ImageButton profilePhoto;
     public static final int RESULT_OK = -1;
     private Uri imageFileUri;
     Intent intent;
     private String stringVariable = "file:///sdcard/_pictureholder_id.jpg";
-
+    private boolean toSellActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,18 +85,33 @@ public class SignupActivity2 extends AppCompatActivity {
 
         //TODO: onclick circleImageview allows user to upload a profile image
 
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
+        getSupportActionBar().setBackgroundDrawable(colorDrawable);
+
+
         dbHelper = DBHelper.getDbHelper(this);
-        Intent intent = getIntent();
-        email = intent.getStringExtra("email");
+        Intent prevIntent = getIntent();
+        email = prevIntent.getStringExtra("email");
+        password = prevIntent.getStringExtra("pass");
+        photoLink = "";
+        toSellActivity = prevIntent.getBooleanExtra(BuyActivity.TO_SELL_ACTIVITY, false);
 
         nameET = (EditText) findViewById(R.id.name);
         addressET = (EditText) findViewById(R.id.address);
         aptET = (EditText) findViewById(R.id.apt);
         cityET = (EditText) findViewById(R.id.city);
         zipET = (EditText) findViewById(R.id.zipcode);
+        stateET = (EditText) findViewById(R.id.state);
         phoneNumberET = (EditText) findViewById(R.id.phone_number);
+        phoneNumberET.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+
+        coordinatorLayoutView = findViewById(R.id.snackbarPosition);
 
 
+//        getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        BitmapDrawable background = new BitmapDrawable (BitmapFactory.decodeResource(getResources(), R.drawable.actionbar));
+//        background.setGravity(Gravity.CENTER);
+//        getSupportActionBar().setBackgroundDrawable(background);
 
         startButton = (Button) findViewById(R.id.createUserButton);
         startButton.setOnClickListener(new View.OnClickListener() {
@@ -94,7 +125,7 @@ public class SignupActivity2 extends AppCompatActivity {
         });
 
 
-        profilePhoto = (ImageView) findViewById(R.id.profile_image);
+        profilePhoto = (ImageButton) findViewById(R.id.profile_image);
         profilePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -163,15 +194,17 @@ public class SignupActivity2 extends AppCompatActivity {
 
         GeolocationAPI geolocationAPI = restAdapter.create(GeolocationAPI.class);
 
-        address = addressET.getText().toString();
+        address = addressET.getText().toString().trim();
         address = address.trim().replace(" ", "+");
         name = nameET.getText().toString().trim();
         apt = aptET.getText().toString().trim();
-        city = cityET.getText().toString().trim().replace(' ','+');
-        phoneNumber = phoneNumberET.getText().toString();
+        city = cityET.getText().toString().trim().replace(' ', '+');
+        state = stateET.getText().toString().trim().replace(' ','+');
+        phoneNumber = phoneNumberET.getText().toString().trim().replace(" ", "");
+        zipcode = zipET.getText().toString().trim();
 
 
-        String queryString = address + ",+" + city + ",+NY";// + "&key=" + APIKEY;
+        String queryString = address + ",+" + city + "," + state;// + "&key=" + APIKEY;
         Log.i("RETROFIT- Geocode Query",queryString);
 
         geolocationAPI.getGeolocation(queryString, new Callback<Geolocation>() {
@@ -179,12 +212,12 @@ public class SignupActivity2 extends AppCompatActivity {
             public void success(Geolocation geolocation, Response response) {
                 String uid = dbHelper.getUserID();
                 Location location = geolocation.getResults().get(0).getGeometry().getLocation();
-                zipcode = geolocation.getResults().get(0).getAddressComponents().get(7).getLongName();
 
                 address = address.replace('+', ' ');
                 city = city.replace('+', ' ');
+                state = state.replace('+',' ');
 
-                userAddress = new Address(address, apt, city, "NY", zipcode, uid);
+                userAddress = new Address(address, apt, city, state, zipcode, uid);
 
                 Log.i("RETROFIT: LatLng", "" + location.getLat() + ", " + location.getLng());
 
@@ -201,14 +234,21 @@ public class SignupActivity2 extends AppCompatActivity {
 
                 saveToSharedPrefs();
 
-                Intent buyActivity = new Intent(getApplicationContext(), BuyActivity.class);
-                startActivity(buyActivity);
+                Intent activity;
+                if(toSellActivity){
+                    activity = new Intent(getApplicationContext(), SellActivity.class);
+                }else{
+                    activity = new Intent(getApplicationContext(), BuyActivity.class);
+                }
+                startActivity(activity);
                 finish();
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Toast.makeText(SignupActivity2.this, "Invalid Address", Toast.LENGTH_SHORT).show();
+                Snackbar
+                        .make(coordinatorLayoutView, "Invalid Address", Snackbar.LENGTH_SHORT)
+                        .show();
             }
         });
 
@@ -217,17 +257,46 @@ public class SignupActivity2 extends AppCompatActivity {
     }
 
     private void saveToSharedPrefs(){
-        SharedPreferences sp = getSharedPreferences(SignupActivity1.USER_INFO, MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences(SignupActivity1.SP_USER_INFO, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putString(SignupActivity1.ADDRESS, address)
-                .putString(SignupActivity1.NAME, name)
-                .putString(SignupActivity1.APT, apt)
-                .putString(SignupActivity1.CITY,city)
-                .putString(SignupActivity1.ZIPCODE, zipcode)
-                .putString(SignupActivity1.PHONE_NUMBER, phoneNumber)
+        editor.putString(SignupActivity1.SP_ADDRESS, address)
+                .putString(SignupActivity1.SP_NAME, name)
+                .putString(SignupActivity1.SP_APT, apt)
+                .putString(SignupActivity1.SP_CITY,city)
+                .putString(SignupActivity1.SP_STATE, state)
+                .putString(SignupActivity1.SP_ZIPCODE, zipcode)
+                .putString(SignupActivity1.SP_PHONE_NUMBER, phoneNumber)
+                .putString(SignupActivity1.SP_PHOTO_LINK,photoLink)
+                .putString(SignupActivity1.SP_PASS, password)
+                .putString(SignupActivity1.SP_EMAIL, email)
+                .putBoolean(SignupActivity1.SP_IS_LOGGED_IN, true)
                 .commit();
     }
 
+    @Override
+    public void onBackPressed() {
+        Snackbar
+                .make(coordinatorLayoutView, "Failed to create account", Snackbar.LENGTH_SHORT)
+                .show();
+        dbHelper.removeUser(email, password, new Firebase.ResultHandler() {
+            @Override
+            public void onSuccess() {
 
+            }
 
+            @Override
+            public void onError(FirebaseError firebaseError) {
+
+            }
+        });
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(new Intent(getApplicationContext(), BuyActivity.class));
+                finish();
+            }
+        }, 2000);
+
+    }
 }

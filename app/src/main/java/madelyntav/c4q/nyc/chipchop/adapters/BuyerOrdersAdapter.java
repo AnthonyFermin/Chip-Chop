@@ -3,20 +3,25 @@ package madelyntav.c4q.nyc.chipchop.adapters;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import madelyntav.c4q.nyc.chipchop.BuyActivity;
-import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
 import madelyntav.c4q.nyc.chipchop.R;
-import madelyntav.c4q.nyc.chipchop.SellActivity;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_OrderDetails;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_OrderDetails;
 
 /**
@@ -25,12 +30,11 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_OrderDetails;
 
 public class BuyerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    RecyclerView recycler;
-    private List<Item> orderItems;
+    private List<Order> orderItems;
     private Context context;
     private int lastPosition = -1;
 
-    public BuyerOrdersAdapter(Context context, List<Item> orderItems) {
+    public BuyerOrdersAdapter(Context context, List<Order> orderItems) {
         this.context = context;
         this.orderItems = orderItems;
     }
@@ -38,23 +42,27 @@ public class BuyerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private class BuyerOrdersViewHolder extends RecyclerView.ViewHolder {
 
         CardView container;
-        TextView orderID;
-        TextView sellerName;
-        TextView date;
-        TextView totalCost;
-        TextView quantity;
+        TextView timeStamp;
+        TextView total;
+        TextView nameOfSeller;
 
 
         public BuyerOrdersViewHolder(View itemView) {
             super(itemView);
 
-            recycler = (RecyclerView) itemView.findViewById(R.id.buyers_orders_list);
+            total = (TextView) itemView.findViewById(R.id.order_cost_tv);
             container = (CardView) itemView.findViewById(R.id.card_view);
-            orderID = (TextView) itemView.findViewById(R.id.order_id_tv);
-            sellerName = (TextView) itemView.findViewById(R.id.seller_name_tv);
-            date = (TextView) itemView.findViewById(R.id.order_time_tv);
-            totalCost = (TextView) itemView.findViewById(R.id.order_cost_tv);
-            quantity = (TextView) itemView.findViewById(R.id.total_item_tv);
+            nameOfSeller = (TextView) itemView.findViewById(R.id.seller_name_tv);
+            timeStamp = (TextView) itemView.findViewById(R.id.order_timestamp_tv);
+
+            container.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    BuyActivity activity = (BuyActivity) context;
+                    activity.setOrderToView(orderItems.get(getAdapterPosition()));
+                    activity.replaceFragment(new Fragment_Buyer_OrderDetails());
+                }
+            });
 
 
 
@@ -72,23 +80,21 @@ public class BuyerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
 
-        Item checkoutItem = orderItems.get(position);
+        Order order = orderItems.get(position);
         BuyerOrdersViewHolder vh = (BuyerOrdersViewHolder) viewHolder;
-//        vh.name.setText(checkoutItem.getNameOfItem());
-//        vh.quantity.setText(String.valueOf(checkoutItem.getQuantityWanted()));
-//        Picasso.with(context).load(checkoutItem.getImageLink()).fit().into(vh.image);
+        vh.nameOfSeller.setText("Seller Name: " + order.getStoreName());
 
+        Log.d("BuyerOrderAdapter", "Date: " + order.getTimeStamp());
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(order.getTimeStamp());
+        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.US);
+        String formattedDate = formatter.format(cal.getTime());
+        vh.timeStamp.setText("Date: " + formattedDate);
+        vh.total.setText("Total: $" + order.getPrice());
 
-            setAnimation(vh.container, position);
-
-//        CartListAdapter cartListAdapter = new CartListAdapter(context, orderDetails);
-//        recycler.setAdapter(cartListAdapter);
+        setAnimation(vh.container, position);
 
     }
-
-
-
-
 
     private void setAnimation(View viewToAnimate, int position) {
         // only animates the view if it was not already displayed on the screen
@@ -101,7 +107,6 @@ public class BuyerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-//        return orderItems.size();
-        return 0;
+        return orderItems.size();
     }
 }

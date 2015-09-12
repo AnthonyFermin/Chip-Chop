@@ -10,14 +10,21 @@ import java.util.ArrayList;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Order {
     String buyerID;
-    double price;
+    int price;
     String orderID;
     Review review;
     String sellerID;
     ArrayList<Item> itemsOrdered;
+    long timeStamp;
+    boolean isActive;
+    String storeName;
+    String sellerPhoneNumber;
+    String buyerPhoneNumber;
+    String transactionToken;
+    String paymentType;
 
     public Order(){
-        //this.buyerID=buyerID;
+        this.itemsOrdered = new ArrayList<>();
     }
 
     public Order(ArrayList<Item> itemsOrdered){
@@ -35,6 +42,62 @@ public class Order {
         this.buyerID = buyerID;
         this.sellerID=sellerID;
         this.itemsOrdered=itemsOrdered;
+    }
+    public Order(String buyerID, ArrayList<Item> itemsOrdered,String sellerID, long timeStamp){
+        this.buyerID = buyerID;
+        this.sellerID=sellerID;
+        this.timeStamp=timeStamp;
+        this.itemsOrdered=itemsOrdered;
+    }
+    public Order(String buyerID, ArrayList<Item> itemsOrdered,String sellerID, boolean isActive){
+        this.buyerID = buyerID;
+        this.sellerID=sellerID;
+        this.isActive=isActive;
+        this.itemsOrdered=itemsOrdered;
+    }
+    public Order(String buyerID, ArrayList<Item> itemsOrdered,String sellerID, long timeStamp, boolean isActive){
+        this.buyerID = buyerID;
+        this.sellerID=sellerID;
+        this.timeStamp=timeStamp;
+        this.isActive=isActive;
+        this.itemsOrdered=itemsOrdered;
+    }
+
+    public Order(String buyerID, int price, String orderID, Review review, String sellerID, long timeStamp, boolean isActive, String storeName) {
+        this.buyerID = buyerID;
+        this.price = price;
+        this.orderID = orderID;
+        this.review = review;
+        this.sellerID = sellerID;
+        this.timeStamp = timeStamp;
+        this.isActive = isActive;
+        this.storeName = storeName;
+    }
+
+    public Order(String buyerID, int price, String orderID, Review review, ArrayList<Item> itemsOrdered, String sellerID, long timeStamp, boolean isActive, String storeName) {
+        this.buyerID = buyerID;
+        this.price = price;
+        this.orderID = orderID;
+        this.review = review;
+        this.itemsOrdered = itemsOrdered;
+        this.sellerID = sellerID;
+        this.timeStamp = timeStamp;
+        this.isActive = isActive;
+        this.storeName = storeName;
+    }
+
+    public Order(String buyerID, int price, String orderID, String sellerID, long timeStamp, ArrayList<Item> itemsOrdered, String storeName, String sellerPhoneNumber, String buyerPhoneNumber, String transactionToken, String paymentType) {
+        this.buyerID = buyerID;
+        this.price = price;
+        this.orderID = orderID;
+        this.sellerID = sellerID;
+        this.timeStamp = timeStamp;
+        this.itemsOrdered = itemsOrdered;
+        this.storeName = storeName;
+        this.sellerPhoneNumber = sellerPhoneNumber;
+        this.buyerPhoneNumber = buyerPhoneNumber;
+        this.transactionToken = transactionToken;
+        this.paymentType = paymentType;
     }
 
     public Order(String buyerID, String sellerID){
@@ -83,11 +146,64 @@ public class Order {
         this.review = review;
     }
 
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
+
+    public long getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
+    }
+
+    public String getSellerPhoneNumber() { return sellerPhoneNumber; }
+
+    public void setSellerPhoneNumber(String sellerPhoneNumber) { this.sellerPhoneNumber = sellerPhoneNumber; }
+
+    public String getBuyerPhoneNumber() {
+        return buyerPhoneNumber;
+    }
+
+    public void setBuyerPhoneNumber(String buyerPhoneNumber) {
+        this.buyerPhoneNumber = buyerPhoneNumber;
+    }
+
+    public String getTransactionToken() {
+        return transactionToken;
+    }
+
+    public void setTransactionToken(String transactionToken) {
+        this.transactionToken = transactionToken;
+    }
+
+    public String getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(String paymentType) {
+        this.paymentType = paymentType;
+    }
 }
+

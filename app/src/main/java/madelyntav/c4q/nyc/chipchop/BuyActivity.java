@@ -1,21 +1,26 @@
 package madelyntav.c4q.nyc.chipchop;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,13 +31,14 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 
+import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
@@ -40,11 +46,16 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Checkout;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Map;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_OrderDetails;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Orders;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_ProfileSettings;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_ViewCart;
 
 public class BuyActivity extends AppCompatActivity {
 
+    private RatingBar ratingBar;
+    private Button contactButton;
     private FrameLayout frameLayout;
     private LinearLayout DrawerLinear;
     private DrawerLayout mDrawerLayout;
@@ -53,7 +64,6 @@ public class BuyActivity extends AppCompatActivity {
     private Fragment fragment;
     private ActionBarDrawerToggle mDrawerToggle;
     private TextView drawerUserNameTV;
-    private RelativeLayout loadingPanel;
 
     private DBHelper dbHelper;
 
@@ -63,10 +73,15 @@ public class BuyActivity extends AppCompatActivity {
 
     private DBCallback emptyCallback;
 
+    private String lastFragment;
     private String currentFragment;
     private Seller sellerToView = null;
     private Item itemToCart = null;
     private Order currentOrder;
+    private Order orderToView;
+    View coordinatorLayoutView;
+
+    public static final String TO_SELL_ACTIVITY = "to_sell";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,16 +91,62 @@ public class BuyActivity extends AppCompatActivity {
 
         bindViews();
         initializeData();
+        checkIsLogged();
         setUpDrawer();
-        checkAutoLogIn();
         selectFragmentToLoad(savedInstanceState);
+    }
+
+    private void checkIsLogged() {
+        userInfoSP = getSharedPreferences(SignupActivity1.SP_USER_INFO, MODE_PRIVATE);
+        boolean isLoggedIn = userInfoSP.getBoolean(SignupActivity1.SP_IS_LOGGED_IN, false);
+        if (isLoggedIn) {
+            String email = userInfoSP.getString(SignupActivity1.SP_EMAIL, null);
+            String pass = userInfoSP.getString(SignupActivity1.SP_PASS, null);
+
+            if (email != null && pass != null) {
+                Log.d("AUTO LOG-IN", "" + email);
+                dbHelper.logInUser(email, pass, new DBCallback() {
+                    @Override
+                    public void runOnSuccess() {
+                        load();
+                        ratingBar.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void runOnFail() {
+                        // clears user login info if login authentication failed
+                        clearLogin();
+                    }
+                });
+            }
+        } else {
+            clearLogin();
+        }
+    }
+
+    private void clearLogin() {
+        stopService(new Intent(this,ServiceBuyerNotify.class));
+        stopService(new Intent(this,ServiceSellerNotify.class));
+        userInfoSP.edit().clear().commit();
+        mListTitles[3] = "Sign In";
+        mDrawerList.setAdapter(new ArrayAdapter<>(this,
+                R.layout.navdrawer_list_item, mListTitles));
+        dbHelper.signOutUser(emptyCallback);
+        drawerUserNameTV.setText("");
+        HelperMethods.setUser(null);
+        ratingBar.setVisibility(View.GONE);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        if(dbHelper.userIsLoggedIn()){
+        boolean isLoggedIn = userInfoSP.getBoolean(SignupActivity1.SP_IS_LOGGED_IN, false);
+        if (isLoggedIn) {
+
+        }
+
+        if (dbHelper.userIsLoggedIn()) {
             mListTitles[3] = "Sign Out";
             mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                     R.layout.navdrawer_list_item, mListTitles));
@@ -93,23 +154,42 @@ public class BuyActivity extends AppCompatActivity {
 
     }
 
-    private void checkAutoLogIn() {
-        if(dbHelper.userIsLoggedIn() && user != null){
-            load();
-        }
-    }
-
     private void selectFragmentToLoad(Bundle savedInstanceState) {
 
         //if items are still in cart go to checkout
-        if(currentOrder != null && currentOrder.getItemsOrdered() != null) {
-            replaceFragment(new Fragment_Buyer_Checkout());
+        SharedPreferences sPref = getSharedPreferences(Fragment_Buyer_ViewCart.FROM_CART, MODE_PRIVATE);
+        boolean fromCart = sPref.getBoolean(Fragment_Buyer_ViewCart.FROM_CART, false);
+        Intent intent = getIntent();
+        boolean toOrder = false;
+
+        if (intent != null) {
+            toOrder = getIntent().getBooleanExtra("To Orders View", false);
+        }
+        if (toOrder) {
+            orderToView = HelperMethods.getCurrentOrder();
+            replaceFragment(new Fragment_Buyer_OrderDetails());
+        } else if (fromCart
+                && getCurrentOrder() != null
+                && getCurrentOrder().getItemsOrdered() != null
+                && getCurrentOrder().getItemsOrdered().size() != 0) {
+            sPref.edit().clear().commit();
+            replaceFragment(new Fragment_Buyer_ViewCart());
         } else if (savedInstanceState == null) {
             selectItem(0);
         }
     }
 
     private void setUpDrawer() {
+        contactButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent contactIntent = new Intent(Intent.ACTION_SEND);
+                contactIntent.setType("text/html");
+                contactIntent.putExtra(Intent.EXTRA_EMAIL, "chipchopcontact@gmail.com");
+                startActivity(Intent.createChooser(contactIntent, "Create Email"));
+            }
+        });
+
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.navdrawer_list_item, mListTitles));
 
@@ -133,13 +213,24 @@ public class BuyActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
 
-                        if(dbHelper.userIsLoggedIn()){
+                        if (dbHelper.userIsLoggedIn()) {
                             Intent sellIntent = new Intent(getApplicationContext(), SellActivity.class);
                             startActivity(sellIntent);
-                        }else{
-                            Toast.makeText(BuyActivity.this,"Must be logged for this feature",Toast.LENGTH_SHORT).show();
-                            Intent signUpIntent = new Intent(getApplicationContext(), SignupActivity1.class);
-                            startActivity(signUpIntent);
+                        } else {
+                            mDrawerLayout.closeDrawer(DrawerLinear);
+                            Snackbar
+                                    .make(coordinatorLayoutView, "Must be logged for this feature", Snackbar.LENGTH_SHORT)
+                                    .show();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent signUpIntent = new Intent(getApplicationContext(), SignupActivity1.class);
+                                    signUpIntent.putExtra(TO_SELL_ACTIVITY, true);
+                                    startActivity(signUpIntent);
+                                    finish();
+                                }
+                            }, 1000);
+
                         }
                     }
                 });
@@ -149,6 +240,7 @@ public class BuyActivity extends AppCompatActivity {
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+//        getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(false);
         mDrawerToggle.setDrawerIndicatorEnabled(true);
@@ -156,16 +248,22 @@ public class BuyActivity extends AppCompatActivity {
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
         getSupportActionBar().setBackgroundDrawable(colorDrawable);
 
+//        BitmapDrawable background = new BitmapDrawable (BitmapFactory.decodeResource(getResources(), R.drawable.actionbar));
+//        background.setGravity(Gravity.CENTER);
+//        getSupportActionBar().setBackgroundDrawable(background);
+
     }
 
-    private void bindViews(){
-        loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
-
+    private void bindViews() {
         drawerUserNameTV = (TextView) findViewById(R.id.drawer_user_nameTV);
         frameLayout = (FrameLayout) findViewById(R.id.sellerFrameLayout);
         DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        coordinatorLayoutView = findViewById(R.id.snackbarPosition);
+        contactButton = (Button) findViewById(R.id.contact_button);
+        ratingBar = (RatingBar) findViewById(R.id.rating_bar);
+
     }
 
     private void initializeData() {
@@ -173,48 +271,18 @@ public class BuyActivity extends AppCompatActivity {
 
         mListTitles = getResources().getStringArray(R.array.BUYER_nav_drawer_titles);
 
+
         emptyCallback = new DBCallback() {
             @Override
             public void runOnSuccess() {
 
             }
+
             @Override
             public void runOnFail() {
 
             }
         };
-
-        /*
-            checks if user info is saved for auto log in
-         */
-
-        userInfoSP = getSharedPreferences(SignupActivity1.USER_INFO, MODE_PRIVATE);
-        String email = userInfoSP.getString(SignupActivity1.EMAIL, null);
-        String pass = userInfoSP.getString(SignupActivity1.PASS, null);
-
-        if(email != null && pass != null){
-            Log.d("AUTO LOG-IN",email + ", " + pass);
-            loadingPanel.setVisibility(View.VISIBLE);
-            frameLayout.setVisibility(View.INVISIBLE);
-            DrawerLinear.setVisibility(View.INVISIBLE);
-            //TODO: AUTO LOG IN SHOULD INITIALIZE USER OBJECT FOR DRAWER
-            dbHelper.logInUser(email,pass, new DBCallback() {
-                @Override
-                public void runOnSuccess() {
-                    load();
-                }
-
-                @Override
-                public void runOnFail() {
-                    // clears user login info if login authentication failed
-                    userInfoSP.edit().clear().commit();
-                    dbHelper.signOutUser(emptyCallback);
-                    loadingPanel.setVisibility(View.GONE);
-                    frameLayout.setVisibility(View.VISIBLE);
-                    DrawerLinear.setVisibility(View.VISIBLE);
-                }
-            });
-        }
 
     }
 
@@ -234,51 +302,57 @@ public class BuyActivity extends AppCompatActivity {
         } else if (position == 1) {
             fragment = new Fragment_Buyer_Orders();
         } else if (position == 2) {
-            fragment = new Fragment_Buyer_ProfileSettings();
+            if (dbHelper.userIsLoggedIn())
+                fragment = new Fragment_Buyer_ProfileSettings();
+            else {
+                clearLogin();
+                Snackbar
+                        .make(coordinatorLayoutView, "Must log in to view profile", Snackbar.LENGTH_SHORT)
+                        .show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        startActivity(new Intent(BuyActivity.this, SignupActivity1.class));
+                    }
+                }, 2000);
+            }
         } else if (position == 3) {
-            //CRASHES APP
-//            if (SignupActivity1.mGoogleApiClient.isConnected()) {
-//                Plus.AccountApi.clearDefaultAccount(SignupActivity1.mGoogleApiClient);
-//                SignupActivity1.mGoogleApiClient.disconnect();
-//            }
-            if(dbHelper.userIsLoggedIn()) {
-                dbHelper.signOutUser(emptyCallback);
-                drawerUserNameTV.setText("");
-                mListTitles[3] = "Sign Out";
-                mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                        R.layout.navdrawer_list_item, mListTitles));
+            //SIGN OUT/IN DRAWER ITEM
+            boolean isLoggedIn = userInfoSP.getBoolean(SignupActivity1.SP_IS_LOGGED_IN, false);
+            if (isLoggedIn) {
+                clearLogin();
+                user = null;
                 LoginManager.getInstance().logOut();
-                Toast.makeText(this, "Sign out successful", Toast.LENGTH_SHORT).show();
-
-                SharedPreferences sharedPreferences = getSharedPreferences(SignupActivity1.USER_INFO, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.clear();
-                editor.commit();
+                Snackbar
+                        .make(coordinatorLayoutView, "Sign out successful", Snackbar.LENGTH_SHORT)
+                        .show();
 
                 //if not currently in fragment_buyer_map, replace current fragment with buyer_map fragment
                 if (!getCurrentFragment().equals(Fragment_Buyer_Map.TAG)) {
                     replaceFragment(new Fragment_Buyer_Map());
                 }
-            }else{
-                Intent intent = new Intent(BuyActivity.this,SignupActivity1.class);
+
+            } else {
+                Intent intent = new Intent(BuyActivity.this, SignupActivity1.class);
                 startActivity(intent);
+                finish();  // killing the activity for now when switching to another activity
             }
 
 
         }
 
-            // Create fragment manager to begin interacting with the fragments and the container
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.sellerFrameLayout, fragment).addToBackStack(null).commit();
+        // Create fragment manager to begin interacting with the fragments and the container
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.sellerFrameLayout, fragment).commit();
 
 
-            // update selected item and title in nav drawer, then close the drawer
+        // update selected item and title in nav drawer, then close the drawer
         mDrawerList.setItemChecked(position, true);
-            mDrawerLayout.closeDrawer(DrawerLinear);
-        }
+        mDrawerLayout.closeDrawer(DrawerLinear);
+    }
 
     @Override
-    public void onConfigurationChanged (Configuration newConfig){
+    public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggles
 
@@ -310,60 +384,64 @@ public class BuyActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-
-        } else {
-            getSupportFragmentManager().popBackStack();
+        switch (getCurrentFragment()) {
+            case (Fragment_Buyer_Checkout.TAG):
+                replaceFragment(new Fragment_Buyer_ViewCart());
+                break;
+            case (Fragment_Buyer_Map.TAG):
+                super.onBackPressed();
+                break;
+            case (Fragment_Buyer_Orders.TAG):
+                replaceFragment(new Fragment_Buyer_Map());
+                break;
+            case (Fragment_Buyer_ProfileSettings.TAG):
+                replaceFragment(new Fragment_Buyer_Map());
+                break;
+            case (Fragment_Buyer_SellerProfile.TAG):
+                replaceFragment(new Fragment_Buyer_Map());
+                break;
+            case (Fragment_Buyer_ViewCart.TAG):
+                if (getLastFragment() != null && getLastFragment().equals(Fragment_Buyer_ViewCart.TAG)) {
+                    replaceFragment(new Fragment_Buyer_Map());
+                } else {
+                    replaceFragment(new Fragment_Buyer_SellerProfile());
+                }
+                break;
+            case (Fragment_Buyer_OrderDetails.TAG):
+                replaceFragment(new Fragment_Buyer_Orders());
+                break;
+            default:
+                super.onBackPressed();
         }
     }
 
     public void replaceFragment(Fragment fragment) {
         FragmentManager BuyFragmentManager = getSupportFragmentManager();
-        BuyFragmentManager.beginTransaction().replace(R.id.sellerFrameLayout, fragment).addToBackStack(null).commit();
+        BuyFragmentManager.beginTransaction().replace(R.id.sellerFrameLayout, fragment).commit();
 
     }
 
-    private void load(){
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                user = dbHelper.getUserFromDB(dbHelper.getUserID());
-                int i = 0;
-                do{
-                    Log.d("Buy - Load User", "Attempt #" + i);
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    if (i > 10){
-                        Log.d("Buy - Load User", "DIDN'T LOAD");
-                        break;
-                    }
-                    i++;
-                }while(user == null);
+    private void load() {
 
-                return null;
-            }
+        String name = userInfoSP.getString(SignupActivity1.SP_NAME, "");
+        String email = userInfoSP.getString(SignupActivity1.SP_EMAIL, "");
+        String streetAddress = userInfoSP.getString(SignupActivity1.SP_ADDRESS, "");
+        String apt = userInfoSP.getString(SignupActivity1.SP_APT, "");
+        String city = userInfoSP.getString(SignupActivity1.SP_CITY, "");
+        String state = userInfoSP.getString(SignupActivity1.SP_STATE, "");
+        String zipcode = userInfoSP.getString(SignupActivity1.SP_ZIPCODE, "");
+        String phoneNumber = userInfoSP.getString(SignupActivity1.SP_PHONE_NUMBER, "");
+        String photoLink = userInfoSP.getString(SignupActivity1.SP_PHOTO_LINK, "");
+        Address address = new Address(streetAddress, apt, city, state, zipcode, dbHelper.getUserID());
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
+        user = new User(dbHelper.getUserID(), email, name, address, photoLink, phoneNumber);
+        HelperMethods.setUser(user);
 
-                if(user != null){
-                    SharedPreferences.Editor editor = userInfoSP.edit();
-                    editor.putString(SignupActivity1.NAME, user.getName());
-                    editor.commit();
+        drawerUserNameTV.setText(user.getName());
+        mListTitles[3] = "Sign Out";
+        mDrawerList.setAdapter(new ArrayAdapter<>(BuyActivity.this,
+                R.layout.navdrawer_list_item, mListTitles));
 
-                    drawerUserNameTV.setText(user.getName());
-                }
-
-                loadingPanel.setVisibility(View.GONE);
-                frameLayout.setVisibility(View.VISIBLE);
-                DrawerLinear.setVisibility(View.VISIBLE);
-
-            }
-        }.execute();
     }
 
 
@@ -374,6 +452,7 @@ public class BuyActivity extends AppCompatActivity {
     }
 
     public void setCurrentFragment(String currentFragment) {
+        setLastFragment(getCurrentFragment());
         this.currentFragment = currentFragment;
     }
 
@@ -394,10 +473,34 @@ public class BuyActivity extends AppCompatActivity {
     }
 
     public Order getCurrentOrder() {
-        return currentOrder;
+        return HelperMethods.getCurrentOrder();
     }
 
     public void setCurrentOrder(Order currentOrder) {
-        this.currentOrder = currentOrder;
+        HelperMethods.setCurrentOrder(currentOrder);
+    }
+
+    public Order getOrderToView() {
+        return orderToView;
+    }
+
+    public void setOrderToView(Order orderToView) {
+        this.orderToView = orderToView;
+    }
+
+    public String getLastFragment() {
+        return lastFragment;
+    }
+
+    private void setLastFragment(String lastFragment) {
+        this.lastFragment = lastFragment;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

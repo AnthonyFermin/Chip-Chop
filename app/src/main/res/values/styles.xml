@@ -4,6 +4,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:activatedBackgroundIndicator">@drawable/drawer_list_selector</item>
         <item name="colorAccent">#D51F27</item>
+        <item name="colorPrimaryDark">#AA191F</item>
         <item name="android:windowActionBarOverlay">true</item>
     </style>
 
@@ -13,7 +14,7 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:background">@drawable/button</item>
     </style>
-    
+
     <style name="text_design">
         <item name="android:textColor">#D51F27</item>
     </style>
@@ -30,6 +31,13 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:indeterminate">true</item>
     </style>
+
+    <style name="RatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/rating_bar_star_filled</item>
+        <item name="android:minHeight">21dp</item>
+        <item name="android:maxHeight">20dp</item>
+    </style>
+
 
 
 </resources>

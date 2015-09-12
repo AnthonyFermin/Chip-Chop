@@ -8,14 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.SellActivity;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_OrderDetails;
@@ -25,11 +22,11 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_OrderDetails;
  */
 public class SellerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<Item> orderItems;
+    private List<Order> orderItems;
     private Context context;
     private int lastPosition = -1;
 
-    public SellerOrdersAdapter(Context context, List<Item> orderItems) {
+    public SellerOrdersAdapter(Context context, List<Order> orderItems) {
         this.context = context;
         this.orderItems = orderItems;
     }
@@ -37,19 +34,26 @@ public class SellerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private class SellerOrdersViewHolder extends RecyclerView.ViewHolder {
 
         CardView container;
-        ImageView image;
-        TextView name;
-        TextView price;
-        TextView quantity;
+        TextView nameOfBuyer;
+        TextView total;
+        TextView orderID;
 
 
         public SellerOrdersViewHolder(View itemView) {
             super(itemView);
 
+            total = (TextView) itemView.findViewById(R.id.order_cost_tv);
             container = (CardView) itemView.findViewById(R.id.card_view);
-            image = (ImageView) itemView.findViewById(R.id.food_image);
-            name = (TextView) itemView.findViewById(R.id.food_name_tv);
-            quantity = (TextView) itemView.findViewById(R.id.food_quantity_tv);
+            nameOfBuyer = (TextView) itemView.findViewById(R.id.buyer_name_tv);
+            orderID = (TextView) itemView.findViewById(R.id.order_id_tv);
+
+            container.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    SellActivity activity = (SellActivity) context;
+                    activity.replaceSellerFragment(new Fragment_Seller_OrderDetails());
+                }
+            });
 
         }
 
@@ -65,22 +69,13 @@ public class SellerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
 
-        Item checkoutItem = orderItems.get(position);
+        Order order = orderItems.get(position);
         SellerOrdersViewHolder vh = (SellerOrdersViewHolder) viewHolder;
-//        vh.name.setText(checkoutItem.getNameOfItem());
-//        vh.quantity.setText(String.valueOf(checkoutItem.getQuantityWanted()));
-//        Picasso.with(context).load(checkoutItem.getImageLink()).fit().into(vh.image);
+        vh.nameOfBuyer.setText("Buyer Id: " + order.getBuyerID());
+        vh.orderID.setText("Order Id: " + order.getOrderID());
+        vh.total.setText("Total Price: $" + order.getPrice());
 
-        vh.container.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SellActivity activity = (SellActivity) context;
-                activity.replaceSellerFragment(new Fragment_Seller_OrderDetails());
-            }
-        });
-
-//            setAnimation(vh.container, position);
-
+        setAnimation(vh.container, position);
 
     }
 

@@ -6,15 +6,13 @@
     android:layout_height="wrap_content"
     card_view:cardCornerRadius="1dp"
     android:orientation="horizontal"
-    android:padding="5dp">
+    android:padding="15dp">
 
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
-
 
 
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -22,111 +20,135 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_gravity="center"
-            android:src="@drawable/food"
+            android:src="@drawable/chipchop"
             app:border_color="#FFF"
-            app:border_width="2dp"/>
+            app:border_width="2dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="5dp"/>
 
-        <LinearLayout
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/food_name_tv"
+                style="@style/text_design"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:paddingStart="4dp"
+                android:paddingTop="5dp"
+                android:textSize="20sp" />
+
+
+            <TextView
+                android:id="@+id/food_price_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:layout_alignParentEnd="true"
+                android:layout_above="@+id/food_description_tv"
+                android:paddingRight="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="QTY: "
+                android:textStyle="bold"
+                android:id="@+id/qty_tv"
+                android:paddingLeft="4dp"
+                android:layout_below="@+id/food_name_tv"/>
+
+            <TextView
+                android:textStyle="bold"
+                android:id="@+id/food_quantity_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/qty_tv"
+                android:layout_above="@+id/food_description_tv"/>
+
+
+            <TextView
+                android:id="@+id/food_description_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/qty_tv"
+                android:text="DESCRIPTION HERE"
+                android:padding="4dp"/>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:gravity="start"
+                android:orientation="horizontal"
+                android:layout_below="@+id/food_description_tv"
+                android:layout_marginBottom="10dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:id="@+id/food_name_tv"
-                    style="@style/text_design"
-                    android:gravity="center_vertical"
-                    android:textSize="20sp"/>
+                <ImageView
+                    android:id="@+id/vegan"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="3dp"
+                    android:visibility="gone"
+                    android:src="@drawable/vegan" />
 
-                <TextView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:id="@+id/food_quantity_tv"/>
+                <ImageView
+                    android:id="@+id/gluten_free"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="3dp"
+                    android:visibility="gone"
+                    android:src="@drawable/glutenfree" />
 
-                <TextView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:id="@+id/food_price_tv"/>
+                <ImageView
+                    android:id="@+id/dairy"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="3dp"
+                    android:visibility="gone"
+                    android:src="@drawable/dairy" />
 
+                <ImageView
+                    android:id="@+id/nut"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="3dp"
+                    android:visibility="gone"
+                    android:src="@drawable/nut" />
+
+                <ImageView
+                    android:id="@+id/egg"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="3dp"
+                    android:visibility="gone"
+                    android:src="@drawable/egg" />
+
+                <ImageView
+                    android:id="@+id/shellfish"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="3dp"
+                    android:visibility="gone"
+                    android:src="@drawable/shellfish" />
 
 
             </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="DESCRIPTION HERE"
-                android:id="@+id/food_description_tv"/>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/remove_item_button"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:background="@android:color/transparent"
+                android:text="X"
+                android:textColor="#D32F2F" />
+        </RelativeLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="bottom|start"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginEnd="3dp"
-                        android:src="@drawable/vegan" />
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginEnd="3dp"
-                        android:src="@drawable/glutenfree" />
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginEnd="3dp"
-                        android:src="@drawable/dairy" />
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginEnd="3dp"
-                        android:src="@drawable/nut" />
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginEnd="3dp"
-                        android:src="@drawable/egg" />
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginEnd="3dp"
-                        android:src="@drawable/shellfish" />
-
-
-                </LinearLayout>
-
-                <Button
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:text="X"
-                    android:background="@android:color/transparent"
-                    android:textColor="#D32F2F"
-                    android:id="@+id/remove_item_button"
-                    android:layout_alignParentEnd="true"/>
-
-            </RelativeLayout>
-
-        </LinearLayout>
 
     </LinearLayout>
 

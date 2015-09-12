@@ -3,10 +3,16 @@ package madelyntav.c4q.nyc.chipchop.fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +22,20 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+
 import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
+import madelyntav.c4q.nyc.chipchop.HelperMethods;
+import madelyntav.c4q.nyc.chipchop.MainActivity;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.SellActivity;
 
@@ -27,13 +44,15 @@ import madelyntav.c4q.nyc.chipchop.SellActivity;
  */
 public class Fragment_Seller_CreateItem extends Fragment {
 
-    EditText dollarPriceET, centPriceET;
+    EditText dollarPriceET;
     ImageButton dishPhotoButton;
     Button addButton;
     EditText dishNameET;
     EditText portionsET;
     EditText descriptionET;
     CheckBox vegCB, glutFreeCB, dairyCB, eggsCB, peanutsCB, shellfishCB;
+
+    String imageLink;
 
     public static final String TAG = "fragment_seller_create_item";
 
@@ -58,22 +77,11 @@ public class Fragment_Seller_CreateItem extends Fragment {
         return root;
     }
 
-    private void editItem(){
-        Item itemToEdit = activity.getItemToEdit();
+    private void editItem(Item itemToEdit){
         dishNameET.setText(itemToEdit.getNameOfItem());
         portionsET.setText(itemToEdit.getQuantity() + "");
         descriptionET.setText(itemToEdit.getDescriptionOfItem());
-        String price = itemToEdit.getPrice() + "";
-        if(price.contains(".") && price.length() > 2){
-            int decInd = price.indexOf('.');
-            String dollarAmt = price.substring(0, decInd);
-            String centAmt = price.substring(decInd + 1);
-            dollarPriceET.setText(dollarAmt);
-            centPriceET.setText(centAmt);
-        }else{
-            dollarPriceET.setText(price);
-            centPriceET.setText("00");
-        }
+        dollarPriceET.setText(itemToEdit.getPrice() + "");
 
         vegCB.setChecked(itemToEdit.isVegetarian());
         glutFreeCB.setChecked(itemToEdit.isGlutenFree());
@@ -88,20 +96,29 @@ public class Fragment_Seller_CreateItem extends Fragment {
         dbHelper = DBHelper.getDbHelper(getActivity());
         activity = (SellActivity) getActivity();
 
+        imageLink = "";
+
         if(activity.getItemToEdit() != null){
-            editItem();
+            editItem(activity.getItemToEdit());
+        }else if(activity.getInactiveItemToEdit() != null){
+            editItem(activity.getInactiveItemToEdit());
         }
 
         itemAddCallback = new DBCallback() {
             @Override
             public void runOnSuccess() {
+                Snackbar
+                        .make(Fragment_Seller_Items.coordinatorLayoutView, "Item added", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(activity,"Item added", Toast.LENGTH_SHORT).show();
                 activity.replaceSellerFragment(new Fragment_Seller_Items());
-
             }
 
             @Override
             public void runOnFail() {
+                Snackbar
+                        .make(Fragment_Seller_Items.coordinatorLayoutView, "Failed to add item", Snackbar.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(activity,"Failed to add item", Toast.LENGTH_SHORT).show();
                 activity.replaceSellerFragment(new Fragment_Seller_Items());
             }
@@ -121,39 +138,66 @@ public class Fragment_Seller_CreateItem extends Fragment {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: add item to sellers items in db and arraylist displayed in profile/items fragment recycler views
-                String dishName = dishNameET.getText().toString();
-                int portions = 0;
-                if(!portionsET.getText().toString().isEmpty()) {
-                    portions = Integer.parseInt(portionsET.getText().toString());
-                }
-                String price = dollarPriceET.getText().toString() + "." + centPriceET.getText().toString();
-                double decimalPrice = 1;
-                if(!price.isEmpty()){
-                    decimalPrice = Double.parseDouble(price);
-                }
-                String description = descriptionET.getText().toString();
+                if (dishNameET.getText().toString().isEmpty()
+                        || dollarPriceET.getText().toString().isEmpty()
+                        || Integer.parseInt(dollarPriceET.getText().toString()) == 0
+                        || portionsET.getText().toString().isEmpty()
+                        || Integer.parseInt(portionsET.getText().toString()) == 0
+                        || descriptionET.getText().toString().isEmpty()) {
+                    Toast.makeText(activity, "Please fill in all required fields", Toast.LENGTH_SHORT).show();
+                } else {
 
-                Item item = new Item(dbHelper.getUserID(), "",dishName,portions,description, "https://tahala.files.wordpress.com/2010/12/avocado-3.jpg");
-                item.setPrice(decimalPrice);
-                item.setIsVegetarian(vegCB.isChecked());
-                item.setGlutenFree(glutFreeCB.isChecked());
-                item.setContainsDairy(dairyCB.isChecked());
-                item.setContainsEggs(eggsCB.isChecked());
-                item.setContainsPeanuts(peanutsCB.isChecked());
-                item.setContainsShellfish(shellfishCB.isChecked());
-
-                if(activity.getItemToEdit() == null) {
-                    if (activity.isCurrentlyCooking()) {
-                        dbHelper.addItemToActiveSellerProfile(item, itemAddCallback);
-                    } else {
-                        dbHelper.addItemToSellerProfileDB(item, itemAddCallback);
+                    String dishName = dishNameET.getText().toString();
+                    int portions = 0;
+                    if (!portionsET.getText().toString().isEmpty()) {
+                        portions = Integer.parseInt(portionsET.getText().toString());
                     }
-                }else{
-                    if (activity.isCurrentlyCooking()) {
-                        dbHelper.editItemInActiveSellerProfile(item, itemAddCallback);
+                    String price = dollarPriceET.getText().toString();
+                    int numPrice = 1;
+                    try {
+                        numPrice = Integer.parseInt(price);
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                    String description = descriptionET.getText().toString();
+
+                    Item item = new Item(dbHelper.getUserID(), "", dishName, portions, description, imageLink);
+                    Log.d("Item Created", "ImageLink: " + imageLink);
+                    item.setPrice(numPrice);
+                    item.setIsVegetarian(vegCB.isChecked());
+                    item.setGlutenFree(glutFreeCB.isChecked());
+                    item.setContainsDairy(dairyCB.isChecked());
+                    item.setContainsEggs(eggsCB.isChecked());
+                    item.setContainsPeanuts(peanutsCB.isChecked());
+                    item.setContainsShellfish(shellfishCB.isChecked());
+
+                    if (activity.getInactiveItemToEdit() != null) {
+                        ArrayList<Item> inactiveItems = activity.getInactiveSellerItems();
+                        boolean itemAdded = false;
+                        item.setItemID(activity.getInactiveItemToEdit().getItemID());
+                        for (int i = 0; i < inactiveItems.size(); i++) {
+                            Item item1 = inactiveItems.get(i);
+                            if (activity.getInactiveItemToEdit().getItemID().equalsIgnoreCase(item1.getItemID())) {
+                                inactiveItems.remove(i);
+                                inactiveItems.add(i, item);
+                                itemAdded = true;
+                            }
+                        }
+                        if(!itemAdded){
+                            inactiveItems.add(item);
+                        }
+                    } else if (activity.getItemToEdit() != null) {
+                        if (activity.isCurrentlyCooking()) {
+                            dbHelper.editItemInActiveSellerProfile(item, itemAddCallback);
+                        } else {
+                            dbHelper.editItemInSellerProfile(item, itemAddCallback);
+                        }
                     } else {
-                        dbHelper.editItemInSellerProfile(item, itemAddCallback);
+                        if (activity.isCurrentlyCooking()) {
+                            dbHelper.addItemToActiveSellerProfile(item, itemAddCallback);
+                        } else {
+                            dbHelper.addItemToSellerProfileDB(item, itemAddCallback);
+                        }
                     }
                 }
             }
@@ -169,9 +213,9 @@ public class Fragment_Seller_CreateItem extends Fragment {
         portionsET = (EditText) root.findViewById(R.id.portions);
         descriptionET = (EditText) root.findViewById(R.id.description);
         dollarPriceET = (EditText) root.findViewById(R.id.price_dollar_amount);
-        centPriceET = (EditText) root.findViewById(R.id.price_cents_amount);
 
         dishPhotoButton = (ImageButton) root.findViewById(R.id.dish_image);
+
 
         vegCB = (CheckBox) root.findViewById(R.id.veg_cb);
         glutFreeCB = (CheckBox) root.findViewById(R.id.glut_free_cb);
@@ -187,20 +231,54 @@ public class Fragment_Seller_CreateItem extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
-            imageFileUri = data.getData();
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            imageFileUri = Uri.parse(stringVariable);
+            String filePath = imageFileUri.getPath();
+            saveImageToDB(filePath);
         }
 
         if (requestCode == 0 && resultCode == RESULT_OK) {
             imageFileUri = Uri.parse(stringVariable);
+            final String filePath = imageFileUri.getPath();
+            saveImageToDB(filePath);
         }
-
 
         if (imageFileUri != null) {
             dishPhotoButton.setImageURI(imageFileUri);
         }
     }
 
+    private void saveImageToDB(final String filePath) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+
+                Bitmap scaledBitmap =  Bitmap.createScaledBitmap(bitmap,500,333,false);
+
+                File file = new File(filePath);
+                FileOutputStream fOut = null;
+                try {
+                    fOut = new FileOutputStream(file);
+                    scaledBitmap.compress(Bitmap.CompressFormat.PNG, 85, fOut);
+                    fOut.flush();
+                    fOut.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                imageLink = HelperMethods.saveImageToEncodedString(filePath);
+                Log.d("Item Creation", "ImageLink: " + imageLink);
+            }
+        }.execute();
+    }
 
 
     //This is for the dialog box: Camera or Gallery
@@ -234,6 +312,7 @@ public class Fragment_Seller_CreateItem extends Fragment {
     @Override
     public void onDetach() {
         activity.setItemToEdit(null);
+        activity.setInactiveItemToEdit(null);
         super.onDetach();
     }
 }

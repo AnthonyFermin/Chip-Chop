@@ -2,17 +2,19 @@ package madelyntav.c4q.nyc.chipchop.DBObjects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.io.Serializable;
+
 /**
  * Created by c4q-madelyntavarez on 8/11/15.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Item {
+
+public class Item implements Serializable{
     String buyerID;
     String sellerID;
     String nameOfItem;
-
     int quantity;
-    double price;
+    int price;
     String descriptionOfItem;
     String imageLink;
     boolean isVegetarian;
@@ -22,10 +24,18 @@ public class Item {
     boolean glutenFree;
     boolean containsPeanuts;
     String itemID;
-
     int quantityWanted;
+    String sellerPhoneNumber;
+    String buyerPhoneNumber;
 
     public Item(){}
+    public Item(String itemID){
+        this.itemID=itemID;
+    }
+
+    public Item(boolean containsPeanuts){
+        this.containsPeanuts=containsPeanuts;
+    }
 
     public String getItemID() {
         return itemID;
@@ -43,6 +53,15 @@ public class Item {
         this.quantity = quantity;
         this.descriptionOfItem=descriptionOfItem;
         this.imageLink=imageLink;
+    }
+
+    //TODO: ANTHONY - USE THIS CONSTRUCTOR WHEN ADDING TO CART
+    public Item(String itemID,String sellerID,String buyerID, String nameOfItem, int quantityWanted){
+        this.buyerID = buyerID;
+        this.itemID=itemID;
+        this.sellerID=sellerID;
+        this.nameOfItem=nameOfItem;
+        this.quantityWanted = quantityWanted;
     }
 
     public Item(String sellerID, String nameOfItem, int quantity, String descriptionOfItem, String imageLink){
@@ -85,11 +104,11 @@ public class Item {
         this.quantity = quantity;
     }
 
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
@@ -163,5 +182,38 @@ public class Item {
 
     public void setQuantityWanted(int quantityWanted) {
         this.quantityWanted = quantityWanted;
+    }
+
+    public String getSellerPhoneNumber() {
+        return sellerPhoneNumber;
+    }
+
+    public String getBuyerPhoneNumber() {
+        return buyerPhoneNumber;
+    }
+
+    public void setBuyerPhoneNumber(String buyerPhoneNumber) {
+        this.buyerPhoneNumber = buyerPhoneNumber;
+    }
+
+    public void setSellerPhoneNumber(String sellerPhoneNumber) {
+        this.sellerPhoneNumber = sellerPhoneNumber;
+    }
+
+    @Override
+    public Item clone() {
+        Item item = new Item(this.getSellerID(),this.getBuyerID(),this.getNameOfItem(),this.getQuantity()
+        ,this.getDescriptionOfItem(),this.getImageLink());
+        item.setPrice(this.getPrice());
+        item.setContainsShellfish(this.isContainsShellfish());
+        item.setContainsPeanuts(this.isContainsPeanuts());
+        item.setContainsDairy(this.isContainsDairy());
+        item.setContainsEggs(this.isContainsEggs());
+        item.setIsVegetarian(this.isVegetarian());
+        item.setGlutenFree(this.isGlutenFree());
+        item.setItemID(this.getItemID());
+        item.setQuantityWanted(this.getQuantityWanted());
+
+        return item;
     }
 }

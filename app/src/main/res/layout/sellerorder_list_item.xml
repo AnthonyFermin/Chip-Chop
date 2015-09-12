@@ -14,12 +14,21 @@
     android:padding="5dp">
 
     <TextView
+        android:id="@+id/buyer_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:text="Name of Buyer" />
+
+    <TextView
         android:id="@+id/order_id_tv"
         style="@style/text_design"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Order ID#"
         android:textStyle="bold"
+        android:layout_below="@+id/buyer_name_tv"
         android:textSize="20sp" />
 
     <TextView
@@ -29,29 +38,28 @@
         android:layout_below="@+id/order_id_tv"
         android:text="TOTAL COST" />
 
-    <TextView
-        android:id="@+id/total_item_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_margin="5dp"
+        android:background="@android:color/darker_gray"
         android:layout_below="@+id/order_cost_tv"
-        android:text="10" />
+        android:id="@+id/divider"/>
 
     <TextView
-        android:id="@+id/buyer_distance_tv"
+        android:id="@+id/delivery_method_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/total_item_tv"
-        android:text="Distance from seller" />
-
-
+        android:layout_below="@+id/divider"
+        android:text="DELIVERY METHOD" />
 
     <TextView
-        android:id="@+id/buyer_name_tv"
+        android:id="@+id/buyer_address_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:text="Name of Buyer" />
+        android:layout_below="@+id/delivery_method_tv"
+        android:text="BUYER ADDRESS" />
+
 
 </RelativeLayout>
 

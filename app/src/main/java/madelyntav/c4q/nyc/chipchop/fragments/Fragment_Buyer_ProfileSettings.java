@@ -13,7 +13,11 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import madelyntav.c4q.nyc.chipchop.BuyActivity;
+import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
+import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.R;
 
 /**
@@ -23,18 +27,31 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
 
     public static final String TAG = "fragment_buyer_profile_settings";
 
-
+    TextView buyerName, address, apt, city, state, zipcode, phoneNumber;
     ImageView profilePhoto;
     public static final int RESULT_OK = -1;
     private Uri imageFileUri;
     Intent intent;
     private String stringVariable = "file:///sdcard/_pictureholder_id.jpg";
 
+    DBHelper dbHelper;
+    BuyActivity activity;
+    User user;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_buyer_profile_settings, container, false);
+
+        activity = (BuyActivity) getActivity();
+        dbHelper = DBHelper.getDbHelper(activity);
+
+        bindViews(root);
+
+        user = activity.getUser();
+
+        activity.setCurrentFragment(TAG);
 
         profilePhoto = (ImageView) root.findViewById(R.id.profile_image);
         profilePhoto.setOnClickListener(new View.OnClickListener() {
@@ -44,7 +61,28 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
             }
         });
 
+
+        buyerName.setText(user.getName());
+        address.setText(user.getAddress().getStreetAddress());
+        apt.setText(user.getAddress().getApartment());
+        city.setText(user.getAddress().getCity());
+        state.setText(user.getAddress().getState());
+        zipcode.setText(user.getAddress().getZipCode());
+        phoneNumber.setText(user.getPhoneNumber());
+
         return root;
+    }
+
+    private void bindViews(View root) {
+        buyerName = (TextView) root.findViewById(R.id.name);
+        address = (TextView) root.findViewById(R.id.address);
+        apt = (TextView) root.findViewById(R.id.apt);
+        city = (TextView) root.findViewById(R.id.city);
+        state = (TextView) root.findViewById(R.id.state);
+        zipcode = (TextView) root.findViewById(R.id.zipcode);
+        phoneNumber = (TextView) root.findViewById(R.id.phone_number);
+
+
     }
 
     //This handles the activity for the intent: using the camera and choosing from a gallery.
@@ -99,9 +137,4 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
 
     }
 
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
-    }
 }

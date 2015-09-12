@@ -2,20 +2,29 @@ package madelyntav.c4q.nyc.chipchop.fragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
-import com.andexert.library.RippleView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 
 import madelyntav.c4q.nyc.chipchop.DBCallback;
@@ -23,14 +32,30 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.SellActivity;
-import madelyntav.c4q.nyc.chipchop.adapters.SellerItemsAdapter;
 
 public class Fragment_Seller_Items extends Fragment {
 
+    /**
+     * The number of pages for the view pager.
+     */
+    private static final int NUM_PAGES = 2;
+
+    /**
+     * The pager widget, which handles animation and allows swiping horizontally to access previous
+     * and next wizard steps.
+     */
+    private ViewPager mPager;
+
+    /**
+     * The pager adapter, which provides the pages to the view pager widget.
+     */
+    private PagerAdapter mPagerAdapter;
+    Fragment fragment;
+
+    public static View coordinatorLayoutView;
+
     private android.support.design.widget.FloatingActionButton addButton;
-    private RecyclerView foodList;
     private RelativeLayout loadingPanel;
-    private RelativeLayout containingView;
 
     public static final String TAG = "fragment_seller_items";
 
@@ -38,6 +63,12 @@ public class Fragment_Seller_Items extends Fragment {
     private SellActivity activity;
 
     private ArrayList<Item> sellerItems = null;
+    private ArrayList<Item> inActiveItems = null;
+
+    private RecyclerView inactiveList;
+    private RecyclerView activeList;
+    private final String INACTIVE_LIST_DIRECTORY = Environment.getExternalStorageDirectory().getPath() + "inactive_list";
+
 
     DBCallback emptyCallback;
 
@@ -47,15 +78,17 @@ public class Fragment_Seller_Items extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_seller__items, container, false);
 
+        sellerItems = new ArrayList<>();
+        // Instantiate a ViewPager and a PagerAdapter.
         initializeData();
         initializeViews(root);
         setListeners();
-        loadList();
+        loadActiveItems();
 
         return root;
     }
 
-    private void initializeData(){
+    private void initializeData() {
         dbHelper = DBHelper.getDbHelper(getActivity());
         activity = (SellActivity) getActivity();
 
@@ -72,33 +105,71 @@ public class Fragment_Seller_Items extends Fragment {
         };
 
         //seller items
-        if(activity.isCurrentlyCooking()) {
-            sellerItems = dbHelper.getSellersOnSaleItems(dbHelper.getUserID(),emptyCallback);
-        }else{
-            sellerItems = dbHelper.getSellerItems(dbHelper.getUserID(), emptyCallback);
+        if (activity.isCurrentlyCooking()) {
+            sellerItems = dbHelper.getSellersOnSaleItems(dbHelper.getUserID(), emptyCallback);
+        } else {
+            dbHelper.getSellerItems(dbHelper.getUserID(), new DBCallback() {
+                @Override
+                public void runOnSuccess() {
+                    sellerItems.addAll(dbHelper.getSellerItems(dbHelper.getUserID(), emptyCallback));
+                }
+
+                @Override
+                public void runOnFail() {
+                    Snackbar
+                            .make(coordinatorLayoutView, "Unable To Load Items, Please Try Again", Snackbar.LENGTH_SHORT)
+                            .show();
+                }
+            });
         }
+        inActiveItems = loadInactiveItems();
+        activity.setInactiveSellerItems(inActiveItems);
+
         activity.setCurrentFragment(TAG);
+        File file = new File(INACTIVE_LIST_DIRECTORY); // creates file if does not exist
+
     }
 
-    private void loadList(){
+    private ArrayList<Item> loadInactiveItems() {
+        ArrayList<Item> items = new ArrayList<>();
+
+        try {
+            FileInputStream fis = new FileInputStream(INACTIVE_LIST_DIRECTORY);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            items = (ArrayList<Item>) ois.readObject();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (StreamCorruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return items;
+    }
+
+    private void loadActiveItems() {
+
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
 
                 int i = 0;
-                do{
+                do {
                     Log.d("LOAD SELLER ITEMS", "Attempt #" + i);
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    if (i > 10){
+                    if (i > 20) {
                         Log.d("LOAD SELLER ITEMS", "DIDN'T LOAD");
                         break;
                     }
                     i++;
-                }while(sellerItems == null);
+                } while (sellerItems == null || sellerItems.size() == 0);
 
                 return null;
             }
@@ -109,31 +180,30 @@ public class Fragment_Seller_Items extends Fragment {
 
                 activity.setSellerItems(sellerItems);
 
-                SellerItemsAdapter sellerItemsAdapter = new SellerItemsAdapter(getActivity(),sellerItems);
-                foodList.setLayoutManager(new LinearLayoutManager(getActivity()));
-                foodList.setAdapter(sellerItemsAdapter);
-                Log.d("LOAD SELLER ITEMS LIST", sellerItems.toString());
+                activeList.getAdapter().notifyDataSetChanged();
+                inactiveList.getAdapter().notifyDataSetChanged();
+
+                Log.d("LOAD SELLER ITEMS LIST", sellerItems.size() + "");
+
 
                 loadingPanel.setVisibility(View.GONE);
-                containingView.setVisibility(View.VISIBLE);
             }
         }.execute();
     }
 
-    private void initializeViews(View root){
-
+    private void initializeViews(View root) {
         loadingPanel = (RelativeLayout) root.findViewById(R.id.loadingPanel);
-        containingView = (RelativeLayout) root.findViewById(R.id.container);
 
-        containingView.setVisibility(View.INVISIBLE);
+        mPager = (ViewPager) root.findViewById(R.id.pager);
+        mPagerAdapter = new ScreenSlidePagerAdapter(getChildFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
 
-        foodList = (RecyclerView) root.findViewById(R.id.seller_items_list);
-
+        coordinatorLayoutView = root.findViewById(R.id.snackbarPosition);
         addButton = (android.support.design.widget.FloatingActionButton) root.findViewById(R.id.addButton);
 
     }
 
-    private void setListeners(){
+    private void setListeners() {
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,8 +215,99 @@ public class Fragment_Seller_Items extends Fragment {
     }
 
 
+    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+        public ScreenSlidePagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+
+            if (position == 0) {
+                fragment = new Fragment_Seller_Items_Active();
+            } else if (position == 1) {
+                fragment = new Fragment_Seller_Items_Inactive();
+            }
+
+            return fragment;
+        }
+
+        @Override
+        public int getCount() {
+            return NUM_PAGES;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            if (position == 0) {
+                return "Active Dishes";
+            }
+            if (position == 1) {
+                return "Inactive Dishes";
+            }
+            return "";
+        }
 
 
+    }
 
 
+    public ArrayList<Item> getActiveItems() {
+        return sellerItems;
+    }
+
+    public void setActiveItems(ArrayList<Item> activeItems) {
+        this.sellerItems = activeItems;
+        activity.setSellerItems(activeItems);
+    }
+
+    public ArrayList<Item> getInActiveItems() {
+        return inActiveItems;
+    }
+
+    public void setInActiveItems(ArrayList<Item> inActiveItems) {
+        this.inActiveItems = inActiveItems;
+    }
+
+    public RecyclerView getInactiveList() {
+        return inactiveList;
+    }
+
+    public void setInactiveList(RecyclerView inactiveList) {
+        this.inactiveList = inactiveList;
+    }
+
+    public RecyclerView getActiveList() {
+        return activeList;
+    }
+
+    public void setActiveList(RecyclerView activeList) {
+        this.activeList = activeList;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        saveInactiveList();
+    }
+
+    private void saveInactiveList() {
+        try {
+            FileOutputStream fout = new FileOutputStream(INACTIVE_LIST_DIRECTORY);
+
+            ObjectOutputStream oos = new ObjectOutputStream(fout);
+            oos.writeObject(inActiveItems);
+
+            fout.close();
+            oos.close();
+
+            Snackbar
+                    .make(coordinatorLayoutView, "Inactive dishes saved to device", Snackbar.LENGTH_SHORT)
+                    .show();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

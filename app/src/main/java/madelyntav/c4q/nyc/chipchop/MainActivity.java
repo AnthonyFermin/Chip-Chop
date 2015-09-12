@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
 
 
            // dbHelper.updateSellerItemsWhenItemIsBought(item2);
-            dbHelper.updateSellerItemsWhenItemIsBought(item2, emptyCallback);
+           // dbHelper.updateSellerItemsWhenItemIsBought(item2, emptyCallback);
 
     }
 
@@ -175,4 +175,5 @@ public class MainActivity extends AppCompatActivity {
        bytes = output.toByteArray();
        String encodedString = Base64.encodeToString(bytes, Base64.DEFAULT);
    }
+
 }

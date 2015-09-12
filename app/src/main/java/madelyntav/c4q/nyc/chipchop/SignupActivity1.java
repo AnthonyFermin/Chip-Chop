@@ -3,14 +3,19 @@ package madelyntav.c4q.nyc.chipchop;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -26,14 +31,13 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.firebase.client.Firebase;
-
-import java.util.Arrays;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.plus.Plus;
+
+import java.util.Arrays;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
@@ -53,19 +57,21 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
     EditText emailET;
     EditText passET;
     DBHelper dbHelper;
-    CheckBox rememberMe;
     LoginButton loginButton;
 
     public static final String TAG = "1";
-    public static final String USER_INFO = "userinfo";
-    public static final String EMAIL = "email";
-    public static final String PASS = "pass";
-    public static final String NAME = "name";
-    public static final String ADDRESS = "address";
-    public static final String APT = "apt";
-    public static final String CITY = "city";
-    public static final String ZIPCODE = "zipcode";
-    public static final String PHONE_NUMBER = "phone_number";
+    public static final String SP_USER_INFO = "user_info";
+    public static final String SP_EMAIL = "email";
+    public static final String SP_PASS = "pass";
+    public static final String SP_NAME = "name";
+    public static final String SP_ADDRESS = "address";
+    public static final String SP_APT = "apt";
+    public static final String SP_CITY = "city";
+    public static final String SP_STATE = "state";
+    public static final String SP_ZIPCODE = "zipcode";
+    public static final String SP_PHONE_NUMBER = "phone_number";
+    public static final String SP_PHOTO_LINK = "photo_link";
+    public static final String SP_IS_LOGGED_IN = "logged_in";
 
     /* Is there a ConnectionResult resolution in progress? */
     private boolean mIsResolving = false;
@@ -73,17 +79,19 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
     /* Should we automatically resolve ConnectionResults when possible? */
     private boolean mShouldResolve = false;
 
+    public static View coordinatorLayoutView;
     String email;
     String password;
     LinearLayout containingView;
     RelativeLayout loadingPanel;
     private User user;
-    Intent intent;
     CallbackManager callbackManager;
     AccessTokenTracker mFacebookAccessTokenTracker;
     DBCallback emptyCallback;
     Firebase.AuthStateListener mAuthStateListener;
     AccessToken accessToken;
+
+    private boolean toSellActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,9 +99,131 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         setContentView(R.layout.activity_signup1);
 
+        initializeData();
+        bindViews();
+        setListeners();
+
+//        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
+        getSupportActionBar().setBackgroundDrawable(colorDrawable);
+
+//        BitmapDrawable background = new BitmapDrawable (BitmapFactory.decodeResource(getResources(), R.drawable.actionbar));
+//        background.setGravity(Gravity.CENTER);
+//        getSupportActionBar().setBackgroundDrawable(background);
+
+
+
+    }
+
+    private void setListeners() {
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (emailET.getText().toString().equals("") || passET.getText().toString().equals("")) {
+                    Snackbar
+                            .make(coordinatorLayoutView, "Please enter in all fields", Snackbar.LENGTH_SHORT)
+                            .show();
+                } else {
+
+                    email = emailET.getText().toString().trim();
+                    password = passET.getText().toString();
+
+                    dbHelper.logInUser(email, password, new DBCallback() {
+                        @Override
+                        public void runOnSuccess() {
+                            user = dbHelper.getUserFromDB(dbHelper.getUserID());
+                            loadingPanel.setVisibility(View.VISIBLE);
+                            containingView.setVisibility(View.GONE);
+                            load();
+                        }
+
+                        @Override
+                        public void runOnFail() {
+                        }
+                    });
+
+                }
+            }
+
+        });
+
+
+        newUserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (emailET.getText().toString().equals("") || passET.getText().toString().equals("")) {
+                    Snackbar
+                            .make(coordinatorLayoutView, "Please set an Email and Password", Snackbar.LENGTH_SHORT)
+                            .show();
+                } else {
+
+                    email = emailET.getText().toString().trim();
+                    password = passET.getText().toString();
+
+                    dbHelper.createUserAndCallback(email, password, new DBCallback() {
+                        @Override
+                        public void runOnSuccess() {
+                            storeUserInfo();
+                            Intent intent1 = new Intent(SignupActivity1.this, SignupActivity2.class);
+                            intent1.putExtra("email", email);
+                            intent1.putExtra("pass", password);
+                            if (toSellActivity) {
+                                intent1.putExtra(BuyActivity.TO_SELL_ACTIVITY, true);
+                            }
+                            startActivity(intent1);
+                            finish();
+                        }
+
+                        @Override
+                        public void runOnFail() {
+
+                        }
+                    });
+                }
+            }
+        });
+        loginButton.setReadPermissions(Arrays.asList("public_profile", "user_friends", "email"));
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                loginWithFacebook();            }
+        });
+
+        findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (view.getId() == R.id.sign_in_button) {
+                    onSignInClicked();
+                }
+
+            }
+        });
+    }
+
+    private void bindViews() {
+        containingView = (LinearLayout) findViewById(R.id.container);
+        loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
+        loadingPanel.setVisibility(View.GONE);
+        loginButton=(LoginButton) findViewById(R.id.login_button);
+
+        emailET = (EditText) findViewById(R.id.eMail);
+        passET = (EditText) findViewById(R.id.password);
+
+        signInButton = (Button) findViewById(R.id.signInButton);
+        newUserButton = (Button) findViewById(R.id.newUserButton);
+
+        coordinatorLayoutView = findViewById(R.id.snackbarPosition);
+
+    }
+
+    private void initializeData() {
+        toSellActivity = getIntent().getBooleanExtra(BuyActivity.TO_SELL_ACTIVITY,false);
+
         dbHelper = DBHelper.getDbHelper(this);
         callbackManager = CallbackManager.Factory.create();
-
 
         emptyCallback = new DBCallback() {
             @Override
@@ -115,91 +245,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
                 .addScope(new Scope(Scopes.PROFILE))
                 .build();
 
-        containingView = (LinearLayout) findViewById(R.id.container);
-        loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
-        loadingPanel.setVisibility(View.GONE);
-        intent = new Intent(getApplicationContext(), BuyActivity.class);
-        loginButton=(LoginButton) findViewById(R.id.login_button);
-
-        emailET = (EditText) findViewById(R.id.eMail);
-        passET = (EditText) findViewById(R.id.password);
-        rememberMe = (CheckBox) findViewById(R.id.remember_me);
-
-        signInButton = (Button) findViewById(R.id.signInButton);
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                email = emailET.getText().toString().trim();
-                password = passET.getText().toString();
-
-                dbHelper.logInUser(email, password, new DBCallback() {
-                    @Override
-                    public void runOnSuccess() {
-                        user = dbHelper.getUserFromDB(dbHelper.getUserID());
-                        loadingPanel.setVisibility(View.VISIBLE);
-                        containingView.setVisibility(View.GONE);
-                        load();
-                    }
-
-                    @Override
-                    public void runOnFail() {
-                    }
-                });
-
-            }
-
-        });
-
-        newUserButton = (Button)
-
-                findViewById(R.id.newUserButton);
-
-        newUserButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                email = emailET.getText().toString().trim();
-                password = passET.getText().toString();
-
-                dbHelper.createUserAndCallback(email, password, new DBCallback() {
-                    @Override
-                    public void runOnSuccess() {
-                        checkRememberMe();
-                        Intent intent1 = new Intent(SignupActivity1.this, SignupActivity2.class);
-                        intent1.putExtra("email", email);
-                        startActivity(intent1);
-                        finish();
-                    }
-
-                    @Override
-                    public void runOnFail() {
-
-                    }
-                });
-            }
-        });
-        loginButton.setReadPermissions(Arrays.asList("public_profile", "user_friends", "email"));
-
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                loginWithFacebook();            }
-        });
-
-        findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (view.getId() == R.id.sign_in_button) {
-                    onSignInClicked();
-                }
-
-            }
-        });
-
-
     }
-
-
 
 
     private void onSignInClicked() {
@@ -207,7 +253,6 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         // attempt to resolve any errors that occur.
         mShouldResolve = true;
         mGoogleApiClient.connect();
-
         // Show a message to the user that we are signing in.
 //        mStatusTextView.setText(R.string.signing_in);
     }
@@ -227,16 +272,16 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
             mIsResolving = false;
             mGoogleApiClient.connect();
         }else if(resultCode== RESULT_OK) {
-            dbHelper.onFacebookAccessTokenChange(AccessToken.getCurrentAccessToken(), emptyCallback);
-            Log.d("request Code", String.valueOf(resultCode));
             Intent intent1 = new Intent(SignupActivity1.this, SignupActivity2.class);
-            startActivity(intent1);
+            dbHelper.onFacebookAccessTokenChange(AccessToken.getCurrentAccessToken(), intent1);
+            Log.d("request Code", String.valueOf(resultCode));
         }
         else{
+            Snackbar
+                    .make(coordinatorLayoutView, "Login Failed", Snackbar.LENGTH_SHORT)
+                    .show();
             Toast.makeText(this,"Login Failed",Toast.LENGTH_LONG).show();
-
         }
-
     }
 
     public void loginWithFacebook() {
@@ -268,7 +313,12 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         mShouldResolve = false;
 
         // Show the signed-in UI
+        Snackbar
+                .make(coordinatorLayoutView, "Signed In", Snackbar.LENGTH_SHORT)
+                .show();
         Toast.makeText(getApplicationContext(), "Signed In", Toast.LENGTH_SHORT).show();
+        Intent intent1 = new Intent(SignupActivity1.this, SignupActivity2.class);
+        dbHelper.onGmailAccessTokenChange(AccessToken.getCurrentAccessToken(), intent1);
 
     }
 
@@ -288,24 +338,29 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
 //        dbHelper.removeAuthStateListener(mAuthStateListener);
     }
 
-    private void checkRememberMe() {
+    private void storeUserInfo() {
 
-        SharedPreferences sharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(SP_USER_INFO, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(EMAIL, email);
-        if (rememberMe.isChecked()) {
-            editor.putString(PASS, password);
-        }
+        editor.putString(SP_EMAIL, email);
+        editor.putString(SP_PASS, password);
+        editor.putBoolean(SP_IS_LOGGED_IN, true);
         // when user clicks sign in
         if (user != null) {
+            Log.d("SignUp - User Info","Name: " + user.getName());
+            Log.d("SignUp - User Info","Address: " + user.getAddressString());
+            Log.d("SignUp - User Info","UID: " + user.getUID());
+            Log.d("SignUp - User Info","Email: " + user.geteMail());
             String addressString = user.getAddressString();
             Address address = HelperMethods.parseAddressString(addressString, dbHelper.getUserID());
-            editor.putString(NAME, user.getName());
-            editor.putString(ADDRESS, address.getStreetAddress());
-            editor.putString(APT, address.getApartment());
-            editor.putString(CITY, address.getCity());
-            editor.putString(ZIPCODE, address.getZipCode());
-            editor.putString(PHONE_NUMBER, user.getPhoneNumber());
+            editor.putString(SP_NAME, user.getName())
+                .putString(SP_ADDRESS, address.getStreetAddress())
+                .putString(SP_APT, address.getApartment())
+                .putString(SP_CITY, address.getCity())
+                .putString(SP_STATE, address.getState())
+                .putString(SP_ZIPCODE, address.getZipCode())
+                .putString(SP_PHONE_NUMBER, user.getPhoneNumber())
+                .putString(SP_PHOTO_LINK, user.getPhotoLink());
         }
         editor.commit();
 
@@ -329,7 +384,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
                                 break;
                             }
                             i++;
-                        } while (user == null);
+                        } while (user == null || user.getName() == null || user.getName().isEmpty() );
 
                         return null;
                     }
@@ -338,14 +393,23 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
                     protected void onPostExecute(Void aVoid) {
                         super.onPostExecute(aVoid);
 
-                        if (user != null) {
-                            checkRememberMe();
+                        if (user != null && user.getAddressString() != null) {
+                            storeUserInfo();
                             Log.d("SIGNUPACTIVITY1", "USER LOG IN SUCCESSFUL");
+                            Intent intent;
+                            if(toSellActivity){
+                                intent = new Intent(SignupActivity1.this,SellActivity.class);
+                            }
+                            else{
+                                intent = new Intent(SignupActivity1.this,BuyActivity.class);
+                            }
                             startActivity(intent);
                             finish();
                         } else {
                             //TODO:display cannot connect to internet error message
-                            Toast.makeText(SignupActivity1.this, "Cannot Connect to Internet", Toast.LENGTH_SHORT).show();
+                            Snackbar
+                                    .make(coordinatorLayoutView, "Failed to load account, please try again", Snackbar.LENGTH_SHORT)
+                                    .show();
                             loadingPanel.setVisibility(View.GONE);
                             containingView.setVisibility(View.VISIBLE);
                             dbHelper.signOutUser(emptyCallback);
@@ -376,7 +440,9 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
             } else {
                 // Could not resolve the connection result, show the user an
                 // error dialog.
-                Toast.makeText(getApplicationContext(), "Error with connection", Toast.LENGTH_SHORT).show();
+                Snackbar
+                        .make(coordinatorLayoutView, "Error with connection", Snackbar.LENGTH_SHORT)
+                        .show();
             }
         } else {
             // Show the signed-out UI
@@ -418,5 +484,11 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
     protected void onStop() {
         super.onStop();
         mGoogleApiClient.disconnect();
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, BuyActivity.class));
+        finish();
     }
 }

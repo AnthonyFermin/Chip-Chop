@@ -21,6 +21,10 @@ public class User {
     String longitude;
     int numOfReviews;
     String addressString;
+    String cardNumber;
+    int cardExpirationMonth;
+    int cardExpirationYear;
+    String cardCVC;
 
     public User(){}
 
@@ -48,6 +52,16 @@ public class User {
         this.photoLink=photoLink;
         this.phoneNumber=phoneNumber;
     }
+
+    public User(String name, String cardNumber, int cardExpirationMonth, int cardExpirationYear, String cardCVC, String UID) {
+        this.name = name;
+        this.cardNumber = cardNumber;
+        this.cardExpirationMonth = cardExpirationMonth;
+        this.cardExpirationYear = cardExpirationYear;
+        this.cardCVC = cardCVC;
+        this.UID = UID;
+    }
+
     public String getUID() {
         return UID;
     }
@@ -143,5 +157,37 @@ public class User {
 
     public void setAddressString(String addressString) {
         this.addressString = addressString;
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    public int getCardExpirationMonth() {
+        return cardExpirationMonth;
+    }
+
+    public void setCardExpirationMonth(int cardExpirationMonth) {
+        this.cardExpirationMonth = cardExpirationMonth;
+    }
+
+    public int getCardExpirationYear() {
+        return cardExpirationYear;
+    }
+
+    public void setCardExpirationYear(int cardExpirationYear) {
+        this.cardExpirationYear = cardExpirationYear;
+    }
+
+    public String getCardCVC() {
+        return cardCVC;
+    }
+
+    public void setCardCVC(String cardCVC) {
+        this.cardCVC = cardCVC;
     }
 }

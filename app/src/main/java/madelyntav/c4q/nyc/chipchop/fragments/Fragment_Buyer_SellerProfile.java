@@ -1,8 +1,8 @@
 package madelyntav.c4q.nyc.chipchop.fragments;
 
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,8 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +42,7 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
     RelativeLayout loadingPanel;
     LinearLayout containingView;
 
+    View coordinatorLayoutView;
     CircleImageView storeImage;
     TextView storeName,storeDescription;
 
@@ -50,7 +51,6 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
     private BuyActivity activity;
     private DBCallback emptyCallback;
     private Order order;
-    private ArrayList<Item> cartItems;
 
 
     @Override
@@ -65,15 +65,16 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
 
         setListeners();
 
+        loadingPanel.setVisibility(root.VISIBLE);
         load();
 
         return root;
     }
 
     private void initializeViews() {
-        Picasso.with(activity).load(seller.getPhotoLink()).fit().into(storeImage);
+        if(seller.getPhotoLink() != null && !seller.getPhotoLink().isEmpty())
+            Picasso.with(activity).load(seller.getPhotoLink()).fit().into(storeImage);
         storeName.setText(seller.getStoreName());
-        storeDescription.setText(seller.getDescription());
     }
 
     private void load() {
@@ -94,7 +95,7 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
                         break;
                     }
                     i++;
-                }while(foodItems == null);
+                }while(foodItems == null || foodItems.size() == 0);
 
                 return null;
             }
@@ -106,6 +107,9 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
                 if(foodItems != null) {
                     setAdapter();
                 }else{
+                    Snackbar
+                            .make(coordinatorLayoutView, "Seller food items not found", Snackbar.LENGTH_SHORT)
+                            .show();
                     Toast.makeText(activity,"Seller food items not found",Toast.LENGTH_SHORT).show();
                 }
                 loadingPanel.setVisibility(View.GONE);
@@ -141,18 +145,21 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
         storeImage = (CircleImageView) root.findViewById(R.id.profile_image);
         storeName = (TextView) root.findViewById(R.id.seller_name);
         storeDescription = (TextView) root.findViewById(R.id.store_description);
+        coordinatorLayoutView = root.findViewById(R.id.snackbarPosition);
+
     }
 
     private void initializeData() {
         activity = (BuyActivity) getActivity();
         dbHelper = DBHelper.getDbHelper(activity);
 
+        activity.setCurrentFragment(TAG);
+
         emptyCallback = new DBCallback() {
             @Override
             public void runOnSuccess() {
 
             }
-
             @Override
             public void runOnFail() {
 
@@ -160,12 +167,12 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
         };
 
         seller = activity.getSellerToView();
-        seller.setUID("113"); // was originally empty when retrieved from DB
-        //TODO: Madelyn: supposed to be seller.getUID() instead of 113, the Seller object does not have a UID when retrieved from DB
         foodItems = dbHelper.getSellersOnSaleItems(seller.getUID(), emptyCallback);
-
-        order = new Order(dbHelper.getUserID(),seller.getUID());
-        cartItems = order.getItemsOrdered();
+        order = activity.getCurrentOrder();
+        order.setBuyerID(dbHelper.getUserID());
+        order.setSellerID(seller.getUID());
+        order.setIsActive(true);
+        order.setStoreName(seller.getStoreName());
         activity.setCurrentOrder(order);
     }
 

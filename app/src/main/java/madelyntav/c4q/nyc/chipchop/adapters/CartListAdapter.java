@@ -1,6 +1,9 @@
 package madelyntav.c4q.nyc.chipchop.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
@@ -17,10 +20,12 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
 import madelyntav.c4q.nyc.chipchop.FoodItemSelectDialog;
 import madelyntav.c4q.nyc.chipchop.R;
 
@@ -30,13 +35,16 @@ import madelyntav.c4q.nyc.chipchop.R;
 public class CartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     Button removeItemButton;
-    private List<Item> cartItems;
+    private ArrayList<Item> cartItems;
     private Context context;
     private int lastPosition = -1;
+    BuyActivity activity;
 
-    public CartListAdapter(Context context, List<Item> checkoutItems) {
+    public CartListAdapter(Context context, ArrayList<Item> cartItems) {
         this.context = context;
-        this.cartItems = checkoutItems;
+        this.cartItems = cartItems;
+        activity = (BuyActivity) context;
+
     }
 
 
@@ -63,8 +71,12 @@ public class CartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             removeItemButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    cartItems.remove(cartItems.get(getAdapterPosition()));
+                    cartItems.remove(getAdapterPosition());
                     notifyItemRemoved(getAdapterPosition());
+                    //order code unnecessary
+                    Order order = activity.getCurrentOrder();
+                    order.setItemsOrdered(cartItems);
+                    activity.setCurrentOrder(order);
                 }
             });
         }
@@ -81,15 +93,32 @@ public class CartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
 
-        final Item checkoutItem = cartItems.get(position);
-        CheckoutViewHolder vh = (CheckoutViewHolder) viewHolder;
+        Item checkoutItem = cartItems.get(position);
+        final CheckoutViewHolder vh = (CheckoutViewHolder) viewHolder;
         int amtWanted = checkoutItem.getQuantityWanted();
 
         vh.name.setText(checkoutItem.getNameOfItem());
-        vh.price.setText((checkoutItem.getPrice() * amtWanted) + "");
+        vh.price.setText("$ " + (checkoutItem.getPrice() * amtWanted) + "");
         vh.quantity.setText(checkoutItem.getQuantityWanted() + "");
         vh.description.setText(checkoutItem.getDescriptionOfItem());
-        Picasso.with(context).load(checkoutItem.getImageLink()).fit().into(vh.image);
+        if(checkoutItem.getImageLink() != null && !checkoutItem.getImageLink().isEmpty() && checkoutItem.getImageLink().length() > 200) {
+            final String imageLink = checkoutItem.getImageLink();
+            new AsyncTask<Void, Void, Bitmap>() {
+                @Override
+                protected Bitmap doInBackground(Void... voids) {
+                    byte[] decoded = org.apache.commons.codec.binary.Base64.decodeBase64(imageLink.getBytes());
+                    BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
+                    return BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
+                }
+
+                @Override
+                protected void onPostExecute(Bitmap bitmap) {
+                    super.onPostExecute(bitmap);
+                    vh.image.setImageBitmap(bitmap);
+                }
+            }.execute();
+        }
+
 
         setAnimation(vh.container, position);
 
@@ -106,8 +135,7 @@ public class CartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemCount() {
-//        return cartItems.size();
-        return 0;
+        return cartItems.size();
     }
 }
 

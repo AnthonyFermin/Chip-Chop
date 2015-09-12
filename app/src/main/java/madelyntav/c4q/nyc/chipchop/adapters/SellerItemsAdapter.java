@@ -1,8 +1,14 @@
 package madelyntav.c4q.nyc.chipchop.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +20,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-
-import java.text.DecimalFormat;
 import java.util.List;
 
 import madelyntav.c4q.nyc.chipchop.DBCallback;
@@ -25,6 +28,7 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.SellActivity;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_CreateItem;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Items;
 
 /**
  * Created by c4q-anthonyf on 8/14/15.
@@ -37,12 +41,16 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private int lastPosition = -1;
     private DBHelper dbHelper;
     private SellActivity activity;
+    private boolean isActive;
+    Fragment_Seller_Items fragment;
 
-    public SellerItemsAdapter(final Context context, final List<Item> sellerItems) {
+    public SellerItemsAdapter(final Context context, Fragment_Seller_Items fragment, final List<Item> sellerItems, boolean isActive) {
         this.context = context;
         this.sellerItems = sellerItems;
         dbHelper = DBHelper.getDbHelper(context);
         activity = (SellActivity) context;
+        this.isActive = isActive;
+        this.fragment = fragment;
     }
 
     private class SellersViewHolder extends RecyclerView.ViewHolder {
@@ -54,6 +62,7 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         TextView price;
         TextView quantity;
         TextView description;
+        SwitchCompat activeSwitch;
 
         public SellersViewHolder(View itemView) {
             super(itemView);
@@ -64,17 +73,24 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             price = (TextView) itemView.findViewById(R.id.food_price_tv);
             quantity = (TextView) itemView.findViewById(R.id.food_quantity_tv);
             description = (TextView) itemView.findViewById(R.id.food_description_tv);
+            activeSwitch = (SwitchCompat) itemView.findViewById(R.id.active_toggle);
 
             itemRemovalCallback = new DBCallback() {
                 @Override
                 public void runOnSuccess() {
                     Toast.makeText(context,"Item removed successfully", Toast.LENGTH_SHORT).show();
+                    Snackbar
+                            .make(Fragment_Seller_Items.coordinatorLayoutView, "Item removed successfully", Snackbar.LENGTH_SHORT)
+                            .show();
 
                 }
 
                 @Override
                 public void runOnFail() {
                     Toast.makeText(context,"Unable to remove item", Toast.LENGTH_SHORT).show();
+                    Snackbar
+                            .make(Fragment_Seller_Items.coordinatorLayoutView, "Unable to remove item", Snackbar.LENGTH_SHORT)
+                            .show();
                 }
             };
 
@@ -83,12 +99,20 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 @Override
                 public void onClick(View view) {
                     //TODO: add popup dialog asking user to confirm deletion
-                    if(activity.isCurrentlyCooking()) {
-                        dbHelper.removeItemFromSale(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
-                    }else {
-                    //TODO: Madelyn: are these the correct methods to remove items from the seller profile in the DB?
-                        dbHelper.removeItemFromSellerProfile(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
-                        Log.d("ITEMID REMOVED", sellerItems.get(getAdapterPosition()).getItemID() + "");
+
+                    Item item = sellerItems.get(getAdapterPosition());
+
+                    if(isActive) {
+                        if (activity.isCurrentlyCooking()) {
+                            dbHelper.removeItemFromSale(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
+                        } else {
+                            //TODO: Madelyn: are these the correct methods to remove items from the seller profile in the DB?
+                            dbHelper.removeItemFromSellerProfile(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
+                            Log.d("ITEMID REMOVED", sellerItems.get(getAdapterPosition()).getItemID() + "");
+                        }
+
+                        activity.getInactiveSellerItems().add(item);
+                        fragment.getInactiveList().getAdapter().notifyDataSetChanged();
                     }
 
                     sellerItems.remove(getAdapterPosition());
@@ -106,6 +130,12 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     activity.replaceSellerFragment(new Fragment_Seller_CreateItem());
                 }
             });
+
+            activeSwitch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                }
+            });
         }
 
     }
@@ -121,19 +151,28 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
 
         Item sellerItem = sellerItems.get(position);
-        SellersViewHolder vh = (SellersViewHolder) viewHolder;
+        final SellersViewHolder vh = (SellersViewHolder) viewHolder;
         vh.name.setText(sellerItem.getNameOfItem());
-        try {
-            DecimalFormat df = new DecimalFormat("#.00");
-            String price = df.format(sellerItem.getPrice());
-            vh.price.setText("$" + price);
-        }catch(NullPointerException e){
-            e.printStackTrace();
-        }
+        vh.price.setText("$ " + sellerItem.getPrice());
         vh.quantity.setText(sellerItem.getQuantity() + "");
         vh.description.setText(sellerItem.getDescriptionOfItem());
-        if(sellerItem.getImageLink() != null && !sellerItem.getImageLink().isEmpty())
-            Picasso.with(context).load(sellerItem.getImageLink()).fit().into(vh.image);
+        if(sellerItem.getImageLink() != null && !sellerItem.getImageLink().isEmpty() && sellerItem.getImageLink().length() > 200) {
+            final String imageLink = sellerItem.getImageLink();
+            new AsyncTask<Void, Void, Bitmap>() {
+                @Override
+                protected Bitmap doInBackground(Void... voids) {
+                    byte[] decoded = org.apache.commons.codec.binary.Base64.decodeBase64(imageLink.getBytes());
+                    BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
+                    return BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
+                }
+
+                @Override
+                protected void onPostExecute(Bitmap bitmap) {
+                    super.onPostExecute(bitmap);
+                    vh.image.setImageBitmap(bitmap);
+                }
+            }.execute();
+        }
 
         setAnimation(vh.container, position);
 

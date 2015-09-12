@@ -6,17 +6,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.v4.app.Fragment;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,8 +25,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -37,10 +34,12 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -51,20 +50,16 @@ import java.util.ArrayList;
 
 import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBCallback;
-import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
-import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
-import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.adapters.SellerListAdapter;
-
-import static android.content.res.Resources.*;
 
 
 public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
+    View coordinatorLayoutView;
     FloatingActionButton refreshButton;
     ImageView arrowImage;
     public SlidingUpPanelLayout slidingPanel;
@@ -85,6 +80,9 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     private ArrayList<Seller> sellers;
     private RecyclerView itemsRView;
     private View root;
+    private String distanceToShow;
+    private String distanceToShow1;
+    public ArrayList<Seller> listOfSellersForUse;
 
     private DBCallback emptyCallback;
 
@@ -95,6 +93,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        listOfSellersForUse= new ArrayList<>();
 
         initializeData(inflater, container);
         bindViews();
@@ -113,7 +112,34 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             @Override
             public void onClick(View view) {
                 // TODO: WRITE CODE TO REFRESH RECYCLERVIEW !!
+                activity.replaceFragment(new Fragment_Buyer_Map());
             }
+        });
+
+        itemsRView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Disallow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(true);
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        // Allow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                }
+
+                // Handle ListView touch events.
+                v.onTouchEvent(event);
+
+                return true;
+
+            }
+
         });
     }
 
@@ -148,7 +174,6 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
             @Override
             public void onPanelAnchored(View view) {
-
             }
 
             @Override
@@ -171,8 +196,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         connectGoogleApiClient();
         mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(10000)        // 10 seconds, in milliseconds
-                .setFastestInterval(5000); // 1 second, in milliseconds
+                .setNumUpdates(1);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
@@ -186,6 +210,8 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         slidingPanel = (SlidingUpPanelLayout) root.findViewById(R.id.slidinglayout);
         itemsRView = (RecyclerView) root.findViewById(R.id.buyers_orders_list);
         refreshButton = (FloatingActionButton) root.findViewById(R.id.refresh_button);
+        coordinatorLayoutView = root.findViewById(R.id.snackbarPosition);
+
 
     }
 
@@ -206,7 +232,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
         activity = (BuyActivity) getActivity();
 
-        activity.setCurrentFragment(Fragment_Buyer_Map.TAG);
+        activity.setCurrentFragment(TAG);
 
         emptyCallback = new DBCallback() {
             @Override
@@ -260,6 +286,9 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
                 @Override
                 public void onClick(DialogInterface paramDialogInterface, int paramInt) {
                     Toast.makeText(getActivity(), "Location Services disabled", Toast.LENGTH_LONG).show();
+                    Snackbar
+                            .make(coordinatorLayoutView, "Location Services disabled", Snackbar.LENGTH_LONG)
+                            .show();
                 }
             });
             dialog.show();
@@ -328,8 +357,8 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         location.setLongitude(longitude);
 
         // Set initial view to current location
-        map.moveCamera(CameraUpdateFactory.newLatLng(locationLatLng));
-        map.animateCamera(CameraUpdateFactory.zoomTo(15));
+        CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(locationLatLng, 15);
+        map.animateCamera(yourLocation);
 
     }
 
@@ -378,7 +407,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
             Circle circle = map.addCircle(new CircleOptions()
                     .center(new LatLng(lat, lng))
-                    .radius(100000)
+                    .radius(3219)
                     .strokeColor(Color.RED));
 
             float[] distance = new float[sellers.size()];
@@ -392,10 +421,20 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             Log.d("Buyer Map Fragment","User Long: " + lng);
 
             if (distance[0] < circle.getRadius()) {
-                Log.d("Fragment Buyer Map","MARKER ADDED");
+                double dist= distance[0]*0.00062137;
+                distanceToShow1= String.valueOf(dist);
+                distanceToShow="";
+                for(int i=0; i<4;i++){
+                    distanceToShow+=distanceToShow1.charAt(i);
+                }
+                seller.setDistanceFromBuyer(distanceToShow);
+                Log.d("DISTANCE", distanceToShow);
+                Log.d("Fragment Buyer Map", "MARKER ADDED");
+                listOfSellersForUse.add(seller);
                 map.addMarker(new MarkerOptions()
                         .position(new LatLng(gLat, gLng))
-                        .title(userName));
+                        .title(userName))
+                        .setIcon(BitmapDescriptorFactory.fromResource(R.drawable.mapmarker));
 
             }
         }
@@ -429,9 +468,12 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             protected void onPostExecute (Void aVoid){
                 super.onPostExecute(aVoid);
                 if (sellers == null) {
+                    Snackbar
+                            .make(coordinatorLayoutView, "No sellers found in area", Snackbar.LENGTH_SHORT)
+                            .show();
                     Toast.makeText(activity, "No sellers found in area", Toast.LENGTH_SHORT).show();
                 } else {
-                    SellerListAdapter sellersListAdapter = new SellerListAdapter(getActivity(), sellers);
+                    SellerListAdapter sellersListAdapter = new SellerListAdapter(getActivity(), listOfSellersForUse);
                     itemsRView.setAdapter(sellersListAdapter);
                     addWithinRangeMarkersToMap();
                 }

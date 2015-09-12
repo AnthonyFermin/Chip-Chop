@@ -2,8 +2,12 @@ package madelyntav.c4q.nyc.chipchop;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.Intent;
@@ -14,6 +18,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,6 +48,8 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Orders;
 
 public class SellActivity extends AppCompatActivity {
 
+    Button contactButton;
+    View coordinatorLayoutView;
     FrameLayout frameLayout;
     LinearLayout DrawerLinear;
     private DrawerLayout mDrawerLayout;
@@ -55,16 +62,20 @@ public class SellActivity extends AppCompatActivity {
     // for storing data between fragments in SellActivity
 
     private ArrayList<Item> sellerItems = null;
+    private ArrayList<Item> inactiveSellerItems = null;
     private boolean currentlyCooking = false;
     private User user = null;
     private Seller seller = null;
-    private boolean fromItemCreation = false;
     private Item itemToEdit = null;
+    private Item inactiveItemToEdit = null;
     private String currentFragment;
+    private Intent serviceIntent;
 
     private DBHelper dbHelper;
 
     DBCallback emptyCallback;
+
+    private SharedPreferences userInfoSP;
 
 
     @Override
@@ -86,6 +97,16 @@ public class SellActivity extends AppCompatActivity {
     }
 
     private void setUpNavActionBar() {
+        contactButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent contactIntent = new Intent(Intent.ACTION_SEND);
+                contactIntent.setType("text/html");
+                contactIntent.putExtra(Intent.EXTRA_EMAIL, "chipchopcontact@gmail.com");
+                startActivity(Intent.createChooser(contactIntent, "Create Email"));
+            }
+        });
+
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.navdrawer_list_item, mListTitles));
 
@@ -124,14 +145,21 @@ public class SellActivity extends AppCompatActivity {
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+//        getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(false);
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.navdrawer);
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
         getSupportActionBar().setBackgroundDrawable(colorDrawable);
+
+//        BitmapDrawable background = new BitmapDrawable (BitmapFactory.decodeResource(getResources(), R.drawable.actionbar));
+//        background.setGravity(Gravity.CENTER);
+//        getSupportActionBar().setBackgroundDrawable(background);
     }
 
     private void initializeData() {
+        userInfoSP = getSharedPreferences(SignupActivity1.SP_USER_INFO, MODE_PRIVATE);
         emptyCallback = new DBCallback() {
             @Override
             public void runOnSuccess() {
@@ -144,7 +172,7 @@ public class SellActivity extends AppCompatActivity {
             }
         };
         mListTitles = getResources().getStringArray(R.array.SELLER_nav_drawer_titles);
-
+        serviceIntent = new Intent(this,ServiceSellerNotify.class).putExtra(ServiceSellerNotify.SELLER_ID,dbHelper.getUserID());
     }
 
     private void bindViews(){
@@ -153,6 +181,9 @@ public class SellActivity extends AppCompatActivity {
         DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        coordinatorLayoutView = findViewById(R.id.snackbarPosition);
+        contactButton = (Button) findViewById(R.id.contact_button);
+
     }
 
 
@@ -175,29 +206,43 @@ public class SellActivity extends AppCompatActivity {
         } else if (position == 2) {
             fragment = new Fragment_Seller_ProfileSettings();
         } else if (position == 3) {
-            dbHelper.signOutUser(emptyCallback);
+            clearLogin();
 
-            SharedPreferences sharedPreferences= getSharedPreferences(SignupActivity1.USER_INFO, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor=sharedPreferences.edit();
-            editor.clear();
-            editor.commit();
-            drawerUserNameTV.setText("");
+            Snackbar
+                    .make(coordinatorLayoutView, "Sign out successful", Snackbar.LENGTH_SHORT)
+                    .show();
 
-            Intent intent = new Intent(this,BuyActivity.class);
-            startActivity(intent);
-            Toast.makeText(this,"Sign out successful",Toast.LENGTH_SHORT).show();
-            finish();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(getApplicationContext(), BuyActivity.class);
+                    startActivity(intent);
+
+                    finish();
+                }
+            }, 2000);
+
         }
 
             // Create fragment manager to begin interacting with the fragments and the container
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.sellerFrameLayout, fragment).addToBackStack(null).commit();
+            fragmentManager.beginTransaction().replace(R.id.sellerFrameLayout, fragment).commit();
 
 
             // update selected item and title in nav drawer, then close the drawer
             mDrawerList.setItemChecked(position, true);
             mDrawerLayout.closeDrawer(DrawerLinear);
 
+    }
+
+    private void clearLogin() {
+        dbHelper.setSellerCookingStatus(false);
+        dbHelper.removeSellersFromActiveSellers(seller, emptyCallback);
+        userInfoSP.edit().clear().commit();
+        dbHelper.signOutUser(emptyCallback);
+        drawerUserNameTV.setText("");
+        stopService(serviceIntent);
+        stopService(new Intent(this,ServiceBuyerNotify.class));
     }
 
     @Override
@@ -256,7 +301,6 @@ public class SellActivity extends AppCompatActivity {
                 replaceSellerFragment(new Fragment_Seller_Items());
                 break;
             default:
-                super.onBackPressed();
         }
     }
 
@@ -267,17 +311,20 @@ public class SellActivity extends AppCompatActivity {
     }
 
     private void initializeUser(){
-        SharedPreferences sp = getSharedPreferences(SignupActivity1.USER_INFO, MODE_PRIVATE);
-        String email = sp.getString(SignupActivity1.EMAIL, "");
-        String name = sp.getString(SignupActivity1.NAME, "");
-        String address = sp.getString(SignupActivity1.ADDRESS,"");
-        String apt = sp.getString(SignupActivity1.APT, "");
-        String city = sp.getString(SignupActivity1.CITY, "");
-        String zip = sp.getString(SignupActivity1.ZIPCODE, "");
-        String phoneNumber = sp.getString(SignupActivity1.PHONE_NUMBER, "");
+        SharedPreferences sp = getSharedPreferences(SignupActivity1.SP_USER_INFO, MODE_PRIVATE);
+        String email = sp.getString(SignupActivity1.SP_EMAIL, "");
+        String name = sp.getString(SignupActivity1.SP_NAME, "");
+        String address = sp.getString(SignupActivity1.SP_ADDRESS,"");
+        String apt = sp.getString(SignupActivity1.SP_APT, "");
+        String city = sp.getString(SignupActivity1.SP_CITY, "");
+        String state = sp.getString(SignupActivity1.SP_STATE,"");
+        String zip = sp.getString(SignupActivity1.SP_ZIPCODE, "");
+        String phoneNumber = sp.getString(SignupActivity1.SP_PHONE_NUMBER, "");
+        String photoLink = sp.getString(SignupActivity1.SP_PHOTO_LINK,"");
 
-        Address userAddress = new Address(address, apt, city, "NY", zip, dbHelper.getUserID());
+        Address userAddress = new Address(address, apt, city, state, zip, dbHelper.getUserID());
         user = new User(dbHelper.getUserID(), email, name, userAddress, phoneNumber);
+        user.setPhotoLink(photoLink);
 
         drawerUserNameTV.setText(user.getName());
     }
@@ -290,6 +337,14 @@ public class SellActivity extends AppCompatActivity {
 
     public void setSellerItems(ArrayList<Item> sellerItems){
         this.sellerItems = sellerItems;
+    }
+
+    public ArrayList<Item> getInactiveSellerItems() {
+        return inactiveSellerItems;
+    }
+
+    public void setInactiveSellerItems(ArrayList<Item> inactiveSellerItems) {
+        this.inactiveSellerItems = inactiveSellerItems;
     }
 
     public void setCookingStatus(boolean condition){
@@ -316,14 +371,6 @@ public class SellActivity extends AppCompatActivity {
         return user;
     }
 
-    public boolean isFromItemCreation(){
-        return fromItemCreation;
-    }
-
-    public void setFromItemCreation(boolean condition){
-        fromItemCreation = condition;
-    }
-
     public Item getItemToEdit() {
         return itemToEdit;
     }
@@ -332,11 +379,27 @@ public class SellActivity extends AppCompatActivity {
         this.itemToEdit = itemToEdit;
     }
 
+    public Item getInactiveItemToEdit() {
+        return inactiveItemToEdit;
+    }
+
+    public void setInactiveItemToEdit(Item inactiveItemToEdit) {
+        this.inactiveItemToEdit = inactiveItemToEdit;
+    }
+
     public String getCurrentFragment() {
         return currentFragment;
     }
 
     public void setCurrentFragment(String currentFragment) {
         this.currentFragment = currentFragment;
+    }
+
+    public Intent getServiceIntent() {
+        return serviceIntent;
+    }
+
+    public void setServiceIntent(Intent serviceIntent) {
+        this.serviceIntent = serviceIntent;
     }
 }

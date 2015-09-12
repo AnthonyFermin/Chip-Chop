@@ -8,6 +8,7 @@ import java.util.ArrayList;
  * Created by c4q-madelyntavarez on 8/20/15.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
+
 public class Seller {
 
     ArrayList<Item> items;
@@ -27,6 +28,13 @@ public class Seller {
     int numOfTotalStars;
     int newReviewNumOfStars;
     String addressString;
+    String cardNumber;
+    int cardExpirationMonth;
+    int cardExpirationYear;
+    String cardCVC;
+    String routingNumber;
+    String accountNumber;
+    String distanceFromBuyer;
 
     public Seller(){}
 
@@ -45,7 +53,7 @@ public class Seller {
         this.address=address;
         this.phoneNumber=phoneNumber;
         this.storeName=storeName;
-        this.photoLink=photoLink;
+        this.photoLink= "";
         this.addressString = address.toString();
     }
 
@@ -54,8 +62,28 @@ public class Seller {
         this.eMail = eMail;
         this.name=name;
         this.address=address;
+        this.storeName=storeName;
         this.photoLink=photoLink;
         this.phoneNumber=phoneNumber;
+    }
+    public Seller(String UID, String eMail, String name, Address address, String photoLink,String storeName, String phoneNumber, Boolean isCooking){
+        this.UID=UID;
+        this.eMail = eMail;
+        this.name=name;
+        this.address=address;
+        this.storeName=storeName;
+        this.photoLink=photoLink;
+        this.phoneNumber=phoneNumber;
+        this.isCooking=isCooking;
+    }
+
+
+    public Seller(String UID, String cardNumber, int cardExpirationMonth, int cardExpirationYear, String cardCVC) {
+        this.UID = UID;
+        this.cardNumber = cardNumber;
+        this.cardExpirationMonth = cardExpirationMonth;
+        this.cardExpirationYear = cardExpirationYear;
+        this.cardCVC = cardCVC;
     }
 
     public String getPhoneNumber() {
@@ -184,11 +212,67 @@ public class Seller {
         photoLink=null;
     }
 
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    public int getCardExpirationMonth() {
+        return cardExpirationMonth;
+    }
+
+    public void setCardExpirationMonth(int cardExpirationMonth) {
+        this.cardExpirationMonth = cardExpirationMonth;
+    }
+
+    public String getCardCVC() {
+        return cardCVC;
+    }
+
+    public void setCardCVC(String cardCVC) {
+        this.cardCVC = cardCVC;
+    }
+
+    public int getCardExpirationYear() {
+        return cardExpirationYear;
+    }
+
+    public void setCardExpirationYear(int cardExpirationYear) {
+        this.cardExpirationYear = cardExpirationYear;
+    }
+
     public String getAddressString() {
         return addressString;
     }
 
     public void setAddressString(String addressString) {
         this.addressString = addressString;
+    }
+
+    public String getDistanceFromBuyer() {
+        return distanceFromBuyer;
+    }
+
+    public void setDistanceFromBuyer(String distanceFromBuyer) {
+        this.distanceFromBuyer = distanceFromBuyer;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public String getRoutingNumber() {
+        return routingNumber;
+    }
+
+    public void setRoutingNumber(String routingNumber) {
+        this.routingNumber = routingNumber;
     }
 }

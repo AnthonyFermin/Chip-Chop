@@ -1,45 +1,62 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile"
-    android:orientation="vertical">
+    tools:context="madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile" >
+
+
+
 
     <RelativeLayout
         style="@style/GenericProgressBackground"
         android:background="@android:color/transparent"
         android:id="@+id/loadingPanel"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
         >
+
         <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:progressDrawable="@drawable/progressbar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
             android:background="@android:color/transparent"/>
+
+
+
     </RelativeLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:padding="10dp"
         android:id="@+id/container">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/profile_image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/chipchop"
-            app:border_width="2dp"
-            app:border_color="#FFF"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/chipchop"
+            android:layout_marginStart="10dp"
+            app:border_width="2dp"
+            app:border_color="#FFF"/>
+
+        <LinearLayout
+            android:layout_width="195dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:id="@+id/linear_layout"
+            android:paddingStart="10dp"
             android:layout_gravity="center_vertical">
+
 
             <TextView
                 android:layout_width="match_parent"
@@ -47,9 +64,20 @@
                 android:id="@+id/seller_name"
                 android:text="Chip Chopper"
                 style="@style/text_design"
-                android:textSize="35sp"
-                android:gravity="center"
+                android:textSize="30sp"
+                android:gravity="start"
                 android:layout_weight="1"/>
+
+            <RatingBar
+                style="@style/RatingBar"
+                android:isIndicator="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/rating_bar"
+                android:numStars="5"
+                android:rating="4"
+                android:layout_gravity="start"
+                android:clickable="false"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -59,41 +87,69 @@
                 android:textSize="18sp"
                 android:id="@+id/cooking_status"
                 android:padding="2dp"
-                android:gravity="center"
+                android:layout_marginTop="4dp"
+                android:gravity="start"
                 android:layout_weight="1"/>
-            
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/store_description"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"/>
-
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/viewCartButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_gravity="end"
-                    android:src="@drawable/cart"
-                    app:backgroundTint="#D42028"
-                    app:elevation="6dp"
-                    app:pressedTranslationZ="12dp"/>
-
-            </LinearLayout>
 
         </LinearLayout>
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/deliver_method_tv"
+        style="@style/text_design"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:text="DELIVERY OPTIONS"
+        android:layout_below="@+id/container"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/deliver_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/deliver_method_tv"
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        android:text="DELIVERY"/>
+
+    <TextView
+        android:id="@+id/pickup_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_below="@+id/deliver_tv"
+        android:text="PICKUP"/>
+
+    </LinearLayout>
+
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/container"
         android:id="@+id/seller_items_list"/>
 
-</LinearLayout>
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/snackbarPosition">
+    </android.support.design.widget.CoordinatorLayout>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/viewCartButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/cart"
+        android:layout_marginEnd="5dp"
+        app:backgroundTint="#D42028"
+        android:layout_below="@+id/container"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"/>
+
+</RelativeLayout>

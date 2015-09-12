@@ -6,15 +6,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
+    app:umanoScrollableView="@id/buyers_orders_list"
     sothree:umanoPanelHeight="68dp"
     sothree:umanoShadowHeight="4dp"
-    app:umanoParalaxOffset="200dp">
+    app:umanoParalaxOffset="200dp"
+    android:background="#FFF">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <ImageView
             android:layout_width="wrap_content"
@@ -34,6 +41,15 @@
 
     </LinearLayout>
 
+        <android.support.design.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/snackbarPosition">
+        </android.support.design.widget.CoordinatorLayout>
+
+    </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -45,7 +61,12 @@
             android:id="@+id/arrow_image"
             android:src="@drawable/up"/>
 
-
+        <TextView
+            android:id="@+id/no_sellers_tv"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:visibility="gone"
+            android:text="There are currenly no active sellers, try checking back later!"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/buyers_orders_list"
@@ -64,6 +85,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
+            android:layout_marginEnd="5dp"
+            android:padding="8dp"
             android:src="@drawable/refresh"
             app:backgroundTint="#D42028"
             app:elevation="6dp"

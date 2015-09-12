@@ -14,50 +14,51 @@
     android:padding="5dp">
 
     <TextView
-        android:id="@+id/order_id_tv"
+        android:id="@+id/seller_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/text_design"
+        android:text="Name of Seller" />
+
+    <TextView
+        android:id="@+id/order_timestamp_tv"
         style="@style/text_design"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Order ID#"
+        android:text="Time Bought"
         android:textStyle="bold"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/order_time_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:text="Date + Time Placed" />
+        android:textSize="20sp"
+        android:layout_below="@+id/seller_name_tv"/>
 
     <TextView
         android:id="@+id/order_cost_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/seller_name_tv"
+        android:layout_below="@+id/order_timestamp_tv"
         android:text="TOTAL COST" />
 
-    <TextView
-        android:id="@+id/total_item_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_margin="5dp"
+        android:background="@android:color/darker_gray"
         android:layout_below="@+id/order_cost_tv"
-        android:text="Total items: 10" />
+        android:id="@+id/divider"/>
 
     <TextView
-        android:id="@+id/seller_name_tv"
+        android:id="@+id/delivery_method_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/order_id_tv"
-        style="@style/text_design"
-        android:text="Name of Seller" />
+        android:layout_below="@+id/divider"
+        android:text="DELIVERY METHOD" />
 
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/buyer_address_tv"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/cart_list"
-        android:layout_below="@+id/total_item_tv"
-        android:padding="5dp"/>
+        android:layout_below="@+id/delivery_method_tv"
+        android:text="BUYER ADDRESS" />
+
 
 
 </RelativeLayout>

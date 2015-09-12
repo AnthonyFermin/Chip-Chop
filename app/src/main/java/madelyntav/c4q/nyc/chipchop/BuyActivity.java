@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
@@ -98,16 +99,17 @@ public class BuyActivity extends AppCompatActivity {
     private void checkIsLogged() {
         userInfoSP = getSharedPreferences(SignupActivity1.SP_USER_INFO, MODE_PRIVATE);
         boolean isLoggedIn = userInfoSP.getBoolean(SignupActivity1.SP_IS_LOGGED_IN, false);
-        if(isLoggedIn){
+        if (isLoggedIn) {
             String email = userInfoSP.getString(SignupActivity1.SP_EMAIL, null);
             String pass = userInfoSP.getString(SignupActivity1.SP_PASS, null);
 
-            if(email != null && pass != null){
+            if (email != null && pass != null) {
                 Log.d("AUTO LOG-IN", "" + email);
-                dbHelper.logInUser(email,pass, new DBCallback() {
+                dbHelper.logInUser(email, pass, new DBCallback() {
                     @Override
                     public void runOnSuccess() {
                         load();
+                        ratingBar.setVisibility(View.VISIBLE);
                     }
 
                     @Override
@@ -117,7 +119,7 @@ public class BuyActivity extends AppCompatActivity {
                     }
                 });
             }
-        }else{
+        } else {
             clearLogin();
         }
     }
@@ -130,6 +132,7 @@ public class BuyActivity extends AppCompatActivity {
         dbHelper.signOutUser(emptyCallback);
         drawerUserNameTV.setText("");
         HelperMethods.setUser(null);
+        ratingBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -137,11 +140,11 @@ public class BuyActivity extends AppCompatActivity {
         super.onResume();
 
         boolean isLoggedIn = userInfoSP.getBoolean(SignupActivity1.SP_IS_LOGGED_IN, false);
-        if(isLoggedIn){
+        if (isLoggedIn) {
 
         }
 
-        if(dbHelper.userIsLoggedIn()){
+        if (dbHelper.userIsLoggedIn()) {
             mListTitles[3] = "Sign Out";
             mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                     R.layout.navdrawer_list_item, mListTitles));
@@ -154,17 +157,16 @@ public class BuyActivity extends AppCompatActivity {
         //if items are still in cart go to checkout
         SharedPreferences sPref = getSharedPreferences(Fragment_Buyer_ViewCart.FROM_CART, MODE_PRIVATE);
         boolean fromCart = sPref.getBoolean(Fragment_Buyer_ViewCart.FROM_CART, false);
-        Intent intent=getIntent();
+        Intent intent = getIntent();
         boolean toOrder = false;
 
-        if(intent!=null) {
-             toOrder = getIntent().getBooleanExtra("To Orders View", false);
+        if (intent != null) {
+            toOrder = getIntent().getBooleanExtra("To Orders View", false);
         }
-            if(toOrder){
-                orderToView=HelperMethods.getCurrentOrder();
-                replaceFragment(new Fragment_Buyer_OrderDetails());
-            }
-            else if(fromCart
+        if (toOrder) {
+            orderToView = HelperMethods.getCurrentOrder();
+            replaceFragment(new Fragment_Buyer_OrderDetails());
+        } else if (fromCart
                 && getCurrentOrder() != null
                 && getCurrentOrder().getItemsOrdered() != null
                 && getCurrentOrder().getItemsOrdered().size() != 0) {
@@ -209,10 +211,10 @@ public class BuyActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
 
-                        if(dbHelper.userIsLoggedIn()){
+                        if (dbHelper.userIsLoggedIn()) {
                             Intent sellIntent = new Intent(getApplicationContext(), SellActivity.class);
                             startActivity(sellIntent);
-                        }else{
+                        } else {
                             mDrawerLayout.closeDrawer(DrawerLinear);
                             Snackbar
                                     .make(coordinatorLayoutView, "Must be logged for this feature", Snackbar.LENGTH_SHORT)
@@ -225,7 +227,7 @@ public class BuyActivity extends AppCompatActivity {
                                     startActivity(signUpIntent);
                                     finish();
                                 }
-                            }, 1500);
+                            }, 1000);
 
                         }
                     }
@@ -250,7 +252,7 @@ public class BuyActivity extends AppCompatActivity {
 
     }
 
-    private void bindViews(){
+    private void bindViews() {
         drawerUserNameTV = (TextView) findViewById(R.id.drawer_user_nameTV);
         frameLayout = (FrameLayout) findViewById(R.id.sellerFrameLayout);
         DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
@@ -258,7 +260,7 @@ public class BuyActivity extends AppCompatActivity {
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         coordinatorLayoutView = findViewById(R.id.snackbarPosition);
         contactButton = (Button) findViewById(R.id.contact_button);
-        ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+        ratingBar = (RatingBar) findViewById(R.id.rating_bar);
 
     }
 
@@ -273,6 +275,7 @@ public class BuyActivity extends AppCompatActivity {
             public void runOnSuccess() {
 
             }
+
             @Override
             public void runOnFail() {
 
@@ -297,7 +300,7 @@ public class BuyActivity extends AppCompatActivity {
         } else if (position == 1) {
             fragment = new Fragment_Buyer_Orders();
         } else if (position == 2) {
-            if(dbHelper.userIsLoggedIn())
+            if (dbHelper.userIsLoggedIn())
                 fragment = new Fragment_Buyer_ProfileSettings();
             else {
                 clearLogin();
@@ -314,7 +317,7 @@ public class BuyActivity extends AppCompatActivity {
         } else if (position == 3) {
             //SIGN OUT/IN DRAWER ITEM
             boolean isLoggedIn = userInfoSP.getBoolean(SignupActivity1.SP_IS_LOGGED_IN, false);
-            if(isLoggedIn) {
+            if (isLoggedIn) {
                 clearLogin();
                 user = null;
                 LoginManager.getInstance().logOut();
@@ -327,8 +330,8 @@ public class BuyActivity extends AppCompatActivity {
                     replaceFragment(new Fragment_Buyer_Map());
                 }
 
-            }else{
-                Intent intent = new Intent(BuyActivity.this,SignupActivity1.class);
+            } else {
+                Intent intent = new Intent(BuyActivity.this, SignupActivity1.class);
                 startActivity(intent);
                 finish();  // killing the activity for now when switching to another activity
             }
@@ -336,18 +339,18 @@ public class BuyActivity extends AppCompatActivity {
 
         }
 
-            // Create fragment manager to begin interacting with the fragments and the container
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.sellerFrameLayout, fragment).commit();
+        // Create fragment manager to begin interacting with the fragments and the container
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.sellerFrameLayout, fragment).commit();
 
 
-            // update selected item and title in nav drawer, then close the drawer
+        // update selected item and title in nav drawer, then close the drawer
         mDrawerList.setItemChecked(position, true);
-            mDrawerLayout.closeDrawer(DrawerLinear);
-        }
+        mDrawerLayout.closeDrawer(DrawerLinear);
+    }
 
     @Override
-    public void onConfigurationChanged (Configuration newConfig){
+    public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggles
 
@@ -379,30 +382,30 @@ public class BuyActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        switch(getCurrentFragment()){
-            case(Fragment_Buyer_Checkout.TAG):
+        switch (getCurrentFragment()) {
+            case (Fragment_Buyer_Checkout.TAG):
                 replaceFragment(new Fragment_Buyer_ViewCart());
                 break;
-            case(Fragment_Buyer_Map.TAG):
+            case (Fragment_Buyer_Map.TAG):
                 super.onBackPressed();
                 break;
-            case(Fragment_Buyer_Orders.TAG):
+            case (Fragment_Buyer_Orders.TAG):
                 replaceFragment(new Fragment_Buyer_Map());
                 break;
-            case(Fragment_Buyer_ProfileSettings.TAG):
+            case (Fragment_Buyer_ProfileSettings.TAG):
                 replaceFragment(new Fragment_Buyer_Map());
                 break;
-            case(Fragment_Buyer_SellerProfile.TAG):
+            case (Fragment_Buyer_SellerProfile.TAG):
                 replaceFragment(new Fragment_Buyer_Map());
                 break;
-            case(Fragment_Buyer_ViewCart.TAG):
-                if(getLastFragment() != null && getLastFragment().equals(Fragment_Buyer_ViewCart.TAG)){
+            case (Fragment_Buyer_ViewCart.TAG):
+                if (getLastFragment() != null && getLastFragment().equals(Fragment_Buyer_ViewCart.TAG)) {
                     replaceFragment(new Fragment_Buyer_Map());
-                }else {
+                } else {
                     replaceFragment(new Fragment_Buyer_SellerProfile());
                 }
                 break;
-            case(Fragment_Buyer_OrderDetails.TAG):
+            case (Fragment_Buyer_OrderDetails.TAG):
                 replaceFragment(new Fragment_Buyer_Orders());
                 break;
             default:
@@ -416,24 +419,23 @@ public class BuyActivity extends AppCompatActivity {
 
     }
 
-    private void load(){
+    private void load() {
 
-        String name = userInfoSP.getString(SignupActivity1.SP_NAME,"");
-        String email = userInfoSP.getString(SignupActivity1.SP_EMAIL,"");
-        String streetAddress = userInfoSP.getString(SignupActivity1.SP_ADDRESS,"");
-        String apt = userInfoSP.getString(SignupActivity1.SP_APT,"");
-        String city = userInfoSP.getString(SignupActivity1.SP_CITY,"");
-        String state = userInfoSP.getString(SignupActivity1.SP_STATE,"");
-        String zipcode = userInfoSP.getString(SignupActivity1.SP_ZIPCODE,"");
+        String name = userInfoSP.getString(SignupActivity1.SP_NAME, "");
+        String email = userInfoSP.getString(SignupActivity1.SP_EMAIL, "");
+        String streetAddress = userInfoSP.getString(SignupActivity1.SP_ADDRESS, "");
+        String apt = userInfoSP.getString(SignupActivity1.SP_APT, "");
+        String city = userInfoSP.getString(SignupActivity1.SP_CITY, "");
+        String state = userInfoSP.getString(SignupActivity1.SP_STATE, "");
+        String zipcode = userInfoSP.getString(SignupActivity1.SP_ZIPCODE, "");
         String phoneNumber = userInfoSP.getString(SignupActivity1.SP_PHONE_NUMBER, "");
-        String photoLink = userInfoSP.getString(SignupActivity1.SP_PHOTO_LINK,"");
-        Address address = new Address(streetAddress,apt,city,state,zipcode,dbHelper.getUserID());
+        String photoLink = userInfoSP.getString(SignupActivity1.SP_PHOTO_LINK, "");
+        Address address = new Address(streetAddress, apt, city, state, zipcode, dbHelper.getUserID());
 
-        user = new User(dbHelper.getUserID(), email, name, address,photoLink, phoneNumber);
+        user = new User(dbHelper.getUserID(), email, name, address, photoLink, phoneNumber);
         HelperMethods.setUser(user);
 
         drawerUserNameTV.setText(user.getName());
-//        ratingBar.setVisibility(View.VISIBLE);
         mListTitles[3] = "Sign Out";
         mDrawerList.setAdapter(new ArrayAdapter<>(BuyActivity.this,
                 R.layout.navdrawer_list_item, mListTitles));

@@ -91,6 +91,33 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/deliver_method_tv"
+        style="@style/text_design"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:text="DELIVERY OPTIONS"
+        android:layout_below="@+id/container"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/deliver_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/deliver_method_tv"
+        android:gravity="center_horizontal"
+        android:text="DELIVERY"/>
+
+    <TextView
+        android:id="@+id/pickup_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_below="@+id/deliver_tv"
+        android:text="PICKUP"/>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/viewCartButton"
         android:layout_width="wrap_content"
@@ -106,7 +133,8 @@
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/container"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/pickup_tv"
         android:id="@+id/seller_items_list"/>
 
     <android.support.design.widget.CoordinatorLayout

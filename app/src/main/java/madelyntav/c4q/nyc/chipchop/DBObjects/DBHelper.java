@@ -2311,7 +2311,6 @@ public class DBHelper extends Firebase {
                         item.setSellerID(item1.sellerID);
                     }
                 }
-            }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {

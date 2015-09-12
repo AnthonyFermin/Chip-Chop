@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -112,6 +113,8 @@ public class Fragment_Seller_Items extends Fragment {
         activity.setInactiveSellerItems(inActiveItems);
 
         activity.setCurrentFragment(TAG);
+        File file = new File(INACTIVE_LIST_DIRECTORY); // creates file if does not exist
+
     }
 
     private ArrayList<Item> loadInactiveItems() {
@@ -160,7 +163,10 @@ public class Fragment_Seller_Items extends Fragment {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                
+
+                Item item = new Item(dbHelper.getUserID(),"Pizza",99,"A Heavenly Home Slice","");
+                item.setPrice(2);
+                sellerItems.add(item);
                 activity.setSellerItems(sellerItems);
 
                 activeList.getAdapter().notifyDataSetChanged();

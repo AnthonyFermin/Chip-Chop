@@ -47,6 +47,7 @@ import madelyntav.c4q.nyc.chipchop.GeolocationAPI.Location;
 import madelyntav.c4q.nyc.chipchop.HelperMethods;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.SellActivity;
+import madelyntav.c4q.nyc.chipchop.ServiceSellerNotify;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -265,6 +266,8 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             cookingStatus.setChecked(true);
             cookingStatusTV.setVisibility(View.VISIBLE);
             saveButton.setEnabled(false);
+            Intent intent = new Intent(activity,ServiceSellerNotify.class).putExtra("sellerid",seller.getUID());
+            activity.startService(intent);
         }else{
             cookingStatus.setChecked(false);
             cookingStatusTV.setVisibility(View.INVISIBLE);
@@ -514,6 +517,8 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                         Snackbar
                                 .make(coordinatorLayoutView, "Cooking Status Active", Snackbar.LENGTH_SHORT)
                                 .show();
+                        Intent intent = new Intent(activity,ServiceSellerNotify.class).putExtra("sellerid",seller.getUID());
+                        activity.startService(intent);
                     } else {
                         cookingStatusTV.setVisibility(View.INVISIBLE);
                         Snackbar

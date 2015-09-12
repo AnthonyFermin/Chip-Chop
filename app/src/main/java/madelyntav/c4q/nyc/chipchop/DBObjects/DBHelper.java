@@ -681,13 +681,13 @@ public class DBHelper extends Firebase {
         ref.changeEmail(oldeMail, neweMail, passWord, new Firebase.ResultHandler() {
             @Override
             public void onSuccess() {
-                Toast.makeText(mContext,"E-mail Successfully Changed",Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "E-mail Successfully Changed", Toast.LENGTH_SHORT).show();
                 dbCallback.runOnSuccess();
             }
 
             @Override
             public void onError(FirebaseError firebaseError) {
-                Toast.makeText(mContext,"Error Changing E-mail, Please Try Again",Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Error Changing E-mail, Please Try Again", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -2534,14 +2534,13 @@ public class DBHelper extends Firebase {
 
     }
 
-    public void addReviewToSellerProfile(User buyer, User seller, int numOfStars, DBCallback dbCallback) {
-        sellerId = seller.getUID();
-        UID = buyer.getUID();
+    public void addReviewToSellerProfile(String buyerID, String sellerID, int numOfStars) {
+        sellerId = sellerID;
+        UID = buyerID;
         Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId + "/Reviews/");
 
         fRef.child(UID).push();
         fRef.child(UID).child("numOfStars").setValue(numOfStars);
-        dbCallback.runOnSuccess();
     }
 
     public void addReviewToSellerProfile(User buyer, User seller, int numOfStars, String details, DBCallback dbCallback) {
@@ -2646,7 +2645,7 @@ public class DBHelper extends Firebase {
         return sellersReviewArrayList;
     }
 
-    public int increaseNumOfTotalStarsAndCalculateAvg(Seller seller, Review review, DBCallback dbCallback) {
+    public int increaseNumOfTotalStarsAndCalculateAvg(String sellerID, Review review) {
         int numOfReviews = seller.getNumOfReviews();
         numOfReviews = numOfReviews + 1;
         seller.setNumOfReviews(numOfReviews);
@@ -2655,18 +2654,21 @@ public class DBHelper extends Firebase {
         int newStars = review.getNumOfStars();
         int newNumofTotalstars = numOfTotalStars + newStars;
         int newAvg = newNumofTotalstars / numOfReviews;
-
-        updateSellerProfileWithNewAvg(seller, newAvg, dbCallback);
+        char newAvgS = 0;
+        for(int i=0;i<1;i++){
+            newAvgS=String.valueOf(newAvgS).charAt(i);
+        }
+        updateSellerProfileWithNewAvg(seller, newAvgS);
 
         return newAvg;
     }
 
-    public void updateSellerProfileWithNewAvg(Seller seller, int newAvg, DBCallback dbCallback) {
+    public void updateSellerProfileWithNewAvg(Seller seller, char newAvg) {
         sellerId = seller.getUID();
 
         Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId + "/Reviews/");
         fRef.child(UID).push();
-        fRef.child(UID).child("AvgNumOfStars").setValue(newAvg);
+        fRef.child(UID).child("AvgNumOfStars").setValue(String.valueOf(newAvg));
     }
 
     //May want to implement this later

@@ -342,7 +342,6 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
                         @Override
                         public void runOnFail() {
                             //Toast.makeText(PaymentsActivity.this, "Items are no longer available", Toast.LENGTH_SHORT).show();
-
                         }
                     });
 

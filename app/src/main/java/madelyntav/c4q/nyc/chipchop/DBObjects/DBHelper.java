@@ -678,6 +678,38 @@ public class DBHelper extends Firebase {
         callback.runOnSuccess();
     }
 
+    public void changeUserEmail(String oldeMail, String neweMail, String passWord, final DBCallback dbCallback){
+        Firebase ref = new Firebase(URL);
+        ref.changeEmail(oldeMail, neweMail, passWord, new Firebase.ResultHandler() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(mContext,"E-mail Successfully Changed",Toast.LENGTH_SHORT).show();
+                dbCallback.runOnSuccess();
+            }
+
+            @Override
+            public void onError(FirebaseError firebaseError) {
+                Toast.makeText(mContext,"Error Changing E-mail, Please Try Again",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void changeUserPassword(String email, String oldPassword, String newPassowrd, final DBCallback dbCallback){
+        Firebase ref = new Firebase(URL);
+        ref.changePassword(email, oldPassword, newPassowrd, new Firebase.ResultHandler() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(mContext,"Password Successfully Changed",Toast.LENGTH_SHORT).show();
+                dbCallback.runOnSuccess();            }
+
+            @Override
+            public void onError(FirebaseError firebaseError) {
+                Toast.makeText(mContext,"Error Changing Password, Please Try Again",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
     public void addSellerProfileInfoToDB(Seller user) {
         Firebase fRef = new Firebase(URL + "SellerProfiles/");
         UID = user.getUID();

@@ -1,6 +1,7 @@
 package madelyntav.c4q.nyc.chipchop.fragments;
 
 import android.app.AlertDialog;
+import android.app.Service;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -247,7 +248,6 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                     seller.setIsCooking(false);
                     dbHelper.addSellerProfileInfoToDB(seller);
                     dbHelper.setSellerCookingStatus(false);
-                    Toast.makeText(activity,"New Seller Profile Created, Please add a store name", Toast.LENGTH_SHORT).show();
                     Snackbar
                             .make(coordinatorLayoutView, "New Seller Profile Created, Please add a store name", Snackbar.LENGTH_SHORT)
                             .show();
@@ -266,7 +266,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             cookingStatus.setChecked(true);
             cookingStatusTV.setVisibility(View.VISIBLE);
             saveButton.setEnabled(false);
-            Intent intent = new Intent(activity,ServiceSellerNotify.class).putExtra("sellerid",seller.getUID());
+            Intent intent = new Intent(activity,ServiceSellerNotify.class).putExtra(ServiceSellerNotify.SELLER_ID,seller.getUID());
             activity.startService(intent);
         }else{
             cookingStatus.setChecked(false);
@@ -517,7 +517,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                         Snackbar
                                 .make(coordinatorLayoutView, "Cooking Status Active", Snackbar.LENGTH_SHORT)
                                 .show();
-                        Intent intent = new Intent(activity,ServiceSellerNotify.class).putExtra("sellerid",seller.getUID());
+                        Intent intent = new Intent(activity,ServiceSellerNotify.class).putExtra(ServiceSellerNotify.SELLER_ID,seller.getUID());
                         activity.startService(intent);
                     } else {
                         cookingStatusTV.setVisibility(View.INVISIBLE);

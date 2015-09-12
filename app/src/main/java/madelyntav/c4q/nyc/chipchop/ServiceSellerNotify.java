@@ -15,7 +15,6 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.google.android.gms.plus.internal.model.people.PersonEntity;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
@@ -27,12 +26,13 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
 public class ServiceSellerNotify extends Service {
 
     public static String TAG = "NOTIFICATION SERVICE";
+    public static String SELLER_ID = "sellerid";
+
     private static final String URL = "https://chipchop.firebaseio.com/";
     private String sellerID;
     private Seller seller;
     private Order order;
 
-    private DBHelper dbHelper;
     private Firebase sellerOrdersRef;
     private Firebase sellerRef;
     private ChildEventListener orderCEL, sellerCEL;
@@ -50,8 +50,8 @@ public class ServiceSellerNotify extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG,"SERVICE STARTED");
         sellerID = intent.getStringExtra("sellerid");
-        dbHelper = DBHelper.getDbHelper(this.getApplicationContext());
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        Firebase.setAndroidContext(this);
         mainTask();
         return START_REDELIVER_INTENT;
     }

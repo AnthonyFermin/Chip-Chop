@@ -84,6 +84,9 @@
         <service android:name=".ServiceSellerNotify"
             android:exported="false"/>
 
+        <service android:name=".ServiceBuyerNotify"
+            android:exported="false" />
+
         <activity
             android:name=".Payments.PaymentsActivity"
             android:label="@string/title_activity_payments" >

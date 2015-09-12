@@ -1,5 +1,6 @@
 package madelyntav.c4q.nyc.chipchop;
 
+import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -112,6 +113,11 @@ public class PaymentDialog extends android.support.v4.app.DialogFragment {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
+                                Intent intent = new Intent(activity,ServiceBuyerNotify.class)
+                                        .putExtra(ServiceBuyerNotify.BUYER_ID,dbHelper.getUserID())
+                                        .putExtra(ServiceBuyerNotify.SELLER_ID,order.getSellerID())
+                                        .putExtra(ServiceBuyerNotify.ORDER_ID,order.getOrderID());
+                                activity.startService(intent);
                                 confirmImage.setVisibility(View.GONE);
                                 activity.replaceFragment(new Fragment_Buyer_Orders());
                             }

@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+
 import android.widget.Toast;
 
 import java.io.File;
@@ -77,7 +78,7 @@ public class Fragment_Seller_Items extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_seller__items, container, false);
 
-
+        sellerItems= new ArrayList<>();
         // Instantiate a ViewPager and a PagerAdapter.
         initializeData();
         initializeViews(root);
@@ -107,7 +108,17 @@ public class Fragment_Seller_Items extends Fragment {
         if(activity.isCurrentlyCooking()) {
             sellerItems = dbHelper.getSellersOnSaleItems(dbHelper.getUserID(),emptyCallback);
         }else{
-            sellerItems = dbHelper.getSellerItems(dbHelper.getUserID(), emptyCallback);
+            dbHelper.getSellerItems(dbHelper.getUserID(), new DBCallback() {
+                @Override
+                public void runOnSuccess() {
+                    sellerItems.addAll(dbHelper.getSellerItems(dbHelper.getUserID(),emptyCallback));
+                }
+
+                @Override
+                public void runOnFail() {
+                Toast.makeText(activity,"Unable To Load Items, Please Try Again",Toast.LENGTH_SHORT).show();
+                }
+            });
         }
         inActiveItems = loadInactiveItems();
         activity.setInactiveSellerItems(inActiveItems);
@@ -138,6 +149,7 @@ public class Fragment_Seller_Items extends Fragment {
     }
 
     private void loadActiveItems(){
+
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -150,7 +162,7 @@ public class Fragment_Seller_Items extends Fragment {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    if (i > 10){
+                    if (i > 20){
                         Log.d("LOAD SELLER ITEMS", "DIDN'T LOAD");
                         break;
                     }
@@ -173,6 +185,7 @@ public class Fragment_Seller_Items extends Fragment {
                 inactiveList.getAdapter().notifyDataSetChanged();
 
                 Log.d("LOAD SELLER ITEMS LIST", sellerItems.size() + "");
+
 
                 loadingPanel.setVisibility(View.GONE);
             }

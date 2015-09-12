@@ -81,6 +81,8 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     private RecyclerView itemsRView;
     private View root;
     private String distanceToShow;
+    private String distanceToShow1;
+    public ArrayList<Seller> listOfSellersForUse;
 
     private DBCallback emptyCallback;
 
@@ -91,6 +93,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        listOfSellersForUse= new ArrayList<>();
 
         initializeData(inflater, container);
         bindViews();
@@ -404,7 +407,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
             Circle circle = map.addCircle(new CircleOptions()
                     .center(new LatLng(lat, lng))
-                    .radius(100000)
+                    .radius(3219)
                     .strokeColor(Color.RED));
 
             float[] distance = new float[sellers.size()];
@@ -418,8 +421,16 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             Log.d("Buyer Map Fragment","User Long: " + lng);
 
             if (distance[0] < circle.getRadius()) {
-                distanceToShow= String.valueOf(distance[0]);
+                double dist= distance[0]*0.00062137;
+                distanceToShow1= String.valueOf(dist);
+                distanceToShow="";
+                for(int i=0; i<4;i++){
+                    distanceToShow+=distanceToShow1.charAt(i);
+                }
+                seller.setDistanceFromBuyer(distanceToShow);
+                Log.d("DISTANCE", distanceToShow);
                 Log.d("Fragment Buyer Map", "MARKER ADDED");
+                listOfSellersForUse.add(seller);
                 map.addMarker(new MarkerOptions()
                         .position(new LatLng(gLat, gLng))
                         .title(userName))
@@ -462,7 +473,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
                             .show();
                     Toast.makeText(activity, "No sellers found in area", Toast.LENGTH_SHORT).show();
                 } else {
-                    SellerListAdapter sellersListAdapter = new SellerListAdapter(getActivity(), sellers);
+                    SellerListAdapter sellersListAdapter = new SellerListAdapter(getActivity(), listOfSellersForUse);
                     itemsRView.setAdapter(sellersListAdapter);
                     addWithinRangeMarkersToMap();
                 }

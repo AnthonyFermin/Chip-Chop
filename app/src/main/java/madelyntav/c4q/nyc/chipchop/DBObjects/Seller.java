@@ -32,6 +32,7 @@ public class Seller {
     int cardExpirationMonth;
     int cardExpirationYear;
     String cardCVC;
+    String distanceFromBuyer;
 
     public Seller(){}
 
@@ -247,5 +248,13 @@ public class Seller {
 
     public void setAddressString(String addressString) {
         this.addressString = addressString;
+    }
+
+    public String getDistanceFromBuyer() {
+        return distanceFromBuyer;
+    }
+
+    public void setDistanceFromBuyer(String distanceFromBuyer) {
+        this.distanceFromBuyer = distanceFromBuyer;
     }
 }

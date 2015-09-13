@@ -908,7 +908,7 @@ public class DBHelper extends Firebase {
                     seller.setLatitude(seller1.latitude);
                     seller.setLongitude(seller1.longitude);
                     seller.setPhoneNumber(seller1.phoneNumber);
-                    seller.setAddress(seller1.address);
+                    seller.setAddressString(seller1.addressString);
                     seller.seteMail(seller1.eMail);
                     seller.setCardCVC(seller1.cardCVC);
                     seller.setCardExpirationMonth(seller1.cardExpirationMonth);

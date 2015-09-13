@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_CreateItem;
@@ -70,6 +71,7 @@ public class SellActivity extends AppCompatActivity {
     private Item inactiveItemToEdit = null;
     private String currentFragment;
     private Intent serviceIntent;
+    private Order orderToView = null;
 
     private DBHelper dbHelper;
 
@@ -401,5 +403,13 @@ public class SellActivity extends AppCompatActivity {
 
     public void setServiceIntent(Intent serviceIntent) {
         this.serviceIntent = serviceIntent;
+    }
+
+    public Order getOrderToView() {
+        return orderToView;
+    }
+
+    public void setOrderToView(Order orderToView) {
+        this.orderToView = orderToView;
     }
 }

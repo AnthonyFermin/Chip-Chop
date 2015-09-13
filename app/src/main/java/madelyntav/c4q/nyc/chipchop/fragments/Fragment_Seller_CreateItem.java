@@ -265,7 +265,6 @@ public class Fragment_Seller_CreateItem extends Fragment {
             @Override
             protected Void doInBackground(Void... voids) {
                 Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-
                 Bitmap scaledBitmap =  Bitmap.createScaledBitmap(bitmap,500,333,false);
 
                 File file = new File(filePath);
@@ -291,7 +290,6 @@ public class Fragment_Seller_CreateItem extends Fragment {
             }
         }.execute();
     }
-
 
     //This is for the dialog box: Camera or Gallery
     private void showListViewDialog() {

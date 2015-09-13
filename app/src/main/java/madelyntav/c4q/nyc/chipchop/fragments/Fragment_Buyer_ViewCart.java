@@ -6,16 +6,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -23,8 +19,9 @@ import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
+import madelyntav.c4q.nyc.chipchop.DBObjects.User;
+import madelyntav.c4q.nyc.chipchop.HelperMethods;
 import madelyntav.c4q.nyc.chipchop.R;
-import madelyntav.c4q.nyc.chipchop.ReviewDialogFragment;
 import madelyntav.c4q.nyc.chipchop.SignupActivity1;
 import madelyntav.c4q.nyc.chipchop.adapters.CartListAdapter;
 
@@ -64,6 +61,9 @@ public class Fragment_Buyer_ViewCart extends Fragment {
             public void onClick(View view) {
 
                 if (!dbHelper.userIsLoggedIn()) {
+                    User user = HelperMethods.getUser();
+                    order.setBuyerName(user.getName());
+                    order.setBuyerAddress(user.getAddressString());
                     Intent signupIntent = new Intent(getActivity(), SignupActivity1.class);
                     SharedPreferences sPref = activity.getSharedPreferences(FROM_CART, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sPref.edit();

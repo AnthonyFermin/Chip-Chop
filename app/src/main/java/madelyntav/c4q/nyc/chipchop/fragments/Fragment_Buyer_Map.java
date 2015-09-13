@@ -45,6 +45,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -119,31 +120,31 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             }
         });
 
-        itemsRView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                int action = event.getAction();
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        // Disallow ScrollView to intercept touch events.
-                        v.getParent().requestDisallowInterceptTouchEvent(true);
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                        // Allow ScrollView to intercept touch events.
-                        v.getParent().requestDisallowInterceptTouchEvent(false);
-                        break;
-                }
-
-                // Handle ListView touch events.
-                v.onTouchEvent(event);
-
-                return true;
-
-            }
-
-        });
+//        itemsRView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//
+//                int action = event.getAction();
+//                switch (action) {
+//                    case MotionEvent.ACTION_DOWN:
+//                        // Disallow ScrollView to intercept touch events.
+//                        v.getParent().requestDisallowInterceptTouchEvent(true);
+//                        break;
+//
+//                    case MotionEvent.ACTION_UP:
+//                        // Allow ScrollView to intercept touch events.
+//                        v.getParent().requestDisallowInterceptTouchEvent(false);
+//                        break;
+//                }
+//
+//                // Handle ListView touch events.
+//                v.onTouchEvent(event);
+//
+//                return true;
+//
+//            }
+//
+//        });
 
     }
 
@@ -378,6 +379,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
     public void addWithinRangeMarkersToMap() {
         Log.d("Buyer Map Fragment", "ADDING SELLER MARKERS");
+        Seller seller1= new Seller();
 
         for (Seller seller : sellers) {
             Log.d("SELLER INFO", "UID: " + seller.getUID());
@@ -385,6 +387,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             Log.d("SELLER INFO", "Lat: " + seller.getLatitude());
             Log.d("SELLER INFO", "Long:" + seller.getLongitude());
             Log.d("SELLER INFO", "Description:" + seller.getDescription());
+            seller1=seller;
 
             double lat = 0;
             double lng = 0;
@@ -402,14 +405,14 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
                 lat = location.getLatitude();
                 lng = location.getLongitude();
             } catch (NullPointerException e) {
-                Log.d("Buyer Map Fragment","Failed to get coordinates");
+                Log.d("Buyer Map Fragment", "Failed to get coordinates");
                 lat = 40.737256;
                 lng = -73.855278;
             }
 
             Circle circle = map.addCircle(new CircleOptions()
                     .center(new LatLng(lat, lng))
-                    .radius(3219)
+                    .radius(13219)
                     .strokeColor(Color.RED));
 
             float[] distance = new float[sellers.size()];
@@ -418,28 +421,39 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
                     gLat, gLng, distance);
 
             Log.d("Buyer Map Fragment", "Seller Lat: " + gLat);
-            Log.d("Buyer Map Fragment","Seller Long: " + gLng);
-            Log.d("Buyer Map Fragment","User Lat: " + lat);
-            Log.d("Buyer Map Fragment","User Long: " + lng);
+            Log.d("Buyer Map Fragment", "Seller Long: " + gLng);
+            Log.d("Buyer Map Fragment", "User Lat: " + lat);
+            Log.d("Buyer Map Fragment", "User Long: " + lng);
 
             if (distance[0] < circle.getRadius()) {
-                double dist= distance[0]*0.00062137;
-                distanceToShow1= String.valueOf(dist);
-                distanceToShow="";
-                for(int i=0; i<4;i++){
-                    distanceToShow+=distanceToShow1.charAt(i);
+                double dist = distance[0] * 0.00062137;
+                distanceToShow1 = String.valueOf(dist);
+                distanceToShow = "";
+                for (int i = 0; i < 4; i++) {
+                    distanceToShow += distanceToShow1.charAt(i);
                 }
-                seller.setDistanceFromBuyer(distanceToShow);
+                seller.setDistanceFromBuyer(distanceToShow + " mi");
                 Log.d("DISTANCE", distanceToShow);
                 Log.d("Fragment Buyer Map", "MARKER ADDED");
-                listOfSellersForUse.add(seller);
                 map.addMarker(new MarkerOptions()
-                        .position(new LatLng(gLat, gLng))
+                        .position(new LatLng(gLat, gLng)).snippet(seller.getDistanceFromBuyer())
                         .title(userName))
                         .setIcon(BitmapDescriptorFactory.fromResource(R.drawable.mapmarker));
-
+                listOfSellersForUse.add(seller);
             }
         }
+
+
+        final Seller finalSeller = seller1;
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                BuyActivity activity = (BuyActivity) getActivity();
+                activity.setSellerToView(finalSeller);
+                activity.replaceFragment(new Fragment_Buyer_SellerProfile());
+
+            }
+        });
     }
 
     private void addSellerMarkers() {

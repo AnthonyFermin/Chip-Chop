@@ -3,21 +3,32 @@ package madelyntav.c4q.nyc.chipchop.fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
+import madelyntav.c4q.nyc.chipchop.HelperMethods;
 import madelyntav.c4q.nyc.chipchop.R;
 
 /**
@@ -29,14 +40,16 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
 
     TextView buyerName, address, apt, city, state, zipcode, phoneNumber;
     ImageView profilePhoto;
+    Button saveChanges;
     public static final int RESULT_OK = -1;
     private Uri imageFileUri;
     Intent intent;
     private String stringVariable = "file:///sdcard/_pictureholder_id.jpg";
-
+    String filePath;
     DBHelper dbHelper;
     BuyActivity activity;
     User user;
+    String imageLink;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,6 +59,7 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
 
         activity = (BuyActivity) getActivity();
         dbHelper = DBHelper.getDbHelper(activity);
+        user = HelperMethods.getUser();
 
         bindViews(root);
 
@@ -58,6 +72,13 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
             @Override
             public void onClick(View view) {
                 showListViewDialog();
+            }
+        });
+
+        saveChanges.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dbHelper.addUserProfileInfoToDB(user);
             }
         });
 
@@ -81,7 +102,15 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
         state = (TextView) root.findViewById(R.id.state);
         zipcode = (TextView) root.findViewById(R.id.zipcode);
         phoneNumber = (TextView) root.findViewById(R.id.phone_number);
+        saveChanges= (Button) root.findViewById(R.id.saveChanges);
 
+        saveChanges.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dbHelper.addUserProfileInfoToDB(user);
+
+            }
+        });
 
     }
 
@@ -92,15 +121,24 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
 
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
             imageFileUri = data.getData();
+            filePath = imageFileUri.getPath();
+            rescaleImageForDb(filePath);
+
         }
 
         if (requestCode == 0 && resultCode == RESULT_OK) {
             imageFileUri = Uri.parse(stringVariable);
+            filePath = imageFileUri.getPath();
+            rescaleImageForDb(filePath);
+
         }
 
 
         if (imageFileUri != null) {
             profilePhoto.setImageURI(imageFileUri);
+            filePath = imageFileUri.getPath();
+            rescaleImageForDb(filePath);
+
         }
     }
 
@@ -134,7 +172,75 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
 //        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         alertDialog.show();
 
+    }
 
+    private void rescaleImageForDb(final String filePath) {
+        new AsyncTask<Void, Void, Bitmap>() {
+            @Override
+            protected Bitmap doInBackground(Void... voids) {
+                Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+                Bitmap rotatedBitmap = rotateBitmap(bitmap,filePath);
+                Bitmap scaledBitmap;
+                if(rotatedBitmap != null) {
+                    scaledBitmap = Bitmap.createScaledBitmap(rotatedBitmap, 500, 333, false);
+                }else{
+                    scaledBitmap = Bitmap.createScaledBitmap(bitmap, 500,333, false);
+                }
+
+
+                File file = new File(filePath);
+                FileOutputStream fOut = null;
+                try {
+                    fOut = new FileOutputStream(file);
+                    scaledBitmap.compress(Bitmap.CompressFormat.PNG, 85, fOut);
+                    fOut.flush();
+                    fOut.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return scaledBitmap;
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+                super.onPostExecute(bitmap);
+                imageLink = HelperMethods.saveImageToEncodedString(filePath);
+                user.setPhotoLink(imageLink);
+                profilePhoto.setImageBitmap(bitmap);
+                Log.d("Item Creation", "ImageLink: " + imageLink);
+            }
+        }.execute();
+    }
+
+    private Bitmap rotateBitmap(Bitmap bitmap, String filePath){
+        Bitmap rotatedBitmap = null;
+
+        try {
+            ExifInterface exif = new ExifInterface(filePath);
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,1);
+            Matrix matrix = new Matrix();
+
+            switch(orientation){
+                case 3:
+                    matrix.postRotate(180);
+                    break;
+                case 6:
+                    matrix.postRotate(90);
+                    break;
+                case 8:
+                    matrix.postRotate(270);
+                    break;
+            }
+
+            rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return rotatedBitmap;
     }
 
 }

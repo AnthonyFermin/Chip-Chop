@@ -13,15 +13,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.SellActivity;
 import madelyntav.c4q.nyc.chipchop.adapters.CheckoutListAdapter;
@@ -37,12 +41,9 @@ public class Fragment_Seller_OrderDetails extends Fragment {
 
     public static final String TAG = "fragment_seller_order_details";
 
-
-    public static NotificationManager notificationManager;
-    public static Notification notification;
-    public static final String NOTIFICATION_ACTION = "ahhhlvin.c4q.nyc.notification";
     private SellActivity activity;
     private DBHelper dbHelper;
+    private Order order;
 
 
 
@@ -53,66 +54,72 @@ public class Fragment_Seller_OrderDetails extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_seller_orderdetail, container, false);
 
-        activity = (SellActivity) getActivity();
-        dbHelper = DBHelper.getDbHelper(activity);
-        activity.setCurrentFragment(TAG);
-
-        foodItems = new ArrayList<>();
-        populateItems();
-
-        foodList = (RecyclerView) root.findViewById(R.id.checkout_items_list);
-        foodList.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        CheckoutListAdapter checkoutListAdapter = new CheckoutListAdapter(getActivity(),foodItems);
-        foodList.setAdapter(checkoutListAdapter);
-
-        completedButton = (FloatingActionButton) root.findViewById(R.id.completedButton);
-        completedButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // TODO: Send notification out to buyer! Subtract from seller's quantity??
-                sendCompleteNotification();
-            }
-        });
-
-
-        // NOTIFICATION CODE
-        notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(getActivity().getApplicationContext())
-                        .setSmallIcon(R.drawable.chipchop_small)
-                        .setContentTitle("ChipChop")
-                        .setContentText("New Order Received");
-
-        mBuilder.setAutoCancel(true);
-        notification = mBuilder.build();
-        notification.flags |= Notification.FLAG_AUTO_CANCEL;
-
+        initializeData();
+        bindViews(root);
+        setListeners();
 
         return root;
 
     }
 
+    private void setListeners() {
+        completedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dbHelper.changeOrderActiveStatus(order);
+                Toast.makeText(activity,"Order Complete",Toast.LENGTH_SHORT).show();
 
+                dbHelper.moveOrderFromActiveToFulfilled(dbHelper.getUserID(), order.getOrderID(), order.getBuyerID(), new DBCallback() {
+                    @Override
+                    public void runOnSuccess() {
 
-    //test method to populate RecyclerView
-    private void populateItems(){
-        for(int i = 0; i < 10; i++) {
+                    }
 
-            foodItems.add(new Item("test", "Something Fancy", 3, "The fanciest homemade meal you've ever had", "http://wisebread.killeracesmedia.netdna-cdn.com/files/fruganomics/imagecache/605x340/blog-images/food-186085296.jpg"));
+                    @Override
+                    public void runOnFail() {
+
+                    }
+                });
+            }
+        });
+    }
+
+    private void bindViews(View root) {
+        foodList = (RecyclerView) root.findViewById(R.id.checkout_items_list);
+        completedButton = (FloatingActionButton) root.findViewById(R.id.completedButton);
+    }
+
+    private void initializeData() {
+        activity = (SellActivity) getActivity();
+        dbHelper = DBHelper.getDbHelper(activity);
+        activity.setCurrentFragment(TAG);
+        order = activity.getOrderToView();
+        if(order != null) {
+            Log.d("ORDER DETAILS", "" + order.getOrderID());
         }
+        Log.d("ORDER DETAILS","Order: " + order);
+
+        foodItems = dbHelper.getReceiptForSpecificOrderForSeller(order.getOrderID(), dbHelper.getUserID(), new DBCallback() {
+            @Override
+            public void runOnSuccess() {
+                Log.d("ORDER DETAILS", "ORDER ITEMS LOADED");
+                for (Item item : foodItems) {
+                    Log.d("ORDER DETAILS ITEM", "item name: " + item.getNameOfItem());
+                }
+                setAdapter();
+            }
+
+            @Override
+            public void runOnFail() {
+
+            }
+        });
     }
 
-    public void sendCompleteNotification() {
-        // getPackageName() will take "ahhhlvin.c4q.nyc" if you aren't creating a public final String for the intent
-        Intent intent = new Intent(NOTIFICATION_ACTION);
-        getActivity().sendBroadcast(intent);
-    }
-
-
-    public interface OnBuyerCheckoutFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+    private void setAdapter() {
+        foodList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        CheckoutListAdapter checkoutListAdapter = new CheckoutListAdapter(getActivity(),foodItems);
+        foodList.setAdapter(checkoutListAdapter);
     }
 
 }

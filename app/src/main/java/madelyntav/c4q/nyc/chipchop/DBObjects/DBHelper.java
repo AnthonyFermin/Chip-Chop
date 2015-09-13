@@ -24,6 +24,7 @@ import java.util.Map;
 
 import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.SignupActivity1;
+import madelyntav.c4q.nyc.chipchop.SignupActivity2;
 
 /**
  * Created by c4q-madelyntavarez on 8/12/15.
@@ -434,7 +435,7 @@ public class DBHelper extends Firebase {
 
     }
 
-    public void onFacebookAccessTokenChange(final AccessToken token, final Intent intent) {
+    public void onFacebookAccessTokenChange(final AccessToken token) {
         Firebase ref = new Firebase(URL);
         Log.d("Tok In DB preAuth", "Token");
 
@@ -460,12 +461,18 @@ public class DBHelper extends Firebase {
                     fRef.child(UID).child(imageLink).setValue(authData.getProviderData().get("profileImageURL"));
                     fRef.child(UID).child(sName).setValue(authData.getProviderData().get("displayName"));
 
+                    SharedPreferences sharedPreferences = mContext.getSharedPreferences("New User", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("id", UID);
+                    editor.putString("eMail", String.valueOf(authData.getProviderData().get("email")));
+                    editor.putString("name", String.valueOf(authData.getProviderData().get("displayName")));
+                    editor.apply();
 
+                    Intent intent = new Intent(mContext, SignupActivity2.class);
                     intent.putExtra("email", String.valueOf(authData.getProviderData().get("email")));
                     intent.putExtra("name", String.valueOf(authData.getProviderData().get("displayName")));
-                    intent.putExtra("display", String.valueOf(authData.getProviderData().get("profileImageURL")));
                     intent.putExtra("UID", UID);
-                    mContext.getApplicationContext().startActivity(intent);
+                    mContext.startActivity(intent);
                 }
 
                 @Override
@@ -538,41 +545,35 @@ public class DBHelper extends Firebase {
                 });
     }
 
-    public void onGmailAccessTokenChange(final AccessToken token, final Intent intent) {
+    public void onGmailAccessTokenChange(final String token) {
         Firebase ref = new Firebase(URL);
         Log.d("Tok In DB preAuth", "Token");
 
         if (token != null) {
-            ref.authWithOAuthToken("google", token.getToken(), new Firebase.AuthResultHandler() {
+            ref.authWithOAuthToken("google", token, new Firebase.AuthResultHandler() {
                 @Override
                 public void onAuthenticated(AuthData authData) {
                     // The Facebook user is now authenticated with your Firebase app
                     Log.d("Tok In DB after Auth", "Token");
                     //Create user Profile with user email
-                    createUserFromGmailAuthLogin(String.valueOf(authData.getProviderData().get("email")), AccessToken.getCurrentAccessToken().getToken());
+                    Log.d("HEREFORG,", "HERE");
+                    createUserFromGmailAuthLogin(String.valueOf(authData.getProviderData().get("email")), String.valueOf(authData.getProviderData().get("displayName")), AccessToken.getCurrentAccessToken().getToken());
                     Log.d("email", authData.getProviderData().get("email").toString());
                     UID = "";
                     UID = authData.getUid();
 
-
                     Log.d("UID", UID + "");
-
                     Firebase fRef = new Firebase(URL + "UserProfiles/");
                     fRef.child(UID);
                     fRef.child(UID).child(sEmailAddress).setValue(authData.getProviderData().get("email"));
                     fRef.child(UID).child(imageLink).setValue(authData.getProviderData().get("profileImageURL"));
                     fRef.child(UID).child(sName).setValue(authData.getProviderData().get("displayName"));
-
-                    intent.putExtra("email", String.valueOf(authData.getProviderData().get("email")));
-                    intent.putExtra("name", String.valueOf(authData.getProviderData().get("displayName")));
-                    intent.putExtra("display", String.valueOf(authData.getProviderData().get("profileImageURL")));
-                    intent.putExtra("UID", UID);
-                    mContext.getApplicationContext().startActivity(intent);
                 }
 
                 @Override
                 public void onAuthenticationError(FirebaseError firebaseError) {
                     // there was an error
+                    Log.d("err", firebaseError.toString());
                 }
             });
         } else {
@@ -582,7 +583,7 @@ public class DBHelper extends Firebase {
     }
 
 
-    private void createUserFromGmailAuthLogin(final String email, final String password) {
+    private void createUserFromGmailAuthLogin(final String email, final String name, final String password) {
         fireBaseRef.createUser(email, password, new ValueResultHandler<Map<String, Object>>() {
             @Override
             public void onSuccess(Map<String, Object> stringObjectMap) {
@@ -595,6 +596,14 @@ public class DBHelper extends Firebase {
                 editor.putString("eMail", email);
                 editor.putString("password", password);
                 editor.apply();
+                Log.d("HEREFOrIntent,", "HERE");
+
+
+                Intent intent = new Intent(mContext, SignupActivity2.class);
+                intent.putExtra("email", String.valueOf(email));
+                intent.putExtra("name", String.valueOf(name));
+                intent.putExtra("UID", UID);
+                mContext.startActivity(intent);
 
                 user = new User(UID, email);
 
@@ -653,8 +662,18 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
         fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
         fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
-        fRef.child(UID).child("routingNumber").setValue(seller.getRoutingNumber());
-        fRef.child(UID).child("accountNumber").setValue(seller.getAccountNumber());
+        fRef.child(UID).child("hasSellerProfile").setValue(user.isHasSellerProfile());
+
+        if (user.isHasSellerProfile()) {
+            seller = new Seller();
+            seller.setUID(user.getUID());
+            seller.setName(user.getName());
+            seller.seteMail(user.geteMail());
+            seller.setPhoneNumber(user.getPhoneNumber());
+            seller.setPhotoLink(user.getPhotoLink());
+            seller.setAddress(user.getAddress());
+            addSellerProfileInfoToDB(seller);
+        }
 
     }
 
@@ -676,7 +695,7 @@ public class DBHelper extends Firebase {
         callback.runOnSuccess();
     }
 
-    public void changeUserEmail(String oldeMail, String neweMail, String passWord, final DBCallback dbCallback){
+    public void changeUserEmail(String oldeMail, String neweMail, String passWord, final DBCallback dbCallback) {
         Firebase ref = new Firebase(URL);
         ref.changeEmail(oldeMail, neweMail, passWord, new Firebase.ResultHandler() {
             @Override
@@ -692,39 +711,38 @@ public class DBHelper extends Firebase {
         });
     }
 
-    public void changeUserPassword(String email, String oldPassword, String newPassowrd, final DBCallback dbCallback){
+    public void changeUserPassword(String email, String oldPassword, String newPassowrd, final DBCallback dbCallback) {
         Firebase ref = new Firebase(URL);
         ref.changePassword(email, oldPassword, newPassowrd, new Firebase.ResultHandler() {
             @Override
             public void onSuccess() {
-                Toast.makeText(mContext,"Password Successfully Changed",Toast.LENGTH_SHORT).show();
-                dbCallback.runOnSuccess();            }
+                Toast.makeText(mContext, "Password Successfully Changed", Toast.LENGTH_SHORT).show();
+                dbCallback.runOnSuccess();
+            }
 
             @Override
             public void onError(FirebaseError firebaseError) {
-                Toast.makeText(mContext,"Error Changing Password, Please Try Again",Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Error Changing Password, Please Try Again", Toast.LENGTH_SHORT).show();
             }
         });
 
     }
 
-    public void addSellerProfileInfoToDB(Seller user) {
+    public void addSellerProfileInfoToDB(Seller seller) {
         Firebase fRef = new Firebase(URL + "SellerProfiles/");
-        UID = user.getUID();
+        sellerId = seller.getUID();
 
-        fRef.child(UID).child("UID").setValue(UID);
-        fRef.child(UID).child(sName).setValue(user.getName());
-        fRef.child(UID).child("storeName").setValue(user.getStoreName());
-        fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
-        fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
-        fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
-        fRef.child(UID).child(sCardNumber).setValue(user.getCardNumber());
-        fRef.child(UID).child(sCardExpirationMonth).setValue(user.getCardExpirationMonth());
-        fRef.child(UID).child(sCardExpirationYear).setValue(user.getCardExpirationYear());
-        fRef.child(UID).child(sCardCVC).setValue(user.getCardCVC());
-        fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
-        fRef.child(UID).child(sLatitude).setValue(user.getAddress().getLatitude());
-        fRef.child(UID).child(sLongitude).setValue(user.getAddress().getLongitude());
+        fRef.child(sellerId).child("UID").setValue(UID);
+        fRef.child(sellerId).child(sName).setValue(seller.getName());
+        fRef.child(sellerId).child("storeName").setValue(seller.getStoreName());
+        fRef.child(sellerId).child(sEmailAddress).setValue(seller.geteMail());
+        fRef.child(sellerId).child(sPhoneNumber).setValue(seller.getPhoneNumber());
+        fRef.child(sellerId).child(sPhotoLink).setValue(seller.getPhotoLink());
+        fRef.child(sellerId).child("routingNumber").setValue(seller.getRoutingNumber());
+        fRef.child(sellerId).child("accountNumber").setValue(seller.getAccountNumber());
+        fRef.child(sellerId).child(sAddress).setValue(seller.getAddress().toString());
+        fRef.child(sellerId).child(sLatitude).setValue(seller.getAddress().getLatitude());
+        fRef.child(sellerId).child(sLongitude).setValue(seller.getAddress().getLongitude());
     }
 
     public void setSellerCookingStatus(boolean isCooking) {
@@ -1257,7 +1275,6 @@ public class DBHelper extends Firebase {
                         item.setNameOfItem(item1.nameOfItem);
                         item.setIsVegetarian(item1.isVegetarian);
                         item.setQuantity(item1.quantity);
-                        moveItemToPreviouslySoldItems(item, dbCallback);
 
                         if (item.getBuyerID() != null) {
                             moveItemToPreviouslyBoughtItems(item, dbCallback);
@@ -1314,7 +1331,6 @@ public class DBHelper extends Firebase {
                         item.setContainsPeanuts(item1.containsPeanuts);
                         item.setContainsShellfish(item1.containsShellfish);
                         item.setGlutenFree(item1.glutenFree);
-                        moveItemToPreviouslySoldItems(item1, dbCallback);
 
                         if (item.getBuyerID() != null) {
                             moveItemToPreviouslyBoughtItems(item, dbCallback);
@@ -1472,29 +1488,55 @@ public class DBHelper extends Firebase {
         dbCallback.runOnSuccess();
     }
 
-    public void moveItemToPreviouslySoldItems(Item item, DBCallback dbCallback) {
+    public void moveItemToPreviouslySoldItems(Order order) {
         Firebase fRef = new Firebase(URL + "SellerProfiles/" + item.getSellerID() + "/PreviouslySold/");
-        String itemID = item.getItemID();
 
-        fRef.child(itemID);
-        fRef.child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
-        fRef.child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
-        fRef.child(itemID).child(quantity).setValue(item.getQuantity());
-        fRef.child(itemID).child("buyerID").setValue(item.getBuyerID());
-        fRef.child(itemID).child("sellerID").setValue(sellerId);
-        fRef.child(itemID).child("price").setValue(item.getPrice());
-        fRef.child(itemID).child("imageLink").setValue(item.getImageLink());
-        fRef.child(itemID).child("containsPeanuts").setValue(item.isContainsPeanuts());
-        fRef.child(itemID).child("glutenFree").setValue(item.isGlutenFree());
-        fRef.child(itemID).child("isVegetarian").setValue(item.isVegetarian());
-        fRef.child(itemID).child("containsEggs").setValue(item.isContainsEggs());
-        fRef.child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
-        fRef.child(itemID).child("containsDairy").setValue(item.isContainsDairy());
-        dbCallback.runOnSuccess();
+        UID = order.getBuyerID();
+        Log.d("UIDFORCHECKOUT", UID + "");
+        sellerId = order.getSellerID();
+
+        ArrayList<Item> itemsOrdered = order.getItemsOrdered();
+        Firebase fire1 = fRef.child(UID).push();
+        String orderID = fire1.getKey();
+        order.setOrderID(orderID);
+
+        for (Item item : itemsOrdered) {
+            itemID = item.getItemID();
+
+            fRef.child(orderID);
+            fRef.child(orderID).child("price").setValue(order.getPrice());
+            fRef.child(orderID).child("transactionToken").setValue(order.getTransactionToken());
+            fRef.child(orderID).child("buyerID").setValue(order.getBuyerID());
+            fRef.child(orderID).child("storeName").setValue(order.getStoreName());
+            fRef.child(orderID).child("isActive").setValue(order.isActive());
+            fRef.child(orderID).child("sellerAddress").setValue(order.getSellerAddress());
+            fRef.child(orderID).child("buyerAddress").setValue(order.getBuyerAddress());
+            fRef.child(orderID).child("sellerName").setValue(order.getSellerName());
+            fRef.child(orderID).child("buyerName").setValue(order.getBuyerName());
+            fRef.child(orderID).child("paymentType").setValue(order.getPaymentType());
+            fRef.child(orderID).child("sellerPhoneNumber").setValue(order.getSellerPhoneNumber());
+            fRef.child(orderID).child("buyerPhoneNumber").setValue(order.getBuyerPhoneNumber());
+            fRef.child(orderID).child("timeStamp").setValue(order.getTimeStamp());
+            fRef.child(orderID).child("items");
+            fRef.child(orderID).child("items").child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
+            fRef.child(orderID).child("items").child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
+            fRef.child(orderID).child("items").child(itemID).child("quantityWanted").setValue(item.getQuantityWanted());
+            fRef.child(orderID).child("items").child(itemID).child("price").setValue(item.getPrice());
+            fRef.child(orderID).child("items").child(itemID).child("sellerPhoneNumber").setValue(item.getSellerPhoneNumber());
+            fRef.child(orderID).child("items").child(itemID).child("sellerPhoneNumber").setValue(item.getSellerPhoneNumber());
+            fRef.child(orderID).child("items").child(itemID).child("imageLink").setValue(item.getImageLink());
+            fRef.child(orderID).child("items").child(itemID).child("containsPeanuts").setValue(item.isContainsPeanuts());
+            fRef.child(orderID).child("items").child(itemID).child("glutenFree").setValue(item.isGlutenFree());
+            fRef.child(orderID).child("items").child(itemID).child("isVegetarian").setValue(item.isVegetarian());
+            fRef.child(orderID).child("items").child(itemID).child("containsEggs").setValue(item.isContainsEggs());
+            fRef.child(orderID).child("items").child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
+            fRef.child(orderID).child("items").child(itemID).child("containsDairy").setValue(item.isContainsDairy());
+        }
 
     }
 
     public void moveItemToPreviouslyBoughtItems(Item item, DBCallback dbCallback) {
+
         Firebase fRef = new Firebase(URL + "UserProfiles/" + item.getBuyerID() + "/PreviouslyBought/");
 
         String itemID = item.getItemID();
@@ -1537,6 +1579,10 @@ public class DBHelper extends Firebase {
                         order.setItemsOrdered(order.itemsOrdered);
                         order.setReview(order.review);
                         order.setTimeStamp(order.timeStamp);
+                        order.setSellerAddress(order.sellerAddress);
+                        order.setBuyerAddress(order.buyerAddress);
+                        order.setSellerName(order.sellerName);
+                        order.setBuyerName(order.buyerName);
                         order.setTransactionToken(order.transactionToken);
                         order.setIsActive(order.isActive);
                         order.setStoreName(order.storeName);
@@ -1616,6 +1662,14 @@ public class DBHelper extends Firebase {
         }
 
         return receiptForSpecificOrder;
+    }
+
+    public void updateBuyerWhenSellerConfirmsOrderIsReady(Order order) {
+        UID = order.getBuyerID();
+        orderID = order.getOrderID();
+
+        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID + "/Orders/" + orderID);
+        fRef.child(orderID).child("isActive").setValue(order.isActive());
     }
 
 
@@ -1704,6 +1758,10 @@ public class DBHelper extends Firebase {
                     Order order = dataSnapshot1.getValue(Order.class);
                     order.setOrderID(dataSnapshot1.getKey());
                     order.setPrice(order.price);
+                    order.setSellerAddress(order.sellerAddress);
+                    order.setBuyerAddress(order.buyerAddress);
+                    order.setSellerName(order.sellerName);
+                    order.setBuyerName(order.buyerName);
                     order.setTransactionToken(order.transactionToken);
                     order.setSellerID(order.sellerID);
                     order.setBuyerID(order.buyerID);
@@ -1810,7 +1868,6 @@ public class DBHelper extends Firebase {
     }
 
     public void addCurrentOrderToSellerDB(Order order, DBCallback dbCallback) {
-
         UID = order.getBuyerID();
         Log.d("UIDFORCHECKOUT", UID + "");
         sellerId = order.getSellerID();
@@ -1822,7 +1879,6 @@ public class DBHelper extends Firebase {
         Firebase fire1 = fRef.child(UID).push();
         String orderID = fire1.getKey();
         order.setOrderID(orderID);
-
 
         for (Item item : itemsOrdered) {
             itemID = item.getItemID();
@@ -1837,6 +1893,10 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child("buyerID").setValue(order.getBuyerID());
             fRef.child(orderID).child("storeName").setValue(order.getStoreName());
             fRef.child(orderID).child("isActive").setValue(order.isActive());
+            fRef.child(orderID).child("sellerAddress").setValue(order.getSellerAddress());
+            fRef.child(orderID).child("buyerAddress").setValue(order.getBuyerAddress());
+            fRef.child(orderID).child("sellerName").setValue(order.getSellerName());
+            fRef.child(orderID).child("buyerName").setValue(order.getBuyerName());
             fRef.child(orderID).child("paymentType").setValue(order.getPaymentType());
             fRef.child(orderID).child("sellerPhoneNumber").setValue(order.getSellerPhoneNumber());
             fRef.child(orderID).child("buyerPhoneNumber").setValue(order.getBuyerPhoneNumber());
@@ -1856,6 +1916,7 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child("items").child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
             fRef.child(orderID).child("items").child(itemID).child("containsDairy").setValue(item.isContainsDairy());
 
+            moveItemToPreviouslySoldItems(order);
             copyOrderToBuyerProfile(order, item);
             updateSellerItemsWhenItemIsBought(item, callback);
         }
@@ -1906,6 +1967,29 @@ public class DBHelper extends Firebase {
 
     }
 
+    public void changeOrderActiveStatus(Order order) {
+        UID = order.getBuyerID();
+        orderID = order.getOrderID();
+
+        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID + "/Orders/" + orderID);
+        fRef.child(orderID);
+        fRef.child(orderID).child("isActive").setValue(order.isActive());
+
+        changeBuyerOrderActiveStatus(order);
+    }
+
+    public void changeBuyerOrderActiveStatus(Order order){
+        sellerId=order.getSellerID();
+        orderID=order.getOrderID();
+
+        Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId + "/Orders/" + orderID);
+
+        fRef.child(orderID);
+        fRef.child(orderID).child("isActive").setValue(order.isActive());
+
+
+    }
+
     public ArrayList<Item> updateItemsForSpecificOrderForBuyer(DBCallback dbCallback) {
 
         if (itemsInSpecificOrder.size() < sizeofAddDBList) {
@@ -1931,6 +2015,10 @@ public class DBHelper extends Firebase {
         fRef.child(orderID).child("storeName").setValue(order.getStoreName());
         fRef.child(orderID).child("paymentType").setValue(order.getPaymentType());
         fRef.child(orderID).child("isActive").setValue(order.isActive());
+        fRef.child(orderID).child("sellerAddress").setValue(order.getSellerAddress());
+        fRef.child(orderID).child("buyerAddress").setValue(order.getBuyerAddress());
+        fRef.child(orderID).child("sellerName").setValue(order.getSellerName());
+        fRef.child(orderID).child("buyerName").setValue(order.getBuyerName());
         fRef.child(orderID).child("sellerPhoneNumber").setValue(order.getSellerPhoneNumber());
         fRef.child(orderID).child("buyerPhoneNumber").setValue(order.getBuyerPhoneNumber());
         fRef.child(orderID).child("timeStamp").setValue(order.getTimeStamp());
@@ -2656,8 +2744,8 @@ public class DBHelper extends Firebase {
         int newNumofTotalstars = numOfTotalStars + newStars;
         int newAvg = newNumofTotalstars / numOfReviews;
         char newAvgS = 0;
-        for(int i=0;i<1;i++){
-            newAvgS=String.valueOf(newAvgS).charAt(i);
+        for (int i = 0; i < 1; i++) {
+            newAvgS = String.valueOf(newAvgS).charAt(i);
         }
         updateSellerProfileWithNewAvg(seller, newAvgS);
 

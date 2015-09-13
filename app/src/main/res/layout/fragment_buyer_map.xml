@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,11 +9,19 @@
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent">-->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="#FFF">
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/snackbarPosition"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"/>
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical"-->
+            <!--android:background="#FFF"-->
+            <!--android:id="@+id/map_container">-->
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -30,10 +39,7 @@
                 android:layout_height="300dp" />
 
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/sellers_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+
 
 
             <!--<ImageView-->
@@ -51,15 +57,15 @@
                 android:visibility="gone" />
 
 
-        </LinearLayout>
+        <!--</LinearLayout>-->
 
     <!--</ScrollView>-->
 
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/snackbarPosition"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/sellers_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true" />
+        android:layout_height="400dp"
+        android:layout_below="@+id/map"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/refresh_button"
@@ -73,7 +79,7 @@
         app:elevation="6dp"
         app:pressedTranslationZ="12dp" />
 
-</RelativeLayout>
+</LinearLayout>
 
 
     <!--</com.sothree.slidinguppanel.SlidingUpPanelLayout>-->

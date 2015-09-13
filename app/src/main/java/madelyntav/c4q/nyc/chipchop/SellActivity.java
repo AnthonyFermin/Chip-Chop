@@ -1,24 +1,21 @@
 package madelyntav.c4q.nyc.chipchop;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
+import android.content.res.Configuration;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,21 +27,22 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.facebook.login.LoginManager;
 
 import java.util.ArrayList;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_CreateItem;
-import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_OrderDetails;
-import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_ProfileSettings;
-
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Items;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_OrderDetails;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Orders;
+import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_ProfileSettings;
 
 public class SellActivity extends AppCompatActivity {
 
@@ -58,6 +56,7 @@ public class SellActivity extends AppCompatActivity {
     private String[] mListTitles;
     private Fragment fragment;
     private ActionBarDrawerToggle mDrawerToggle;
+    SignupActivity1 signupActivity1;
 
     // for storing data between fragments in SellActivity
 
@@ -70,6 +69,7 @@ public class SellActivity extends AppCompatActivity {
     private Item inactiveItemToEdit = null;
     private String currentFragment;
     private Intent serviceIntent;
+    private Order orderToView = null;
 
     private DBHelper dbHelper;
 
@@ -85,6 +85,7 @@ public class SellActivity extends AppCompatActivity {
 
         dbHelper = DBHelper.getDbHelper(this);
 
+        signupActivity1= new SignupActivity1();
         bindViews();
         initializeData();
         setUpNavActionBar();
@@ -242,7 +243,8 @@ public class SellActivity extends AppCompatActivity {
         dbHelper.signOutUser(emptyCallback);
         drawerUserNameTV.setText("");
         stopService(serviceIntent);
-        stopService(new Intent(this,ServiceBuyerNotify.class));
+        LoginManager.getInstance().logOut();
+        stopService(new Intent(this, ServiceBuyerNotify.class));
     }
 
     @Override
@@ -401,5 +403,13 @@ public class SellActivity extends AppCompatActivity {
 
     public void setServiceIntent(Intent serviceIntent) {
         this.serviceIntent = serviceIntent;
+    }
+
+    public Order getOrderToView() {
+        return orderToView;
+    }
+
+    public void setOrderToView(Order orderToView) {
+        this.orderToView = orderToView;
     }
 }

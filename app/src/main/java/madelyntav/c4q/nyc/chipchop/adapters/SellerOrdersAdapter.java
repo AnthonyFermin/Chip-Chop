@@ -51,6 +51,7 @@ public class SellerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 @Override
                 public void onClick(View view) {
                     SellActivity activity = (SellActivity) context;
+                    activity.setOrderToView(orderItems.get(getAdapterPosition()));
                     activity.replaceSellerFragment(new Fragment_Seller_OrderDetails());
                 }
             });

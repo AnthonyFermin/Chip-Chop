@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SwitchCompat;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,7 +62,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
     public static final String TAG = "fragment_seller_profile";
 
-    
+    SwitchCompat deliverSwitch, pickupSwitch;
     ToggleButton cookingStatus;
     TextView cookingStatusTV;
 
@@ -466,6 +467,14 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         cookingStatusTV = (TextView) root.findViewById(R.id.cooking_status_text);
         saveButton = (Button) root.findViewById(R.id.save_button);
         coordinatorLayoutView = root.findViewById(R.id.snackbarPosition);
+
+        // TODO: ANTHONY DELIVER
+        deliverSwitch = (SwitchCompat) root.findViewById(R.id.delivery_switch);
+        if (deliverSwitch.isChecked()) {
+        }
+        pickupSwitch = (SwitchCompat) root.findViewById(R.id.pickup_switch);
+
+
 
 
         if(activity.isCurrentlyCooking()){

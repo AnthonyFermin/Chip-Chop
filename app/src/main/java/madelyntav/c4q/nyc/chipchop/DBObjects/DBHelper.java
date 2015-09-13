@@ -1546,6 +1546,10 @@ public class DBHelper extends Firebase {
                         order.setItemsOrdered(order.itemsOrdered);
                         order.setReview(order.review);
                         order.setTimeStamp(order.timeStamp);
+                        order.setSellerAddress(order.sellerAddress);
+                        order.setBuyerAddress(order.buyerAddress);
+                        order.setSellerName(order.sellerName);
+                        order.setBuyerName(order.buyerName);
                         order.setTransactionToken(order.transactionToken);
                         order.setIsActive(order.isActive);
                         order.setStoreName(order.storeName);
@@ -1721,6 +1725,10 @@ public class DBHelper extends Firebase {
                     Order order = dataSnapshot1.getValue(Order.class);
                     order.setOrderID(dataSnapshot1.getKey());
                     order.setPrice(order.price);
+                    order.setSellerAddress(order.sellerAddress);
+                    order.setBuyerAddress(order.buyerAddress);
+                    order.setSellerName(order.sellerName);
+                    order.setBuyerName(order.buyerName);
                     order.setTransactionToken(order.transactionToken);
                     order.setSellerID(order.sellerID);
                     order.setBuyerID(order.buyerID);
@@ -1854,6 +1862,10 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child("buyerID").setValue(order.getBuyerID());
             fRef.child(orderID).child("storeName").setValue(order.getStoreName());
             fRef.child(orderID).child("isActive").setValue(order.isActive());
+            fRef.child(orderID).child("sellerAddress").setValue(order.getSellerAddress());
+            fRef.child(orderID).child("buyerAddress").setValue(order.getBuyerAddress());
+            fRef.child(orderID).child("sellerName").setValue(order.getSellerName());
+            fRef.child(orderID).child("buyerName").setValue(order.getBuyerName());
             fRef.child(orderID).child("paymentType").setValue(order.getPaymentType());
             fRef.child(orderID).child("sellerPhoneNumber").setValue(order.getSellerPhoneNumber());
             fRef.child(orderID).child("buyerPhoneNumber").setValue(order.getBuyerPhoneNumber());
@@ -1948,6 +1960,10 @@ public class DBHelper extends Firebase {
         fRef.child(orderID).child("storeName").setValue(order.getStoreName());
         fRef.child(orderID).child("paymentType").setValue(order.getPaymentType());
         fRef.child(orderID).child("isActive").setValue(order.isActive());
+        fRef.child(orderID).child("sellerAddress").setValue(order.getSellerAddress());
+        fRef.child(orderID).child("buyerAddress").setValue(order.getBuyerAddress());
+        fRef.child(orderID).child("sellerName").setValue(order.getSellerName());
+        fRef.child(orderID).child("buyerName").setValue(order.getBuyerName());
         fRef.child(orderID).child("sellerPhoneNumber").setValue(order.getSellerPhoneNumber());
         fRef.child(orderID).child("buyerPhoneNumber").setValue(order.getBuyerPhoneNumber());
         fRef.child(orderID).child("timeStamp").setValue(order.getTimeStamp());

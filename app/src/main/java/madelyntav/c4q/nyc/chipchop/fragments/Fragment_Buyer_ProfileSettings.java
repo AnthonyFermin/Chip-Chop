@@ -59,6 +59,7 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
 
         activity = (BuyActivity) getActivity();
         dbHelper = DBHelper.getDbHelper(activity);
+        user = HelperMethods.getUser();
 
         bindViews(root);
 

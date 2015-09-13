@@ -18,10 +18,14 @@ public class Order {
     long timeStamp;
     boolean isActive;
     String storeName;
+    String buyerAddress;
+    String sellerAddress;
     String sellerPhoneNumber;
     String buyerPhoneNumber;
     String transactionToken;
     String paymentType;
+    String buyerName;
+    String sellerName;
 
     public Order(){
         this.itemsOrdered = new ArrayList<>();
@@ -204,6 +208,38 @@ public class Order {
 
     public void setPaymentType(String paymentType) {
         this.paymentType = paymentType;
+    }
+
+    public String getBuyerAddress() {
+        return buyerAddress;
+    }
+
+    public void setBuyerAddress(String buyerAddress) {
+        this.buyerAddress = buyerAddress;
+    }
+
+    public String getSellerAddress() {
+        return sellerAddress;
+    }
+
+    public void setSellerAddress(String sellerAddress) {
+        this.sellerAddress = sellerAddress;
+    }
+
+    public String getBuyerName() {
+        return buyerName;
+    }
+
+    public void setBuyerName(String buyerName) {
+        this.buyerName = buyerName;
+    }
+
+    public String getSellerName() {
+        return sellerName;
+    }
+
+    public void setSellerName(String sellerName) {
+        this.sellerName = sellerName;
     }
 }
 

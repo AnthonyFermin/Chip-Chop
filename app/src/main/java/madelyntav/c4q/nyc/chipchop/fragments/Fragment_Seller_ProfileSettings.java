@@ -61,6 +61,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
     public static final String TAG = "fragment_seller_profile";
 
+    
     ToggleButton cookingStatus;
     TextView cookingStatusTV;
 

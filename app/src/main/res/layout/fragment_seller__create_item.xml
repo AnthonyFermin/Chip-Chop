@@ -185,17 +185,20 @@
             </LinearLayout>
 
 
-            <Button
-                android:id="@+id/add_item_button"
-                style="@style/button_design"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="ADD" />
 
         </LinearLayout>
 
 
     </ScrollView>
+
+
+    <Button
+        android:id="@+id/add_item_button"
+        style="@style/button_design"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ADD" />
+
 </LinearLayout>
 
 <android.support.design.widget.CoordinatorLayout

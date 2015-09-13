@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 
+import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
+
 /**
  * Created by alvin2 on 9/12/15.
  */
@@ -23,10 +25,12 @@ public class DeliveryDialog extends android.support.v4.app.DialogFragment {
 
         View root = inflater.inflate(R.layout.fragment_dialog_delivery, container, false);
 
+
         deliverButton = (Button) root.findViewById(R.id.delivery_button);
         deliverButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                HelperMethods.getCurrentOrder().setToDeliver(true);
                 getDialog().dismiss();
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 PaymentDialog alertDialog = new PaymentDialog();
@@ -39,6 +43,7 @@ public class DeliveryDialog extends android.support.v4.app.DialogFragment {
         pickupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                HelperMethods.getCurrentOrder().setIsPickup(true);
                 getDialog().dismiss();
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 PaymentDialog alertDialog = new PaymentDialog();

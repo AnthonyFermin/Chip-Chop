@@ -206,6 +206,7 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
             protected void onPostExecute(Bitmap bitmap) {
                 super.onPostExecute(bitmap);
                 imageLink = HelperMethods.saveImageToEncodedString(filePath);
+                user.setPhotoLink(imageLink);
                 profilePhoto.setImageBitmap(bitmap);
                 Log.d("Item Creation", "ImageLink: " + imageLink);
             }

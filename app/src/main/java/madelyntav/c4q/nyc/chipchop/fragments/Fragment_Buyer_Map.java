@@ -103,7 +103,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
         initializeListPanel();
 
-        //addSellerMarkers() is in onResume()
+        addSellerMarkers();
 
         return root;
     }
@@ -148,7 +148,6 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onResume() {
         super.onResume();
-        addSellerMarkers();
 
         // clear cart when entering this fragment
         activity.setCurrentOrder(new Order());
@@ -208,10 +207,10 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
     private void bindViews() {
         arrowImage = (ImageView) root.findViewById(R.id.arrow_image);
-        slidingPanel = (SlidingUpPanelLayout) root.findViewById(R.id.slidinglayout);
         itemsRView = (RecyclerView) root.findViewById(R.id.buyers_orders_list);
         refreshButton = (FloatingActionButton) root.findViewById(R.id.refresh_button);
         coordinatorLayoutView = root.findViewById(R.id.snackbarPosition);
+        slidingPanel = (SlidingUpPanelLayout) root.findViewById(R.id.slidinglayout);
 
 
     }
@@ -493,7 +492,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
                 }
             }
         }.execute();
-}
+    }
 
     @Override
     public void onDetach() {

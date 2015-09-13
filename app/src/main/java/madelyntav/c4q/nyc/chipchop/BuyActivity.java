@@ -295,7 +295,20 @@ public class BuyActivity extends AppCompatActivity {
         if (position == 0) {
             fragment = new Fragment_Buyer_Map();
         } else if (position == 1) {
-            fragment = new Fragment_Buyer_Orders();
+            if (dbHelper.userIsLoggedIn())
+                fragment = new Fragment_Buyer_Orders();
+            else {
+                clearLogin();
+                Snackbar
+                        .make(coordinatorLayoutView, "Must log in to view profile", Snackbar.LENGTH_SHORT)
+                        .show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        startActivity(new Intent(BuyActivity.this, SignupActivity1.class));
+                    }
+                }, 1500);
+            }
         } else if (position == 2) {
             if (dbHelper.userIsLoggedIn())
                 fragment = new Fragment_Buyer_ProfileSettings();
@@ -309,7 +322,7 @@ public class BuyActivity extends AppCompatActivity {
                     public void run() {
                         startActivity(new Intent(BuyActivity.this, SignupActivity1.class));
                     }
-                }, 2000);
+                }, 1500);
             }
         } else if (position == 3) {
             //SIGN OUT/IN DRAWER ITEM

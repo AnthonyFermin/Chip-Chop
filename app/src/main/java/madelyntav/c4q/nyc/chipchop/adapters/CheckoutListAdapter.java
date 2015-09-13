@@ -1,6 +1,9 @@
 package madelyntav.c4q.nyc.chipchop.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,12 +68,26 @@ public class CheckoutListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
 
             Item checkoutItem = checkoutItems.get(position);
-            CheckoutViewHolder vh = (CheckoutViewHolder) viewHolder;
+            final CheckoutViewHolder vh = (CheckoutViewHolder) viewHolder;
             vh.name.setText(checkoutItem.getNameOfItem());
             vh.price.setText("$ " + checkoutItem.getPrice() + "");
             vh.quantity.setText(checkoutItem.getQuantityWanted() + "");
-            if(checkoutItem.getImageLink() != null && !checkoutItem.getImageLink().isEmpty())
-                Picasso.with(context).load(checkoutItem.getImageLink()).fit().into(vh.image);
+            if(checkoutItem.getImageLink() != null && !checkoutItem.getImageLink().isEmpty() && checkoutItem.getImageLink().length() > 200) {
+                final String imageLink = checkoutItem.getImageLink();
+                new AsyncTask<Void, Void, Bitmap>() {
+                    @Override
+                    protected Bitmap doInBackground(Void... voids) {
+                        byte[] decoded = org.apache.commons.codec.binary.Base64.decodeBase64(imageLink.getBytes());
+                        return BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
+                    }
+
+                    @Override
+                    protected void onPostExecute(Bitmap bitmap) {
+                        super.onPostExecute(bitmap);
+                        vh.image.setImageBitmap(bitmap);
+                    }
+                }.execute();
+            }
 
             setAnimation(vh.container, position);
 

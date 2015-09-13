@@ -14,7 +14,6 @@ import android.widget.TextView;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -22,7 +21,6 @@ import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_OrderDetails;
-import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_OrderDetails;
 
 /**
  * Created by alvin2 on 8/26/15.
@@ -45,6 +43,8 @@ public class BuyerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         TextView timeStamp;
         TextView total;
         TextView nameOfSeller;
+        TextView deliveryMethod;
+        TextView sellerAddress;
 
 
         public BuyerOrdersViewHolder(View itemView) {
@@ -54,6 +54,8 @@ public class BuyerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             container = (CardView) itemView.findViewById(R.id.card_view);
             nameOfSeller = (TextView) itemView.findViewById(R.id.seller_name_tv);
             timeStamp = (TextView) itemView.findViewById(R.id.order_timestamp_tv);
+            deliveryMethod = (TextView) itemView.findViewById(R.id.delivery_method_tv);
+            sellerAddress = (TextView) itemView.findViewById(R.id.seller_address_tv);
 
             container.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -63,8 +65,6 @@ public class BuyerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     activity.replaceFragment(new Fragment_Buyer_OrderDetails());
                 }
             });
-
-
 
         }
 
@@ -80,6 +80,7 @@ public class BuyerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
 
+        String deliveryMethod = "";
         Order order = orderItems.get(position);
         BuyerOrdersViewHolder vh = (BuyerOrdersViewHolder) viewHolder;
         vh.nameOfSeller.setText("Seller Name: " + order.getStoreName());
@@ -91,6 +92,19 @@ public class BuyerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         String formattedDate = formatter.format(cal.getTime());
         vh.timeStamp.setText("Date: " + formattedDate);
         vh.total.setText("Total: $" + order.getPrice());
+
+        if (order.isPickup()) {
+            deliveryMethod = "PICKUP";
+        } else {
+            deliveryMethod = "DELIVER";
+        }
+
+        vh.deliveryMethod.setText("DELIVERY METHOD: " + deliveryMethod);
+        if (order.isPickup()) {
+            vh.sellerAddress.setText("SELLER ADDRESS: " + order.getSellerAddress());
+        } else {
+            vh.sellerAddress.setVisibility(View.GONE);
+        }
 
         setAnimation(vh.container, position);
 

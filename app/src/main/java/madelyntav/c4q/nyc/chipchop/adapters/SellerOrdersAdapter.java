@@ -37,6 +37,8 @@ public class SellerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView nameOfBuyer;
         TextView total;
         TextView orderID;
+        TextView deliveryMethod;
+        TextView buyerAddress;
 
 
         public SellerOrdersViewHolder(View itemView) {
@@ -70,11 +72,25 @@ public class SellerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
 
+        String deliveryMethod = "";
         Order order = orderItems.get(position);
         SellerOrdersViewHolder vh = (SellerOrdersViewHolder) viewHolder;
         vh.nameOfBuyer.setText("Buyer Id: " + order.getBuyerID());
         vh.orderID.setText("Order Id: " + order.getOrderID());
         vh.total.setText("Total Price: $" + order.getPrice());
+
+        if (order.isPickup()) {
+            deliveryMethod = "PICKUP";
+        } else {
+            deliveryMethod = "DELIVER";
+        }
+
+        vh.deliveryMethod.setText("DELIVERY METHOD: " + deliveryMethod);
+        if (order.isToDeliver()) {
+            vh.buyerAddress.setText("BUYER ADDRESS: " + order.getBuyerAddress());
+        } else {
+            vh.buyerAddress.setVisibility(View.GONE);
+        }
 
         setAnimation(vh.container, position);
 

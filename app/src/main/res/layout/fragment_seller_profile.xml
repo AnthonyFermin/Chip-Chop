@@ -336,7 +336,7 @@
             style="@style/button_design"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="EDIT PROFILE"
+            android:text="SAVE CHANGES"
             android:id="@+id/save_button"/>
 
     </LinearLayout>

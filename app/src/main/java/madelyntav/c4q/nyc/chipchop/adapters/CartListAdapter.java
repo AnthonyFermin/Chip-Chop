@@ -44,7 +44,6 @@ public class CartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.context = context;
         this.cartItems = cartItems;
         activity = (BuyActivity) context;
-
     }
 
 
@@ -57,6 +56,8 @@ public class CartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TextView quantity;
         TextView description;
 
+        ImageView vegan, glutenFree, dairy, nut, egg, shellFish;
+
 
         public CheckoutViewHolder(View itemView) {
             super(itemView);
@@ -67,6 +68,14 @@ public class CartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             price = (TextView) itemView.findViewById(R.id.food_price_tv);
             quantity = (TextView) itemView.findViewById(R.id.food_quantity_tv);
             description = (TextView) itemView.findViewById(R.id.food_description_tv);
+
+            vegan = (ImageView) itemView.findViewById(R.id.vegan);
+            glutenFree = (ImageView) itemView.findViewById(R.id.gluten_free);
+            dairy = (ImageView) itemView.findViewById(R.id.dairy);
+            nut = (ImageView) itemView.findViewById(R.id.nut);
+            egg = (ImageView) itemView.findViewById(R.id.egg);
+            shellFish = (ImageView) itemView.findViewById(R.id.shellfish);
+
             removeItemButton = (Button) itemView.findViewById(R.id.remove_item_button);
             removeItemButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -119,6 +128,18 @@ public class CartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }.execute();
         }
 
+        if(checkoutItem.isVegetarian())
+            vh.vegan.setVisibility(View.VISIBLE);
+        if(checkoutItem.isGlutenFree())
+            vh.glutenFree.setVisibility(View.VISIBLE);
+        if(checkoutItem.isContainsDairy())
+            vh.dairy.setVisibility(View.VISIBLE);
+        if(checkoutItem.isContainsPeanuts())
+            vh.nut.setVisibility(View.VISIBLE);
+        if(checkoutItem.isContainsEggs())
+            vh.egg.setVisibility(View.VISIBLE);
+        if(checkoutItem.isContainsShellfish())
+            vh.shellFish.setVisibility(View.VISIBLE);
 
         setAnimation(vh.container, position);
 

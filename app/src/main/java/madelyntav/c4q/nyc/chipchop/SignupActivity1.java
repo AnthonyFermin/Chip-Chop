@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -163,6 +164,9 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
                             .make(coordinatorLayoutView, "Please set an Email and Password", Snackbar.LENGTH_SHORT)
                             .show();
                 } else {
+                    FragmentManager fm = getSupportFragmentManager();
+                    TermsDialog alertDialog = new TermsDialog();
+                    alertDialog.show(fm, "fragment_alert");
 
                     email = emailET.getText().toString().trim();
                     password = passET.getText().toString();

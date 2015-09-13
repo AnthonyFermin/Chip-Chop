@@ -47,6 +47,8 @@ public class FoodListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TextView price;
         TextView quantity;
 
+        ImageView vegan, glutenFree, dairy, nut, egg, shellFish;
+
         public FoodItemViewHolder(View itemView) {
             super(itemView);
 
@@ -56,6 +58,13 @@ public class FoodListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             description = (TextView) itemView.findViewById(R.id.food_description_tv);
             price = (TextView) itemView.findViewById(R.id.food_price_tv);
             quantity = (TextView) itemView.findViewById(R.id.food_quantity_tv);
+
+            vegan = (ImageView) itemView.findViewById(R.id.vegan);
+            glutenFree = (ImageView) itemView.findViewById(R.id.gluten_free);
+            dairy = (ImageView) itemView.findViewById(R.id.dairy);
+            nut = (ImageView) itemView.findViewById(R.id.nut);
+            egg = (ImageView) itemView.findViewById(R.id.egg);
+            shellFish = (ImageView) itemView.findViewById(R.id.shellfish);
 
             container.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -103,6 +112,18 @@ public class FoodListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             }.execute();
         }
+        if(foodItem.isVegetarian())
+            vh.vegan.setVisibility(View.VISIBLE);
+        if(foodItem.isGlutenFree())
+            vh.glutenFree.setVisibility(View.VISIBLE);
+        if(foodItem.isContainsDairy())
+            vh.dairy.setVisibility(View.VISIBLE);
+        if(foodItem.isContainsPeanuts())
+            vh.nut.setVisibility(View.VISIBLE);
+        if(foodItem.isContainsEggs())
+            vh.egg.setVisibility(View.VISIBLE);
+        if(foodItem.isContainsShellfish())
+            vh.shellFish.setVisibility(View.VISIBLE);
 
         setAnimation(vh.container, position);
 

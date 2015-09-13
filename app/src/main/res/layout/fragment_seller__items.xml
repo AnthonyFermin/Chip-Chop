@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Items"
-    android:layout_margin="10dp">
+    android:padding="10dp">
 
     <RelativeLayout
         style="@style/GenericProgressBackground"
@@ -35,7 +35,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/addButton">
 
-        <android.support.v4.view.PagerTitleStrip
+        <android.support.v4.view.PagerTabStrip
             android:id="@+id/pager_title_strip"
             android:layout_width="match_parent"
             android:layout_height="40dp"

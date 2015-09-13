@@ -6,22 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
-    app:umanoScrollableView="@id/buyers_orders_list"
     sothree:umanoPanelHeight="68dp"
     sothree:umanoShadowHeight="4dp"
-    app:umanoParalaxOffset="200dp"
-    android:background="#FFF">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    app:umanoParalaxOffset="200dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -41,15 +34,6 @@
 
     </LinearLayout>
 
-        <android.support.design.widget.CoordinatorLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
-            android:id="@+id/snackbarPosition">
-        </android.support.design.widget.CoordinatorLayout>
-
-    </RelativeLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -61,12 +45,7 @@
             android:id="@+id/arrow_image"
             android:src="@drawable/up"/>
 
-        <TextView
-            android:id="@+id/no_sellers_tv"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:visibility="gone"
-            android:text="There are currenly no active sellers, try checking back later!"/>
+
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/buyers_orders_list"
@@ -85,8 +64,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="5dp"
-            android:padding="8dp"
             android:src="@drawable/refresh"
             app:backgroundTint="#D42028"
             app:elevation="6dp"
@@ -96,3 +73,70 @@
     </RelativeLayout>
 
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+
+
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--android:orientation="vertical"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent">-->
+
+
+    <!--<android.support.design.widget.CoordinatorLayout-->
+        <!--android:id="@+id/snackbarPosition"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:visibility="gone"/>-->
+
+
+            <!--<ImageView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:gravity="center|top"-->
+                <!--android:paddingBottom="5dp"-->
+                <!--android:paddingTop="5dp"-->
+                <!--android:src="@drawable/cc_logo_red"-->
+                <!--android:visibility="gone" />-->
+
+            <!--<fragment-->
+                <!--android:id="@+id/map"-->
+                <!--android:name="com.google.android.gms.maps.SupportMapFragment"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="300dp" />-->
+
+
+            <!--<TextView-->
+                <!--android:id="@+id/no_sellers_tv"-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="fill_parent"-->
+                <!--android:text="There are currenly no active sellers, try checking back later!"-->
+                <!--android:visibility="gone" />-->
+
+
+        <!--&lt;!&ndash;</LinearLayout>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;</ScrollView>&ndash;&gt;-->
+
+    <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:id="@+id/sellers_list"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="400dp"-->
+        <!--android:layout_below="@+id/map"/>-->
+
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/refresh_button"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:layout_margin="10dp"-->
+        <!--android:src="@drawable/refresh"-->
+        <!--app:backgroundTint="#D42028"-->
+        <!--app:elevation="6dp"-->
+        <!--app:pressedTranslationZ="12dp" />-->
+
+<!--</LinearLayout>-->
+
+

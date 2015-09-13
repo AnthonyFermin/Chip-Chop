@@ -28,12 +28,12 @@ public class HelperMethods {
         streetAddress = addressLines[0].trim();
         apt = addressLines[1].trim();
         city = addressLines[2].trim();
-        zip = addressLines[3].trim().split(" ")[1];
+//        zip = addressLines[3].trim().split(" ")[1];
         state = addressLines[3].trim().split(" ")[0];
 
-        Log.d("Address","" + streetAddress + " " + apt + " " + city + ", " + state + " " + zip);
+//        Log.d("Address","" + streetAddress + " " + apt + " " + city + ", " + state + " " + zip);
 
-        Address address = new Address(streetAddress, apt, city, state, zip, uid);
+        Address address = new Address(streetAddress, apt, city, state, uid);
 
 
         return address;

@@ -61,9 +61,6 @@ public class Fragment_Buyer_ViewCart extends Fragment {
             public void onClick(View view) {
 
                 if (!dbHelper.userIsLoggedIn()) {
-                    User user = HelperMethods.getUser();
-                    order.setBuyerName(user.getName());
-                    order.setBuyerAddress(user.getAddressString());
                     Intent signupIntent = new Intent(getActivity(), SignupActivity1.class);
                     SharedPreferences sPref = activity.getSharedPreferences(FROM_CART, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sPref.edit();
@@ -76,6 +73,10 @@ public class Fragment_Buyer_ViewCart extends Fragment {
                             .show();
 
                 }else {
+                    User user = HelperMethods.getUser();
+                    Log.d("USER OBJECT","" + user);
+                    order.setBuyerName(user.getName());
+                    order.setBuyerAddress(user.getAddressString());
                     activity.replaceFragment(new Fragment_Buyer_Checkout());
                 }
             }

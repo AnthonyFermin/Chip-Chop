@@ -53,7 +53,7 @@
         android:text="DELIVERY METHOD" />
 
     <TextView
-        android:id="@+id/buyer_address_tv"
+        android:id="@+id/seller_address_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/delivery_method_tv"

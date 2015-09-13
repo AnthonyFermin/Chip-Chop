@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -18,7 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -39,8 +40,10 @@ import madelyntav.c4q.nyc.chipchop.SellActivity;
  */
 public class Fragment_Seller_CreateItem extends Fragment {
 
+    View coordinatorLayoutView;
+    static String filePath;
     EditText dollarPriceET;
-    ImageButton dishPhotoButton;
+    ImageView dishPhotoButton;
     Button addButton;
     EditText dishNameET;
     EditText portionsET;
@@ -78,6 +81,23 @@ public class Fragment_Seller_CreateItem extends Fragment {
         descriptionET.setText(itemToEdit.getDescriptionOfItem());
         dollarPriceET.setText(itemToEdit.getPrice() + "");
 
+        if(itemToEdit.getImageLink() != null && !itemToEdit.getImageLink().isEmpty() && itemToEdit.getImageLink().length() > 200) {
+            final String imageLink = itemToEdit.getImageLink();
+            new AsyncTask<Void, Void, Bitmap>() {
+                @Override
+                protected Bitmap doInBackground(Void... voids) {
+                    byte[] decoded = org.apache.commons.codec.binary.Base64.decodeBase64(imageLink.getBytes());
+                    return BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
+                }
+
+                @Override
+                protected void onPostExecute(Bitmap bitmap) {
+                    super.onPostExecute(bitmap);
+                    dishPhotoButton.setImageBitmap(bitmap);
+                }
+            }.execute();
+        }
+
         vegCB.setChecked(itemToEdit.isVegetarian());
         glutFreeCB.setChecked(itemToEdit.isGlutenFree());
         dairyCB.setChecked(itemToEdit.isContainsDairy());
@@ -103,19 +123,27 @@ public class Fragment_Seller_CreateItem extends Fragment {
             @Override
             public void runOnSuccess() {
                 Snackbar
-                        .make(Fragment_Seller_Items.coordinatorLayoutView, "Item added", Snackbar.LENGTH_SHORT)
+                        .make(coordinatorLayoutView, "Item added", Snackbar.LENGTH_SHORT)
                         .show();
-                Toast.makeText(activity,"Item added", Toast.LENGTH_SHORT).show();
-                activity.replaceSellerFragment(new Fragment_Seller_Items());
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        activity.replaceSellerFragment(new Fragment_Seller_Items());
+                    }
+                }, 1000);
             }
 
             @Override
             public void runOnFail() {
                 Snackbar
-                        .make(Fragment_Seller_Items.coordinatorLayoutView, "Failed to add item", Snackbar.LENGTH_SHORT)
+                        .make(coordinatorLayoutView, "Failed to add item", Snackbar.LENGTH_SHORT)
                         .show();
-                Toast.makeText(activity,"Failed to add item", Toast.LENGTH_SHORT).show();
-                activity.replaceSellerFragment(new Fragment_Seller_Items());
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        activity.replaceSellerFragment(new Fragment_Seller_Items());
+                    }
+                }, 1000);
             }
         };
 
@@ -141,7 +169,6 @@ public class Fragment_Seller_CreateItem extends Fragment {
                         || descriptionET.getText().toString().isEmpty()) {
                     Toast.makeText(activity, "Please fill in all required fields", Toast.LENGTH_SHORT).show();
                 } else {
-
                     String dishName = dishNameET.getText().toString();
                     int portions = 0;
                     if (!portionsET.getText().toString().isEmpty()) {
@@ -154,7 +181,9 @@ public class Fragment_Seller_CreateItem extends Fragment {
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                     }
+
                     String description = descriptionET.getText().toString();
+
 
                     Item item = new Item(dbHelper.getUserID(), "", dishName, portions, description, imageLink);
                     Log.d("Item Created", "ImageLink: " + imageLink);
@@ -185,6 +214,9 @@ public class Fragment_Seller_CreateItem extends Fragment {
                         if (activity.isCurrentlyCooking()) {
                             dbHelper.editItemInActiveSellerProfile(item, itemAddCallback);
                         } else {
+                            Log.d("EDIT ITEM","ITEM ID: " + item.getItemID());
+                            Log.d("EDIT ITEM","SELLER ID: " + item.getSellerID());
+                            Log.d("SELLER ITEMS","GLUTEN FREE: " + item.isGlutenFree());
                             dbHelper.editItemInSellerProfile(item, itemAddCallback);
                         }
                     } else {
@@ -209,8 +241,8 @@ public class Fragment_Seller_CreateItem extends Fragment {
         descriptionET = (EditText) root.findViewById(R.id.description);
         dollarPriceET = (EditText) root.findViewById(R.id.price_dollar_amount);
 
-        dishPhotoButton = (ImageButton) root.findViewById(R.id.dish_image);
-
+        dishPhotoButton = (ImageView) root.findViewById(R.id.dish_image);
+        coordinatorLayoutView = (View) root.findViewById(R.id.snackbarPosition);
 
         vegCB = (CheckBox) root.findViewById(R.id.veg_cb);
         glutFreeCB = (CheckBox) root.findViewById(R.id.glut_free_cb);
@@ -226,26 +258,26 @@ public class Fragment_Seller_CreateItem extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 1 && resultCode == RESULT_OK) {
+
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
+            imageFileUri = data.getData();
+            filePath = imageFileUri.getPath();
+//            resizeImageForDB(filePath);
+
+
+        } else if (requestCode == 0 && resultCode == RESULT_OK) {
             imageFileUri = Uri.parse(stringVariable);
-            String filePath = imageFileUri.getPath();
-            dishPhotoButton.setImageURI(imageFileUri);
-            saveImageToDB(filePath);
+            filePath = imageFileUri.getPath();
+//            resizeImageForDB(filePath);
+
         }
 
-        if (requestCode == 0 && resultCode == RESULT_OK) {
-            imageFileUri = Uri.parse(stringVariable);
-            final String filePath = imageFileUri.getPath();
-            dishPhotoButton.setImageURI(imageFileUri);
-            saveImageToDB(filePath);
-        }
+        dishPhotoButton.setImageURI(imageFileUri);
 
-        if (imageFileUri != null) {
-            dishPhotoButton.setImageURI(imageFileUri);
-        }
+
     }
 
-    private void saveImageToDB(final String filePath) {
+    private void resizeImageForDB(final String filePath) {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -280,19 +312,19 @@ public class Fragment_Seller_CreateItem extends Fragment {
     private void showListViewDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         dialogBuilder.setTitle("Set Dish Image");
-        final String[] items = {"Camera", "Gallery"};
+        final String[] items = {"Gallery"};
         dialogBuilder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                if (items[which].equalsIgnoreCase("Camera")) {
-                    intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.parse(stringVariable));
-
-                    if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-                        startActivityForResult(intent, 0);
-                    }
-                }
+//                if (items[which].equalsIgnoreCase("Camera")) {
+//                    intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                    intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.parse(stringVariable));
+//
+//                    if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+//                        startActivityForResult(intent, 0);
+//                    }
+//                }
 
                 if (items[which].equalsIgnoreCase("Gallery")) {
                     intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);

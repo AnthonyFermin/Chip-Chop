@@ -51,6 +51,7 @@
             android:layout_height="wrap_content"
             android:textSize="30sp"
             android:padding="10dp"
+            android:maxLines="2"
             style="@style/text_design"
             android:textStyle="bold"
             android:gravity="center_horizontal"

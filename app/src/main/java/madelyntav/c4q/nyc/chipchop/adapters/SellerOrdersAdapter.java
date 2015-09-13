@@ -87,7 +87,8 @@ public class SellerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         vh.deliveryMethod.setText("DELIVERY METHOD: " + deliveryMethod);
         if (order.isToDeliver()) {
-            vh.buyerAddress.setText("BUYER ADDRESS: " + order.getBuyerAddress());
+            vh.buyerAddress.setText("BUYER ADDRESS: \n" +
+                    "\n" + order.getBuyerAddress());
         } else {
             vh.buyerAddress.setVisibility(View.GONE);
         }

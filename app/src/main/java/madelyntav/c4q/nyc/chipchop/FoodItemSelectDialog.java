@@ -1,6 +1,9 @@
 package madelyntav.c4q.nyc.chipchop;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -128,8 +131,22 @@ public class FoodItemSelectDialog extends android.support.v4.app.DialogFragment 
     }
 
     private void initializeViews() {
-        if(itemForCart.getImageLink() != null && !itemForCart.getImageLink().isEmpty())
-//            Picasso.with(activity).load(itemForCart.getImageLink()).fit().into(foodImage);
+        if(itemForCart.getImageLink() != null && !itemForCart.getImageLink().isEmpty() && itemForCart.getImageLink().length() > 200) {
+            final String imageLink = itemForCart.getImageLink();
+            new AsyncTask<Void, Void, Bitmap>() {
+                @Override
+                protected Bitmap doInBackground(Void... voids) {
+                    byte[] decoded = org.apache.commons.codec.binary.Base64.decodeBase64(imageLink.getBytes());
+                    return BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
+                }
+
+                @Override
+                protected void onPostExecute(Bitmap bitmap) {
+                    super.onPostExecute(bitmap);
+                    foodImage.setImageBitmap(bitmap);
+                }
+            }.execute();
+        }
         dishName.setText(itemForCart.getNameOfItem());
         foodDescription.setText(itemForCart.getDescriptionOfItem());
     }

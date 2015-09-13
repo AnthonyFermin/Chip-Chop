@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -40,10 +41,6 @@ public class Fragment_Seller_OrderDetails extends Fragment {
 
     public static final String TAG = "fragment_seller_order_details";
 
-
-    public static NotificationManager notificationManager;
-    public static Notification notification;
-    public static final String NOTIFICATION_ACTION = "ahhhlvin.c4q.nyc.notification";
     private SellActivity activity;
     private DBHelper dbHelper;
     private Order order;
@@ -70,6 +67,19 @@ public class Fragment_Seller_OrderDetails extends Fragment {
             @Override
             public void onClick(View view) {
                 dbHelper.changeOrderActiveStatus(order);
+                Toast.makeText(activity,"Order Complete",Toast.LENGTH_SHORT).show();
+
+                dbHelper.moveOrderFromActiveToFulfilled(dbHelper.getUserID(), order.getOrderID(), order.getBuyerID(), new DBCallback() {
+                    @Override
+                    public void runOnSuccess() {
+
+                    }
+
+                    @Override
+                    public void runOnFail() {
+
+                    }
+                });
             }
         });
     }
@@ -84,17 +94,19 @@ public class Fragment_Seller_OrderDetails extends Fragment {
         dbHelper = DBHelper.getDbHelper(activity);
         activity.setCurrentFragment(TAG);
         order = activity.getOrderToView();
+        if(order != null) {
+            Log.d("ORDER DETAILS", "" + order.getOrderID());
+        }
         Log.d("ORDER DETAILS","Order: " + order);
 
         foodItems = dbHelper.getReceiptForSpecificOrderForSeller(order.getOrderID(), dbHelper.getUserID(), new DBCallback() {
             @Override
             public void runOnSuccess() {
-                Log.d("ORDER DETAILS","ORDER ITEMS LOADED");
-                for(Item item: foodItems){
-                    Log.d("ORDER DETAILS ITEM","item name: " + item.getNameOfItem());
+                Log.d("ORDER DETAILS", "ORDER ITEMS LOADED");
+                for (Item item : foodItems) {
+                    Log.d("ORDER DETAILS ITEM", "item name: " + item.getNameOfItem());
                 }
                 setAdapter();
-
             }
 
             @Override
@@ -108,12 +120,6 @@ public class Fragment_Seller_OrderDetails extends Fragment {
         foodList.setLayoutManager(new LinearLayoutManager(getActivity()));
         CheckoutListAdapter checkoutListAdapter = new CheckoutListAdapter(getActivity(),foodItems);
         foodList.setAdapter(checkoutListAdapter);
-    }
-
-
-    public interface OnBuyerCheckoutFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
     }
 
 }

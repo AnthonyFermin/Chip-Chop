@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,20 +21,16 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.HelperMethods;
-import madelyntav.c4q.nyc.chipchop.MainActivity;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.SellActivity;
 
@@ -255,7 +250,6 @@ public class Fragment_Seller_CreateItem extends Fragment {
             @Override
             protected Void doInBackground(Void... voids) {
                 Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-
                 Bitmap scaledBitmap =  Bitmap.createScaledBitmap(bitmap,500,333,false);
 
                 File file = new File(filePath);
@@ -281,7 +275,6 @@ public class Fragment_Seller_CreateItem extends Fragment {
             }
         }.execute();
     }
-
 
     //This is for the dialog box: Camera or Gallery
     private void showListViewDialog() {

@@ -25,6 +25,7 @@ public class User {
     int cardExpirationMonth;
     int cardExpirationYear;
     String cardCVC;
+    boolean hasSellerProfile;
 
     public User(){}
 
@@ -189,5 +190,13 @@ public class User {
 
     public void setCardCVC(String cardCVC) {
         this.cardCVC = cardCVC;
+    }
+
+    public boolean isHasSellerProfile() {
+        return hasSellerProfile;
+    }
+
+    public void setHasSellerProfile(boolean hasSellerProfile) {
+        this.hasSellerProfile = hasSellerProfile;
     }
 }

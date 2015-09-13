@@ -407,7 +407,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
             Circle circle = map.addCircle(new CircleOptions()
                     .center(new LatLng(lat, lng))
-                    .radius(3219)
+                    .radius(13219)
                     .strokeColor(Color.RED));
 
             float[] distance = new float[sellers.size()];
@@ -430,12 +430,11 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
                 seller.setDistanceFromBuyer(distanceToShow);
                 Log.d("DISTANCE", distanceToShow);
                 Log.d("Fragment Buyer Map", "MARKER ADDED");
-                listOfSellersForUse.add(seller);
                 map.addMarker(new MarkerOptions()
                         .position(new LatLng(gLat, gLng))
                         .title(userName))
                         .setIcon(BitmapDescriptorFactory.fromResource(R.drawable.mapmarker));
-
+                        listOfSellersForUse.add(seller);
             }
         }
     }

@@ -103,7 +103,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
         initializeListPanel();
 
-        //addSellerMarkers() is in onResume()
+        addSellerMarkers();
 
         return root;
     }
@@ -148,7 +148,6 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onResume() {
         super.onResume();
-        addSellerMarkers();
 
         // clear cart when entering this fragment
         activity.setCurrentOrder(new Order());

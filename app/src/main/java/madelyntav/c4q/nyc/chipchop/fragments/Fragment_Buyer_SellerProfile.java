@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -178,8 +177,6 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
         order.setSellerID(seller.getUID());
         order.setIsActive(true);
         order.setStoreName(seller.getStoreName());
-        order.setBuyerName(user.getName());
-        order.setBuyerAddress(user.getAddressString());
         order.setSellerName(seller.getName());
         order.setSellerAddress(seller.getAddressString());
         activity.setCurrentOrder(order);

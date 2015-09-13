@@ -3,9 +3,7 @@ package madelyntav.c4q.nyc.chipchop;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -13,7 +11,6 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,12 +28,17 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.firebase.client.Firebase;
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.plus.Plus;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
@@ -48,12 +50,14 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
 
     /* Request code used to invoke sign in user interactions. */
     private static final int RC_SIGN_IN = 0;
+    public int MY_ACTIVITY_REQUEST_CODE;
 
     /* Client used to interact with Google APIs. */
     static GoogleApiClient mGoogleApiClient;
 
     Button signInButton;
     Button newUserButton;
+    String token;
     EditText emailET;
     EditText passET;
     DBHelper dbHelper;
@@ -90,6 +94,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
     DBCallback emptyCallback;
     Firebase.AuthStateListener mAuthStateListener;
     AccessToken accessToken;
+    SignInButton googleButton;
 
     private boolean toSellActivity;
 
@@ -189,10 +194,13 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
             @Override
             public void onClick(View v) {
 
-                loginWithFacebook();            }
+                loginWithFacebook();
+            }
         });
 
-        findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
+        googleButton= (SignInButton) findViewById(R.id.sign_in_button);
+
+        googleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (view.getId() == R.id.sign_in_button) {
@@ -257,30 +265,27 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
 //        mStatusTextView.setText(R.string.signing_in);
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        MY_ACTIVITY_REQUEST_CODE=requestCode;
         Log.d(TAG, "onActivityResult:" + requestCode + ":" + resultCode + ":" + data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
             // If the error resolution was not successful we should not resolve further.
             if (resultCode != RESULT_OK) {
                 mShouldResolve = false;
+                    Snackbar
+                            .make(coordinatorLayoutView, "Login Failed", Snackbar.LENGTH_SHORT)
+                            .show();
+                    Toast.makeText(this,"Login Failed",Toast.LENGTH_LONG).show();
             }
 
             mIsResolving = false;
             mGoogleApiClient.connect();
         }else if(resultCode== RESULT_OK) {
-            Intent intent1 = new Intent(SignupActivity1.this, SignupActivity2.class);
-            dbHelper.onFacebookAccessTokenChange(AccessToken.getCurrentAccessToken(), intent1);
+            dbHelper.onFacebookAccessTokenChange(AccessToken.getCurrentAccessToken());
             Log.d("request Code", String.valueOf(resultCode));
-        }
-        else{
-            Snackbar
-                    .make(coordinatorLayoutView, "Login Failed", Snackbar.LENGTH_SHORT)
-                    .show();
-            Toast.makeText(this,"Login Failed",Toast.LENGTH_LONG).show();
         }
     }
 
@@ -310,17 +315,48 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         // account has granted any requested permissions to our app and that we were able to
         // establish a service connection to Google Play services.
         Log.d(TAG, "onConnected:" + bundle);
+        googleButton.setEnabled(false);
+        googleButton.setEnabled(true);
+        googleButton.setEnabled(true);
         mShouldResolve = false;
 
-        // Show the signed-in UI
-        Snackbar
-                .make(coordinatorLayoutView, "Signed In", Snackbar.LENGTH_SHORT)
-                .show();
-        Toast.makeText(getApplicationContext(), "Signed In", Toast.LENGTH_SHORT).show();
-        Intent intent1 = new Intent(SignupActivity1.this, SignupActivity2.class);
-        dbHelper.onGmailAccessTokenChange(AccessToken.getCurrentAccessToken(), intent1);
-
+        googleSignInASync();
     }
+
+ public void googleSignInASync() {
+     new AsyncTask<Void, Void, Void>() {
+         @Override
+         protected Void doInBackground(Void... params) {
+             final String SCOPES = "https://www.googleapis.com/auth/userinfo.profile";
+             try {
+                 token = GoogleAuthUtil.getToken(getApplicationContext(),
+                         Plus.AccountApi.getAccountName(mGoogleApiClient),
+                         "oauth2:" + SCOPES);
+             } catch (IOException e) {
+                 e.printStackTrace();
+             } catch (UserRecoverableAuthException userAuthEx) {
+                 // Start the user recoverable action using the intent returned by
+                 // getIntent()
+                 SignupActivity1.this.startActivityForResult(
+                         userAuthEx.getIntent(),
+                         MY_ACTIVITY_REQUEST_CODE);
+                 return null;
+             } catch (GoogleAuthException e) {
+                 e.printStackTrace();
+             }
+
+             Log.i("", "mustafa olll " + token);
+                 return null;
+             }
+
+
+             @Override
+             protected void onPostExecute (Void aVoid){
+                 super.onPostExecute(aVoid);
+                 dbHelper.onGmailAccessTokenChange(token);
+             }
+         }.execute();
+     }
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -451,7 +487,6 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
             //Toast.makeText(getApplicationContext(), "Signed Out", Toast.LENGTH_SHORT).show();
         }
     }
-
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {

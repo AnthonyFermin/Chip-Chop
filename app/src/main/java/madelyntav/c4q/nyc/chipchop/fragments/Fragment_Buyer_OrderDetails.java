@@ -11,7 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBCallback;
@@ -31,7 +35,7 @@ public class Fragment_Buyer_OrderDetails extends Fragment {
 
     public static final String TAG = "fragment_buyer_order_details";
 
-    TextView totalPrice;
+    TextView totalPrice, sellerName, buyDateTime, deliveryMethod, sellerAddress;
     private BuyActivity activity;
     private DBHelper dbHelper;
     private DBCallback emptyCallback;
@@ -46,6 +50,10 @@ public class Fragment_Buyer_OrderDetails extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_buyer_orderdetail, container, false);
 
+        sellerName = (TextView) root.findViewById(R.id.seller_name);
+        buyDateTime = (TextView) root.findViewById(R.id.order_timestamp_tv);
+        deliveryMethod = (TextView) root.findViewById(R.id.delivery_method_tv);
+        sellerAddress = (TextView) root.findViewById(R.id.seller_address_tv);
         totalPrice = (TextView) root.findViewById(R.id.total_price_tv);
         activity = (BuyActivity) getActivity();
         dbHelper = DBHelper.getDbHelper(activity);
@@ -87,6 +95,23 @@ public class Fragment_Buyer_OrderDetails extends Fragment {
 //        mBuilder.setAutoCancel(true);
 //        notification = mBuilder.build();
 //        notification.flags |= Notification.FLAG_AUTO_CANCEL;
+        sellerName.setText("SELLER NAME: " + orderToView.getSellerName());
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(orderToView.getTimeStamp());
+        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.US);
+        String formattedDate = formatter.format(cal.getTime());
+        buyDateTime.setText("TIME: " + formattedDate);
+        String deliverMethod = "";
+
+        if (orderToView.isPickup()) {
+            deliverMethod = "PICKUP";
+        } else {
+            deliverMethod = "DELIVER";
+        }
+
+        deliveryMethod.setText("DELIVERY METHOD: " + deliverMethod);
+        sellerAddress.setText("SELLER ADDRESS: \n" + orderToView.getSellerAddress());
 
 
         return root;

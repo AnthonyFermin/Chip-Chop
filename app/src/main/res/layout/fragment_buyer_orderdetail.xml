@@ -16,10 +16,50 @@
         android:text="order details"
         android:textSize="35sp" />
 
+    <TextView
+        android:id="@+id/seller_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name of Seller" />
+
+    <TextView
+        android:id="@+id/order_timestamp_tv"
+        style="@style/text_design"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Time Bought"
+        android:textStyle="bold"
+        android:textSize="20sp"/>
+
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_margin="5dp"
+        android:background="@android:color/darker_gray"/>
+
+
+    <TextView
+        android:id="@+id/delivery_method_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/divider"
+        android:text="DELIVERY METHOD" />
+
+    <TextView
+        android:id="@+id/seller_address_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/text_design"
+        android:layout_below="@+id/delivery_method_tv"
+        android:text="SELLER ADDRESS" />
+
     <LinearLayout
         android:id="@+id/header_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
         android:layout_below="@id/order_summary_divider"
         android:orientation="horizontal">
 

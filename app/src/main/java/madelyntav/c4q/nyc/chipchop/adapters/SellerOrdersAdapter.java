@@ -10,7 +10,11 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
 import madelyntav.c4q.nyc.chipchop.R;
@@ -39,11 +43,13 @@ public class SellerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView orderID;
         TextView deliveryMethod;
         TextView buyerAddress;
+        TextView timeStamp;
 
 
         public SellerOrdersViewHolder(View itemView) {
             super(itemView);
 
+            timeStamp = (TextView) itemView.findViewById(R.id.time_stamp);
             total = (TextView) itemView.findViewById(R.id.order_cost_tv);
             container = (CardView) itemView.findViewById(R.id.card_view);
             nameOfBuyer = (TextView) itemView.findViewById(R.id.buyer_name_tv);
@@ -77,7 +83,12 @@ public class SellerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         SellerOrdersViewHolder vh = (SellerOrdersViewHolder) viewHolder;
         vh.nameOfBuyer.setText("Buyer Id: " + order.getBuyerID());
         vh.orderID.setText("Order Id: " + order.getOrderID());
-        vh.total.setText("Total Price: $" + order.getPrice());
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(order.getTimeStamp());
+        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.US);
+        String formattedDate = formatter.format(cal.getTime());
+        vh.timeStamp.setText("TIME: " + formattedDate);
+        vh.total.setText("TOTAL : $" + order.getPrice());
 
         if (order.isPickup()) {
             deliveryMethod = "PICKUP";

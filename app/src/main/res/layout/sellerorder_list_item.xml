@@ -22,6 +22,15 @@
         android:text="Name of Buyer" />
 
     <TextView
+        android:id="@+id/time_stamp"
+        style="@style/text_design"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Time Bought"
+        android:textStyle="bold"
+        android:textSize="20sp"/>
+
+    <TextView
         android:id="@+id/order_id_tv"
         style="@style/text_design"
         android:layout_width="match_parent"

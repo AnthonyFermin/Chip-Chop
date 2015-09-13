@@ -24,6 +24,7 @@ import java.util.Map;
 
 import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.SignupActivity1;
+import madelyntav.c4q.nyc.chipchop.SignupActivity2;
 
 /**
  * Created by c4q-madelyntavarez on 8/12/15.
@@ -434,7 +435,7 @@ public class DBHelper extends Firebase {
 
     }
 
-    public void onFacebookAccessTokenChange(final AccessToken token, final Intent intent) {
+    public void onFacebookAccessTokenChange(final AccessToken token) {
         Firebase ref = new Firebase(URL);
         Log.d("Tok In DB preAuth", "Token");
 
@@ -460,12 +461,18 @@ public class DBHelper extends Firebase {
                     fRef.child(UID).child(imageLink).setValue(authData.getProviderData().get("profileImageURL"));
                     fRef.child(UID).child(sName).setValue(authData.getProviderData().get("displayName"));
 
+                    SharedPreferences sharedPreferences = mContext.getSharedPreferences("New User", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("id", UID);
+                    editor.putString("eMail", String.valueOf(authData.getProviderData().get("email")));
+                    editor.putString("name", String.valueOf(authData.getProviderData().get("displayName")));
+                    editor.apply();
 
+                    Intent intent = new Intent(mContext,SignupActivity2.class);
                     intent.putExtra("email", String.valueOf(authData.getProviderData().get("email")));
                     intent.putExtra("name", String.valueOf(authData.getProviderData().get("displayName")));
-                    intent.putExtra("display", String.valueOf(authData.getProviderData().get("profileImageURL")));
                     intent.putExtra("UID", UID);
-                    mContext.getApplicationContext().startActivity(intent);
+                    mContext.startActivity(intent);
                 }
 
                 @Override
@@ -538,41 +545,35 @@ public class DBHelper extends Firebase {
                 });
     }
 
-    public void onGmailAccessTokenChange(final AccessToken token, final Intent intent) {
+    public void onGmailAccessTokenChange(final String token) {
         Firebase ref = new Firebase(URL);
         Log.d("Tok In DB preAuth", "Token");
 
         if (token != null) {
-            ref.authWithOAuthToken("google", token.getToken(), new Firebase.AuthResultHandler() {
+            ref.authWithOAuthToken("google", token, new Firebase.AuthResultHandler() {
                 @Override
                 public void onAuthenticated(AuthData authData) {
                     // The Facebook user is now authenticated with your Firebase app
                     Log.d("Tok In DB after Auth", "Token");
                     //Create user Profile with user email
-                    createUserFromGmailAuthLogin(String.valueOf(authData.getProviderData().get("email")), AccessToken.getCurrentAccessToken().getToken());
+                    Log.d("HEREFORG,","HERE");
+                    createUserFromGmailAuthLogin(String.valueOf(authData.getProviderData().get("email")), String.valueOf(authData.getProviderData().get("displayName")), AccessToken.getCurrentAccessToken().getToken());
                     Log.d("email", authData.getProviderData().get("email").toString());
                     UID = "";
                     UID = authData.getUid();
 
-
                     Log.d("UID", UID + "");
-
                     Firebase fRef = new Firebase(URL + "UserProfiles/");
                     fRef.child(UID);
                     fRef.child(UID).child(sEmailAddress).setValue(authData.getProviderData().get("email"));
                     fRef.child(UID).child(imageLink).setValue(authData.getProviderData().get("profileImageURL"));
                     fRef.child(UID).child(sName).setValue(authData.getProviderData().get("displayName"));
-
-                    intent.putExtra("email", String.valueOf(authData.getProviderData().get("email")));
-                    intent.putExtra("name", String.valueOf(authData.getProviderData().get("displayName")));
-                    intent.putExtra("display", String.valueOf(authData.getProviderData().get("profileImageURL")));
-                    intent.putExtra("UID", UID);
-                    mContext.getApplicationContext().startActivity(intent);
                 }
 
                 @Override
                 public void onAuthenticationError(FirebaseError firebaseError) {
                     // there was an error
+                    Log.d("err",firebaseError.toString());
                 }
             });
         } else {
@@ -582,7 +583,7 @@ public class DBHelper extends Firebase {
     }
 
 
-    private void createUserFromGmailAuthLogin(final String email, final String password) {
+    private void createUserFromGmailAuthLogin(final String email, final String name, final String password) {
         fireBaseRef.createUser(email, password, new ValueResultHandler<Map<String, Object>>() {
             @Override
             public void onSuccess(Map<String, Object> stringObjectMap) {
@@ -595,6 +596,14 @@ public class DBHelper extends Firebase {
                 editor.putString("eMail", email);
                 editor.putString("password", password);
                 editor.apply();
+                Log.d("HEREFOrIntent,", "HERE");
+
+
+                Intent intent = new Intent(mContext,SignupActivity2.class);
+                intent.putExtra("email", String.valueOf(email));
+                intent.putExtra("name", String.valueOf(name));
+                intent.putExtra("UID", UID);
+                mContext.startActivity(intent);
 
                 user = new User(UID, email);
 
@@ -2160,6 +2169,7 @@ public class DBHelper extends Firebase {
                     item2.setSellerID(sellerId);
                     item2.setNameOfItem(item1.nameOfItem);
                     item2.setPrice(item1.price);
+                    item2.setDescriptionOfItem(item1.descriptionOfItem);
                     item2.setQuantity(item1.quantity);
                     item2.setIsVegetarian(item1.isVegetarian);
                     item2.setImageLink(item1.imageLink);

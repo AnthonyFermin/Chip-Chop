@@ -53,7 +53,7 @@ public class ServiceBuyerNotify extends Service {
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mainTask();
 
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     private void mainTask() {

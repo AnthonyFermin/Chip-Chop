@@ -73,6 +73,8 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     EditText zipcodeET;
     EditText phoneNumberET;
     EditText stateET;
+    EditText accountNumET;
+    EditText routingNumET;
     View coordinatorLayoutView;
 
     Button saveButton;
@@ -85,6 +87,8 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     String zipcode;
     String phoneNumber;
     String imageLink;
+    String accountNum;
+    String routingNum;
 
     Seller seller = null;
     User user;
@@ -166,6 +170,9 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         state = stateET.getText().toString().trim().replace(' ', '+');
         phoneNumber = phoneNumberET.getText().toString().replace("-", "");
 
+        accountNum = accountNumET.getText().toString().trim();
+        routingNum = routingNumET.getText().toString().trim();
+
         String queryString = address + ",+" + city + ",+" + state;// + "&key=" + APIKEY;
         Log.i("RETROFIT- Geocode Query", queryString);
 
@@ -189,6 +196,10 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 seller.setLongitude(location.getLng() + "");
                 seller.setIsCooking(false);
                 seller.setPhotoLink(imageLink);
+                if(!accountNum.isEmpty() && !routingNum.isEmpty()) {
+                    seller.setAccountNumber(accountNum);
+                    seller.setRoutingNumber(routingNum);
+                }
                 dbHelper.addSellerProfileInfoToDB(seller);
                 dbHelper.setSellerCookingStatus(seller.getIsCooking());
                 activity.setSeller(seller);
@@ -265,6 +276,16 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             stateET.setText(address.getState());
             zipcodeET.setText(address.getZipCode());
         }
+
+        accountNum = seller.getAccountNumber();
+        routingNum = seller.getRoutingNumber();
+
+        if(accountNum != null && !accountNum.isEmpty()
+                && routingNum != null && !routingNum.isEmpty()){
+            accountNumET.setText(accountNum);
+            routingNumET.setText(routingNum);
+        }
+
         phoneNumberET.setText(user.getPhoneNumber());
         imageLink = seller.getPhotoLink();
         if(imageLink != null && !imageLink.isEmpty() && imageLink.length() > 200) {
@@ -436,6 +457,8 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         zipcodeET = (EditText) root.findViewById(R.id.zipcode);
         phoneNumberET = (EditText) root.findViewById(R.id.phone_number);
         stateET = (EditText) root.findViewById(R.id.state);
+        accountNumET = (EditText) root.findViewById(R.id.account_number);
+        routingNumET = (EditText) root.findViewById(R.id.routing_number);
         setReadOnlyAll(true);
 
         cookingStatus = (ToggleButton) root.findViewById(R.id.cooking_status);
@@ -586,6 +609,8 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         setReadOnly(zipcodeET, readOnly);
         setReadOnly(phoneNumberET, readOnly);
         setReadOnly(stateET, readOnly);
+        setReadOnly(accountNumET, readOnly);
+        setReadOnly(routingNumET, readOnly);
     }
 
     private void setReadOnly(EditText view, boolean readOnly) {

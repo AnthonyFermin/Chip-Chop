@@ -90,7 +90,13 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
         phoneNumber = (TextView) root.findViewById(R.id.phone_number);
         saveChanges= (Button) root.findViewById(R.id.saveChanges);
 
+        saveChanges.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dbHelper.addUserProfileInfoToDB(user);
 
+            }
+        });
 
     }
 

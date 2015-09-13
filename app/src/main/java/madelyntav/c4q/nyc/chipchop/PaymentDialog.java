@@ -96,7 +96,7 @@ public class PaymentDialog extends android.support.v4.app.DialogFragment {
                                 activity.startService(intent);
                                 confirmImage.setVisibility(View.GONE);
                                 activity.replaceFragment(new Fragment_Buyer_Orders());
-                                
+
                             }
                         }, 1000);
                         getDialog().dismiss();

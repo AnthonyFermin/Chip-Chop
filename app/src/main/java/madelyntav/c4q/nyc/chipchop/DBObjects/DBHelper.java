@@ -653,8 +653,18 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
         fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
         fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
-        fRef.child(UID).child("routingNumber").setValue(seller.getRoutingNumber());
-        fRef.child(UID).child("accountNumber").setValue(seller.getAccountNumber());
+        fRef.child(UID).child("hasSellerProfile").setValue(user.isHasSellerProfile());
+
+        if(user.isHasSellerProfile()){
+            seller= new Seller();
+            seller.setUID(user.getUID());
+            seller.setName(user.getName());
+            seller.seteMail(user.geteMail());
+            seller.setPhoneNumber(user.getPhoneNumber());
+            seller.setPhotoLink(user.getPhotoLink());
+            seller.setAddress(user.getAddress());
+            addSellerProfileInfoToDB(seller);
+        }
 
     }
 
@@ -709,23 +719,21 @@ public class DBHelper extends Firebase {
 
     }
 
-    public void addSellerProfileInfoToDB(Seller user) {
+    public void addSellerProfileInfoToDB(Seller seller) {
         Firebase fRef = new Firebase(URL + "SellerProfiles/");
-        UID = user.getUID();
+        sellerId = seller.getUID();
 
-        fRef.child(UID).child("UID").setValue(UID);
-        fRef.child(UID).child(sName).setValue(user.getName());
-        fRef.child(UID).child("storeName").setValue(user.getStoreName());
-        fRef.child(UID).child(sEmailAddress).setValue(user.geteMail());
-        fRef.child(UID).child(sPhoneNumber).setValue(user.getPhoneNumber());
-        fRef.child(UID).child(sPhotoLink).setValue(user.getPhotoLink());
-        fRef.child(UID).child(sCardNumber).setValue(user.getCardNumber());
-        fRef.child(UID).child(sCardExpirationMonth).setValue(user.getCardExpirationMonth());
-        fRef.child(UID).child(sCardExpirationYear).setValue(user.getCardExpirationYear());
-        fRef.child(UID).child(sCardCVC).setValue(user.getCardCVC());
-        fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
-        fRef.child(UID).child(sLatitude).setValue(user.getAddress().getLatitude());
-        fRef.child(UID).child(sLongitude).setValue(user.getAddress().getLongitude());
+        fRef.child(sellerId).child("UID").setValue(UID);
+        fRef.child(sellerId).child(sName).setValue(seller.getName());
+        fRef.child(sellerId).child("storeName").setValue(seller.getStoreName());
+        fRef.child(sellerId).child(sEmailAddress).setValue(seller.geteMail());
+        fRef.child(sellerId).child(sPhoneNumber).setValue(seller.getPhoneNumber());
+        fRef.child(sellerId).child(sPhotoLink).setValue(seller.getPhotoLink());
+        fRef.child(sellerId).child("routingNumber").setValue(seller.getRoutingNumber());
+        fRef.child(sellerId).child("accountNumber").setValue(seller.getAccountNumber());
+        fRef.child(sellerId).child(sAddress).setValue(seller.getAddress().toString());
+        fRef.child(sellerId).child(sLatitude).setValue(seller.getAddress().getLatitude());
+        fRef.child(sellerId).child(sLongitude).setValue(seller.getAddress().getLongitude());
     }
 
     public void setSellerCookingStatus(boolean isCooking) {

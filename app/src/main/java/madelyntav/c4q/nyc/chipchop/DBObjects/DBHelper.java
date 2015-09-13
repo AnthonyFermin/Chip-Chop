@@ -1934,6 +1934,14 @@ public class DBHelper extends Firebase {
         }
 
     }
+    public void changeOrderActiveStatus(Order order){
+        UID=order.getBuyerID();
+        orderID=order.getOrderID();
+
+        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID + "/Orders/" + orderID);
+        fRef.child(UID).child(orderID);
+        fRef.child(orderID).child("isActive").setValue(order.isActive());
+    }
 
     public ArrayList<Item> updateItemsForSpecificOrderForBuyer(DBCallback dbCallback) {
 

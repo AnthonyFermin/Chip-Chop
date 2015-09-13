@@ -434,7 +434,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
                 Log.d("DISTANCE", distanceToShow);
                 Log.d("Fragment Buyer Map", "MARKER ADDED");
                 map.addMarker(new MarkerOptions()
-                        .position(new LatLng(gLat, gLng))
+                        .position(new LatLng(gLat, gLng)).snippet(seller.getDistanceFromBuyer())
                         .title(userName))
                         .setIcon(BitmapDescriptorFactory.fromResource(R.drawable.mapmarker));
                 listOfSellersForUse.add(seller);

@@ -29,15 +29,11 @@ public class ServiceBuyerNotify extends Service {
     public static String ORDER_ID = "orderid";
     public static String BUYER_ID = "buyerid";
 
-
     private static final String URL = "https://chipchop.firebaseio.com/";
     private String orderID;
     private String buyerID;
-    private String sellerID;
 
     private Firebase buyerOrderRef;
-    private Firebase sellerRef;
-    private ChildEventListener sellerCEL;
     private ValueEventListener orderVEL;
 
     private NotificationManager notificationManager;
@@ -53,12 +49,11 @@ public class ServiceBuyerNotify extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         orderID = intent.getStringExtra(ORDER_ID);
         buyerID = intent.getStringExtra(BUYER_ID);
-        sellerID = intent.getStringExtra(SELLER_ID);
         Firebase.setAndroidContext(this);
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mainTask();
 
-        return START_REDELIVER_INTENT;
+        return START_STICKY;
     }
 
     private void mainTask() {
@@ -86,6 +81,7 @@ public class ServiceBuyerNotify extends Service {
 
                     mBuilder.setAutoCancel(true);
                     notification = mBuilder.build();
+                    notification.defaults |= Notification.DEFAULT_SOUND;
                     notification.flags |= Notification.FLAG_AUTO_CANCEL;
                     notificationManager.notify(123, notification);
                     Log.d(TAG, "ORDER COMPLETE");

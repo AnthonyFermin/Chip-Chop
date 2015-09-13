@@ -115,7 +115,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:text="300 ft"
+        android:text="0.5 mi"
         android:textColor="#FFF"
         android:textSize="20sp"
         android:padding="10dp"/>

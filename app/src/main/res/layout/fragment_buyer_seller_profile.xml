@@ -79,34 +79,26 @@
                 android:layout_gravity="start"
                 android:clickable="false"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:textColor="#8bc34a"
-                android:text="● Currently Cooking"
-                android:textSize="18sp"
-                android:id="@+id/cooking_status"
-                android:padding="2dp"
-                android:layout_marginTop="4dp"
-                android:gravity="start"
-                android:layout_weight="1"/>
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/deliver_method_tv"
-        style="@style/text_design"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:text="DELIVERY OPTIONS"
-        android:layout_below="@+id/container"
-        android:textStyle="bold" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:textColor="#8bc34a"
+            android:text="● Currently Cooking"
+            android:textSize="18sp"
+            android:id="@+id/cooking_status"
+            android:padding="2dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="5dp"
+            android:gravity="center_horizontal"
+            android:layout_weight="1"/>
 
-    <TextView
+
+        <TextView
         android:id="@+id/deliver_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -121,7 +113,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:layout_below="@+id/deliver_tv"
-        android:text="PICKUP"/>
+        android:text="PICKUP AVAILABLE"/>
 
     </LinearLayout>
 
@@ -148,7 +140,7 @@
         android:src="@drawable/cart"
         android:layout_marginEnd="5dp"
         app:backgroundTint="#D42028"
-        android:layout_below="@+id/container"
+        android:layout_above="@+id/seller_items_list"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp"/>
 

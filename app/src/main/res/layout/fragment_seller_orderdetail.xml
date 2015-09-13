@@ -2,37 +2,105 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_margin="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/orderdetail_id_tv"
+            style="@style/text_design"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="Order ID#"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/buyer_name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name of Buyer" />
+
+
+
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_margin="5dp"
+            android:background="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/delivery_method_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/text_design"
+            android:text="DELIVERY METHOD" />
+
+        <TextView
+            android:id="@+id/buyer_address_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BUYER ADDRESS" />
+
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_margin="5dp"
+            android:background="@android:color/darker_gray" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/checkout_items_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TOTAL: "
+        style="@style/text_design"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/total_price_tv"
+        android:textSize="20sp"
+        android:id="@+id/total_tv"
+        android:layout_margin="10dp"
+        android:textStyle="bold"/>
 
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="25sp"
-        android:text="Order ID#"
-        android:textStyle="bold"
-        android:padding="10dp"
-        style="@style/text_design"
-        android:id="@+id/orderdetail_id_tv"/>
 
-
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/checkout_items_list"
-        android:layout_below="@id/orderdetail_id_tv"
-        android:padding="10dp"/>
+        android:text="$ TOTAL PRICE HERE"
+        android:textSize="20sp"
+        android:id="@+id/total_price_tv"
+        android:layout_margin="10dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:textStyle="bold"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/completedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
         android:layout_marginEnd="5dp"
         android:src="@drawable/check"
         app:backgroundTint="#D42028"
         app:elevation="6dp"
-        app:pressedTranslationZ="12dp"/>
+        app:pressedTranslationZ="12dp" />
 
 </RelativeLayout>

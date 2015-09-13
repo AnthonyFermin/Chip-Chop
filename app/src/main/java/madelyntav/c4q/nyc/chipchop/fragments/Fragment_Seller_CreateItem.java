@@ -229,12 +229,14 @@ public class Fragment_Seller_CreateItem extends Fragment {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             imageFileUri = Uri.parse(stringVariable);
             String filePath = imageFileUri.getPath();
+            dishPhotoButton.setImageURI(imageFileUri);
             saveImageToDB(filePath);
         }
 
         if (requestCode == 0 && resultCode == RESULT_OK) {
             imageFileUri = Uri.parse(stringVariable);
             final String filePath = imageFileUri.getPath();
+            dishPhotoButton.setImageURI(imageFileUri);
             saveImageToDB(filePath);
         }
 

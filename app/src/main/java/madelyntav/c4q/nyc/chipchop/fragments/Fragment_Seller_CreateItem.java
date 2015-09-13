@@ -78,6 +78,23 @@ public class Fragment_Seller_CreateItem extends Fragment {
         descriptionET.setText(itemToEdit.getDescriptionOfItem());
         dollarPriceET.setText(itemToEdit.getPrice() + "");
 
+        if(itemToEdit.getImageLink() != null && !itemToEdit.getImageLink().isEmpty() && itemToEdit.getImageLink().length() > 200) {
+            final String imageLink = itemToEdit.getImageLink();
+            new AsyncTask<Void, Void, Bitmap>() {
+                @Override
+                protected Bitmap doInBackground(Void... voids) {
+                    byte[] decoded = org.apache.commons.codec.binary.Base64.decodeBase64(imageLink.getBytes());
+                    return BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
+                }
+
+                @Override
+                protected void onPostExecute(Bitmap bitmap) {
+                    super.onPostExecute(bitmap);
+                    dishPhotoButton.setImageBitmap(bitmap);
+                }
+            }.execute();
+        }
+
         vegCB.setChecked(itemToEdit.isVegetarian());
         glutFreeCB.setChecked(itemToEdit.isGlutenFree());
         dairyCB.setChecked(itemToEdit.isContainsDairy());

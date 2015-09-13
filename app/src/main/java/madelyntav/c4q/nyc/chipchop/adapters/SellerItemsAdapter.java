@@ -63,6 +63,7 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         TextView quantity;
         TextView description;
         SwitchCompat activeSwitch;
+        ImageView vegan, glutenFree, dairy, nut, egg, shellFish;
 
         public SellersViewHolder(View itemView) {
             super(itemView);
@@ -74,6 +75,13 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             quantity = (TextView) itemView.findViewById(R.id.food_quantity_tv);
             description = (TextView) itemView.findViewById(R.id.food_description_tv);
             activeSwitch = (SwitchCompat) itemView.findViewById(R.id.active_toggle);
+
+            vegan = (ImageView) itemView.findViewById(R.id.vegan);
+            glutenFree = (ImageView) itemView.findViewById(R.id.gluten_free);
+            dairy = (ImageView) itemView.findViewById(R.id.dairy);
+            nut = (ImageView) itemView.findViewById(R.id.nut);
+            egg = (ImageView) itemView.findViewById(R.id.egg);
+            shellFish = (ImageView) itemView.findViewById(R.id.shellfish);
 
             itemRemovalCallback = new DBCallback() {
                 @Override
@@ -173,6 +181,19 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
             }.execute();
         }
+
+        if(sellerItem.isVegetarian())
+            vh.vegan.setVisibility(View.VISIBLE);
+        if(sellerItem.isGlutenFree())
+            vh.glutenFree.setVisibility(View.VISIBLE);
+        if(sellerItem.isContainsDairy())
+            vh.dairy.setVisibility(View.VISIBLE);
+        if(sellerItem.isContainsPeanuts())
+            vh.nut.setVisibility(View.VISIBLE);
+        if(sellerItem.isContainsEggs())
+            vh.egg.setVisibility(View.VISIBLE);
+        if(sellerItem.isContainsShellfish())
+            vh.shellFish.setVisibility(View.VISIBLE);
 
         setAnimation(vh.container, position);
 

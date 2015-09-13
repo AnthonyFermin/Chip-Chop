@@ -2757,7 +2757,6 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child(itemID).child("containsEggs").setValue(item.isContainsEggs());
             fRef.child(orderID).child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
             fRef.child(orderID).child(itemID).child("containsDairy").setValue(item.isContainsDairy());
-
         }
 
         dbCallback.runOnSuccess();

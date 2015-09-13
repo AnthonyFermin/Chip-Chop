@@ -25,8 +25,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -103,10 +101,9 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         initializeMap();
         setListeners();
 
-//        initializeListPanel();
+        initializeListPanel();
 
         addSellerMarkers();
-
 
         return root;
     }
@@ -120,32 +117,31 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             }
         });
 
-//        itemsRView.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//
-//                int action = event.getAction();
-//                switch (action) {
-//                    case MotionEvent.ACTION_DOWN:
-//                        // Disallow ScrollView to intercept touch events.
-//                        v.getParent().requestDisallowInterceptTouchEvent(true);
-//                        break;
-//
-//                    case MotionEvent.ACTION_UP:
-//                        // Allow ScrollView to intercept touch events.
-//                        v.getParent().requestDisallowInterceptTouchEvent(false);
-//                        break;
-//                }
-//
-//                // Handle ListView touch events.
-//                v.onTouchEvent(event);
-//
-//                return true;
-//
-//            }
-//
-//        });
+        itemsRView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
 
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Disallow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(true);
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        // Allow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                }
+
+                // Handle ListView touch events.
+                v.onTouchEvent(event);
+
+                return true;
+
+            }
+
+        });
     }
 
 
@@ -186,9 +182,9 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             }
         });
 
-//        itemsRView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        itemsRView.setLayoutManager(new LinearLayoutManager(getActivity()));
 //        sellersList.addItemDecoration(new MarginDe(this));
-//        itemsRView.setHasFixedSize(true);
+        itemsRView.setHasFixedSize(true);
 //        sellersList.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 //        sellersList.setAdapter(new NumberedAdapter(30));
 
@@ -210,9 +206,11 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     }
 
     private void bindViews() {
-        itemsRView = (RecyclerView) root.findViewById(R.id.sellers_list);
+        arrowImage = (ImageView) root.findViewById(R.id.arrow_image);
+        itemsRView = (RecyclerView) root.findViewById(R.id.buyers_orders_list);
         refreshButton = (FloatingActionButton) root.findViewById(R.id.refresh_button);
         coordinatorLayoutView = root.findViewById(R.id.snackbarPosition);
+        slidingPanel = (SlidingUpPanelLayout) root.findViewById(R.id.slidinglayout);
 
 
     }
@@ -431,7 +429,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
                 for (int i = 0; i < 4; i++) {
                     distanceToShow += distanceToShow1.charAt(i);
                 }
-                seller.setDistanceFromBuyer(distanceToShow + " mi");
+                seller.setDistanceFromBuyer(distanceToShow);
                 Log.d("DISTANCE", distanceToShow);
                 Log.d("Fragment Buyer Map", "MARKER ADDED");
                 map.addMarker(new MarkerOptions()
@@ -486,17 +484,15 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
                     Snackbar
                             .make(coordinatorLayoutView, "No sellers found in area", Snackbar.LENGTH_SHORT)
                             .show();
-//                    TextView noSellers = (TextView) root.findViewById(R.id.no_sellers_tv);
-//                    noSellers.setVisibility(View.VISIBLE);
+                    Toast.makeText(activity, "No sellers found in area", Toast.LENGTH_SHORT).show();
                 } else {
                     SellerListAdapter sellersListAdapter = new SellerListAdapter(getActivity(), listOfSellersForUse);
                     itemsRView.setAdapter(sellersListAdapter);
                     addWithinRangeMarkersToMap();
                 }
-
             }
         }.execute();
-}
+    }
 
     @Override
     public void onDetach() {
@@ -509,6 +505,4 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         addSellerMarkers.cancel(true);
         super.onPause();
     }
-
-
 }

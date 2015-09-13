@@ -468,7 +468,7 @@ public class DBHelper extends Firebase {
                     editor.putString("name", String.valueOf(authData.getProviderData().get("displayName")));
                     editor.apply();
 
-                    Intent intent = new Intent(mContext,SignupActivity2.class);
+                    Intent intent = new Intent(mContext, SignupActivity2.class);
                     intent.putExtra("email", String.valueOf(authData.getProviderData().get("email")));
                     intent.putExtra("name", String.valueOf(authData.getProviderData().get("displayName")));
                     intent.putExtra("UID", UID);
@@ -556,7 +556,7 @@ public class DBHelper extends Firebase {
                     // The Facebook user is now authenticated with your Firebase app
                     Log.d("Tok In DB after Auth", "Token");
                     //Create user Profile with user email
-                    Log.d("HEREFORG,","HERE");
+                    Log.d("HEREFORG,", "HERE");
                     createUserFromGmailAuthLogin(String.valueOf(authData.getProviderData().get("email")), String.valueOf(authData.getProviderData().get("displayName")), AccessToken.getCurrentAccessToken().getToken());
                     Log.d("email", authData.getProviderData().get("email").toString());
                     UID = "";
@@ -573,7 +573,7 @@ public class DBHelper extends Firebase {
                 @Override
                 public void onAuthenticationError(FirebaseError firebaseError) {
                     // there was an error
-                    Log.d("err",firebaseError.toString());
+                    Log.d("err", firebaseError.toString());
                 }
             });
         } else {
@@ -599,7 +599,7 @@ public class DBHelper extends Firebase {
                 Log.d("HEREFOrIntent,", "HERE");
 
 
-                Intent intent = new Intent(mContext,SignupActivity2.class);
+                Intent intent = new Intent(mContext, SignupActivity2.class);
                 intent.putExtra("email", String.valueOf(email));
                 intent.putExtra("name", String.valueOf(name));
                 intent.putExtra("UID", UID);
@@ -664,8 +664,8 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sAddress).setValue(user.getAddress().toString());
         fRef.child(UID).child("hasSellerProfile").setValue(user.isHasSellerProfile());
 
-        if(user.isHasSellerProfile()){
-            seller= new Seller();
+        if (user.isHasSellerProfile()) {
+            seller = new Seller();
             seller.setUID(user.getUID());
             seller.setName(user.getName());
             seller.seteMail(user.geteMail());
@@ -695,7 +695,7 @@ public class DBHelper extends Firebase {
         callback.runOnSuccess();
     }
 
-    public void changeUserEmail(String oldeMail, String neweMail, String passWord, final DBCallback dbCallback){
+    public void changeUserEmail(String oldeMail, String neweMail, String passWord, final DBCallback dbCallback) {
         Firebase ref = new Firebase(URL);
         ref.changeEmail(oldeMail, neweMail, passWord, new Firebase.ResultHandler() {
             @Override
@@ -711,7 +711,7 @@ public class DBHelper extends Firebase {
         });
     }
 
-    public void changeUserPassword(String email, String oldPassword, String newPassowrd, final DBCallback dbCallback){
+    public void changeUserPassword(String email, String oldPassword, String newPassowrd, final DBCallback dbCallback) {
         Firebase ref = new Firebase(URL);
         ref.changePassword(email, oldPassword, newPassowrd, new Firebase.ResultHandler() {
             @Override
@@ -1275,7 +1275,6 @@ public class DBHelper extends Firebase {
                         item.setNameOfItem(item1.nameOfItem);
                         item.setIsVegetarian(item1.isVegetarian);
                         item.setQuantity(item1.quantity);
-                        moveItemToPreviouslySoldItems(item, dbCallback);
 
                         if (item.getBuyerID() != null) {
                             moveItemToPreviouslyBoughtItems(item, dbCallback);
@@ -1332,7 +1331,6 @@ public class DBHelper extends Firebase {
                         item.setContainsPeanuts(item1.containsPeanuts);
                         item.setContainsShellfish(item1.containsShellfish);
                         item.setGlutenFree(item1.glutenFree);
-                        moveItemToPreviouslySoldItems(item1, dbCallback);
 
                         if (item.getBuyerID() != null) {
                             moveItemToPreviouslyBoughtItems(item, dbCallback);
@@ -1490,29 +1488,55 @@ public class DBHelper extends Firebase {
         dbCallback.runOnSuccess();
     }
 
-    public void moveItemToPreviouslySoldItems(Item item, DBCallback dbCallback) {
+    public void moveItemToPreviouslySoldItems(Order order) {
         Firebase fRef = new Firebase(URL + "SellerProfiles/" + item.getSellerID() + "/PreviouslySold/");
-        String itemID = item.getItemID();
 
-        fRef.child(itemID);
-        fRef.child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
-        fRef.child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
-        fRef.child(itemID).child(quantity).setValue(item.getQuantity());
-        fRef.child(itemID).child("buyerID").setValue(item.getBuyerID());
-        fRef.child(itemID).child("sellerID").setValue(sellerId);
-        fRef.child(itemID).child("price").setValue(item.getPrice());
-        fRef.child(itemID).child("imageLink").setValue(item.getImageLink());
-        fRef.child(itemID).child("containsPeanuts").setValue(item.isContainsPeanuts());
-        fRef.child(itemID).child("isGluttenFree").setValue(item.isGlutenFree());
-        fRef.child(itemID).child("isVegetarian").setValue(item.isVegetarian());
-        fRef.child(itemID).child("containsEggs").setValue(item.isContainsEggs());
-        fRef.child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
-        fRef.child(itemID).child("containsDairy").setValue(item.isContainsDairy());
-        dbCallback.runOnSuccess();
+        UID = order.getBuyerID();
+        Log.d("UIDFORCHECKOUT", UID + "");
+        sellerId = order.getSellerID();
+
+        ArrayList<Item> itemsOrdered = order.getItemsOrdered();
+        Firebase fire1 = fRef.child(UID).push();
+        String orderID = fire1.getKey();
+        order.setOrderID(orderID);
+
+        for (Item item : itemsOrdered) {
+            itemID = item.getItemID();
+
+            fRef.child(orderID);
+            fRef.child(orderID).child("price").setValue(order.getPrice());
+            fRef.child(orderID).child("transactionToken").setValue(order.getTransactionToken());
+            fRef.child(orderID).child("buyerID").setValue(order.getBuyerID());
+            fRef.child(orderID).child("storeName").setValue(order.getStoreName());
+            fRef.child(orderID).child("isActive").setValue(order.isActive());
+            fRef.child(orderID).child("sellerAddress").setValue(order.getSellerAddress());
+            fRef.child(orderID).child("buyerAddress").setValue(order.getBuyerAddress());
+            fRef.child(orderID).child("sellerName").setValue(order.getSellerName());
+            fRef.child(orderID).child("buyerName").setValue(order.getBuyerName());
+            fRef.child(orderID).child("paymentType").setValue(order.getPaymentType());
+            fRef.child(orderID).child("sellerPhoneNumber").setValue(order.getSellerPhoneNumber());
+            fRef.child(orderID).child("buyerPhoneNumber").setValue(order.getBuyerPhoneNumber());
+            fRef.child(orderID).child("timeStamp").setValue(order.getTimeStamp());
+            fRef.child(orderID).child("items");
+            fRef.child(orderID).child("items").child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
+            fRef.child(orderID).child("items").child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
+            fRef.child(orderID).child("items").child(itemID).child("quantityWanted").setValue(item.getQuantityWanted());
+            fRef.child(orderID).child("items").child(itemID).child("price").setValue(item.getPrice());
+            fRef.child(orderID).child("items").child(itemID).child("sellerPhoneNumber").setValue(item.getSellerPhoneNumber());
+            fRef.child(orderID).child("items").child(itemID).child("sellerPhoneNumber").setValue(item.getSellerPhoneNumber());
+            fRef.child(orderID).child("items").child(itemID).child("imageLink").setValue(item.getImageLink());
+            fRef.child(orderID).child("items").child(itemID).child("containsPeanuts").setValue(item.isContainsPeanuts());
+            fRef.child(orderID).child("items").child(itemID).child("isGluttenFree").setValue(item.isGlutenFree());
+            fRef.child(orderID).child("items").child(itemID).child("isVegetarian").setValue(item.isVegetarian());
+            fRef.child(orderID).child("items").child(itemID).child("containsEggs").setValue(item.isContainsEggs());
+            fRef.child(orderID).child("items").child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
+            fRef.child(orderID).child("items").child(itemID).child("containsDairy").setValue(item.isContainsDairy());
+        }
 
     }
 
     public void moveItemToPreviouslyBoughtItems(Item item, DBCallback dbCallback) {
+
         Firebase fRef = new Firebase(URL + "UserProfiles/" + item.getBuyerID() + "/PreviouslyBought/");
 
         String itemID = item.getItemID();
@@ -1640,11 +1664,11 @@ public class DBHelper extends Firebase {
         return receiptForSpecificOrder;
     }
 
-    public void updateBuyerWhenSellerConfirmsOrderIsReady(Order order){
-        UID=order.getBuyerID();
-        orderID=order.getOrderID();
+    public void updateBuyerWhenSellerConfirmsOrderIsReady(Order order) {
+        UID = order.getBuyerID();
+        orderID = order.getOrderID();
 
-        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID + "/Orders/" + orderID );
+        Firebase fRef = new Firebase(URL + "UserProfiles/" + UID + "/Orders/" + orderID);
         fRef.child(orderID).child("isActive").setValue(order.isActive());
     }
 
@@ -1844,7 +1868,6 @@ public class DBHelper extends Firebase {
     }
 
     public void addCurrentOrderToSellerDB(Order order, DBCallback dbCallback) {
-
         UID = order.getBuyerID();
         Log.d("UIDFORCHECKOUT", UID + "");
         sellerId = order.getSellerID();
@@ -1856,7 +1879,6 @@ public class DBHelper extends Firebase {
         Firebase fire1 = fRef.child(UID).push();
         String orderID = fire1.getKey();
         order.setOrderID(orderID);
-
 
         for (Item item : itemsOrdered) {
             itemID = item.getItemID();
@@ -1894,6 +1916,7 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child("items").child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
             fRef.child(orderID).child("items").child(itemID).child("containsDairy").setValue(item.isContainsDairy());
 
+            moveItemToPreviouslySoldItems(order);
             copyOrderToBuyerProfile(order, item);
             updateSellerItemsWhenItemIsBought(item, callback);
         }
@@ -1943,13 +1966,28 @@ public class DBHelper extends Firebase {
         }
 
     }
-    public void changeOrderActiveStatus(Order order){
-        UID=order.getBuyerID();
-        orderID=order.getOrderID();
+
+    public void changeOrderActiveStatus(Order order) {
+        UID = order.getBuyerID();
+        orderID = order.getOrderID();
 
         Firebase fRef = new Firebase(URL + "UserProfiles/" + UID + "/Orders/" + orderID);
-        fRef.child(UID).child(orderID);
+        fRef.child(orderID);
         fRef.child(orderID).child("isActive").setValue(order.isActive());
+
+        changeBuyerOrderActiveStatus(order);
+    }
+
+    public void changeBuyerOrderActiveStatus(Order order){
+        sellerId=order.getSellerID();
+        orderID=order.getOrderID();
+
+        Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId + "/Orders/" + orderID);
+
+        fRef.child(orderID);
+        fRef.child(orderID).child("isActive").setValue(order.isActive());
+
+
     }
 
     public ArrayList<Item> updateItemsForSpecificOrderForBuyer(DBCallback dbCallback) {
@@ -2706,8 +2744,8 @@ public class DBHelper extends Firebase {
         int newNumofTotalstars = numOfTotalStars + newStars;
         int newAvg = newNumofTotalstars / numOfReviews;
         char newAvgS = 0;
-        for(int i=0;i<1;i++){
-            newAvgS=String.valueOf(newAvgS).charAt(i);
+        for (int i = 0; i < 1; i++) {
+            newAvgS = String.valueOf(newAvgS).charAt(i);
         }
         updateSellerProfileWithNewAvg(seller, newAvgS);
 

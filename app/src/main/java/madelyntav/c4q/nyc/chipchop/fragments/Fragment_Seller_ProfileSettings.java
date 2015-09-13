@@ -436,7 +436,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         zipcodeET = (EditText) root.findViewById(R.id.zipcode);
         phoneNumberET = (EditText) root.findViewById(R.id.phone_number);
         stateET = (EditText) root.findViewById(R.id.state);
-        setReadOnlyAll(true);
+        setReadOnlyAll(false);
 
         cookingStatus = (ToggleButton) root.findViewById(R.id.cooking_status);
         cookingStatusTV = (TextView) root.findViewById(R.id.cooking_status_text);

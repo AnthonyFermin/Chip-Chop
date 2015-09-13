@@ -465,11 +465,11 @@ public class BuyActivity extends AppCompatActivity {
     }
 
     public Seller getSellerToView() {
-        return sellerToView;
+        return HelperMethods.getSellerToView();
     }
 
     public void setSellerToView(Seller sellerToView) {
-        this.sellerToView = sellerToView;
+        HelperMethods.setSellerToView(sellerToView);
     }
 
     public Item getItemToCart() {

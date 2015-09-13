@@ -10,8 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,6 +28,7 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
 
     TextView buyerName, address, apt, city, state, zipcode, phoneNumber;
     ImageView profilePhoto;
+    Button saveChanges;
     public static final int RESULT_OK = -1;
     private Uri imageFileUri;
     Intent intent;
@@ -61,6 +61,13 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
             }
         });
 
+        saveChanges.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dbHelper.addUserProfileInfoToDB(user);
+            }
+        });
+
 
         buyerName.setText(user.getName());
         address.setText(user.getAddress().getStreetAddress());
@@ -81,6 +88,8 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
         state = (TextView) root.findViewById(R.id.state);
         zipcode = (TextView) root.findViewById(R.id.zipcode);
         phoneNumber = (TextView) root.findViewById(R.id.phone_number);
+        saveChanges= (Button) root.findViewById(R.id.saveChanges);
+
 
 
     }

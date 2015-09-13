@@ -1,6 +1,5 @@
 package madelyntav.c4q.nyc.chipchop;
 
-import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -97,6 +96,7 @@ public class PaymentDialog extends android.support.v4.app.DialogFragment {
                                 activity.startService(intent);
                                 confirmImage.setVisibility(View.GONE);
                                 activity.replaceFragment(new Fragment_Buyer_Orders());
+                                
                             }
                         }, 1000);
                         getDialog().dismiss();

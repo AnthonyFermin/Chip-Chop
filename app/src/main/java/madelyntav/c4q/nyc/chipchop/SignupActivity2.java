@@ -93,10 +93,14 @@ public class SignupActivity2 extends AppCompatActivity {
         Intent prevIntent = getIntent();
         email = prevIntent.getStringExtra("email");
         password = prevIntent.getStringExtra("pass");
+        name = prevIntent.getStringExtra("name");
         photoLink = "";
         toSellActivity = prevIntent.getBooleanExtra(BuyActivity.TO_SELL_ACTIVITY, false);
 
         nameET = (EditText) findViewById(R.id.name);
+        if(name != null) {
+            nameET.setText(name);
+        }
         addressET = (EditText) findViewById(R.id.address);
         aptET = (EditText) findViewById(R.id.apt);
         cityET = (EditText) findViewById(R.id.city);

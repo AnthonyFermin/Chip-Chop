@@ -27,6 +27,8 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
+import madelyntav.c4q.nyc.chipchop.DBObjects.User;
+import madelyntav.c4q.nyc.chipchop.HelperMethods;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.adapters.FoodListAdapter;
 
@@ -47,6 +49,7 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
     TextView storeName,storeDescription;
 
     private DBHelper dbHelper;
+    private User user;
     private Seller seller;
     private BuyActivity activity;
     private DBCallback emptyCallback;
@@ -166,13 +169,19 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
             }
         };
 
+        user = HelperMethods.getUser();
         seller = activity.getSellerToView();
         foodItems = dbHelper.getSellersOnSaleItems(seller.getUID(), emptyCallback);
+
         order = activity.getCurrentOrder();
         order.setBuyerID(dbHelper.getUserID());
         order.setSellerID(seller.getUID());
         order.setIsActive(true);
         order.setStoreName(seller.getStoreName());
+        order.setBuyerName(user.getName());
+        order.setBuyerAddress(user.getAddressString());
+        order.setSellerName(seller.getName());
+        order.setSellerAddress(seller.getAddressString());
         activity.setCurrentOrder(order);
     }
 

@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,9 +61,6 @@ public class Fragment_Seller_OrderDetails extends Fragment {
         bindViews(root);
         setListeners();
 
-
-
-
         return root;
 
     }
@@ -71,7 +69,7 @@ public class Fragment_Seller_OrderDetails extends Fragment {
         completedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //dbHelper.changeOrderStatus(order);
+                dbHelper.changeOrderActiveStatus(order);
             }
         });
     }
@@ -86,11 +84,17 @@ public class Fragment_Seller_OrderDetails extends Fragment {
         dbHelper = DBHelper.getDbHelper(activity);
         activity.setCurrentFragment(TAG);
         order = activity.getOrderToView();
+        Log.d("ORDER DETAILS","Order: " + order);
 
         foodItems = dbHelper.getReceiptForSpecificOrderForSeller(order.getOrderID(), dbHelper.getUserID(), new DBCallback() {
             @Override
             public void runOnSuccess() {
+                Log.d("ORDER DETAILS","ORDER ITEMS LOADED");
+                for(Item item: foodItems){
+                    Log.d("ORDER DETAILS ITEM","item name: " + item.getNameOfItem());
+                }
                 setAdapter();
+
             }
 
             @Override

@@ -488,7 +488,6 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         }
     }
 
-
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         float fbIconScale = 1.45F;

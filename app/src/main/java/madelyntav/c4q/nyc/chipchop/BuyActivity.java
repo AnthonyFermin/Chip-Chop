@@ -1,15 +1,11 @@
 package madelyntav.c4q.nyc.chipchop;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
@@ -20,7 +16,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,7 +28,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
@@ -125,8 +119,8 @@ public class BuyActivity extends AppCompatActivity {
     }
 
     private void clearLogin() {
-        stopService(new Intent(this,ServiceBuyerNotify.class));
-        stopService(new Intent(this,ServiceSellerNotify.class));
+        stopService(new Intent(this, ServiceBuyerNotify.class));
+        stopService(new Intent(this, ServiceSellerNotify.class));
         userInfoSP.edit().clear().commit();
         mListTitles[3] = "Sign In";
         mDrawerList.setAdapter(new ArrayAdapter<>(this,
@@ -135,6 +129,7 @@ public class BuyActivity extends AppCompatActivity {
         drawerUserNameTV.setText("");
         HelperMethods.setUser(null);
         ratingBar.setVisibility(View.GONE);
+        LoginManager.getInstance().logOut();
     }
 
     @Override

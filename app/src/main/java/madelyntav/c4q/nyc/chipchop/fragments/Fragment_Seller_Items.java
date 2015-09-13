@@ -106,7 +106,18 @@ public class Fragment_Seller_Items extends Fragment {
 
         //seller items
         if (activity.isCurrentlyCooking()) {
-            sellerItems = dbHelper.getSellersOnSaleItems(dbHelper.getUserID(), emptyCallback);
+            Log.d("SELLER ID","ID: " + dbHelper.getUserID());
+            dbHelper.getSellersOnSaleItems(dbHelper.getUserID(), new DBCallback() {
+                @Override
+                public void runOnSuccess() {
+                    sellerItems.addAll(dbHelper.getSellersOnSaleItems(dbHelper.getUserID(),emptyCallback));
+                }
+
+                @Override
+                public void runOnFail() {
+
+                }
+            });
         } else {
             dbHelper.getSellerItems(dbHelper.getUserID(), new DBCallback() {
                 @Override

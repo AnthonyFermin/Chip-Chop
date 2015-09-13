@@ -112,6 +112,11 @@ public class Fragment_Seller_Items extends Fragment {
                 @Override
                 public void runOnSuccess() {
                     sellerItems.addAll(dbHelper.getSellerItems(dbHelper.getUserID(), emptyCallback));
+                    for(Item item: sellerItems){
+                        Log.d("SELLER ITEMS","ITEM ID: " + item.getItemID());
+                        Log.d("SELLER ITEMS","SELLER ID: " + item.getSellerID());
+                        Log.d("SELLER ITEMS","GLUTEN FREE: " + item.isGlutenFree());
+                    }
                 }
 
                 @Override
@@ -240,10 +245,10 @@ public class Fragment_Seller_Items extends Fragment {
         @Override
         public CharSequence getPageTitle(int position) {
             if (position == 0) {
-                return "Active Dishes";
+                return "ACTIVE";
             }
             if (position == 1) {
-                return "Inactive Dishes";
+                return "INACTIVE";
             }
             return "";
         }

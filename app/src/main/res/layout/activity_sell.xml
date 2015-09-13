@@ -55,6 +55,7 @@
             android:textSize="30sp"
             android:padding="10dp"
             android:textStyle="bold"
+            android:maxLines="2"
             android:gravity="center_horizontal"
             android:id="@+id/drawer_user_nameTV"/>
 

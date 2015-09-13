@@ -1065,7 +1065,7 @@ public class DBHelper extends Firebase {
                     fRef1.child("sellerID").setValue(item.getSellerID());
                     fRef1.child("imageLink").setValue(item.getImageLink());
                     fRef1.child("containsPeanuts").setValue(item.isContainsPeanuts());
-                    fRef1.child("isGluttenFree").setValue(item.isGlutenFree());
+                    fRef1.child("glutenFree").setValue(item.isGlutenFree());
                     fRef1.child("isVegetarian").setValue(item.isVegetarian());
                     fRef1.child("containsEggs").setValue(item.isContainsEggs());
                     fRef1.child("containsShellfish").setValue(item.isContainsShellfish());
@@ -1093,7 +1093,7 @@ public class DBHelper extends Firebase {
         fRef.child(itemID).child("price").setValue(item.getPrice());
         fRef.child(itemID).child("imageLink").setValue(item.getImageLink());
         fRef.child(itemID).child("containsPeanuts").setValue(item.isContainsPeanuts());
-        fRef.child(itemID).child("isGluttenFree").setValue(item.isGlutenFree());
+        fRef.child(itemID).child("glutenFree").setValue(item.isGlutenFree());
         fRef.child(itemID).child("isVegetarian").setValue(item.isVegetarian());
         fRef.child(itemID).child("containsEggs").setValue(item.isContainsEggs());
         fRef.child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
@@ -1115,7 +1115,7 @@ public class DBHelper extends Firebase {
         fRef.child(itemID).child("price").setValue(item.getPrice());
         fRef.child(itemID).child("imageLink").setValue(item.getImageLink());
         fRef.child(itemID).child("containsPeanuts").setValue(item.isContainsPeanuts());
-        fRef.child(itemID).child("isGluttenFree").setValue(item.isGlutenFree());
+        fRef.child(itemID).child("glutenFree").setValue(item.isGlutenFree());
         fRef.child(itemID).child("isVegetarian").setValue(item.isVegetarian());
         fRef.child(itemID).child("containsEggs").setValue(item.isContainsEggs());
         fRef.child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
@@ -1143,7 +1143,7 @@ public class DBHelper extends Firebase {
         fRef.child(itemID).child("price").setValue(item.getPrice());
         fRef.child(itemID).child("imageLink").setValue(item.getImageLink());
         fRef.child(itemID).child("containsPeanuts").setValue(item.isContainsPeanuts());
-        fRef.child(itemID).child("isGluttenFree").setValue(item.isGlutenFree());
+        fRef.child(itemID).child("glutenFree").setValue(item.isGlutenFree());
         fRef.child(itemID).child("isVegetarian").setValue(item.isVegetarian());
         fRef.child(itemID).child("containsEggs").setValue(item.isContainsEggs());
         fRef.child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
@@ -1186,7 +1186,7 @@ public class DBHelper extends Firebase {
             fRef.child(itemID).child("price").setValue(item.getPrice());
             fRef.child(itemID).child("imageLink").setValue(item.getImageLink());
             fRef.child(itemID).child("containsPeanuts").setValue(item.isContainsPeanuts());
-            fRef.child(itemID).child("isGluttenFree").setValue(item.isGlutenFree());
+            fRef.child(itemID).child("glutenFree").setValue(item.isGlutenFree());
             fRef.child(itemID).child("isVegetarian").setValue(item.isVegetarian());
             fRef.child(itemID).child("containsEggs").setValue(item.isContainsEggs());
             fRef.child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
@@ -1396,7 +1396,7 @@ public class DBHelper extends Firebase {
         fire.child("price").setValue(item.getPrice());
         fire.child("imageLink").setValue(item.getImageLink());
         fire.child("containsPeanuts").setValue(item.isContainsPeanuts());
-        fire.child("isGluttenFree").setValue(item.isGlutenFree());
+        fire.child("glutenFree").setValue(item.isGlutenFree());
         fire.child("isVegetarian").setValue(item.isVegetarian());
         fire.child("sellerID").setValue(item.getSellerID());
         fire.child("containsEggs").setValue(item.isContainsEggs());
@@ -1416,7 +1416,7 @@ public class DBHelper extends Firebase {
         fRef.child(item.getItemID()).child("price").setValue(item.getPrice());
         fRef.child(item.getItemID()).child("imageLink").setValue(item.getImageLink());
         fRef.child(item.getItemID()).child("containsPeanuts").setValue(item.isContainsPeanuts());
-        fRef.child(item.getItemID()).child("isGluttenFree").setValue(item.isGlutenFree());
+        fRef.child(item.getItemID()).child("glutenFree").setValue(item.isGlutenFree());
         fRef.child(item.getItemID()).child("isVegetarian").setValue(item.isVegetarian());
         fRef.child(item.getItemID()).child("containsEggs").setValue(item.isContainsEggs());
         fRef.child(item.getItemID()).child("containsShellfish").setValue(item.isContainsShellfish());
@@ -1439,7 +1439,7 @@ public class DBHelper extends Firebase {
         fRef.child(item.getItemID()).child("price").setValue(item.getPrice());
         fRef.child(item.getItemID()).child("imageLink").setValue(item.getImageLink());
         fRef.child(item.getItemID()).child("containsPeanuts").setValue(item.isContainsPeanuts());
-        fRef.child(item.getItemID()).child("isGluttenFree").setValue(item.isGlutenFree());
+        fRef.child(item.getItemID()).child("glutenFree").setValue(item.isGlutenFree());
         fRef.child(item.getItemID()).child("isVegetarian").setValue(item.isVegetarian());
         fRef.child(item.getItemID()).child("containsEggs").setValue(item.isContainsEggs());
         fRef.child(item.getItemID()).child("containsShellfish").setValue(item.isContainsShellfish());
@@ -1464,7 +1464,7 @@ public class DBHelper extends Firebase {
         fRef.child(itemID).child("price").setValue(item.getPrice());
         fRef.child(itemID).child("imageLink").setValue(item.getImageLink());
         fRef.child(itemID).child("containsPeanuts").setValue(item.isContainsPeanuts());
-        fRef.child(itemID).child("isGluttenFree").setValue(item.isGlutenFree());
+        fRef.child(itemID).child("glutenFree").setValue(item.isGlutenFree());
         fRef.child(itemID).child("isVegetarian").setValue(item.isVegetarian());
         fRef.child(itemID).child("containsEggs").setValue(item.isContainsEggs());
         fRef.child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
@@ -1485,7 +1485,7 @@ public class DBHelper extends Firebase {
         fRef.child(itemID).child("price").setValue(item.getPrice());
         fRef.child(itemID).child("imageLink").setValue(item.getImageLink());
         fRef.child(itemID).child("containsPeanuts").setValue(item.isContainsPeanuts());
-        fRef.child(itemID).child("isGluttenFree").setValue(item.isGlutenFree());
+        fRef.child(itemID).child("glutenFree").setValue(item.isGlutenFree());
         fRef.child(itemID).child("isVegetarian").setValue(item.isVegetarian());
         fRef.child(itemID).child("containsEggs").setValue(item.isContainsEggs());
         fRef.child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
@@ -1508,7 +1508,7 @@ public class DBHelper extends Firebase {
         fRef.child(itemID).child("price").setValue(item.getPrice());
         fRef.child(itemID).child("imageLink").setValue(item.getImageLink());
         fRef.child(itemID).child("containsPeanuts").setValue(item.isContainsPeanuts());
-        fRef.child(itemID).child("isGluttenFree").setValue(item.isGlutenFree());
+        fRef.child(itemID).child("glutenFree").setValue(item.isGlutenFree());
         fRef.child(itemID).child("isVegetarian").setValue(item.isVegetarian());
         fRef.child(itemID).child("containsEggs").setValue(item.isContainsEggs());
         fRef.child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
@@ -1850,7 +1850,7 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child("items").child(itemID).child("sellerPhoneNumber").setValue(item.getSellerPhoneNumber());
             fRef.child(orderID).child("items").child(itemID).child("imageLink").setValue(item.getImageLink());
             fRef.child(orderID).child("items").child(itemID).child("containsPeanuts").setValue(item.isContainsPeanuts());
-            fRef.child(orderID).child("items").child(itemID).child("isGluttenFree").setValue(item.isGlutenFree());
+            fRef.child(orderID).child("items").child(itemID).child("glutenFree").setValue(item.isGlutenFree());
             fRef.child(orderID).child("items").child(itemID).child("isVegetarian").setValue(item.isVegetarian());
             fRef.child(orderID).child("items").child(itemID).child("containsEggs").setValue(item.isContainsEggs());
             fRef.child(orderID).child("items").child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
@@ -1942,7 +1942,7 @@ public class DBHelper extends Firebase {
         fRef.child(orderID).child("items").child(itemID).child("price").setValue(item.getPrice());
         fRef.child(orderID).child("items").child(itemID).child("imageLink").setValue(item.getImageLink());
         fRef.child(orderID).child("items").child(itemID).child("containsPeanuts").setValue(item.isContainsPeanuts());
-        fRef.child(orderID).child("items").child(itemID).child("isGluttenFree").setValue(item.isGlutenFree());
+        fRef.child(orderID).child("items").child(itemID).child("glutenFree").setValue(item.isGlutenFree());
         fRef.child(orderID).child("items").child(itemID).child("isVegetarian").setValue(item.isVegetarian());
         fRef.child(orderID).child("items").child(itemID).child("containsEggs").setValue(item.isContainsEggs());
         fRef.child(orderID).child("items").child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
@@ -2119,6 +2119,7 @@ public class DBHelper extends Firebase {
                     item2.setSellerID(sellerId);
                     item2.setNameOfItem(item1.nameOfItem);
                     item2.setPrice(item1.price);
+                    item2.setDescriptionOfItem(item1.descriptionOfItem);
                     item2.setQuantity(item1.quantity);
                     item2.setIsVegetarian(item1.isVegetarian);
                     item2.setImageLink(item1.imageLink);
@@ -2462,7 +2463,7 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child(itemID).child("price").setValue(item.getPrice());
             fRef.child(orderID).child(itemID).child("imageLink").setValue(item.getImageLink());
             fRef.child(orderID).child(itemID).child("containsPeanuts").setValue(item.isContainsPeanuts());
-            fRef.child(orderID).child(itemID).child("isGluttenFree").setValue(item.isGlutenFree());
+            fRef.child(orderID).child(itemID).child("glutenFree").setValue(item.isGlutenFree());
             fRef.child(orderID).child(itemID).child("isVegetarian").setValue(item.isVegetarian());
             fRef.child(orderID).child(itemID).child("containsEggs").setValue(item.isContainsEggs());
             fRef.child(orderID).child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
@@ -2711,7 +2712,7 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child(itemID).child("price").setValue(item.getPrice());
             fRef.child(orderID).child(itemID).child("imageLink").setValue(item.getImageLink());
             fRef.child(orderID).child(itemID).child("containsPeanuts").setValue(item.isContainsPeanuts());
-            fRef.child(orderID).child(itemID).child("isGluttenFree").setValue(item.isGlutenFree());
+            fRef.child(orderID).child(itemID).child("glutenFree").setValue(item.isGlutenFree());
             fRef.child(orderID).child(itemID).child("isVegetarian").setValue(item.isVegetarian());
             fRef.child(orderID).child(itemID).child("containsEggs").setValue(item.isContainsEggs());
             fRef.child(orderID).child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
@@ -2743,7 +2744,7 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child(itemID).child("price").setValue(item.getPrice());
             fRef.child(orderID).child(itemID).child("imageLink").setValue(item.getImageLink());
             fRef.child(orderID).child(itemID).child("containsPeanuts").setValue(item.isContainsPeanuts());
-            fRef.child(orderID).child(itemID).child("isGluttenFree").setValue(item.isGlutenFree());
+            fRef.child(orderID).child(itemID).child("glutenFree").setValue(item.isGlutenFree());
             fRef.child(orderID).child(itemID).child("isVegetarian").setValue(item.isVegetarian());
             fRef.child(orderID).child(itemID).child("containsEggs").setValue(item.isContainsEggs());
             fRef.child(orderID).child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());

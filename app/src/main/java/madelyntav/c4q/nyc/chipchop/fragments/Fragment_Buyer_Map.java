@@ -25,6 +25,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -100,9 +102,10 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         initializeMap();
         setListeners();
 
-        initializeListPanel();
+//        initializeListPanel();
 
         //addSellerMarkers() is in onResume()
+
 
         return root;
     }
@@ -141,6 +144,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             }
 
         });
+
     }
 
 
@@ -182,9 +186,9 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             }
         });
 
-        itemsRView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        itemsRView.setLayoutManager(new LinearLayoutManager(getActivity()));
 //        sellersList.addItemDecoration(new MarginDe(this));
-        itemsRView.setHasFixedSize(true);
+//        itemsRView.setHasFixedSize(true);
 //        sellersList.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 //        sellersList.setAdapter(new NumberedAdapter(30));
 
@@ -206,9 +210,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     }
 
     private void bindViews() {
-        arrowImage = (ImageView) root.findViewById(R.id.arrow_image);
-        slidingPanel = (SlidingUpPanelLayout) root.findViewById(R.id.slidinglayout);
-        itemsRView = (RecyclerView) root.findViewById(R.id.buyers_orders_list);
+        itemsRView = (RecyclerView) root.findViewById(R.id.sellers_list);
         refreshButton = (FloatingActionButton) root.findViewById(R.id.refresh_button);
         coordinatorLayoutView = root.findViewById(R.id.snackbarPosition);
 
@@ -471,12 +473,14 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
                     Snackbar
                             .make(coordinatorLayoutView, "No sellers found in area", Snackbar.LENGTH_SHORT)
                             .show();
-                    Toast.makeText(activity, "No sellers found in area", Toast.LENGTH_SHORT).show();
+//                    TextView noSellers = (TextView) root.findViewById(R.id.no_sellers_tv);
+//                    noSellers.setVisibility(View.VISIBLE);
                 } else {
                     SellerListAdapter sellersListAdapter = new SellerListAdapter(getActivity(), listOfSellersForUse);
                     itemsRView.setAdapter(sellersListAdapter);
                     addWithinRangeMarkersToMap();
                 }
+
             }
         }.execute();
 }
@@ -492,4 +496,6 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         addSellerMarkers.cancel(true);
         super.onPause();
     }
+
+
 }

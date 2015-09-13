@@ -66,8 +66,6 @@ public class BuyerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
             });
 
-
-
         }
 
     }

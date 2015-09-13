@@ -1,15 +1,12 @@
 package madelyntav.c4q.nyc.chipchop;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
-
-import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 
 /**
  * Created by alvin2 on 9/12/15.

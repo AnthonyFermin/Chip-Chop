@@ -179,7 +179,6 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
         order.setStoreName(seller.getStoreName());
         order.setSellerName(seller.getName());
         order.setSellerAddress(seller.getAddressString());
-        Log.d("SELLER ADDRESS", seller.getAddressString());
         activity.setCurrentOrder(order);
     }
 

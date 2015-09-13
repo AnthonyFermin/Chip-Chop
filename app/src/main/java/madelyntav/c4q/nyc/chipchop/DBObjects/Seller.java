@@ -35,6 +35,8 @@ public class Seller {
     String routingNumber;
     String accountNumber;
     String distanceFromBuyer;
+    boolean pickUpAvailable;
+    boolean deliveryAvailable;
 
     public Seller(){}
 
@@ -274,5 +276,21 @@ public class Seller {
 
     public void setRoutingNumber(String routingNumber) {
         this.routingNumber = routingNumber;
+    }
+
+    public boolean isPickUpAvailable() {
+        return pickUpAvailable;
+    }
+
+    public void setPickUpAvailable(boolean pickUpAvailable) {
+        this.pickUpAvailable = pickUpAvailable;
+    }
+
+    public boolean isDeliveryAvailable() {
+        return deliveryAvailable;
+    }
+
+    public void setDeliveryAvailable(boolean deliveryAvailable) {
+        this.deliveryAvailable = deliveryAvailable;
     }
 }

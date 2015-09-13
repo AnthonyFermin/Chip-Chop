@@ -735,6 +735,8 @@ public class DBHelper extends Firebase {
         fRef.child(sellerId).child("UID").setValue(UID);
         fRef.child(sellerId).child(sName).setValue(seller.getName());
         fRef.child(sellerId).child("storeName").setValue(seller.getStoreName());
+        fRef.child(sellerId).child("pickUpAvailable").setValue(seller.isPickUpAvailable());
+        fRef.child(sellerId).child("deliveryAvailable").setValue(seller.isDeliveryAvailable());
         fRef.child(sellerId).child(sEmailAddress).setValue(seller.geteMail());
         fRef.child(sellerId).child(sPhoneNumber).setValue(seller.getPhoneNumber());
         fRef.child(sellerId).child(sPhotoLink).setValue(seller.getPhotoLink());
@@ -796,6 +798,8 @@ public class DBHelper extends Firebase {
                     seller.setCardExpirationYear(seller1.cardExpirationYear);
                     seller.setCardNumber(seller1.cardNumber);
                     seller.setDescription(seller1.description);
+                    seller.setPickUpAvailable(seller1.pickUpAvailable);
+                    seller.setDeliveryAvailable(seller1.deliveryAvailable);
                     seller.seteMail(seller1.eMail);
                     seller.setUID(dataSnapshot.getKey());
                     seller.setPhoneNumber(seller1.phoneNumber);
@@ -868,6 +872,8 @@ public class DBHelper extends Firebase {
         fRef.child(sellerId).child(sIsCooking).setValue(seller.getIsCooking());
         fRef.child(sellerId).child("storeName").setValue(seller.getStoreName());
         fRef.child(sellerId).child(sName).setValue(seller.getName());
+        fRef.child(sellerId).child("pickUpAvailable").setValue(seller.isPickUpAvailable());
+        fRef.child(sellerId).child("deliveryAvailable").setValue(seller.isDeliveryAvailable());
         fRef.child(sellerId).child(sEmailAddress).setValue(seller.geteMail());
         fRef.child(sellerId).child(sPhoneNumber).setValue(seller.getPhoneNumber());
         fRef.child(sellerId).child(sPhotoLink).setValue(seller.getPhotoLink());
@@ -897,6 +903,8 @@ public class DBHelper extends Firebase {
                     seller.setName(seller1.name);
                     seller.setUID(dataSnapshot1.getKey());
                     seller.setIsCooking(seller1.isCooking);
+                    seller.setPickUpAvailable(seller1.pickUpAvailable);
+                    seller.setDeliveryAvailable(seller1.deliveryAvailable);
                     seller.setLatitude(seller1.latitude);
                     seller.setLongitude(seller1.longitude);
                     seller.setPhoneNumber(seller1.phoneNumber);
@@ -1059,6 +1067,8 @@ public class DBHelper extends Firebase {
         fRef.child(sellerId).child("storeName").setValue(seller.getStoreName());
         fRef.child(sellerId).child("routingNumber").setValue(seller.getRoutingNumber());
         fRef.child(sellerId).child("accountNumber").setValue(seller.getAccountNumber());
+        fRef.child(sellerId).child("pickUpAvailable").setValue(seller.isPickUpAvailable());
+        fRef.child(sellerId).child("deliveryAvailable").setValue(seller.isDeliveryAvailable());
         fRef.child(sellerId).child(sIsCooking).setValue(seller.getIsCooking());
         fRef.child(sellerId).child(sEmailAddress).setValue(seller.geteMail());
         fRef.child(sellerId).child(sPhoneNumber).setValue(seller.getPhoneNumber());
@@ -1509,6 +1519,8 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child("buyerID").setValue(order.getBuyerID());
             fRef.child(orderID).child("storeName").setValue(order.getStoreName());
             fRef.child(orderID).child("isActive").setValue(order.isActive());
+            fRef.child(orderID).child("isPickup").setValue(order.isPickup());
+            fRef.child(orderID).child("toDeliver").setValue(order.isToDeliver());
             fRef.child(orderID).child("sellerAddress").setValue(order.getSellerAddress());
             fRef.child(orderID).child("buyerAddress").setValue(order.getBuyerAddress());
             fRef.child(orderID).child("sellerName").setValue(order.getSellerName());
@@ -1576,6 +1588,8 @@ public class DBHelper extends Firebase {
                         order.setPrice(order.price);
                         order.setSellerID(order.sellerID);
                         order.setBuyerID(order.buyerID);
+                        order.setIsPickup(order.isPickup);
+                        order.setToDeliver(order.toDeliver);
                         order.setItemsOrdered(order.itemsOrdered);
                         order.setReview(order.review);
                         order.setTimeStamp(order.timeStamp);
@@ -1758,6 +1772,8 @@ public class DBHelper extends Firebase {
                     Order order = dataSnapshot1.getValue(Order.class);
                     order.setOrderID(dataSnapshot1.getKey());
                     order.setPrice(order.price);
+                    order.setIsPickup(order.isPickup);
+                    order.setToDeliver(order.toDeliver);
                     order.setSellerAddress(order.sellerAddress);
                     order.setBuyerAddress(order.buyerAddress);
                     order.setSellerName(order.sellerName);
@@ -1891,6 +1907,8 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child("price").setValue(order.getPrice());
             fRef.child(orderID).child("transactionToken").setValue(order.getTransactionToken());
             fRef.child(orderID).child("buyerID").setValue(order.getBuyerID());
+            fRef.child(orderID).child("isPickup").setValue(order.isPickup());
+            fRef.child(orderID).child("toDeliver").setValue(order.isToDeliver());
             fRef.child(orderID).child("storeName").setValue(order.getStoreName());
             fRef.child(orderID).child("isActive").setValue(order.isActive());
             fRef.child(orderID).child("sellerAddress").setValue(order.getSellerAddress());
@@ -2013,6 +2031,8 @@ public class DBHelper extends Firebase {
         fRef.child(orderID).child("sellerID").setValue(order.getSellerID());
         fRef.child(orderID).child("buyerID").setValue(order.getBuyerID());
         fRef.child(orderID).child("storeName").setValue(order.getStoreName());
+        fRef.child(orderID).child("isPickup").setValue(order.isPickup());
+        fRef.child(orderID).child("toDeliver").setValue(order.isToDeliver());
         fRef.child(orderID).child("paymentType").setValue(order.getPaymentType());
         fRef.child(orderID).child("isActive").setValue(order.isActive());
         fRef.child(orderID).child("sellerAddress").setValue(order.getSellerAddress());

@@ -17,6 +17,8 @@ public class Order {
     ArrayList<Item> itemsOrdered;
     long timeStamp;
     boolean isActive;
+    boolean isPickup;
+    boolean toDeliver;
     String storeName;
     String buyerAddress;
     String sellerAddress;
@@ -240,6 +242,21 @@ public class Order {
 
     public void setSellerName(String sellerName) {
         this.sellerName = sellerName;
+    }
+
+    public boolean isPickup() {
+        return isPickup;
+    }
+    public void setIsPickup(boolean isPickup) {
+        this.isPickup = isPickup;
+    }
+
+    public boolean isToDeliver() {
+        return toDeliver;
+    }
+
+    public void setToDeliver(boolean toDeliver) {
+        this.toDeliver = toDeliver;
     }
 }
 

@@ -52,7 +52,7 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             container = (RelativeLayout) itemView.findViewById(R.id.container);
             name = (TextView) itemView.findViewById(R.id.store_name);
             description = (TextView) itemView.findViewById(R.id.store_description);
-            image = (ImageView) itemView.findViewById(R.id.food_image);
+            image = (ImageView) itemView.findViewById(R.id.food_background);
             distance = (TextView) itemView.findViewById(R.id.distance_tv);
             ratingBar= (RatingBar) itemView.findViewById(R.id.rating_bar);
 
@@ -83,7 +83,7 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final SellersViewHolder vh = (SellersViewHolder) viewHolder;
         vh.name.setText(seller.getStoreName());
         vh.description.setText(seller.getDescription());
-        vh.distance.setText(seller.getDistanceFromBuyer() + " mi");
+        vh.distance.setText(seller.getDistanceFromBuyer());
         if(seller.getPhotoLink() != null && !seller.getPhotoLink().isEmpty() && seller.getPhotoLink().length() > 200) {
             final String imageLink = seller.getPhotoLink();
             new AsyncTask<Void, Void, Bitmap>() {
@@ -98,7 +98,7 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 protected void onPostExecute(Bitmap bitmap) {
                     super.onPostExecute(bitmap);
                     vh.image.setImageBitmap(bitmap);
-                    vh.image.setRotation(90);
+                    vh.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 }
             }.execute();
         }

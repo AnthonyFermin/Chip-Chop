@@ -83,15 +83,15 @@ public class BuyerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         String deliveryMethod = "";
         Order order = orderItems.get(position);
         BuyerOrdersViewHolder vh = (BuyerOrdersViewHolder) viewHolder;
-        vh.nameOfSeller.setText("Seller Name: " + order.getStoreName());
+        vh.nameOfSeller.setText("SELLER NAME: " + order.getStoreName());
 
         Log.d("BuyerOrderAdapter", "Date: " + order.getTimeStamp());
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(order.getTimeStamp());
         DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.US);
         String formattedDate = formatter.format(cal.getTime());
-        vh.timeStamp.setText("Date: " + formattedDate);
-        vh.total.setText("Total: $" + order.getPrice());
+        vh.timeStamp.setText("TIME: " + formattedDate);
+        vh.total.setText("TOTAL: $" + order.getPrice());
 
         if (order.isPickup()) {
             deliveryMethod = "PICKUP";
@@ -101,7 +101,7 @@ public class BuyerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         vh.deliveryMethod.setText("DELIVERY METHOD: " + deliveryMethod);
         if (order.isPickup()) {
-            vh.sellerAddress.setText("SELLER ADDRESS: " + order.getSellerAddress());
+            vh.sellerAddress.setText("SELLER ADDRESS: \n\n" + order.getSellerAddress());
         } else {
             vh.sellerAddress.setVisibility(View.GONE);
         }

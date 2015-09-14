@@ -9,7 +9,7 @@ import java.io.Serializable;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 
-public class Item implements Serializable{
+public class Item{
     String buyerID;
     String sellerID;
     String nameOfItem;

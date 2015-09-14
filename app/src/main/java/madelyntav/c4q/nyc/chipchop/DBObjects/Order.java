@@ -28,6 +28,7 @@ public class Order {
     String paymentType;
     String buyerName;
     String sellerName;
+    boolean isReviewed;
 
     public Order(){
         this.itemsOrdered = new ArrayList<>();
@@ -257,6 +258,14 @@ public class Order {
 
     public void setToDeliver(boolean toDeliver) {
         this.toDeliver = toDeliver;
+    }
+
+    public boolean isReviewed() {
+        return isReviewed;
+    }
+
+    public void setIsReviewed(boolean isReviewed) {
+        this.isReviewed = isReviewed;
     }
 }
 

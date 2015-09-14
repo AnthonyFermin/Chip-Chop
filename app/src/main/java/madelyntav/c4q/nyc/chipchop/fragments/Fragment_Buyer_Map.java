@@ -411,7 +411,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
             Circle circle = map.addCircle(new CircleOptions()
                     .center(new LatLng(lat, lng))
-                    .radius(13219)
+                    .radius(100000)
                     .strokeColor(Color.RED));
 
             float[] distance = new float[sellers.size()];

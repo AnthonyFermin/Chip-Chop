@@ -32,7 +32,6 @@ import com.facebook.login.LoginManager;
 
 import java.util.ArrayList;
 
-import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
@@ -313,20 +312,22 @@ public class SellActivity extends AppCompatActivity {
     }
 
     private void initializeUser(){
-        SharedPreferences sp = getSharedPreferences(SignupActivity1.SP_USER_INFO, MODE_PRIVATE);
-        String email = sp.getString(SignupActivity1.SP_EMAIL, "");
-        String name = sp.getString(SignupActivity1.SP_NAME, "");
-        String address = sp.getString(SignupActivity1.SP_ADDRESS,"");
-        String apt = sp.getString(SignupActivity1.SP_APT, "");
-        String city = sp.getString(SignupActivity1.SP_CITY, "");
-        String state = sp.getString(SignupActivity1.SP_STATE,"");
-        String zip = sp.getString(SignupActivity1.SP_ZIPCODE, "");
-        String phoneNumber = sp.getString(SignupActivity1.SP_PHONE_NUMBER, "");
-        String photoLink = sp.getString(SignupActivity1.SP_PHOTO_LINK,"");
+//        SharedPreferences sp = getSharedPreferences(SignupActivity1.SP_USER_INFO, MODE_PRIVATE);
+//        String email = sp.getString(SignupActivity1.SP_EMAIL, "");
+//        String name = sp.getString(SignupActivity1.SP_NAME, "");
+//        String address = sp.getString(SignupActivity1.SP_ADDRESS,"");
+//        String apt = sp.getString(SignupActivity1.SP_APT, "");
+//        String city = sp.getString(SignupActivity1.SP_CITY, "");
+//        String state = sp.getString(SignupActivity1.SP_STATE,"");
+//        String zip = sp.getString(SignupActivity1.SP_ZIPCODE, "");
+//        String phoneNumber = sp.getString(SignupActivity1.SP_PHONE_NUMBER, "");
+//        String photoLink = sp.getString(SignupActivity1.SP_PHOTO_LINK,"");
 
-        Address userAddress = new Address(address, apt, city, state, zip, dbHelper.getUserID());
-        user = new User(dbHelper.getUserID(), email, name, userAddress, phoneNumber);
-        user.setPhotoLink(photoLink);
+
+        user=HelperMethods.getUser();
+//        Address userAddress = new Address(address, apt, city, state, zip, dbHelper.getUserID());
+//        user = new User(dbHelper.getUserID(), email, name, userAddress, phoneNumber);
+//        user.setPhotoLink(photoLink);
 
         drawerUserNameTV.setText(user.getName());
     }

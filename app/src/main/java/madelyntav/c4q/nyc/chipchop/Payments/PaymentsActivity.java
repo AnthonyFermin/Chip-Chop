@@ -135,6 +135,8 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
         zipCodeView = (EditText) findViewById(R.id.zipcode);
         zipCodeView.setText(zipCode);
 
+        getSupportActionBar().setTitle(R.string.app_name);
+
 
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
         getSupportActionBar().setBackgroundDrawable(colorDrawable);

@@ -82,7 +82,7 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
             }
         });
 
-
+        //TODO CHECK CRASH
         buyerName.setText(user.getName());
         address.setText(user.getAddress().getStreetAddress());
         apt.setText(user.getAddress().getApartment());

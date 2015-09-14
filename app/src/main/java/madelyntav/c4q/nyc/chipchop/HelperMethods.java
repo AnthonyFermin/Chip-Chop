@@ -1,5 +1,6 @@
 package madelyntav.c4q.nyc.chipchop;
 
+import android.content.Context;
 import android.util.Base64;
 import android.util.Log;
 
@@ -87,4 +88,5 @@ public class HelperMethods {
     public static void setSellerToView(Seller sellerToView) {
         HelperMethods.sellerToView = sellerToView;
     }
+
 }

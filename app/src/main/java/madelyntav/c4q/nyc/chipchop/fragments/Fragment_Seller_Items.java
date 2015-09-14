@@ -67,7 +67,6 @@ public class Fragment_Seller_Items extends Fragment {
 
     private RecyclerView inactiveList;
     private RecyclerView activeList;
-    private final String INACTIVE_LIST_DIRECTORY = Environment.getExternalStorageDirectory().getPath() + "inactive_list";
 
 
     DBCallback emptyCallback;
@@ -142,26 +141,25 @@ public class Fragment_Seller_Items extends Fragment {
         activity.setInactiveSellerItems(inActiveItems);
 
         activity.setCurrentFragment(TAG);
-        File file = new File(INACTIVE_LIST_DIRECTORY); // creates file if does not exist
-
     }
 
     private ArrayList<Item> loadInactiveItems() {
         ArrayList<Item> items = new ArrayList<>();
 
-        try {
-            FileInputStream fis = new FileInputStream(INACTIVE_LIST_DIRECTORY);
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            items = (ArrayList<Item>) ois.readObject();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (StreamCorruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        dbHelper.getInactiveItems(dbHelper.getUserID(), new DBCallback() {
+            @Override
+            public void runOnSuccess() {
+                inActiveItems.addAll(dbHelper.getInactiveItems(dbHelper.getUserID(),emptyCallback));
+                if(inactiveList != null){
+                    inactiveList.getAdapter().notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void runOnFail() {
+
+            }
+        });
 
         return items;
     }
@@ -308,22 +306,10 @@ public class Fragment_Seller_Items extends Fragment {
     }
 
     private void saveInactiveList() {
-        try {
-            FileOutputStream fout = new FileOutputStream(INACTIVE_LIST_DIRECTORY);
 
-            ObjectOutputStream oos = new ObjectOutputStream(fout);
-            oos.writeObject(inActiveItems);
-
-            fout.close();
-            oos.close();
-
-            Snackbar
-                    .make(coordinatorLayoutView, "Inactive dishes saved to device", Snackbar.LENGTH_SHORT)
-                    .show();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        for(Item item: inActiveItems){
+            dbHelper.addInactiveItemToSellerProfileDB(item);
         }
+
     }
 }

@@ -50,7 +50,7 @@ public class Fragment_Buyer_OrderDetails extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_buyer_orderdetail, container, false);
 
-        sellerName = (TextView) root.findViewById(R.id.seller_name);
+        sellerName = (TextView) root.findViewById(R.id.seller_name_tv);
         buyDateTime = (TextView) root.findViewById(R.id.order_timestamp_tv);
         deliveryMethod = (TextView) root.findViewById(R.id.delivery_method_tv);
         sellerAddress = (TextView) root.findViewById(R.id.seller_address_tv);

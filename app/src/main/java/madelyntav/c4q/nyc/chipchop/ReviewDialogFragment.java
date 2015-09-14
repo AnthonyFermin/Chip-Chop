@@ -33,15 +33,16 @@ public class ReviewDialogFragment extends android.support.v4.app.DialogFragment 
         View root = inflater.inflate(R.layout.fragment_dialog_review, container, false);
         ratingBar = (RatingBar) root.findViewById(R.id.ratingBar);
         review= new Review();
-        order=new Order();
-        review.setNumOfStars(ratingBar.getNumStars());
+        order=HelperMethods.getCurrentOrder();
 
         submitButton = (Button) root.findViewById(R.id.submit_review_button);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ratingBar.getNumStars();
+                review.setNumOfStars(ratingBar.getRating());
                 order.setReview(review);
+                order.setIsReviewed(true);
+
                 addReviewAndCalculateNewAvg();
                 getDialog().dismiss();
             }
@@ -61,10 +62,23 @@ public class ReviewDialogFragment extends android.support.v4.app.DialogFragment 
         new AsyncTask<Void,Void,Void>(){
             @Override
             protected Void doInBackground(Void... params) {
-                dbHelper.addReviewToSellerProfile(order.getBuyerID(),order.getSellerID(),review.getNumOfStars());
-                dbHelper.increaseNumOfTotalStarsAndCalculateAvg(order.getSellerID(),review);
+                //dbHelper.addReviewToSellerProfile(order.getBuyerID(),order.getSellerID(),review.getNumOfStars());
+                dbHelper.copyOrderToBuyerProfile(order);
+                dbHelper.setReviewForOrderInSellerProfile(order);
+                dbHelper.sendReviewedOrderToSellerDB(order, new DBCallback() {
+                    @Override
+                    public void runOnSuccess() {
+                        dismiss();
+                    }
+
+                    @Override
+                    public void runOnFail() {
+
+                    }
+                });
                 return null;
             }
         }.execute();
+
     }
 }

@@ -133,6 +133,7 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 public void onClick(View view) {
 
                     Item itemToEdit = sellerItems.get(getAdapterPosition());
+                    Log.d("ITEMGGG",itemToEdit.getItemID());
 
                     activity.setItemToEdit(itemToEdit);
                     activity.replaceSellerFragment(new Fragment_Seller_CreateItem());

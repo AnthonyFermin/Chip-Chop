@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Review {
     String sellerID;
     String buyerID;
-    int numOfStars;
+    float numOfStars;
     String reviewDescription;
 
     public Review(){}
@@ -51,11 +51,11 @@ public class Review {
         this.buyerID = buyerID;
     }
 
-    public int getNumOfStars() {
+    public float getNumOfStars() {
         return numOfStars;
     }
 
-    public void setNumOfStars(int numOfStars) {
+    public void setNumOfStars(float numOfStars) {
         this.numOfStars = numOfStars;
     }
 

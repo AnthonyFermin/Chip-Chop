@@ -1,5 +1,6 @@
 package madelyntav.c4q.nyc.chipchop;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
@@ -64,6 +65,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
     DBHelper dbHelper;
     LoginButton loginButton;
 
+    public static final int MY_REQUEST_CODE=0;
     public static final String TAG = "1";
     public static final String SP_USER_INFO = "user_info";
     public static final String SP_EMAIL = "email";
@@ -167,6 +169,11 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
                     FragmentManager fm = getSupportFragmentManager();
                     TermsDialog alertDialog = new TermsDialog();
                     alertDialog.show(fm, "fragment_alert");
+                    alertDialog.setCancelable(false);
+//                    alertDialog.setTargetFragment(, MY_REQUEST_CODE);
+
+
+
 
                     email = emailET.getText().toString().trim();
                     password = passET.getText().toString();
@@ -214,6 +221,8 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
             }
         });
     }
+
+
 
     private void bindViews() {
         containingView = (LinearLayout) findViewById(R.id.container);

@@ -164,7 +164,7 @@ public class SignupActivity2 extends AppCompatActivity {
     private void showListViewDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getApplicationContext());
         dialogBuilder.setTitle("Set Profile Image");
-        final String[] items = {"Camera", "Gallery"};
+        final String[] items = {"Gallery"};
         dialogBuilder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

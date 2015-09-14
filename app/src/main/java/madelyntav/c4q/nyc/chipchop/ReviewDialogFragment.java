@@ -34,16 +34,12 @@ public class ReviewDialogFragment extends android.support.v4.app.DialogFragment 
         ratingBar = (RatingBar) root.findViewById(R.id.ratingBar);
         review= new Review();
         order=HelperMethods.getCurrentOrder();
-        review.setNumOfStars(ratingBar.getRating());
 
         submitButton = (Button) root.findViewById(R.id.submit_review_button);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(review.getNumOfStars()==0) {
-                    ratingBar.setNumStars(0);
-                }
-                review.setNumOfStars(ratingBar.getNumStars());
+                review.setNumOfStars(ratingBar.getRating());
                 order.setReview(review);
                 order.setIsReviewed(true);
 
@@ -84,12 +80,5 @@ public class ReviewDialogFragment extends android.support.v4.app.DialogFragment 
             }
         }.execute();
 
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-
-                return null;
-            }
-        }.execute();
     }
 }

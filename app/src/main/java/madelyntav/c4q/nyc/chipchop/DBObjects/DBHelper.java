@@ -2242,7 +2242,8 @@ public class DBHelper extends Firebase {
                     }
 
                     float newNumToAvg = numofStars + numOfStarsForOrder;
-                    numOfReviews++;
+
+                    numOfReviews= numOfReviews +1;
 
                     float newAvg1 = newNumToAvg / numOfReviews;
 

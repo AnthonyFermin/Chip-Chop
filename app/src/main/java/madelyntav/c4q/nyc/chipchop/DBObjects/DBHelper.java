@@ -402,9 +402,7 @@ public class DBHelper extends Firebase {
                                 mSuccess = false;
                                 break;
                             case FirebaseError.INVALID_PASSWORD:
-                                Snackbar
-                                        .make(SignupActivity1.coordinatorLayoutView, "Invalid Password", Snackbar.LENGTH_SHORT)
-                                        .show();
+
                                 Toast.makeText(mContext, "Invalid Password", Toast.LENGTH_LONG).show();
                                 mSuccess = false;
                                 break;

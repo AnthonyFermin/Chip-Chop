@@ -8,19 +8,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/text_design"
-        android:text="terms of agreement"
+        android:text="terms user of agreement"
         android:textSize="35sp"
         android:gravity="center_horizontal"
         android:layout_margin="10dp"
         android:paddingBottom="20dp"
         android:id="@+id/title_tv"/>
 
-
+<ScrollView
+    android:layout_width="wrap_content"
+    android:layout_height="200dp">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."/>
-
+        android:text="Thank you for using ChipChop! \nBuyers: By agreeing to the terms, you acknowledge that you are taking the risk of eating vendors’ foods. ChipChop employs a reviews system that helps us keep the system updated with feedback on vendors to keep an updated system of eligible vendors to participate in using ChipChop to sell food.  \nSellers: During your use of ChipChop, ChipChop reserves the sole right to decide in its sole, absolute and unfettered approval and discretion whether Vendor is selling an inappropriate product and/or items.  Should ChipChop decide an item or product being sold is inappropriate, Vendor shall immediately cease selling the item or product at ChipChop and remove all such items or products from the marketplace.  Should Vendor refuse to cease selling the item or product or remove it from the marketplace, ChipChop will shut down Vendors operations and remove Vendor and its storefront and concession for the ChipChop Application.  Vendor shall not sell any illegal items.  ChipChop, through its Grounds Committee, reserves the right to terminate the operations of Vendor at anytime during ChipChop if the food product is not of the highest quality as determined by ChipChop in its in sole discretion. ChipChop reserves the right to terminate this Agreement at any time if the Vendor, in the judgment and sole discretion of ChipChop, commits any act in violation of and/or contradictory to the purposes of ChipChop, violates the provisions of the Health Department, fails to cooperate with representatives of ChipChop, or breaches any of the terms and conditions of this Agreement.  This includes, but is not limited to, Vendor and/or its employees use or possession of alcohol and/or other mind or mood altering substance(s), illegal or otherwise, and/or any other such drug(s), product(s), and/or material(s) which could jeopardize the safety and wellbeing of ChipChop users. Vendor shall be responsible for collection and payment of any tax upon gross receipts from Vendor’s participation in ChipChop, as required by USA Law. Vendor agrees to comply with all Health Department regulations.  \n\n  Fees: In exchange for the right to share food and drinks pursuant to the terms and conditions of this Agreement, Vendor agrees to pay the ChipChop a membership fee of $1.00.   For the purpose of this Agreement, total sales shall mean total amount revenue collected by Vendor through food and drink sales earned by Vendor during the ChipChop. \n\n **This Agreement shall be binding upon the parties hereto and also their personal representatives, heirs, successors and assigns.**"/>
+</ScrollView>
     <CheckBox
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

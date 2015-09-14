@@ -272,6 +272,7 @@ public class Fragment_Seller_CreateItem extends Fragment {
 
         }
 
+        resizeImageForDB(filePath);
         dishPhotoButton.setImageURI(imageFileUri);
 
 

@@ -34,7 +34,7 @@ public class ReviewDialogFragment extends android.support.v4.app.DialogFragment 
         ratingBar = (RatingBar) root.findViewById(R.id.ratingBar);
         review= new Review();
         order=HelperMethods.getCurrentOrder();
-        review.setNumOfStars(ratingBar.getNumStars());
+        review.setNumOfStars(ratingBar.getRating());
 
         submitButton = (Button) root.findViewById(R.id.submit_review_button);
         submitButton.setOnClickListener(new View.OnClickListener() {

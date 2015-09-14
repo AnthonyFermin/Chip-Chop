@@ -11,6 +11,17 @@
     android:padding="5dp"
     tools:context="madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/text_design"
+        android:text="profile settings"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:textSize="40sp"
+        android:gravity="center_horizontal"/>
+
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -24,12 +35,6 @@
             android:orientation="vertical">
 
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="15dp">
-
                 <!--<de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"-->
                 <!--android:id="@+id/profile_image"-->
                 <!--android:layout_width="90dp"-->
@@ -40,9 +45,19 @@
                 <!--app:border_width="2dp" />-->
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
+                    <TextView
+                        style="@style/text_design"
+                        android:layout_marginTop="15dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:layout_marginBottom="10dp"
+                        android:text="SET PROFILE IMAGE"
+                        android:textStyle="bold" />
 
                 <ImageButton
                     android:id="@+id/profile_image"
@@ -54,29 +69,12 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/chipchop" />
 
-                <TextView
-                    style="@style/text_design"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
-                    android:text="SET \n FOOD IMAGE"
-                    android:textStyle="bold" />
+
 
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/seller_name"
-                    style="@style/text_design"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:textStyle="bold"
-                    android:text="Chip Chopper"
-                    android:textSize="35sp" />
 
-            </LinearLayout>
 
 
             <!--<TextView-->
@@ -156,7 +154,6 @@
 
                 <EditText
                     android:id="@+id/name"
-                    android:maxLength="20"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Name"

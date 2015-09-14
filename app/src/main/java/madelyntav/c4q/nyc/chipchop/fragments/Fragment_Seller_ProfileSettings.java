@@ -211,7 +211,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 dbHelper.addUserProfileInfoToDB(user);
 
                 Snackbar
-                        .make(coordinatorLayoutView, "Changes Saved", Snackbar.LENGTH_SHORT)
+                        .make(coordinatorLayoutView, "Store profile hanges Saved", Snackbar.LENGTH_SHORT)
                         .show();
 
                 setReadOnlyAll(true);

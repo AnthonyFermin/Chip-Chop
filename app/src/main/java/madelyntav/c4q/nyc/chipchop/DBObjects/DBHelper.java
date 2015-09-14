@@ -1528,8 +1528,9 @@ public class DBHelper extends Firebase {
     public void editItemInSellerProfile(Item item, DBCallback dbCallback) {
         sellerId = item.getSellerID();
         Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId + "/itemsForSale/");
-
-        fRef.child(item.getItemID()).push();
+        Log.d("UILKK", fRef.toString());
+        Log.d("ITemIDII",item.getItemID()+"");
+        fRef.child(item.getItemID());
         fRef.child(item.getItemID()).child("sellerID").setValue(sellerId);
         fRef.child(item.getItemID()).child("nameOfItem").setValue(item.getNameOfItem());
         fRef.child(item.getItemID()).child("descriptionOfItem").setValue(item.getDescriptionOfItem());

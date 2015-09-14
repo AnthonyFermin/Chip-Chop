@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -211,6 +210,7 @@ public class Fragment_Seller_CreateItem extends Fragment {
                             inactiveItems.add(item);
                         }
                     } else if (activity.getItemToEdit() != null) {
+                        item.setItemID(activity.getItemToEdit().getItemID());
                         if (activity.isCurrentlyCooking()) {
                             dbHelper.editItemInActiveSellerProfile(item, itemAddCallback);
                         } else {

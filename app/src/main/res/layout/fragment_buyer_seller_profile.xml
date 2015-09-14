@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/rating_bar"
                 android:numStars="5"
-                android:rating="4"
+                android:rating="5"
                 android:layout_gravity="start"/>
 
 

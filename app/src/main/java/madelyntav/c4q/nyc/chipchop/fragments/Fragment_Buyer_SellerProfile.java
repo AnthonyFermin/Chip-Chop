@@ -129,7 +129,6 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
                     Snackbar
                             .make(coordinatorLayoutView, "Seller food items not found", Snackbar.LENGTH_SHORT)
                             .show();
-                    Toast.makeText(activity,"Seller food items not found",Toast.LENGTH_SHORT).show();
                 }
                 loadingPanel.setVisibility(View.GONE);
                 containingView.setVisibility(View.VISIBLE);

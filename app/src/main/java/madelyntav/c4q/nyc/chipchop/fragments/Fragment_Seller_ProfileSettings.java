@@ -211,7 +211,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 dbHelper.addUserProfileInfoToDB(user);
 
                 Snackbar
-                        .make(coordinatorLayoutView, "Changes Saved", Snackbar.LENGTH_SHORT)
+                        .make(coordinatorLayoutView, "Store profile hanges Saved", Snackbar.LENGTH_SHORT)
                         .show();
 
                 setReadOnlyAll(true);
@@ -426,7 +426,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     private void showListViewDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         dialogBuilder.setTitle("Set Profile Image");
-        final String[] items = {"Camera", "Gallery"};
+        final String[] items = {"Gallery"};
         dialogBuilder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

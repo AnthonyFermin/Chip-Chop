@@ -1,5 +1,10 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -151,6 +156,7 @@
 
                 <EditText
                     android:id="@+id/name"
+                    android:maxLength="20"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Name"
@@ -294,7 +300,15 @@
         android:id="@+id/saveChanges"
         android:text="SAVE CHANGES" />
 
-
 </LinearLayout>
 
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/snackbarPosition">
+    </android.support.design.widget.CoordinatorLayout>
 
+
+
+</RelativeLayout>

@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,6 +39,7 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
 
     public static final String TAG = "fragment_buyer_profile_settings";
 
+    View coordinatorLayoutView;
     TextView buyerName, address, apt, city, state, zipcode, phoneNumber;
     ImageView profilePhoto;
     Button saveChanges;
@@ -91,6 +93,16 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
         zipcode.setText(user.getAddress().getZipCode());
         phoneNumber.setText(user.getPhoneNumber());
 
+        saveChanges.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dbHelper.addUserProfileInfoToDB(user);
+                Snackbar
+                        .make(coordinatorLayoutView, "Profile changes saved", Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+        });
+
         return root;
     }
 
@@ -103,14 +115,9 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
         zipcode = (TextView) root.findViewById(R.id.zipcode);
         phoneNumber = (TextView) root.findViewById(R.id.phone_number);
         saveChanges= (Button) root.findViewById(R.id.saveChanges);
+        coordinatorLayoutView = root.findViewById(R.id.snackbarPosition);
 
-        saveChanges.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dbHelper.addUserProfileInfoToDB(user);
 
-            }
-        });
 
     }
 
@@ -148,7 +155,7 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
     private void showListViewDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         dialogBuilder.setTitle("Set Profile Image");
-        final String[] items = {"Camera", "Gallery"};
+        final String[] items = {"Gallery"};
         dialogBuilder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

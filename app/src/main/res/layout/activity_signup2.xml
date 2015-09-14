@@ -1,33 +1,22 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
-android:layout_height="match_parent">
+android:layout_height="match_parent"
+    android:layout_margin="10dp">
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="madelyntav.c4q.nyc.chipchop.SignupActivity2">
 
-    <TextView
-        style="@style/text_design"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:padding="5dp"
-        android:text="● ●"
-        android:textSize="30sp" />
 
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="PROFILE PHOTO"
+        android:text="SET PROFILE PHOTO"
         android:layout_marginBottom="10dp"
         android:gravity="center_horizontal"
         android:textStyle="bold"
@@ -74,6 +63,7 @@ android:layout_height="match_parent">
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Name"
+            android:maxLength="20"
             android:textSize="20sp" />
 
     </android.support.design.widget.TextInputLayout>
@@ -204,14 +194,17 @@ android:layout_height="match_parent">
     </LinearLayout>
     </ScrollView>
 
+
+
+</LinearLayout>
+
     <Button
         android:id="@+id/createUserButton"
         style="@style/button_design"
+        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Sign up" />
-
-</LinearLayout>
 
 <android.support.design.widget.CoordinatorLayout
 android:layout_width="match_parent"
@@ -219,4 +212,6 @@ android:layout_height="match_parent"
 android:layout_alignParentBottom="true"
 android:id="@+id/snackbarPosition">
 </android.support.design.widget.CoordinatorLayout>
+
+
     </RelativeLayout>

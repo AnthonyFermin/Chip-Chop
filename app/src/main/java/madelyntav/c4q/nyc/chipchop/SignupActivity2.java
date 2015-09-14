@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -159,7 +160,7 @@ public class SignupActivity2 extends AppCompatActivity {
     private void showListViewDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getApplicationContext());
         dialogBuilder.setTitle("Set Profile Image");
-        final String[] items = {"Camera", "Gallery"};
+        final String[] items = {"Gallery"};
         dialogBuilder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -179,9 +180,9 @@ public class SignupActivity2 extends AppCompatActivity {
                 }
             }
         });
-        AlertDialog alertDialog = dialogBuilder.create();
+//        AlertDialog alertDialog = dialogBuilder.create();
 //        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        alertDialog.show();
+//        alertDialog.show();
 
 
     }

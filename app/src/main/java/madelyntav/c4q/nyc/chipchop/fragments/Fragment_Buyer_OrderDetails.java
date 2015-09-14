@@ -95,7 +95,7 @@ public class Fragment_Buyer_OrderDetails extends Fragment {
 //        mBuilder.setAutoCancel(true);
 //        notification = mBuilder.build();
 //        notification.flags |= Notification.FLAG_AUTO_CANCEL;
-        sellerName.setText("SELLER NAME: " + orderToView.getSellerName());
+        sellerName.setText("SELLER: " + orderToView.getSellerName());
 
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(orderToView.getTimeStamp());
@@ -111,7 +111,7 @@ public class Fragment_Buyer_OrderDetails extends Fragment {
         }
 
         deliveryMethod.setText("DELIVERY METHOD: " + deliverMethod);
-        sellerAddress.setText("SELLER ADDRESS: \n" + orderToView.getSellerAddress());
+        sellerAddress.setText("SELLER ADDRESS: \n\n" + orderToView.getSellerAddress());
 
 
         return root;

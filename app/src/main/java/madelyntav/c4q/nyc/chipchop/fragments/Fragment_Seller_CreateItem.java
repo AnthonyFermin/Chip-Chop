@@ -166,8 +166,9 @@ public class Fragment_Seller_CreateItem extends Fragment {
                         || Integer.parseInt(dollarPriceET.getText().toString()) == 0
                         || portionsET.getText().toString().isEmpty()
                         || Integer.parseInt(portionsET.getText().toString()) == 0
-                        || descriptionET.getText().toString().isEmpty()) {
-                    Toast.makeText(activity, "Please fill in all required fields", Toast.LENGTH_SHORT).show();
+                        || descriptionET.getText().toString().isEmpty()
+                        || imageLink.isEmpty()) {
+                    Toast.makeText(activity, "Please fill in all required fields and select a photo", Toast.LENGTH_SHORT).show();
                 } else {
                     String dishName = dishNameET.getText().toString();
                     int portions = 0;

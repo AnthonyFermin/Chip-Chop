@@ -2235,17 +2235,23 @@ public class DBHelper extends Firebase {
                 int numofStars = seller.numOfTotalStars;
                 int numOfReviews = seller.numOfReviews;
 
+
+                    float newAvg1;
+
                     float numOfStarsForOrder = order.getReview().getNumOfStars();
 
-                    if(numofStars==0){
-                    numofStars=0;
+                    if(numOfReviews==0){
+
+                        newAvg1=numOfStarsForOrder;
+                        numOfReviews++;
+                    } else {
+
+                        float newNumToAvg = numofStars + numOfStarsForOrder;
+
+                        numOfReviews = numOfReviews + 1;
+
+                        newAvg1 = newNumToAvg / numOfReviews;
                     }
-
-                    float newNumToAvg = numofStars + numOfStarsForOrder;
-
-                    numOfReviews = numOfReviews + 1 ;
-
-                    float newAvg1 = newNumToAvg / 2 ;
 
                     sendReviewToSellerProfileAvg(sellerId, newAvg1, numOfReviews);
             }

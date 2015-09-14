@@ -50,7 +50,7 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             container = (RelativeLayout) itemView.findViewById(R.id.container);
             name = (TextView) itemView.findViewById(R.id.store_name);
             description = (TextView) itemView.findViewById(R.id.store_description);
-            image = (ImageView) itemView.findViewById(R.id.food_image);
+            image = (ImageView) itemView.findViewById(R.id.food_background);
             distance = (TextView) itemView.findViewById(R.id.distance_tv);
 
             container.setOnClickListener(new View.OnClickListener() {
@@ -95,7 +95,7 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 protected void onPostExecute(Bitmap bitmap) {
                     super.onPostExecute(bitmap);
                     vh.image.setImageBitmap(bitmap);
-                    vh.image.setRotation(90);
+                    vh.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 }
             }.execute();
         }

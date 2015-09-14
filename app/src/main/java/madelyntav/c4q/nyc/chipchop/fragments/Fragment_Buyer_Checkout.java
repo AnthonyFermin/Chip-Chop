@@ -25,7 +25,9 @@ import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
 import madelyntav.c4q.nyc.chipchop.DeliveryDialog;
+import madelyntav.c4q.nyc.chipchop.HelperMethods;
 import madelyntav.c4q.nyc.chipchop.PaymentDialog;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.ReviewDialogFragment;
@@ -39,6 +41,7 @@ public class Fragment_Buyer_Checkout extends Fragment {
     private ArrayList<Item> cartItems;
     private RecyclerView cartRView;
     private TextView totalPriceTV;
+    private Seller seller;
 
     private BuyActivity activity;
     private Order order;
@@ -68,10 +71,23 @@ public class Fragment_Buyer_Checkout extends Fragment {
             @Override
             public void onClick(View view) {
 
-                FragmentManager fm = activity.getSupportFragmentManager();
-                DeliveryDialog alertDialog = new DeliveryDialog();
-                alertDialog.show(fm, "fragment_alert");
+                if(  !(seller.isDeliveryAvailable() && seller.isPickUpAvailable())  ){
+                    if(seller.isDeliveryAvailable()){
+                        HelperMethods.getCurrentOrder().setToDeliver(true);
+                        HelperMethods.getCurrentOrder().setIsPickup(false);
+                    }else{
+                        HelperMethods.getCurrentOrder().setIsPickup(true);
+                        HelperMethods.getCurrentOrder().setToDeliver(false);
+                    }
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    PaymentDialog alertDialog = new PaymentDialog();
+                    alertDialog.show(fm, "fragment_alert");
+                }else {
 
+                    FragmentManager fm = activity.getSupportFragmentManager();
+                    DeliveryDialog alertDialog = new DeliveryDialog();
+                    alertDialog.show(fm, "fragment_alert");
+                }
 
             }
         });
@@ -103,6 +119,8 @@ public class Fragment_Buyer_Checkout extends Fragment {
         activity = (BuyActivity) getActivity();
         dbHelper = DBHelper.getDbHelper(activity);
         activity.setCurrentFragment(TAG);
+
+        seller = HelperMethods.getSellerToView();
 
         order = activity.getCurrentOrder();
         order.setBuyerID(dbHelper.getUserID());

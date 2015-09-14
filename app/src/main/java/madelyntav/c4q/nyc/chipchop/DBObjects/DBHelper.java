@@ -814,6 +814,7 @@ public class DBHelper extends Firebase {
                     seller.setIsCooking(seller1.isCooking);
                     seller.setAccountNumber(seller1.getAccountNumber());
                     seller.setRoutingNumber(seller1.routingNumber);
+                    seller.setPhotoLink(seller1.getPhotoLink());
 
                     Log.d("Seller", seller.name + "");
                     callback.runOnSuccess();

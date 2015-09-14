@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -43,6 +44,7 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         TextView description;
         ImageView image;
         TextView distance;
+        RatingBar ratingBar;
 
         public SellersViewHolder(View itemView) {
             super(itemView);
@@ -52,6 +54,7 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             description = (TextView) itemView.findViewById(R.id.store_description);
             image = (ImageView) itemView.findViewById(R.id.food_image);
             distance = (TextView) itemView.findViewById(R.id.distance_tv);
+            ratingBar= (RatingBar) itemView.findViewById(R.id.rating_bar);
 
             container.setOnClickListener(new View.OnClickListener() {
                 @Override

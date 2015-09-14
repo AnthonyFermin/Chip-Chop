@@ -2260,11 +2260,8 @@ public class DBHelper extends Firebase {
         Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId);
 
         fRef.child(sellerId);
-        fRef.child(UID).child("numOfTotalStars").setValue(newAvg);
-        fRef.child(UID).child("numOfReviews").setValue(newNumOfReviews);
-
-
-
+        fRef.child(sellerId).child("numOfTotalStars").setValue(newAvg);
+        fRef.child(sellerId).child("numOfReviews").setValue(newNumOfReviews);
 
     }
 

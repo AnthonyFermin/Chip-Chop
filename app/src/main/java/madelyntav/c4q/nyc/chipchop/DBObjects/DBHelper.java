@@ -2234,14 +2234,14 @@ public class DBHelper extends Firebase {
                 int numofStars = seller.numOfTotalStars;
                 int numOfReviews = seller.numOfReviews;
 
-                    int numOfStarsForOrder = order.getReview().getNumOfStars();
+                    float numOfStarsForOrder = order.getReview().getNumOfStars();
 
-                    int newNumToAvg = numofStars + numOfStarsForOrder;
+                    float newNumToAvg = numofStars + numOfStarsForOrder;
                     numOfReviews++;
 
-                    int newAvgReview = newNumToAvg / numOfReviews;
+                    float newAvgReview = newNumToAvg / numOfReviews;
 
-                    char newAvg1 = String.valueOf(newAvgReview).charAt(0);
+                    float newAvg1 = newAvgReview;
 
                     sendReviewToSellerProfileAvg(sellerId, newAvg1, numOfReviews);
             }
@@ -2254,7 +2254,7 @@ public class DBHelper extends Firebase {
 
     }
 
-    private void sendReviewToSellerProfileAvg(String sellerId, char newAvg, int newNumOfReviews){
+    private void sendReviewToSellerProfileAvg(String sellerId, float newAvg, int newNumOfReviews){
         this.sellerId=sellerId;
 
         Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId);

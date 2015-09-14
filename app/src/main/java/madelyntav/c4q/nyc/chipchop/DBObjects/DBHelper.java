@@ -2224,8 +2224,9 @@ public class DBHelper extends Firebase {
 
     public void setReviewForOrderInSellerProfile(final Order order){
         sellerId=order.getSellerID();
-        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId);
 
+        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId);
+        Log.d("INTHEREVIEWSFOR",fRef.toString());
 
         fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -2236,12 +2237,14 @@ public class DBHelper extends Firebase {
 
                     float numOfStarsForOrder = order.getReview().getNumOfStars();
 
+                    if(numofStars==0){
+                    numofStars=0;
+                    }
+
                     float newNumToAvg = numofStars + numOfStarsForOrder;
                     numOfReviews++;
 
-                    float newAvgReview = newNumToAvg / numOfReviews;
-
-                    float newAvg1 = newAvgReview;
+                    float newAvg1 = newNumToAvg / numOfReviews;
 
                     sendReviewToSellerProfileAvg(sellerId, newAvg1, numOfReviews);
             }
@@ -2258,6 +2261,7 @@ public class DBHelper extends Firebase {
         this.sellerId=sellerId;
 
         Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId);
+        Log.d("placingIT",fRef.toString());
 
         fRef.child(sellerId);
         fRef.child(sellerId).child("numOfTotalStars").setValue(newAvg);
@@ -2871,24 +2875,6 @@ public class DBHelper extends Firebase {
             getAllReviewsForCertainSeller(sellerId, dbCallback);
         }
         return sellersReviewArrayList;
-    }
-
-    public int increaseNumOfTotalStarsAndCalculateAvg(String sellerID, Review review) {
-        int numOfReviews = seller.getNumOfReviews();
-        numOfReviews = numOfReviews + 1;
-        seller.setNumOfReviews(numOfReviews);
-
-        int numOfTotalStars = seller.getNumOfTotalStars();
-        int newStars = review.getNumOfStars();
-        int newNumofTotalstars = numOfTotalStars + newStars;
-        int newAvg = newNumofTotalstars / numOfReviews;
-        char newAvgS = 0;
-        for (int i = 0; i < 1; i++) {
-            newAvgS = String.valueOf(newAvgS).charAt(i);
-        }
-        updateSellerProfileWithNewAvg(seller, newAvgS);
-
-        return newAvg;
     }
 
     public void updateSellerProfileWithNewAvg(Seller seller, char newAvg) {

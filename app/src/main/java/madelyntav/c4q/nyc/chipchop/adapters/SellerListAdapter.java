@@ -87,7 +87,7 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final SellersViewHolder vh = (SellersViewHolder) viewHolder;
         vh.name.setText(seller.getStoreName());
         vh.description.setText(seller.getDescription());
-        vh.distance.setText(String.valueOf(seller.getDistanceFromBuyer()));
+        vh.distance.setText(String.valueOf(seller.getDistanceFromBuyer() + " mi"));
         if(seller.getPhotoLink() != null && !seller.getPhotoLink().isEmpty() && seller.getPhotoLink().length() > 200) {
             final String imageLink = seller.getPhotoLink();
             new AsyncTask<Void, Void, Bitmap>() {

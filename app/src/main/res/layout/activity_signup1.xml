@@ -26,19 +26,12 @@
         android:paddingEnd="10dp"
         android:id="@+id/container">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/text_design"
-            android:text="● ○"
-            android:textSize="30sp"
-            android:layout_margin="5dp"
-            android:gravity="center_horizontal"/>
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:src="@drawable/cc_logo_red"
+            android:layout_marginTop="30dp"
             android:layout_marginBottom="20dp"/>
 
         <android.support.design.widget.TextInputLayout
@@ -56,7 +49,9 @@
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            >
 
         <EditText
             android:id="@+id/password"

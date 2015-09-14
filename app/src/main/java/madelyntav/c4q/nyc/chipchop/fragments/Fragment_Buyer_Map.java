@@ -431,7 +431,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
                 for (int i = 0; i < 4; i++) {
                     distanceToShow += distanceToShow1.charAt(i);
                 }
-                seller.setDistanceFromBuyer(Double.valueOf(distanceToShow));
+                seller.setDistanceFromBuyer(Double.valueOf(distanceToShow) );
                 Log.d("DISTANCE", distanceToShow);
                 Log.d("Fragment Buyer Map", "MARKER ADDED");
                 map.addMarker(new MarkerOptions()

@@ -198,7 +198,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 seller.setLongitude(location.getLng() + "");
                 seller.setIsCooking(false);
                 seller.setPhotoLink(imageLink);
-                if(!accountNum.isEmpty() && !routingNum.isEmpty()) {
+                if (!accountNum.isEmpty() && !routingNum.isEmpty()) {
                     seller.setAccountNumber(accountNum);
                     seller.setRoutingNumber(routingNum);
                 }
@@ -474,9 +474,6 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         }
         pickupSwitch = (SwitchCompat) root.findViewById(R.id.pickup_switch);
 
-
-
-
         if(activity.isCurrentlyCooking()){
             cookingStatus.setChecked(true);
             cookingStatusTV.setVisibility(View.VISIBLE);
@@ -508,7 +505,12 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 if (cookingStatus.getText().toString().equalsIgnoreCase("on")) {
                     //TODO: add confirmation dialog when changing cooking status mention to click save to commit changes
                     sellerItems = activity.getSellerItems();
-                    if(storeNameET.getText().toString().isEmpty()){
+                    if(imageLink == null || imageLink.isEmpty()){
+                        Snackbar
+                                .make(coordinatorLayoutView, "Please add a food image", Snackbar.LENGTH_SHORT)
+                                .show();
+                        cookingStatus.setChecked(false);
+                    }else if(storeNameET.getText().toString().isEmpty()){
                         Snackbar
                                 .make(coordinatorLayoutView, "Please add a store name", Snackbar.LENGTH_SHORT)
                                 .show();
@@ -580,6 +582,10 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             @Override
             public void onClick(View view) {
                 showListViewDialog();
+                if(!saveButton.getText().toString().equalsIgnoreCase("Save Changes")){
+                    saveButton.setText("Save Changes");
+                    setReadOnlyAll(false);
+                }
             }
         });
 

@@ -11,6 +11,7 @@ import java.io.InputStream;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
+import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 
 /**
@@ -20,6 +21,7 @@ public class HelperMethods {
 
     public static Order currentOrder = null;
     public static User user = null;
+    public static Seller sellerToView = null;
 
     public static Address parseAddressString(String addressString, String uid){
 
@@ -76,5 +78,13 @@ public class HelperMethods {
 
     public static void setUser(User user) {
         HelperMethods.user = user;
+    }
+
+    public static Seller getSellerToView() {
+        return sellerToView;
+    }
+
+    public static void setSellerToView(Seller sellerToView) {
+        HelperMethods.sellerToView = sellerToView;
     }
 }

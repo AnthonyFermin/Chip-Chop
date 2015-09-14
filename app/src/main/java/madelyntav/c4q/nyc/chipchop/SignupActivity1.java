@@ -63,6 +63,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
     EditText passET;
     DBHelper dbHelper;
     LoginButton loginButton;
+    Intent newUserIntent;
 
     public static final String TAG = "1";
     public static final String SP_USER_INFO = "user_info";
@@ -162,32 +163,22 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
                             .make(coordinatorLayoutView, "Please set an Email and Password", Snackbar.LENGTH_SHORT)
                             .show();
                 } else {
-                    FragmentManager fm = getSupportFragmentManager();
-                    TermsDialog alertDialog = new TermsDialog();
-                    alertDialog.show(fm, "fragment_alert");
 
                     email = emailET.getText().toString().trim();
                     password = passET.getText().toString();
 
-                    dbHelper.createUserAndCallback(email, password, new DBCallback() {
-                        @Override
-                        public void runOnSuccess() {
-                            storeUserInfo();
-                            Intent intent1 = new Intent(SignupActivity1.this, SignupActivity2.class);
-                            intent1.putExtra("email", email);
-                            intent1.putExtra("pass", password);
-                            if (toSellActivity) {
-                                intent1.putExtra(BuyActivity.TO_SELL_ACTIVITY, true);
-                            }
-                            startActivity(intent1);
-                            finish();
-                        }
+                    newUserIntent = new Intent(SignupActivity1.this, SignupActivity2.class);
+                    newUserIntent.putExtra("email", email);
+                    newUserIntent.putExtra("pass", password);
+                    if (toSellActivity) {
+                        newUserIntent.putExtra(BuyActivity.TO_SELL_ACTIVITY, true);
+                    }
 
-                        @Override
-                        public void runOnFail() {
+                    storeUserInfo();
 
-                        }
-                    });
+                    FragmentManager fm = getSupportFragmentManager();
+                    TermsDialog alertDialog = new TermsDialog();
+                    alertDialog.show(fm, "fragment_alert");
                 }
             }
         });
@@ -527,5 +518,21 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
     public void onBackPressed() {
         startActivity(new Intent(this, BuyActivity.class));
         finish();
+    }
+
+    public Intent getNewUserIntent() {
+        return newUserIntent;
+    }
+
+    public void setNewUserIntent(Intent newUserIntent) {
+        this.newUserIntent = newUserIntent;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

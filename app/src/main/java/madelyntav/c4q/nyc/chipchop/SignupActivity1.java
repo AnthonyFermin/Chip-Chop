@@ -169,8 +169,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
                     FragmentManager fm = getSupportFragmentManager();
                     TermsDialog alertDialog = new TermsDialog();
                     alertDialog.show(fm, "fragment_alert");
-                    alertDialog.setCancelable(false);
-//                    alertDialog.setTargetFragment(, MY_REQUEST_CODE);
+                   
 
 
 

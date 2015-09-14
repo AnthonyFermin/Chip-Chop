@@ -3,12 +3,14 @@ package madelyntav.c4q.nyc.chipchop.fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -262,10 +264,15 @@ public class Fragment_Seller_CreateItem extends Fragment {
 
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
             imageFileUri = data.getData();
-            filePath = imageFileUri.getPath();
-//            resizeImageForDB(filePath);
 
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            Cursor cursor = activity.getContentResolver().query(imageFileUri,filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            filePath = cursor.getString(columnIndex);
+            cursor.close();
 
+            Log.d("Seller Profile","ImageLink: " + imageLink);
         } else if (requestCode == 0 && resultCode == RESULT_OK) {
             imageFileUri = Uri.parse(stringVariable);
             filePath = imageFileUri.getPath();

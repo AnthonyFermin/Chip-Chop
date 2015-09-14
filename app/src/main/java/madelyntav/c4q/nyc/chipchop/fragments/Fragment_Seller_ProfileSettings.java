@@ -121,9 +121,11 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
         initializeViews(root);
 
+        setListeners();
+
         loadSellerInfo();
 
-        setListeners();
+
 
         return root;
     }
@@ -193,15 +195,28 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
                 userAddress.setLatitude(location.getLat());
                 userAddress.setLongitude(location.getLng());
+                int numRevs = seller.getNumOfReviews();
+                int numStars = seller.getNumOfTotalStars();
+                int newRevNumStars = seller.getNewReviewNumOfStars();
                 seller = new Seller(uid, user.geteMail(), user.getName(), userAddress, storeName, phoneNumber);
+
+                seller.setNumOfReviews(numRevs);
+                seller.setNumOfTotalStars(numStars);
+                seller.setNewReviewNumOfStars(newRevNumStars);
+
                 seller.setLatitude(location.getLat() + "");
                 seller.setLongitude(location.getLng() + "");
                 seller.setIsCooking(false);
                 seller.setPhotoLink(imageLink);
+                seller.setPickUpAvailable(pickupSwitch.isChecked());
+                seller.setDeliveryAvailable(deliverSwitch.isChecked());
+
+
                 if (!accountNum.isEmpty() && !routingNum.isEmpty()) {
                     seller.setAccountNumber(accountNum);
                     seller.setRoutingNumber(routingNum);
                 }
+
                 dbHelper.addSellerProfileInfoToDB(seller);
                 dbHelper.setSellerCookingStatus(seller.getIsCooking());
                 activity.setSeller(seller);
@@ -211,7 +226,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 dbHelper.addUserProfileInfoToDB(user);
 
                 Snackbar
-                        .make(coordinatorLayoutView, "Store profile hanges Saved", Snackbar.LENGTH_SHORT)
+                        .make(coordinatorLayoutView, "Changes Saved", Snackbar.LENGTH_SHORT)
                         .show();
 
                 setReadOnlyAll(true);
@@ -296,14 +311,16 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
         phoneNumberET.setText(user.getPhoneNumber());
 
-        if(seller.isDeliveryAvailable()){
-            deliverSwitch.callOnClick();
-        }
-        if(seller.isPickUpAvailable()){
-            pickupSwitch.callOnClick();
+        deliverSwitch.setChecked(seller.isDeliveryAvailable());
+        pickupSwitch.setChecked(seller.isPickUpAvailable());
+
+        if(  !seller.isDeliveryAvailable() && !seller.isPickUpAvailable()){
+            pickupSwitch.setChecked(true);
+            seller.setPickUpAvailable(true);
         }
 
         imageLink = seller.getPhotoLink();
+        Log.d("IMAGELINK SELL PROFILE","" + imageLink);
         if(imageLink != null && !imageLink.isEmpty() && imageLink.length() > 200) {
             new AsyncTask<Void, Void, Bitmap>() {
                 @Override
@@ -475,17 +492,16 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         stateET = (EditText) root.findViewById(R.id.state);
         accountNumET = (EditText) root.findViewById(R.id.account_number);
         routingNumET = (EditText) root.findViewById(R.id.routing_number);
+        deliverSwitch = (SwitchCompat) root.findViewById(R.id.delivery_switch);
+        pickupSwitch = (SwitchCompat) root.findViewById(R.id.pickup_switch);
+        deliverSwitch.setChecked(false);
+        pickupSwitch.setChecked(false);
         setReadOnlyAll(false);
 
         cookingStatus = (ToggleButton) root.findViewById(R.id.cooking_status);
         cookingStatusTV = (TextView) root.findViewById(R.id.cooking_status_text);
         saveButton = (Button) root.findViewById(R.id.save_button);
         coordinatorLayoutView = root.findViewById(R.id.snackbarPosition);
-
-        deliverSwitch = (SwitchCompat) root.findViewById(R.id.delivery_switch);
-        deliverSwitch.setChecked(false);
-        pickupSwitch = (SwitchCompat) root.findViewById(R.id.pickup_switch);
-        pickupSwitch.setChecked(false);
 
         if(activity.isCurrentlyCooking()){
             cookingStatus.setChecked(true);
@@ -661,8 +677,8 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         setReadOnly(stateET, readOnly);
         setReadOnly(accountNumET, readOnly);
         setReadOnly(routingNumET, readOnly);
-        deliverSwitch.setEnabled(readOnly);
-        pickupSwitch.setEnabled(readOnly);
+        deliverSwitch.setEnabled(!readOnly);
+        pickupSwitch.setEnabled(!readOnly);
     }
 
     private void setReadOnly(EditText view, boolean readOnly) {

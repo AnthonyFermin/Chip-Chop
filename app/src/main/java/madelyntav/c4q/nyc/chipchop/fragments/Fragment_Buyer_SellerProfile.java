@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +49,7 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
     CircleImageView storeImage;
     TextView storeName,storeDescription;
     TextView deliveryTV, pickupTV;
+    RatingBar ratingBar;
 
     private DBHelper dbHelper;
     private User user;
@@ -95,6 +97,22 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
             }.execute();
         }
         storeName.setText(seller.getStoreName());
+
+        if(seller.isDeliveryAvailable()){
+            deliveryTV.setVisibility(View.VISIBLE);
+        }
+
+        //only checks if pickup not available since pickup is available by default
+        if(!seller.isPickUpAvailable()){
+            pickupTV.setVisibility(View.GONE);
+            deliveryTV.setVisibility(View.VISIBLE);
+        }
+
+        if(seller.getNumOfReviews() == 0){
+            ratingBar.setVisibility(View.GONE);
+        }else{
+            ratingBar.setRating(seller.getNumOfTotalStars());
+        }
     }
 
     private void load() {
@@ -166,19 +184,10 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
         storeName = (TextView) root.findViewById(R.id.seller_name);
         storeDescription = (TextView) root.findViewById(R.id.store_description);
         coordinatorLayoutView = root.findViewById(R.id.snackbarPosition);
+        ratingBar = (RatingBar) root.findViewById(R.id.rating_bar);
 
         deliveryTV = (TextView) root.findViewById(R.id.deliver_tv);
         pickupTV = (TextView) root.findViewById(R.id.pickup_tv);
-
-        if(seller.isDeliveryAvailable()){
-            deliveryTV.setVisibility(View.VISIBLE);
-        }
-
-        //only checks if pickup not available since pickup is available by default
-        if(!seller.isPickUpAvailable()){
-            pickupTV.setVisibility(View.GONE);
-            deliveryTV.setVisibility(View.VISIBLE);
-        }
     }
 
     private void initializeData() {

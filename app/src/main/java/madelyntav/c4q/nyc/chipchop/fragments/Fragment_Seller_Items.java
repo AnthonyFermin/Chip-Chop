@@ -146,10 +146,10 @@ public class Fragment_Seller_Items extends Fragment {
     private ArrayList<Item> loadInactiveItems() {
         ArrayList<Item> items = new ArrayList<>();
 
-        dbHelper.getSellersOnSaleItems(dbHelper.getUserID(), new DBCallback() {
+        dbHelper.getInactiveItems(dbHelper.getUserID(), new DBCallback() {
             @Override
             public void runOnSuccess() {
-                sellerItems.addAll(dbHelper.getSellersOnSaleItems(dbHelper.getUserID(),emptyCallback));
+                inActiveItems.addAll(dbHelper.getInactiveItems(dbHelper.getUserID(),emptyCallback));
                 if(inactiveList != null){
                     inactiveList.getAdapter().notifyDataSetChanged();
                 }
@@ -306,6 +306,10 @@ public class Fragment_Seller_Items extends Fragment {
     }
 
     private void saveInactiveList() {
-        dbHelper.getSellersOnSaleItems(dbHelper.getUserID(), emptyCallback);
+
+        for(Item item: inActiveItems){
+            dbHelper.addInactiveItemToSellerProfileDB(item);
+        }
+
     }
 }

@@ -33,6 +33,8 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
@@ -447,6 +449,7 @@ public class BuyActivity extends AppCompatActivity {
 
         user = new User(dbHelper.getUserID(), email, name, address, photoLink, phoneNumber);
         HelperMethods.setUser(user);
+        checkIfLastOrderHasBeenReviewedAndIfNotSetReview();
 
         drawerUserNameTV.setText(user.getName());
         mListTitles[3] = "Sign Out";
@@ -516,14 +519,32 @@ public class BuyActivity extends AppCompatActivity {
     }
 
     public void checkIfLastOrderHasBeenReviewedAndIfNotSetReview(){
+        orders=new ArrayList<>();
         dbHelper.getAllPreviouslyBoughtOrders(user.getUID(), new DBCallback() {
             @Override
             public void runOnSuccess() {
                 orders.addAll(dbHelper.getAllPreviouslyBoughtOrders(user.getUID(), emptyCallback));
 
-
-                if(!orders.get(0).isReviewed()){
-
+                Collections.sort(orders, new Comparator<Order>() {
+                    @Override
+                    public int compare(Order order, Order t1) {
+                        if (order.getTimeStamp() > t1.getTimeStamp()) {
+                            return -1;
+                        } else if (order.getTimeStamp() < t1.getTimeStamp()) {
+                            return 1;
+                        } else {
+                            return 0;
+                        }
+                    }
+                });
+                if(orders.size()>0) {
+                    Order order = orders.get(0);
+                    if (!order.isReviewed()) {
+                        HelperMethods.setCurrentOrder(order);
+                        FragmentManager fm = getSupportFragmentManager();
+                        ReviewDialogFragment alertDialog = new ReviewDialogFragment();
+                        alertDialog.show(fm, "fragment_alert");
+                    }
                 }
 
             }

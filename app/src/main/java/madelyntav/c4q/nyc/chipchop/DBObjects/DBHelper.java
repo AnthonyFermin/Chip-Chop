@@ -1571,16 +1571,14 @@ public class DBHelper extends Firebase {
     }
 
     public void moveItemToPreviouslySoldItems(Order order) {
-        Firebase fRef = new Firebase(URL + "SellerProfiles/" + item.getSellerID() + "/PreviouslySold/");
+        Firebase fRef = new Firebase(URL + "SellerProfiles/" + order.getSellerID() + "/PreviouslySold/");
 
         UID = order.getBuyerID();
         Log.d("UIDFORCHECKOUT", UID + "");
         sellerId = order.getSellerID();
 
         ArrayList<Item> itemsOrdered = order.getItemsOrdered();
-        Firebase fire1 = fRef.child(UID).push();
-        String orderID = fire1.getKey();
-        order.setOrderID(orderID);
+        String orderID = order.getOrderID();
 
         for (Item item : itemsOrdered) {
             itemID = item.getItemID();
@@ -1660,6 +1658,7 @@ public class DBHelper extends Firebase {
                         order.setPrice(order.price);
                         order.setSellerID(order.sellerID);
                         order.setBuyerID(order.buyerID);
+                        order.setIsReviewed(order.isReviewed);
                         order.setIsPickup(order.isPickup);
                         order.setToDeliver(order.toDeliver);
                         order.setItemsOrdered(order.itemsOrdered);
@@ -1846,6 +1845,7 @@ public class DBHelper extends Firebase {
                     order.setPrice(order.price);
                     order.setIsPickup(order.isPickup);
                     order.setToDeliver(order.toDeliver);
+                    order.setIsReviewed(order.isReviewed);
                     order.setSellerAddress(order.sellerAddress);
                     order.setBuyerAddress(order.buyerAddress);
                     order.setSellerName(order.sellerName);
@@ -2007,7 +2007,7 @@ public class DBHelper extends Firebase {
             fRef.child(orderID).child("items").child(itemID).child("containsDairy").setValue(item.isContainsDairy());
 
             moveItemToPreviouslySoldItems(order);
-            copyOrderToBuyerProfile(order, item);
+            copyOrderToBuyerProfile(order);
             updateSellerItemsWhenItemIsBought(item, callback);
         }
         dbCallback.runOnSuccess();
@@ -2089,18 +2089,18 @@ public class DBHelper extends Firebase {
         return itemsInSpecificOrder;
     }
 
-    public void copyOrderToBuyerProfile(Order order, Item item) {
+    public void copyOrderToBuyerProfile(Order order) {
 
         UID = order.getBuyerID();
         sellerId = order.getSellerID();
         String orderID = order.getOrderID();
-        String itemID = item.getItemID();
 
         Firebase fRef = new Firebase(URL + "UserProfiles/" + UID + "/Orders/");
 
         fRef.child(sellerId).child(orderID);
         fRef.child(orderID).child("price").setValue(order.getPrice());
         fRef.child(orderID).child("sellerID").setValue(order.getSellerID());
+        fRef.child(orderID).child("isReviewed").setValue(order.isReviewed());
         fRef.child(orderID).child("buyerID").setValue(order.getBuyerID());
         fRef.child(orderID).child("storeName").setValue(order.getStoreName());
         fRef.child(orderID).child("isPickup").setValue(order.isPickup());
@@ -2114,19 +2114,22 @@ public class DBHelper extends Firebase {
         fRef.child(orderID).child("sellerPhoneNumber").setValue(order.getSellerPhoneNumber());
         fRef.child(orderID).child("buyerPhoneNumber").setValue(order.getBuyerPhoneNumber());
         fRef.child(orderID).child("timeStamp").setValue(order.getTimeStamp());
-        fRef.child(orderID).child("items");
-        fRef.child(orderID).child("items").child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
-        fRef.child(orderID).child("items").child(itemID).child("sellerPhoneNumber").setValue(order.getSellerPhoneNumber());
-        fRef.child(orderID).child("items").child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
-        fRef.child(orderID).child("items").child(itemID).child("quantityWanted").setValue(item.getQuantityWanted());
-        fRef.child(orderID).child("items").child(itemID).child("price").setValue(item.getPrice());
-        fRef.child(orderID).child("items").child(itemID).child("imageLink").setValue(item.getImageLink());
-        fRef.child(orderID).child("items").child(itemID).child("containsPeanuts").setValue(item.isContainsPeanuts());
-        fRef.child(orderID).child("items").child(itemID).child("glutenFree").setValue(item.isGlutenFree());
-        fRef.child(orderID).child("items").child(itemID).child("isVegetarian").setValue(item.isVegetarian());
-        fRef.child(orderID).child("items").child(itemID).child("containsEggs").setValue(item.isContainsEggs());
-        fRef.child(orderID).child("items").child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
-        fRef.child(orderID).child("items").child(itemID).child("containsDairy").setValue(item.isContainsDairy());
+        for( Item item: order.getItemsOrdered()) {
+            itemID=item.getItemID();
+            fRef.child(orderID).child("items");
+            fRef.child(orderID).child("items").child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
+            fRef.child(orderID).child("items").child(itemID).child("sellerPhoneNumber").setValue(order.getSellerPhoneNumber());
+            fRef.child(orderID).child("items").child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
+            fRef.child(orderID).child("items").child(itemID).child("quantityWanted").setValue(item.getQuantityWanted());
+            fRef.child(orderID).child("items").child(itemID).child("price").setValue(item.getPrice());
+            fRef.child(orderID).child("items").child(itemID).child("imageLink").setValue(item.getImageLink());
+            fRef.child(orderID).child("items").child(itemID).child("containsPeanuts").setValue(item.isContainsPeanuts());
+            fRef.child(orderID).child("items").child(itemID).child("glutenFree").setValue(item.isGlutenFree());
+            fRef.child(orderID).child("items").child(itemID).child("isVegetarian").setValue(item.isVegetarian());
+            fRef.child(orderID).child("items").child(itemID).child("containsEggs").setValue(item.isContainsEggs());
+            fRef.child(orderID).child("items").child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
+            fRef.child(orderID).child("items").child(itemID).child("containsDairy").setValue(item.isContainsDairy());
+        }
     }
 
     public ArrayList<Item> getSellersOnSaleItems(final String sellerId, final DBCallback dbCallback) {

@@ -55,7 +55,7 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
     private static final int LOAD_MASKED_WALLET_REQUEST_CODE = 1000;
     private static final int LOAD_FULL_WALLET_REQUEST_CODE = 1001;
     GoogleApiClient googleApiClient;
-    private String secretPublishableTestKey = "pk_test_AzaPoEV6yirFsSW63owmbRh9";
+    private String secretPublishableTestKey = "pk_live_bF65W5ox6cMxpch5Mz9CNo49";
     String cardNum;
     int cardMonth;
     int cardYear;
@@ -92,7 +92,7 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payments);
-        com.stripe.Stripe.apiKey = "sk_test_6hJykZdli4Tw6ALzNEyHSePR";
+        com.stripe.Stripe.apiKey = "sk_live_0XhFKiBSsMWOUxD3yPRaUqSL";
 
         dbHelper = DBHelper.getDbHelper(this);
 

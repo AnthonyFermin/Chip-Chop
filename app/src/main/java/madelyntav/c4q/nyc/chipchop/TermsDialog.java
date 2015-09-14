@@ -1,6 +1,7 @@
 package madelyntav.c4q.nyc.chipchop;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +42,14 @@ public class TermsDialog extends android.support.v4.app.DialogFragment {
                     activity.dbHelper.createUserAndCallback(activity.getEmail(), activity.getPassword(), new DBCallback() {
                         @Override
                         public void runOnSuccess() {
+
+                            SharedPreferences sharedPreferences = activity.getSharedPreferences(activity.SP_USER_INFO, activity.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString(activity.SP_EMAIL, activity.getEmail());
+                            editor.putString(activity.SP_PASS, activity.getPassword());
+                            editor.putBoolean(activity.SP_IS_LOGGED_IN, true);
+                            editor.commit();
+
                             activity.startActivity(activity.getNewUserIntent());
                             activity.finish();
                         }

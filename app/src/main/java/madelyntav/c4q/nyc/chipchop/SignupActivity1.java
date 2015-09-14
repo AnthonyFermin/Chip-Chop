@@ -175,8 +175,6 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
                         newUserIntent.putExtra(BuyActivity.TO_SELL_ACTIVITY, true);
                     }
 
-                    storeUserInfo();
-
                     FragmentManager fm = getSupportFragmentManager();
                     TermsDialog alertDialog = new TermsDialog();
                     alertDialog.show(fm, "fragment_alert");
@@ -394,7 +392,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
                 .putString(SP_PHONE_NUMBER, user.getPhoneNumber())
                 .putString(SP_PHOTO_LINK, user.getPhotoLink());
         }
-        editor.commit();
+        editor.apply();
 
     }
 

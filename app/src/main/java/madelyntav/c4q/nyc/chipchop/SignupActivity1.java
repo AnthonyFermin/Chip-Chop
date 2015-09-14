@@ -1,6 +1,5 @@
 package madelyntav.c4q.nyc.chipchop;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
@@ -257,7 +256,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         // User clicked the sign-in button, so begin the sign-in process and automatically
         // attempt to resolve any errors that occur.
         mShouldResolve = true;
-        mGoogleApiClient.connect();
+        //mGoogleApiClient.connect();
         // Show a message to the user that we are signing in.
 //        mStatusTextView.setText(R.string.signing_in);
     }
@@ -279,7 +278,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
             }
 
             mIsResolving = false;
-            mGoogleApiClient.connect();
+            //mGoogleApiClient.connect();
         }else if(resultCode== RESULT_OK) {
             dbHelper.onFacebookAccessTokenChange(AccessToken.getCurrentAccessToken());
             Log.d("request Code", String.valueOf(resultCode));
@@ -317,7 +316,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         googleButton.setEnabled(true);
         mShouldResolve = false;
 
-        googleSignInASync();
+        //googleSignInASync();
     }
 
  public void googleSignInASync() {
@@ -509,13 +508,13 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
     @Override
     protected void onStart() {
         super.onStart();
-        mGoogleApiClient.connect();
+        //mGoogleApiClient.connect();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mGoogleApiClient.disconnect();
+       // mGoogleApiClient.disconnect();
     }
 
     @Override

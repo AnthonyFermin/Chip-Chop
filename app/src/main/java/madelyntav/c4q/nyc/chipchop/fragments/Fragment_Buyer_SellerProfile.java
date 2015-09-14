@@ -1,5 +1,7 @@
 package madelyntav.c4q.nyc.chipchop.fragments;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -10,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -74,8 +77,24 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
     }
 
     private void initializeViews() {
-        if(seller.getPhotoLink() != null && !seller.getPhotoLink().isEmpty())
-            Picasso.with(activity).load(seller.getPhotoLink()).fit().into(storeImage);
+        if(seller.getPhotoLink() != null && !seller.getPhotoLink().isEmpty() && seller.getPhotoLink().length() > 200) {
+            final String imageLink = seller.getPhotoLink();
+            new AsyncTask<Void, Void, Bitmap>() {
+                @Override
+                protected Bitmap doInBackground(Void... voids) {
+                    byte[] decoded = org.apache.commons.codec.binary.Base64.decodeBase64(imageLink.getBytes());
+                    BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
+                    return BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
+                }
+
+                @Override
+                protected void onPostExecute(Bitmap bitmap) {
+                    super.onPostExecute(bitmap);
+                    storeImage.setImageBitmap(bitmap);
+                    storeImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                }
+            }.execute();
+        }
         storeName.setText(seller.getStoreName());
     }
 
@@ -148,7 +167,6 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
         storeName = (TextView) root.findViewById(R.id.seller_name);
         storeDescription = (TextView) root.findViewById(R.id.store_description);
         coordinatorLayoutView = root.findViewById(R.id.snackbarPosition);
-
     }
 
     private void initializeData() {

@@ -76,8 +76,7 @@
                 android:id="@+id/rating_bar"
                 android:numStars="5"
                 android:rating="4"
-                android:layout_gravity="start"
-                android:clickable="false"/>
+                android:layout_gravity="start"/>
 
 
         </LinearLayout>

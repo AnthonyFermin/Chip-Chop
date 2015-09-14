@@ -48,6 +48,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBCallback;
@@ -429,14 +431,20 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
                 for (int i = 0; i < 4; i++) {
                     distanceToShow += distanceToShow1.charAt(i);
                 }
-                seller.setDistanceFromBuyer(distanceToShow + " mi");
+                seller.setDistanceFromBuyer(Double.valueOf(distanceToShow));
                 Log.d("DISTANCE", distanceToShow);
                 Log.d("Fragment Buyer Map", "MARKER ADDED");
                 map.addMarker(new MarkerOptions()
-                        .position(new LatLng(gLat, gLng)).snippet(seller.getDistanceFromBuyer())
+                        .position(new LatLng(gLat, gLng)).snippet(String.valueOf(seller.getDistanceFromBuyer()))
                         .title(userName))
                         .setIcon(BitmapDescriptorFactory.fromResource(R.drawable.mapmarker));
                 listOfSellersForUse.add(seller);
+                Collections.sort(listOfSellersForUse, new Comparator<Seller>() {
+                    @Override
+                    public int compare(Seller c1, Seller c2) {
+                        return Double.compare(c1.getDistanceFromBuyer(), c2.getDistanceFromBuyer());
+                    }
+                });
             }
         }
 

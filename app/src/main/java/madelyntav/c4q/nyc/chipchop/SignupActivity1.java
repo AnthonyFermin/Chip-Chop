@@ -118,8 +118,6 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
 //        background.setGravity(Gravity.CENTER);
 //        getSupportActionBar().setBackgroundDrawable(background);
 
-
-
     }
 
     private void setListeners() {

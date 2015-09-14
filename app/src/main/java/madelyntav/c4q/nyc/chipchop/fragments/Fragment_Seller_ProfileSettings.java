@@ -247,6 +247,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             Snackbar
                     .make(coordinatorLayoutView, "New Seller Profile Created, Please add a store name", Snackbar.LENGTH_SHORT)
                     .show();
+            setEditTexts();
         }
         activity.setSeller(seller);
         loadingPanel.setVisibility(View.GONE);
@@ -341,7 +342,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             imageFileUri = Uri.parse(stringVariable);
             String filePath = imageFileUri.getPath();
             rescaleImageForDb(filePath);
-            Log.d("Seller Profile","ImageLink: " + imageLink);
+            Log.d("Seller Profile", "ImageLink: " + imageLink);
         }
 
         Log.d("Seller Profile", "Image Uri: " + imageFileUri);
@@ -611,7 +612,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         activity = (SellActivity) getActivity();
         imageLink = "";
 
-        user = activity.getUser();
+        user = HelperMethods.getUser();
 
         activity.setCurrentFragment(TAG);
 

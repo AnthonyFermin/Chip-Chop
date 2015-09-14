@@ -1218,7 +1218,6 @@ public class DBHelper extends Firebase {
                     Item item = dataSnapshot1.getValue(Item.class);
 
                     item.setItemID(dataSnapshot1.getKey());
-                    item.setQuantity(item.quantityWanted);
                     item.setSellerID(item.sellerID);
                     item.setBuyerID(item.buyerID);
                     item.setItemID(dataSnapshot1.getKey());

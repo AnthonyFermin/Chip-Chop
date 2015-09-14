@@ -32,6 +32,8 @@ import android.widget.TextView;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 
+import java.util.ArrayList;
+
 import madelyntav.c4q.nyc.chipchop.DBObjects.Address;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
@@ -58,6 +60,7 @@ public class BuyActivity extends AppCompatActivity {
     private Fragment fragment;
     private ActionBarDrawerToggle mDrawerToggle;
     private TextView drawerUserNameTV;
+    public ArrayList<Order> orders;
 
     private DBHelper dbHelper;
 
@@ -510,5 +513,26 @@ public class BuyActivity extends AppCompatActivity {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void checkIfLastOrderHasBeenReviewedAndIfNotSetReview(){
+        dbHelper.getAllPreviouslyBoughtOrders(user.getUID(), new DBCallback() {
+            @Override
+            public void runOnSuccess() {
+                orders.addAll(dbHelper.getAllPreviouslyBoughtOrders(user.getUID(), emptyCallback));
+
+
+                if(!orders.get(0).isReviewed()){
+
+                }
+
+            }
+
+            @Override
+            public void runOnFail() {
+
+            }
+        });
+
     }
 }

@@ -519,6 +519,7 @@ public class BuyActivity extends AppCompatActivity {
     }
 
     public void checkIfLastOrderHasBeenReviewedAndIfNotSetReview(){
+
         orders=new ArrayList<>();
         dbHelper.getAllPreviouslyBoughtOrders(user.getUID(), new DBCallback() {
             @Override

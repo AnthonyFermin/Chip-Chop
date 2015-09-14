@@ -669,6 +669,7 @@ public class DBHelper extends Firebase {
         if (user.isHasSellerProfile()) {
             seller = new Seller();
             seller.setUID(user.getUID());
+            seller.setNumOfReviews(seller.numOfReviews);
             seller.setName(user.getName());
             seller.seteMail(user.geteMail());
             seller.setPhoneNumber(user.getPhoneNumber());
@@ -735,8 +736,12 @@ public class DBHelper extends Firebase {
         fRef.child(sellerId).child("UID").setValue(UID);
         fRef.child(sellerId).child(sName).setValue(seller.getName());
         fRef.child(sellerId).child("storeName").setValue(seller.getStoreName());
+        fRef.child(sellerId).child("numOfTotalStars").setValue(seller.getNumOfTotalStars());
+        fRef.child(sellerId).child("numOfReviews").setValue(seller.getNumOfReviews());
         fRef.child(sellerId).child("pickUpAvailable").setValue(seller.isPickUpAvailable());
         fRef.child(sellerId).child("deliveryAvailable").setValue(seller.isDeliveryAvailable());
+        fRef.child(sellerId).child("numOfTotalStars").setValue(seller.getNumOfTotalStars());
+        fRef.child(sellerId).child("numOfReviews").setValue(seller.getNumOfReviews());
         fRef.child(sellerId).child(sEmailAddress).setValue(seller.geteMail());
         fRef.child(sellerId).child(sPhoneNumber).setValue(seller.getPhoneNumber());
         fRef.child(sellerId).child(sPhotoLink).setValue(seller.getPhotoLink());
@@ -761,12 +766,14 @@ public class DBHelper extends Firebase {
         fRef.child(UID).child(sName).setValue(seller.getName());
         fRef.child(UID).child("storeName").setValue(seller.getStoreName());
         fRef.child(UID).child(sEmailAddress).setValue(seller.geteMail());
-        fRef.child(UID).child(sCardNumber).setValue(seller.getCardNumber());
-        fRef.child(UID).child(sCardExpirationMonth).setValue(seller.getCardExpirationMonth());
-        fRef.child(UID).child(sCardExpirationYear).setValue(seller.getCardExpirationYear());
-        fRef.child(UID).child(sCardCVC).setValue(seller.getCardCVC());
         fRef.child(UID).child(sPhoneNumber).setValue(seller.getPhoneNumber());
         fRef.child(UID).child(sPhotoLink).setValue(seller.getPhotoLink());
+        fRef.child(UID).child("numOfTotalStars").setValue(seller.getNumOfTotalStars());
+        fRef.child(UID).child("numOfReviews").setValue(seller.getNumOfReviews());
+        fRef.child(UID).child("numOfTotalStars").setValue(seller.getNumOfTotalStars());
+        fRef.child(UID).child("numOfReviews").setValue(seller.getNumOfReviews());
+        fRef.child(UID).child("numOfTotalStars").setValue(seller.getNumOfTotalStars());
+        fRef.child(UID).child("numOfReviews").setValue(seller.getNumOfReviews());
         fRef.child(UID).child(sAddress).setValue(seller.getAddress().toString());
         fRef.child(UID).child(sLatitude).setValue(seller.getAddress().getLatitude());
         fRef.child(UID).child(sLongitude).setValue(seller.getAddress().getLongitude());
@@ -793,10 +800,8 @@ public class DBHelper extends Firebase {
                     seller.setName(seller1.name);
                     seller.setStoreName(seller1.storeName);
                     seller.setAddress(seller1.address);
-                    seller.setCardCVC(seller1.cardCVC);
-                    seller.setCardExpirationMonth(seller1.cardExpirationMonth);
-                    seller.setCardExpirationYear(seller1.cardExpirationYear);
-                    seller.setCardNumber(seller1.cardNumber);
+                    seller.setNumOfReviews(seller1.numOfReviews);
+                    seller.setNumOfTotalStars(seller1.numOfTotalStars);
                     seller.setDescription(seller1.description);
                     seller.setPickUpAvailable(seller1.pickUpAvailable);
                     seller.setDeliveryAvailable(seller1.deliveryAvailable);
@@ -872,6 +877,10 @@ public class DBHelper extends Firebase {
         fRef.child(sellerId).child(sIsCooking).setValue(seller.getIsCooking());
         fRef.child(sellerId).child("storeName").setValue(seller.getStoreName());
         fRef.child(sellerId).child(sName).setValue(seller.getName());
+        fRef.child(sellerId).child("numOfTotalStars").setValue(seller.getNumOfTotalStars());
+        fRef.child(sellerId).child("numOfReviews").setValue(seller.getNumOfReviews());
+        fRef.child(sellerId).child("numOfTotalStars").setValue(seller.getNumOfTotalStars());
+        fRef.child(sellerId).child("numOfReviews").setValue(seller.getNumOfReviews());
         fRef.child(sellerId).child("pickUpAvailable").setValue(seller.isPickUpAvailable());
         fRef.child(sellerId).child("deliveryAvailable").setValue(seller.isDeliveryAvailable());
         fRef.child(sellerId).child(sEmailAddress).setValue(seller.geteMail());
@@ -910,15 +919,14 @@ public class DBHelper extends Firebase {
                     seller.setPhoneNumber(seller1.phoneNumber);
                     seller.setAddressString(seller1.addressString);
                     seller.seteMail(seller1.eMail);
-                    seller.setCardCVC(seller1.cardCVC);
-                    seller.setCardExpirationMonth(seller1.cardExpirationMonth);
-                    seller.setCardExpirationYear(seller1.cardExpirationYear);
-                    seller.setCardNumber(seller1.cardNumber);
+                    seller.setNumOfTotalStars(seller.numOfTotalStars);
                     seller.setDescription(seller1.description);
                     seller.setPhotoLink(seller1.photoLink);
                     seller.setStoreName(seller1.storeName);
                     seller.setAccountNumber(seller1.accountNumber);
                     seller.setRoutingNumber(seller1.routingNumber);
+                    seller.setNumOfReviews(seller.numOfReviews);
+
 
                     if (allActiveSellers.size() < sizeofAddDBList) {
 
@@ -973,10 +981,7 @@ public class DBHelper extends Firebase {
                         seller.setDescription(seller1.description);
                         seller.seteMail(seller1.eMail);
                         seller.setUID(seller1.UID);
-                        seller.setCardCVC(seller1.cardCVC);
-                        seller.setCardExpirationMonth(seller1.cardExpirationMonth);
-                        seller.setCardExpirationYear(seller1.cardExpirationYear);
-                        seller.setCardNumber(seller1.cardNumber);
+                        seller.setNumOfTotalStars(seller1.numOfTotalStars);
                         seller.setStoreName(seller1.storeName);
                         seller.setPhoneNumber(seller1.phoneNumber);
                         seller.setItems(seller1.items);
@@ -984,6 +989,8 @@ public class DBHelper extends Firebase {
                         seller.setRoutingNumber(seller1.routingNumber);
                         seller.setAccountNumber(seller1.accountNumber);
                         seller.setLatitude(seller1.longitude);
+                        seller.setNumOfReviews(seller1.numOfReviews);
+
                     }
                     Log.d("SellerOne", seller.name + "");
                 }
@@ -1022,6 +1029,7 @@ public class DBHelper extends Firebase {
                         seller.setAddressString(seller1.addressString);
                         seller.setDescription(seller1.description);
                         seller.seteMail(seller1.eMail);
+                        seller.setNumOfTotalStars(seller1.numOfTotalStars);
                         seller.setUID(seller1.UID);
                         seller.setCardCVC(seller1.cardCVC);
                         seller.setCardExpirationMonth(seller1.cardExpirationMonth);
@@ -1034,6 +1042,8 @@ public class DBHelper extends Firebase {
                         seller.setLatitude(seller1.longitude);
                         seller.setRoutingNumber(seller1.routingNumber);
                         seller.setAccountNumber(seller1.accountNumber);
+                        seller.setNumOfReviews(seller1.numOfReviews);
+
                     }
                     Log.d("SellerOne", seller.name + "");
                 }
@@ -1064,6 +1074,8 @@ public class DBHelper extends Firebase {
         fRef.child(sellerId).child(sUID).setValue(sellerId);
         fRef.child(sellerId).child(sName).setValue(seller.getName());
         fRef.child(sellerId).child(descriptionOfItem).setValue(seller.getDescription());
+        fRef.child(sellerId).child("numOfTotalStars").setValue(seller.getNumOfTotalStars());
+        fRef.child(sellerId).child("numOfReviews").setValue(seller.getNumOfReviews());
         fRef.child(sellerId).child("storeName").setValue(seller.getStoreName());
         fRef.child(sellerId).child("routingNumber").setValue(seller.getRoutingNumber());
         fRef.child(sellerId).child("accountNumber").setValue(seller.getAccountNumber());
@@ -2210,6 +2222,56 @@ public class DBHelper extends Firebase {
 
     }
 
+    public void setReviewForOrderInSellerProfile(final Order order){
+        sellerId=order.getSellerID();
+        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId);
+
+
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Seller seller = dataSnapshot.getValue(Seller.class);
+                int numofStars = seller.numOfTotalStars;
+                int numOfReviews = seller.numOfReviews;
+
+                if(numOfReviews>2) {
+
+                    int numOfStarsForOrder = order.getReview().getNumOfStars();
+
+                    int newNumToAvg = numofStars + numOfStarsForOrder;
+                    numOfReviews++;
+
+                    int newAvgReview = newNumToAvg / numOfReviews;
+
+                    char newAvg1 = String.valueOf(newAvgReview).charAt(0);
+
+                    sendReviewToSellerProfileAvg(sellerId, newAvg1, numOfReviews);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+    }
+
+    private void sendReviewToSellerProfileAvg(String sellerId, char newAvg, int newNumOfReviews){
+        this.sellerId=sellerId;
+
+        Firebase fRef = new Firebase(URL + "SellerProfiles/"+sellerId);
+
+        fRef.child(sellerId);
+        fRef.child(UID).child("numOfTotalStars").setValue(newAvg);
+        fRef.child(UID).child("numOfReviews").setValue(newNumOfReviews);
+
+
+
+
+    }
+
     private void sendReviewedOrderToBuyerDB(Order order, DBCallback dbCallback) {
         Firebase fRef = new Firebase(URL + "UserProfiles/" + order.getBuyerID() + "/Reviews/");
         String orderID = order.getOrderID();
@@ -2396,11 +2458,15 @@ public class DBHelper extends Firebase {
                     seller.setStoreName(seller.storeName);
                     seller.setIsCooking(seller.isCooking);
                     seller.setPhotoLink(seller.photoLink);
+                    seller.setNumOfReviews(seller.numOfReviews);
+                    seller.setNumOfTotalStars(seller.numOfTotalStars);
                     seller.seteMail(seller.eMail);
                     seller.setDescription(seller.description);
                     seller.setAddressString(seller.addressString);
                     seller.setLatitude(seller.latitude);
                     seller.setLongitude(seller.longitude);
+                    seller.setNumOfReviews(seller.numOfReviews);
+
 
                     if (allSellersInDB.size() < sizeofAddDBList) {
                         allSellersInDB.add(seller);

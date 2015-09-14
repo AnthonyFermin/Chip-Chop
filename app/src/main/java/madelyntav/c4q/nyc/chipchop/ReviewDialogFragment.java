@@ -67,8 +67,8 @@ public class ReviewDialogFragment extends android.support.v4.app.DialogFragment 
             @Override
             protected Void doInBackground(Void... params) {
                 dbHelper.addReviewToSellerProfile(order.getBuyerID(),order.getSellerID(),review.getNumOfStars());
-                dbHelper.increaseNumOfTotalStarsAndCalculateAvg(order.getSellerID(), review);
                 dbHelper.copyOrderToBuyerProfile(order);
+                dbHelper.setReviewForOrderInSellerProfile(order);
                 dbHelper.sendReviewedOrderToSellerDB(order, new DBCallback() {
                     @Override
                     public void runOnSuccess() {
@@ -80,6 +80,14 @@ public class ReviewDialogFragment extends android.support.v4.app.DialogFragment 
 
                     }
                 });
+                return null;
+            }
+        }.execute();
+
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+
                 return null;
             }
         }.execute();

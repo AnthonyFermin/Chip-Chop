@@ -193,12 +193,7 @@ android:layout_height="match_parent"
     </LinearLayout>
     </ScrollView>
 
-    <Button
-        android:id="@+id/createUserButton"
-        style="@style/button_design"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sign up" />
+
 
 </LinearLayout>
 
@@ -208,4 +203,12 @@ android:layout_height="match_parent"
 android:layout_alignParentBottom="true"
 android:id="@+id/snackbarPosition">
 </android.support.design.widget.CoordinatorLayout>
+
+    <Button
+        android:id="@+id/createUserButton"
+        style="@style/button_design"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sign up" />
     </RelativeLayout>

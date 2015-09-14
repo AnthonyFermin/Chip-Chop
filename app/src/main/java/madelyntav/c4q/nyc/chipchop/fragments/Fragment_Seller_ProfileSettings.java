@@ -242,6 +242,9 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             Log.d("Load Seller Info", "NOT FOUND IN DB, NEW SELLER CREATED");
             seller = new Seller(dbHelper.getUserID(),user.geteMail(),user.getName(),user.getAddress(),"",user.getPhoneNumber());
             seller.setIsCooking(false);
+            seller.setNumOfTotalStars(5);
+            seller.setNumOfReviews(1);
+
             dbHelper.addSellerProfileInfoToDB(seller);
             dbHelper.setSellerCookingStatus(false);
             Snackbar

@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/text_design"
-        android:text="Review"
+        android:text="Review Your Last Order"
         android:paddingBottom="30dp"
         android:textSize="40sp"
         android:gravity="center_horizontal"/>

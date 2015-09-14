@@ -9,13 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
+        android:src="@drawable/food2"
         android:adjustViewBounds="true"/>
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:alpha="0.3"
-        android:background="#000"
+        android:src="@drawable/gradient_shape"
         android:scaleType="fitXY"
         android:adjustViewBounds="true"/>
 

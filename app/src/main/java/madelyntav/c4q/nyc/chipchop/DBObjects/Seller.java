@@ -34,7 +34,7 @@ public class Seller {
     String cardCVC;
     String routingNumber;
     String accountNumber;
-    String distanceFromBuyer;
+    double distanceFromBuyer;
     boolean pickUpAvailable;
     boolean deliveryAvailable;
 
@@ -254,11 +254,11 @@ public class Seller {
         this.addressString = addressString;
     }
 
-    public String getDistanceFromBuyer() {
+    public double getDistanceFromBuyer() {
         return distanceFromBuyer;
     }
 
-    public void setDistanceFromBuyer(String distanceFromBuyer) {
+    public void setDistanceFromBuyer(double distanceFromBuyer) {
         this.distanceFromBuyer = distanceFromBuyer;
     }
 

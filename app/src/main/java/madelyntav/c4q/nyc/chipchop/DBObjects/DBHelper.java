@@ -670,11 +670,9 @@ public class DBHelper extends Firebase {
             seller.setName(user.getName());
             seller.seteMail(user.geteMail());
             seller.setPhoneNumber(user.getPhoneNumber());
-            seller.setPhotoLink(user.getPhotoLink());
             seller.setAddress(user.getAddress());
             addSellerProfileInfoToDB(seller);
         }
-
     }
 
     public void addUserProfileInfoToDBAndLaunchIntent(User user, final DBCallback callback) {

@@ -2234,8 +2234,6 @@ public class DBHelper extends Firebase {
                 int numofStars = seller.numOfTotalStars;
                 int numOfReviews = seller.numOfReviews;
 
-                if(numOfReviews>2) {
-
                     int numOfStarsForOrder = order.getReview().getNumOfStars();
 
                     int newNumToAvg = numofStars + numOfStarsForOrder;
@@ -2246,8 +2244,6 @@ public class DBHelper extends Firebase {
                     char newAvg1 = String.valueOf(newAvgReview).charAt(0);
 
                     sendReviewToSellerProfileAvg(sellerId, newAvg1, numOfReviews);
-
-                }
             }
 
             @Override

@@ -84,6 +84,7 @@ public class DBHelper extends Firebase {
     public static ArrayList<Order> previouslySold;
     public static ArrayList<Item> receiptForSpecificOrder;
     public static ArrayList<Item> itemsInSpecificOrder;
+    public static ArrayList<Item> inactiveItems;
 
 
     public DBHelper() {
@@ -109,6 +110,7 @@ public class DBHelper extends Firebase {
         user = new User();
         latLngList = new ArrayList<>();
         addressList = new ArrayList<>();
+        inactiveItems = new ArrayList<>();
         userList = new ArrayList<>();
         arrayListOfSellerItems = new ArrayList<>();
         returnOrder = new Order();
@@ -1180,6 +1182,78 @@ public class DBHelper extends Firebase {
         Log.d("ItemID", itemID);
     }
 
+    public void addInactiveItemToSellerProfileDB(Item item) {
+        sellerId = item.getSellerID();
+
+        Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId + "/inactiveItems/");
+        Firebase fire1 = fRef.child("itemsForSale").push();
+
+        String itemID = fire1.getKey();
+        //item.setItemID(itemID);
+        fRef.child(itemID);
+        fRef.child(itemID).child("nameOfItem").setValue(item.getNameOfItem());
+        fRef.child(itemID).child("descriptionOfItem").setValue(item.getDescriptionOfItem());
+        fRef.child(itemID).child(quantity).setValue(item.getQuantity());
+        fRef.child(itemID).child("price").setValue(item.getPrice());
+        fRef.child(itemID).child("imageLink").setValue(item.getImageLink());
+        fRef.child(itemID).child("containsPeanuts").setValue(item.isContainsPeanuts());
+        fRef.child(itemID).child("glutenFree").setValue(item.isGlutenFree());
+        fRef.child(itemID).child("isVegetarian").setValue(item.isVegetarian());
+        fRef.child(itemID).child("containsEggs").setValue(item.isContainsEggs());
+        fRef.child(itemID).child("containsShellfish").setValue(item.isContainsShellfish());
+        fRef.child(itemID).child("containsDairy").setValue(item.isContainsDairy());
+        fRef.child(itemID).child("sellerID").setValue(item.getSellerID());
+        Log.d("ItemID", itemID);
+    }
+
+    public ArrayList<Item> getInactiveItems(String sellerId, final DBCallback dbCallback) {
+        this.sellerId = sellerId;
+        final Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId + "/inactiveItems/");
+
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                sizeofAddDBList = dataSnapshot.getChildrenCount();
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Item item = dataSnapshot1.getValue(Item.class);
+
+                    item.setItemID(dataSnapshot1.getKey());
+                    item.setQuantity(item.quantityWanted);
+                    item.setSellerID(item.sellerID);
+                    item.setBuyerID(item.buyerID);
+                    item.setItemID(dataSnapshot1.getKey());
+                    item.setNameOfItem(item.nameOfItem);
+                    item.setPrice(item.price);
+                    item.setSellerPhoneNumber(item.sellerPhoneNumber);
+                    item.setBuyerPhoneNumber(item.buyerPhoneNumber);
+                    item.setQuantity(item.quantity);
+                    item.setIsVegetarian(item.isVegetarian);
+                    item.setImageLink(item.imageLink);
+                    item.setContainsDairy(item.containsDairy);
+                    item.setContainsEggs(item.containsEggs);
+                    item.setContainsPeanuts(item.containsPeanuts);
+                    item.setContainsShellfish(item.containsShellfish);
+                    item.setGlutenFree(item.glutenFree);
+
+                    if (inactiveItems.size() < sizeofAddDBList) {
+                        inactiveItems.add(item);
+                    }
+                }
+                dbCallback.runOnSuccess();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "No Inactive Items Available", Snackbar.LENGTH_SHORT)
+                        .show();
+                dbCallback.runOnFail();
+            }
+        });
+
+        return inactiveItems;
+    }
+
     //Method that sends a list of items to the sellersProfile... if num>0 display on listView
     public ArrayList<Item> sendArrayListOfItemsToItemsForSale(ArrayList<Item> itemsforSale, String sellerID) {
         sellerId = sellerID;
@@ -1995,9 +2069,9 @@ public class DBHelper extends Firebase {
         changeBuyerOrderActiveStatus(order);
     }
 
-    public void changeBuyerOrderActiveStatus(Order order){
-        sellerId=order.getSellerID();
-        orderID=order.getOrderID();
+    public void changeBuyerOrderActiveStatus(Order order) {
+        sellerId = order.getSellerID();
+        orderID = order.getOrderID();
 
         Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId + "/Orders/" + orderID);
 
@@ -2080,7 +2154,7 @@ public class DBHelper extends Firebase {
                     item2.setPrice(item1.price);
                     item2.setDescriptionOfItem(item1.descriptionOfItem);
                     item2.setQuantity(item1.quantity);
-                    Log.d("ItemQ2",item2.getNameOfItem());
+                    Log.d("ItemQ2", item2.getNameOfItem());
                     item2.setIsVegetarian(item1.isVegetarian);
                     item2.setImageLink(item1.imageLink);
                     item2.setContainsDairy(item1.containsDairy);

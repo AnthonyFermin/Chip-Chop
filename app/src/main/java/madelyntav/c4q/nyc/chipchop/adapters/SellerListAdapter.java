@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import madelyntav.c4q.nyc.chipchop.BuyActivity;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
+import madelyntav.c4q.nyc.chipchop.HelperMethods;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile;
 
@@ -59,7 +61,9 @@ public class SellerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             container.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Log.d("YEHDHH",sellers.get(getAdapterPosition()).getAddressString()+"");
                     BuyActivity activity = (BuyActivity) context;
+                    HelperMethods.setSellerToView(sellers.get(getAdapterPosition()));
                     activity.setSellerToView(sellers.get(getAdapterPosition()));
                     activity.replaceFragment(new Fragment_Buyer_SellerProfile());
                 }

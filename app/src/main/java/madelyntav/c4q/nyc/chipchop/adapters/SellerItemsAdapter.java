@@ -137,7 +137,7 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
             });
             
-            activeSwitch.setChecked(true);
+            activeSwitch.setChecked(isActive);
             activeSwitch.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -152,6 +152,9 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             Log.d("ITEMID moved", sellerItems.get(getAdapterPosition()).getItemID() + "");
                         }
 
+                        sellerItems.remove(getAdapterPosition());
+                        notifyItemRemoved(getAdapterPosition());
+
                         activity.getInactiveSellerItems().add(item);
                         fragment.getInactiveList().getAdapter().notifyDataSetChanged();
                     }else{
@@ -162,6 +165,9 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             dbHelper.addItemToSellerProfileDB(sellerItems.get(getAdapterPosition()), emptyCallback);
                             Log.d("ITEMID moved", sellerItems.get(getAdapterPosition()).getItemID() + "");
                         }
+
+                        sellerItems.remove(getAdapterPosition());
+                        notifyItemRemoved(getAdapterPosition());
 
                         activity.getSellerItems().add(item);
                         fragment.getActiveList().getAdapter().notifyDataSetChanged();

@@ -24,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RatingBar;
@@ -49,9 +50,11 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_Orders;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_ProfileSettings;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_SellerProfile;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Buyer_ViewCart;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 public class BuyActivity extends AppCompatActivity {
 
+    private Button sellButton;
     private RatingBar ratingBar;
     private Button contactButton;
     private FrameLayout frameLayout;
@@ -81,6 +84,8 @@ public class BuyActivity extends AppCompatActivity {
     View coordinatorLayoutView;
 
     public static final String TO_SELL_ACTIVITY = "to_sell";
+    public static final String SHOWCASE_ID = "SHOWCASE_ID_4";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +94,10 @@ public class BuyActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(this.getApplicationContext());
 
         bindViews();
+
+
+
+
         initializeData();
         checkIsLogged();
         setUpDrawer();
@@ -205,10 +214,20 @@ public class BuyActivity extends AppCompatActivity {
 
             public void onDrawerOpened(View drawerView) {
 
+                sellButton = (Button) findViewById(R.id.sellButton);
+
+                new MaterialShowcaseView.Builder(BuyActivity.this)
+                        .setTarget(sellButton)
+                        .setMaskColour(Color.parseColor("#D51F27"))
+                        .setDismissText("GOT IT")
+                        .setContentText("Click here to begin selling home-cooked food!")
+//                        .setDelay(1000) // optional but starting animations immediately in onCreate can make them choppy
+                        .singleUse(SHOWCASE_ID) // provide a unique ID used to ensure it is only shown once
+                        .show();
+
                 InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputManager.hideSoftInputFromWindow(drawerView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
-                Button sellButton = (Button) findViewById(R.id.sellButton);
                 sellButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -263,6 +282,8 @@ public class BuyActivity extends AppCompatActivity {
         coordinatorLayoutView = findViewById(R.id.snackbarPosition);
         contactButton = (Button) findViewById(R.id.contact_button);
         ratingBar = (RatingBar) findViewById(R.id.rating_bar);
+
+
 
     }
 

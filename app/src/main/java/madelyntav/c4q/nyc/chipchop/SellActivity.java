@@ -42,6 +42,7 @@ import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Items;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_OrderDetails;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_Orders;
 import madelyntav.c4q.nyc.chipchop.fragments.Fragment_Seller_ProfileSettings;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 public class SellActivity extends AppCompatActivity {
 
@@ -75,6 +76,8 @@ public class SellActivity extends AppCompatActivity {
     DBCallback emptyCallback;
 
     private SharedPreferences userInfoSP;
+
+    public static final String SHOWCASE_ID = "SHOWCASE_ID_7";
 
 
     @Override
@@ -126,12 +129,21 @@ public class SellActivity extends AppCompatActivity {
                 getSupportActionBar().setTitle(R.string.app_name);
                 ActivityCompat.invalidateOptionsMenu(SellActivity.this);
 
+                Button buyButton = (Button) findViewById(R.id.buyButton);
+
+                new MaterialShowcaseView.Builder(SellActivity.this)
+                        .setTarget(buyButton)
+                        .setMaskColour(Color.parseColor("#D51F27"))
+                        .setDismissText("GOT IT")
+                        .setContentText("Click here to go back to being a Buyer!")
+//                        .setDelay(1000) // optional but starting animations immediately in onCreate can make them choppy
+                        .singleUse(SHOWCASE_ID) // provide a unique ID used to ensure it is only shown once
+                        .show();
 
                 InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputManager.hideSoftInputFromWindow(drawerView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
 
-                Button buyButton = (Button) findViewById(R.id.buyButton);
                 buyButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

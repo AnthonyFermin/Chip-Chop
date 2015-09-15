@@ -58,6 +58,7 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Seller;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.adapters.SellerListAdapter;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 
 public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -90,6 +91,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     private DBCallback emptyCallback;
 
     public static final String TAG = "fragment_buyer_map";
+    public static final String SHOWCASE_ID_2 = "SHOWCASE_ID_5";
 
     private BuyActivity activity;
     private AsyncTask<Void, Void, Void> addSellerMarkers;
@@ -106,6 +108,8 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         initializeListPanel();
 
         addSellerMarkers();
+
+
 
         return root;
     }
@@ -214,6 +218,14 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         coordinatorLayoutView = root.findViewById(R.id.snackbarPosition);
         slidingPanel = (SlidingUpPanelLayout) root.findViewById(R.id.slidinglayout);
 
+        new MaterialShowcaseView.Builder(getActivity())
+                .setTarget(arrowImage)
+                .setMaskColour(Color.parseColor("#D51F27"))
+                .setDismissText("GOT IT")
+                .setContentText("Slide up to check out a list of nearby vendors!")
+//                        .setDelay(1000) // optional but starting animations immediately in onCreate can make them choppy
+                .singleUse(SHOWCASE_ID_2) // provide a unique ID used to ensure it is only shown once
+                .show();
 
     }
 

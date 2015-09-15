@@ -126,6 +126,7 @@
                     android:layout_marginBottom="20dp">
 
                 <LinearLayout
+                    android:id="@+id/linear_pickup"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -148,6 +149,7 @@
 
 
                 <LinearLayout
+                    android:id="@+id/linear_deliver"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"

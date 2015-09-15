@@ -51,6 +51,9 @@ import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 
 public class Fragment_Seller_ProfileSettings extends Fragment {
@@ -60,6 +63,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
     DBHelper dbHelper;
 
+    public static final String SHOWCASE_ID = "SHOWCASE_ID_6";
     public static final String TAG = "fragment_seller_profile";
 
     SwitchCompat deliverSwitch, pickupSwitch;
@@ -100,7 +104,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     SellActivity activity;
 
     RelativeLayout loadingPanel;
-    LinearLayout containingView;
+    LinearLayout containingView, pickupLinear, deliverLinear;
 
     ImageButton profilePhoto;
     public static final int RESULT_OK = -1;
@@ -124,7 +128,6 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         setListeners();
 
         loadSellerInfo();
-
 
 
         return root;
@@ -252,6 +255,28 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             Log.d("SELLER INFO", "Store Name: " + seller.getStoreName());
             Log.d("SELLER INFO", "isCooking: " + seller.getIsCooking());
             setEditTexts();
+
+
+            ShowcaseConfig config = new ShowcaseConfig();
+            config.setMaskColor(Color.parseColor("#D51F27"));
+            config.setDelay(300); // half second between each showcase view
+
+            MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(getActivity(), SHOWCASE_ID);
+
+            sequence.setConfig(config);
+
+            sequence.addSequenceItem(cookingStatus,
+                    "Toggle your Cooking Status on everytime you wish to start selling!", "NEXT");
+
+            sequence.addSequenceItem(pickupLinear,
+                    "Switch ON to allow buyers to pickup food from your address!", "NEXT");
+
+            sequence.addSequenceItem(deliverLinear,
+                    "Switch ON to deliver to the buyer!", "GOT IT");
+
+            sequence.start();
+
+
         }else{
             //TODO:display cannot connect to internet error message
             Log.d("Load Seller Info", "NOT FOUND IN DB, NEW SELLER CREATED");
@@ -496,6 +521,8 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         pickupSwitch = (SwitchCompat) root.findViewById(R.id.pickup_switch);
         deliverSwitch.setChecked(false);
         pickupSwitch.setChecked(false);
+        pickupLinear = (LinearLayout) root.findViewById(R.id.linear_pickup);
+        deliverLinear = (LinearLayout) root.findViewById(R.id.linear_deliver);
         setReadOnlyAll(false);
 
         cookingStatus = (ToggleButton) root.findViewById(R.id.cooking_status);

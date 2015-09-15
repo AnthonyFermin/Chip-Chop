@@ -31,6 +31,7 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.HelperMethods;
 import madelyntav.c4q.nyc.chipchop.R;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 /**
  * Created by alvin2 on 8/22/15.
@@ -102,6 +103,9 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
                         .show();
             }
         });
+
+
+
 
         return root;
     }

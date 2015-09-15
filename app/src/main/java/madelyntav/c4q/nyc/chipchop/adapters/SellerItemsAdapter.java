@@ -119,6 +119,15 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 @Override
                 public void onClick(View view) {
                     //TODO: add popup dialog asking user to confirm deletion
+                    if(isActive) {
+                        if (activity.isCurrentlyCooking()) {
+                            dbHelper.removeItemFromSale(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
+                        } else {
+                            //TODO: Madelyn: are these the correct methods to remove items from the seller profile in the DB?
+                            dbHelper.removeItemFromSellerProfile(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
+                            Log.d("ITEMID moved", sellerItems.get(getAdapterPosition()).getItemID() + "");
+                        }
+                    }
 
                     sellerItems.remove(getAdapterPosition());
                     notifyItemRemoved(getAdapterPosition());
@@ -153,7 +162,7 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         }
 
                         sellerItems.remove(getAdapterPosition());
-                        notifyItemRemoved(getAdapterPosition());
+                        notifyDataSetChanged();
 
                         activity.getInactiveSellerItems().add(item);
                         fragment.getInactiveList().getAdapter().notifyDataSetChanged();
@@ -167,7 +176,7 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         }
 
                         sellerItems.remove(getAdapterPosition());
-                        notifyItemRemoved(getAdapterPosition());
+                        notifyDataSetChanged();
 
                         activity.getSellerItems().add(item);
                         fragment.getActiveList().getAdapter().notifyDataSetChanged();

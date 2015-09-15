@@ -104,7 +104,7 @@
         android:layout_below="@+id/deliver_method_tv"
         android:gravity="center_horizontal"
         android:visibility="gone"
-        android:text="DELIVERY"/>
+        android:text="DELIVERY AVAILABLE"/>
 
     <TextView
         android:id="@+id/pickup_tv"

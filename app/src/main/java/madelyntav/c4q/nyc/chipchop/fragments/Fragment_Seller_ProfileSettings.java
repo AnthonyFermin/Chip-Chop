@@ -266,7 +266,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             sequence.setConfig(config);
 
             sequence.addSequenceItem(cookingStatus,
-                    "Toggle your Cooking Status on everytime you wish to start selling!", "NEXT");
+                    "Toggle your Cooking Status ON every time you wish to start selling!", "NEXT");
 
             sequence.addSequenceItem(pickupLinear,
                     "Switch ON to allow buyers to pickup food from your address!", "NEXT");

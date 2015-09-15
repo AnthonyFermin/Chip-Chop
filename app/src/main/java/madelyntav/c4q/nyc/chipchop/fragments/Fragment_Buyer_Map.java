@@ -219,17 +219,15 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         coordinatorLayoutView = root.findViewById(R.id.snackbarPosition);
         slidingPanel = (SlidingUpPanelLayout) root.findViewById(R.id.slidinglayout);
 
-        Drawable drawable = getResources().getDrawable(R.drawable.showcase, null);
-
 
         new MaterialShowcaseView.Builder(getActivity())
                 .setTarget(arrowImage)
-                .setMaskColour("red")
+                .setMaskColour(R.drawable.showcase)
                 .setDismissOnTouch(true)
                 .setDismissText("GOT IT")
 
                 .setContentText("Slide up to check out a list of nearby vendors!")
-                        .setDelay(5000) // optional but starting animations immediately in onCreate can make them choppy
+                        .setDelay(3500) // optional but starting animations immediately in onCreate can make them choppy
                 .singleUse(SHOWCASE_ID_2) // provide a unique ID used to ensure it is only shown once
                 .show();
 

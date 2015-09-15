@@ -133,7 +133,7 @@ public class SellActivity extends AppCompatActivity {
 
                 new MaterialShowcaseView.Builder(SellActivity.this)
                         .setTarget(buyButton)
-                        .setMaskColour(Color.parseColor("#D51F27"))
+                        .setMaskColour(R.drawable.showcase)
                         .setDismissOnTouch(true)
                         .setDismissText("GOT IT")
                         .setContentText("Click here to go back to being a Buyer!")

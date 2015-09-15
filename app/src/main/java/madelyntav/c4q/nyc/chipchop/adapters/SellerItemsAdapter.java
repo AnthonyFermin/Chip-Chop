@@ -154,17 +154,17 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                     if(isActive) {
                         if (activity.isCurrentlyCooking()) {
-                            dbHelper.removeItemFromSale(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
+                            dbHelper.removeItemFromSale(sellerItems.get(getAdapterPosition()), emptyCallback);
                         } else {
                             //TODO: Madelyn: are these the correct methods to remove items from the seller profile in the DB?
-                            dbHelper.removeItemFromSellerProfile(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
+                            dbHelper.removeItemFromSellerProfile(sellerItems.get(getAdapterPosition()), emptyCallback);
                             Log.d("ITEMID moved", sellerItems.get(getAdapterPosition()).getItemID() + "");
                         }
 
-                        sellerItems.remove(getAdapterPosition());
+                        fragment.getActiveItems().remove(getAdapterPosition());
                         notifyDataSetChanged();
 
-                        activity.getInactiveSellerItems().add(item);
+                        fragment.getInActiveItems().add(item);
                         fragment.getInactiveList().getAdapter().notifyDataSetChanged();
                     }else{
                         if (activity.isCurrentlyCooking()) {
@@ -178,7 +178,7 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         sellerItems.remove(getAdapterPosition());
                         notifyDataSetChanged();
 
-                        activity.getSellerItems().add(item);
+                        fragment.getActiveItems().add(item);
                         fragment.getActiveList().getAdapter().notifyDataSetChanged();
                     }
                 }

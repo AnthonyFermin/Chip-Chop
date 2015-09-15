@@ -544,7 +544,12 @@ public class BuyActivity extends AppCompatActivity {
                         HelperMethods.setOrderToReview(order);
                         FragmentManager fm = getSupportFragmentManager();
                         ReviewDialogFragment alertDialog = new ReviewDialogFragment();
-                        alertDialog.show(fm, "fragment_alert");
+                        try {
+                            alertDialog.show(fm, "fragment_alert");
+                        }catch(IllegalStateException e){
+                            Log.d("FAILED REVIEW","WRONG ACTIVITY");
+                            e.printStackTrace();
+                        }
                     }
                 }
 

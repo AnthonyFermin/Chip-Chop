@@ -291,7 +291,7 @@ public class Fragment_Seller_CreateItem extends Fragment {
             @Override
             protected Void doInBackground(Void... voids) {
                 Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-                Bitmap scaledBitmap =  Bitmap.createScaledBitmap(bitmap,500,333,false);
+                Bitmap scaledBitmap =  Bitmap.createScaledBitmap(bitmap,100,67,false);
 
                 File file = new File(filePath);
                 FileOutputStream fOut = null;

@@ -19,6 +19,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -119,8 +120,15 @@ public class SignupActivity2 extends AppCompatActivity {
             public void onClick(View view) {
                 //TODO: CODE TO LINK TO CHECKOUT FRAGMENT
                 //TODO: Uses google api to get geolocation of address, if successful, save profile info to DB
-                getGeoLocation();
-
+                if (addressET.getText().toString().isEmpty()
+                        || cityET.getText().toString().isEmpty()
+                        || stateET.getText().toString().isEmpty()
+                        || phoneNumberET.getText().toString().isEmpty()
+                        || nameET.getText().toString().isEmpty()) {
+                    Toast.makeText(SignupActivity2.this, "Please fill in name, address and phone number fields", Toast.LENGTH_SHORT).show();
+                } else {
+                    getGeoLocation();
+                }
             }
         });
 

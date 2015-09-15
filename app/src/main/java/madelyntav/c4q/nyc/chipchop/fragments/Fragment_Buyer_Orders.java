@@ -87,7 +87,7 @@ public class Fragment_Buyer_Orders extends Fragment {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    if (i > 10){
+                    if (i > 15){
                         Log.d("LOAD BUYER ORDERS", "DIDN'T LOAD");
                         break;
                     }

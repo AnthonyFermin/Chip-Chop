@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
@@ -218,9 +219,12 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         coordinatorLayoutView = root.findViewById(R.id.snackbarPosition);
         slidingPanel = (SlidingUpPanelLayout) root.findViewById(R.id.slidinglayout);
 
+        Drawable drawable = getResources().getDrawable(R.drawable.showcase, null);
+
+
         new MaterialShowcaseView.Builder(getActivity())
                 .setTarget(arrowImage)
-                .setMaskColour(Color.parseColor("#D51F27"))
+                .setMaskColour("red")
                 .setDismissOnTouch(true)
                 .setDismissText("GOT IT")
 

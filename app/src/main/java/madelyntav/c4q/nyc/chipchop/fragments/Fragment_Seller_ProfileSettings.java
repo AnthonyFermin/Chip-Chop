@@ -258,7 +258,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
 
 
             ShowcaseConfig config = new ShowcaseConfig();
-            config.setMaskColor(Color.parseColor("#D51F27"));
+            config.setMaskColor(R.drawable.chipchop);
             config.setDelay(300); // half second between each showcase view
 
             MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(getActivity(), SHOWCASE_ID);

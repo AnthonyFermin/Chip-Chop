@@ -61,12 +61,19 @@ public class Fragment_Buyer_ViewCart extends Fragment {
             public void onClick(View view) {
 
                 if (!dbHelper.userIsLoggedIn()) {
-                    Intent signupIntent = new Intent(getActivity(), SignupActivity1.class);
-                    SharedPreferences sPref = activity.getSharedPreferences(FROM_CART, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sPref.edit();
-                    editor.putBoolean(FROM_CART,true);
-                    editor.commit();
-                    startActivity(signupIntent);
+                    if(activity.getSellerToView().getUID().equals(dbHelper.getUserID())){
+                        Snackbar
+                                .make(coordinatorLayoutView, "Cannot buy from self", Snackbar.LENGTH_SHORT)
+                                .show();
+                    }
+                    {
+                        Intent signupIntent = new Intent(getActivity(), SignupActivity1.class);
+                        SharedPreferences sPref = activity.getSharedPreferences(FROM_CART, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sPref.edit();
+                        editor.putBoolean(FROM_CART, true);
+                        editor.commit();
+                        startActivity(signupIntent);
+                    }
                 } else if(cartItems.size() == 0){
                     Snackbar
                             .make(coordinatorLayoutView, "Cart is empty", Snackbar.LENGTH_SHORT)

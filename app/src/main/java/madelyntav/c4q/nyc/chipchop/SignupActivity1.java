@@ -393,7 +393,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
                 .putString(SP_PHOTO_LINK, user.getPhotoLink());
             HelperMethods.setUser(user);
         }
-        editor.apply();
+        editor.commit();
 
     }
 

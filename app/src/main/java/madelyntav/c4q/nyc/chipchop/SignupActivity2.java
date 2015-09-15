@@ -282,7 +282,9 @@ public class SignupActivity2 extends AppCompatActivity {
         dbHelper.removeUser(email, password, new Firebase.ResultHandler() {
             @Override
             public void onSuccess() {
-
+                getSharedPreferences(SignupActivity1.SP_USER_INFO, MODE_PRIVATE).edit().clear().commit();
+                startActivity(new Intent(getApplicationContext(), BuyActivity.class));
+                finish();
             }
 
             @Override
@@ -291,13 +293,13 @@ public class SignupActivity2 extends AppCompatActivity {
             }
         });
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startActivity(new Intent(getApplicationContext(), BuyActivity.class));
-                finish();
-            }
-        }, 2000);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                startActivity(new Intent(getApplicationContext(), BuyActivity.class));
+//                finish();
+//            }
+//        }, 2000);
 
     }
 }

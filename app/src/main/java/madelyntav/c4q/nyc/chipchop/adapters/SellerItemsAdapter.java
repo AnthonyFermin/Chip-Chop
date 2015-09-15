@@ -43,6 +43,7 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private SellActivity activity;
     private boolean isActive;
     Fragment_Seller_Items fragment;
+    private DBCallback emptyCallback;
 
     public SellerItemsAdapter(final Context context, Fragment_Seller_Items fragment, final List<Item> sellerItems, boolean isActive) {
         this.context = context;
@@ -51,6 +52,17 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         activity = (SellActivity) context;
         this.isActive = isActive;
         this.fragment = fragment;
+        emptyCallback = new DBCallback() {
+            @Override
+            public void runOnSuccess() {
+
+            }
+
+            @Override
+            public void runOnFail() {
+
+            }
+        };
     }
 
     private class SellersViewHolder extends RecyclerView.ViewHolder {
@@ -108,21 +120,6 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 public void onClick(View view) {
                     //TODO: add popup dialog asking user to confirm deletion
 
-                    Item item = sellerItems.get(getAdapterPosition());
-
-                    if(isActive) {
-                        if (activity.isCurrentlyCooking()) {
-                            dbHelper.removeItemFromSale(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
-                        } else {
-                            //TODO: Madelyn: are these the correct methods to remove items from the seller profile in the DB?
-                            dbHelper.removeItemFromSellerProfile(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
-                            Log.d("ITEMID REMOVED", sellerItems.get(getAdapterPosition()).getItemID() + "");
-                        }
-
-                        activity.getInactiveSellerItems().add(item);
-                        fragment.getInactiveList().getAdapter().notifyDataSetChanged();
-                    }
-
                     sellerItems.remove(getAdapterPosition());
                     notifyItemRemoved(getAdapterPosition());
                 }
@@ -139,10 +136,36 @@ public class SellerItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     activity.replaceSellerFragment(new Fragment_Seller_CreateItem());
                 }
             });
-
+            
+            activeSwitch.setChecked(true);
             activeSwitch.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Item item = sellerItems.get(getAdapterPosition());
+
+                    if(isActive) {
+                        if (activity.isCurrentlyCooking()) {
+                            dbHelper.removeItemFromSale(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
+                        } else {
+                            //TODO: Madelyn: are these the correct methods to remove items from the seller profile in the DB?
+                            dbHelper.removeItemFromSellerProfile(sellerItems.get(getAdapterPosition()), itemRemovalCallback);
+                            Log.d("ITEMID moved", sellerItems.get(getAdapterPosition()).getItemID() + "");
+                        }
+
+                        activity.getInactiveSellerItems().add(item);
+                        fragment.getInactiveList().getAdapter().notifyDataSetChanged();
+                    }else{
+                        if (activity.isCurrentlyCooking()) {
+                            dbHelper.addItemToActiveSellerProfile(sellerItems.get(getAdapterPosition()), emptyCallback);
+                        } else {
+                            //TODO: Madelyn: are these the correct methods to remove items from the seller profile in the DB?
+                            dbHelper.addItemToSellerProfileDB(sellerItems.get(getAdapterPosition()), emptyCallback);
+                            Log.d("ITEMID moved", sellerItems.get(getAdapterPosition()).getItemID() + "");
+                        }
+
+                        activity.getSellerItems().add(item);
+                        fragment.getActiveList().getAdapter().notifyDataSetChanged();
+                    }
                 }
             });
         }

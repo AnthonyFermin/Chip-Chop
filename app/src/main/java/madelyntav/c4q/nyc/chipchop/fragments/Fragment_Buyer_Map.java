@@ -510,7 +510,6 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
                     Snackbar
                             .make(coordinatorLayoutView, "No sellers found in area", Snackbar.LENGTH_SHORT)
                             .show();
-                    Toast.makeText(activity, "No sellers found in area", Toast.LENGTH_SHORT).show();
                 } else {
                     SellerListAdapter sellersListAdapter = new SellerListAdapter(getActivity(), listOfSellersForUse);
                     itemsRView.setAdapter(sellersListAdapter);

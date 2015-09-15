@@ -290,7 +290,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             dbHelper.addSellerProfileInfoToDB(seller);
             dbHelper.setSellerCookingStatus(false);
             Snackbar
-                    .make(coordinatorLayoutView, "New Seller Profile Created, Please add a store name", Snackbar.LENGTH_SHORT)
+                    .make(coordinatorLayoutView, "New Seller Profile Created, Please add a store name", Snackbar.LENGTH_LONG)
                     .show();
             setEditTexts();
         }

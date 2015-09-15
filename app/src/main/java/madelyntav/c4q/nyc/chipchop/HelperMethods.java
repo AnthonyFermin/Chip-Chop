@@ -23,6 +23,7 @@ public class HelperMethods {
     public static Order currentOrder = null;
     public static User user = null;
     public static Seller sellerToView = null;
+    public static Order orderToReview = null;
 
     public static Address parseAddressString(String addressString, String uid){
 
@@ -89,4 +90,11 @@ public class HelperMethods {
         HelperMethods.sellerToView = sellerToView;
     }
 
+    public static Order getOrderToReview() {
+        return orderToReview;
+    }
+
+    public static void setOrderToReview(Order orderToReview) {
+        HelperMethods.orderToReview = orderToReview;
+    }
 }

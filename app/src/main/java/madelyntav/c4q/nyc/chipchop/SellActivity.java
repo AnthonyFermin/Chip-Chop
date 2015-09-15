@@ -134,6 +134,7 @@ public class SellActivity extends AppCompatActivity {
                 new MaterialShowcaseView.Builder(SellActivity.this)
                         .setTarget(buyButton)
                         .setMaskColour(Color.parseColor("#D51F27"))
+                        .setDismissOnTouch(true)
                         .setDismissText("GOT IT")
                         .setContentText("Click here to go back to being a Buyer!")
 //                        .setDelay(1000) // optional but starting animations immediately in onCreate can make them choppy

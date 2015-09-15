@@ -221,9 +221,11 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         new MaterialShowcaseView.Builder(getActivity())
                 .setTarget(arrowImage)
                 .setMaskColour(Color.parseColor("#D51F27"))
+                .setDismissOnTouch(true)
                 .setDismissText("GOT IT")
+
                 .setContentText("Slide up to check out a list of nearby vendors!")
-//                        .setDelay(1000) // optional but starting animations immediately in onCreate can make them choppy
+                        .setDelay(5000) // optional but starting animations immediately in onCreate can make them choppy
                 .singleUse(SHOWCASE_ID_2) // provide a unique ID used to ensure it is only shown once
                 .show();
 

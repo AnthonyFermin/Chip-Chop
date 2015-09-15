@@ -256,7 +256,7 @@ public class SellActivity extends AppCompatActivity {
         drawerUserNameTV.setText("");
         stopService(serviceIntent);
         LoginManager.getInstance().logOut();
-        stopService(new Intent(this, ServiceBuyerNotify.class));
+//        stopService(new Intent(this, ServiceBuyerNotify.class));
     }
 
     @Override

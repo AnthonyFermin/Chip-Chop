@@ -133,7 +133,7 @@ public class BuyActivity extends AppCompatActivity {
     }
 
     private void clearLogin() {
-        stopService(new Intent(this, ServiceBuyerNotify.class));
+//        stopService(new Intent(this, ServiceBuyerNotify.class));
         stopService(new Intent(this, ServiceSellerNotify.class));
         userInfoSP.edit().clear().commit();
         mListTitles[3] = "Sign In";

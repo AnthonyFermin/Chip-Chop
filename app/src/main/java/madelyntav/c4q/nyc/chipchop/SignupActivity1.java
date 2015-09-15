@@ -391,8 +391,9 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
                 .putString(SP_ZIPCODE, address.getZipCode())
                 .putString(SP_PHONE_NUMBER, user.getPhoneNumber())
                 .putString(SP_PHOTO_LINK, user.getPhotoLink());
+            HelperMethods.setUser(user);
         }
-        editor.apply();
+        editor.commit();
 
     }
 

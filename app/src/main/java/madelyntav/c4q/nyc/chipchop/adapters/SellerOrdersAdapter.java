@@ -55,6 +55,7 @@ public class SellerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             nameOfBuyer = (TextView) itemView.findViewById(R.id.buyer_name_tv);
             orderID = (TextView) itemView.findViewById(R.id.order_id_tv);
             deliveryMethod = (TextView) itemView.findViewById(R.id.delivery_method_tv);
+            buyerAddress = (TextView) itemView.findViewById(R.id.buyer_address_tv);
 
             container.setOnClickListener(new View.OnClickListener() {
                 @Override

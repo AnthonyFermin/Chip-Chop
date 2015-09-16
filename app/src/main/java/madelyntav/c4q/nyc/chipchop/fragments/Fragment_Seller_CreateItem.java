@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -44,7 +45,7 @@ public class Fragment_Seller_CreateItem extends Fragment {
     View coordinatorLayoutView;
     static String filePath;
     EditText dollarPriceET;
-    ImageView dishPhotoButton;
+    ImageButton dishPhotoButton;
     Button addButton;
     EditText dishNameET;
     EditText portionsET;
@@ -244,7 +245,7 @@ public class Fragment_Seller_CreateItem extends Fragment {
         descriptionET = (EditText) root.findViewById(R.id.description);
         dollarPriceET = (EditText) root.findViewById(R.id.price_dollar_amount);
 
-        dishPhotoButton = (ImageView) root.findViewById(R.id.dish_image);
+        dishPhotoButton = (ImageButton) root.findViewById(R.id.dish_image);
         coordinatorLayoutView = (View) root.findViewById(R.id.snackbarPosition);
 
         vegCB = (CheckBox) root.findViewById(R.id.veg_cb);

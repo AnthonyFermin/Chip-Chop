@@ -564,7 +564,7 @@ public class BuyActivity extends AppCompatActivity {
         dbHelper.getAllPreviouslyBoughtOrders(user.getUID(), new DBCallback() {
             @Override
             public void runOnSuccess() {
-                orders.addAll(dbHelper.getAllPreviouslyBoughtOrders(user.getUID(), emptyCallback));
+                orders.addAll(dbHelper.getAllPreviouslyBoughtOrders(dbHelper.getUserID(), emptyCallback));
 
                 Collections.sort(orders, new Comparator<Order>() {
                     @Override

@@ -278,8 +278,54 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
             mIsResolving = false;
             //mGoogleApiClient.connect();
         }else if(resultCode== RESULT_OK) {
-            dbHelper.onFacebookAccessTokenChange(AccessToken.getCurrentAccessToken());
-            Log.d("request Code", String.valueOf(resultCode));
+            loadingPanel.setVisibility(View.VISIBLE);
+            containingView.setVisibility(View.GONE);
+            dbHelper.onFacebookAccessTokenChange(AccessToken.getCurrentAccessToken(), new DBCallback() {
+                @Override
+                public void runOnSuccess() {
+                    user = dbHelper.getUserFromDBForFBAuth(dbHelper.getUserID(), new DBCallback() {
+                        @Override
+                        public void runOnSuccess() {
+                            Log.d("OUTUID",dbHelper.getUserID());
+                            HelperMethods.setUser(user);
+                            loadingPanel.setVisibility(View.GONE);
+                            containingView.setVisibility(View.VISIBLE);
+                            Log.d("FBUSER", "" + user.getName());
+                            Log.d("FBUserAddress", user.getAddressString());
+
+                            Log.d("FBUserPhone", user.getPhoneNumber());
+                            storeUserInfo();
+                            Log.d("SIGNUPACTIVITY1", "USER LOG IN SUCCESSFUL");
+                            Intent intent;
+                            if(toSellActivity){
+                                intent = new Intent(SignupActivity1.this,SellActivity.class);
+                            }
+                            else{
+                                intent = new Intent(SignupActivity1.this,BuyActivity.class);
+                            }
+                            startActivity(intent);
+                            finish();
+                        }
+
+                        @Override
+                        public void runOnFail() {
+                            Snackbar
+                                    .make(coordinatorLayoutView, "Failed to load account, please try again", Snackbar.LENGTH_SHORT)
+                                    .show();
+                            loadingPanel.setVisibility(View.GONE);
+                            containingView.setVisibility(View.VISIBLE);
+                            dbHelper.signOutUser(emptyCallback);
+
+                        }
+                    });
+
+                }
+
+                @Override
+                public void runOnFail() {
+
+                }
+            });
         }
     }
 
@@ -383,6 +429,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
             Log.d("SignUp - User Info","Email: " + user.geteMail());
             String addressString = user.getAddressString();
             Address address = HelperMethods.parseAddressString(addressString, dbHelper.getUserID());
+            user.setAddress(address);
             editor.putString(SP_NAME, user.getName())
                 .putString(SP_ADDRESS, address.getStreetAddress())
                 .putString(SP_APT, address.getApartment())

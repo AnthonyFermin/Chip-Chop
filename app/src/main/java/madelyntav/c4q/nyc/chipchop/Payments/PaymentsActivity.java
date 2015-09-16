@@ -196,7 +196,7 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
                         public void onSuccess(Token token) {
                             Toast.makeText(PaymentsActivity.this, "Payment Info Submitted Successfully", Toast.LENGTH_LONG).show();
                             Log.d("TokenIS", token.toString());
-                            price = order.getPrice() * 100;
+                            price = (order.getPrice()+1) * 100;
 
                             createCharge(price, token, cardNum, cardMonth, cardYear, cardCVC);
                         }

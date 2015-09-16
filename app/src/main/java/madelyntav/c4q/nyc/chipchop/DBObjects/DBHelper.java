@@ -430,25 +430,31 @@ public class DBHelper extends Firebase {
 
                     }
                 });
-
         return mSuccess;
-
     }
 
-    public void onFacebookAccessTokenChange(final AccessToken token) {
+    public void onFacebookAccessTokenChange(final AccessToken token, final DBCallback dbCallback) {
         Firebase ref = new Firebase(URL);
         Log.d("Tok In DB preAuth", "Token");
 
         Log.d("Token Is:", token.toString());
 
         if (token != null) {
+
             ref.authWithOAuthToken("facebook", token.getToken(), new Firebase.AuthResultHandler() {
                 @Override
                 public void onAuthenticated(AuthData authData) {
                     // The Facebook user is now authenticated with your Firebase app
                     Log.d("Tok In DB after Auth", "Token");
                     //Create user Profile with user email
-                    createUserFromFBAuthLogin(String.valueOf(authData.getProviderData().get("email")), AccessToken.getCurrentAccessToken().getToken());
+                    String token2= token.getToken();
+                    String password ="";
+                    for (int i=0;i<7;i++){
+                        password+=token2.charAt(i);
+                    }
+                    Log.d("passwordt",password);
+                    createUserFromFBAuthLogin(String.valueOf(authData.getProviderData().get("email")), password, dbCallback);
+
                     Log.d("email", authData.getProviderData().get("email").toString());
                     UID = "";
                     UID = authData.getUid();
@@ -461,18 +467,11 @@ public class DBHelper extends Firebase {
                     fRef.child(UID).child(imageLink).setValue(authData.getProviderData().get("profileImageURL"));
                     fRef.child(UID).child(sName).setValue(authData.getProviderData().get("displayName"));
 
-                    SharedPreferences sharedPreferences = mContext.getSharedPreferences("New User", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("id", UID);
-                    editor.putString("eMail", String.valueOf(authData.getProviderData().get("email")));
-                    editor.putString("name", String.valueOf(authData.getProviderData().get("displayName")));
-                    editor.apply();
-
-                    Intent intent = new Intent(mContext, SignupActivity2.class);
-                    intent.putExtra("email", String.valueOf(authData.getProviderData().get("email")));
-                    intent.putExtra("name", String.valueOf(authData.getProviderData().get("displayName")));
-                    intent.putExtra("UID", UID);
-                    mContext.startActivity(intent);
+//                    Intent intent = new Intent(mContext, SignupActivity2.class);
+//                    intent.putExtra("email", String.valueOf(authData.getProviderData().get("email")));
+//                    intent.putExtra("name", String.valueOf(authData.getProviderData().get("displayName")));
+//                    intent.putExtra("UID", UID);
+//                    mContext.startActivity(intent);
                 }
 
                 @Override
@@ -486,13 +485,16 @@ public class DBHelper extends Firebase {
         }
     }
 
-    private void createUserFromFBAuthLogin(final String email, final String password) {
+    private void createUserFromFBAuthLogin(final String email, final String password, final DBCallback callback) {
+        Log.d("emailz",email);
+        Log.d("passwordz",password);
+
         fireBaseRef.createUser(email, password, new ValueResultHandler<Map<String, Object>>() {
             @Override
             public void onSuccess(Map<String, Object> stringObjectMap) {
-                mSuccess = true;
+                //mSuccess = true;
 
-                SharedPreferences sharedPreferences = mContext.getSharedPreferences("New User", Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = mContext.getSharedPreferences("user_info", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("id", UID);
                 editor.putString("eMail", email);
@@ -501,28 +503,31 @@ public class DBHelper extends Firebase {
 
                 user = new User(UID, email);
 
-                Firebase fRef = new Firebase(URL + "UserProfiles");
+                Firebase fRef = new Firebase(URL + "UserProfiles/");
                 fRef.child(UID);
                 fRef.child(UID).child(sEmailAddress).setValue(email);
+                Log.d("b4CB","B4CB");
 
                 callback.runOnSuccess();
             }
 
             @Override
             public void onError(FirebaseError firebaseError) {
-                loginUserThroughFacebookAuth(email, password);
+                loginUserThroughFacebookAuth(email, password, callback);
 
             }
         });
     }
 
-    private void loginUserThroughFacebookAuth(String email, String password) {
+    private void loginUserThroughFacebookAuth(String email, String password, final DBCallback dbCallback) {
+        Log.d("createUserLoginFailed","lk");
         fireBaseRef.authWithPassword(email, password,
                 new Firebase.AuthResultHandler() {
                     @Override
                     public void onAuthenticated(AuthData authData) { /* ... */
                         mSuccess = true;
-                        UID = authData.getUid();
+                        //UID = authData.getUid();
+                        dbCallback.runOnSuccess();
                     }
 
                     @Override
@@ -860,6 +865,44 @@ public class DBHelper extends Firebase {
                         .make(SignupActivity1.coordinatorLayoutView, "Please Try Again", Snackbar.LENGTH_SHORT)
                         .show();
                 Toast.makeText(mContext, "Please Try Again", Toast.LENGTH_SHORT).show();
+                user = null;
+            }
+        });
+
+        return user;
+    }
+
+    public User getUserFromDBForFBAuth(final String userID, final DBCallback dbCallback) {
+        this.UID = userID;
+        Firebase fRef = new Firebase(URL + "UserProfiles/" + userID);
+        Log.d("frefz32", fRef.toString());
+
+
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("Number2", dataSnapshot.getChildrenCount() + "");
+
+                User user1 = dataSnapshot.getValue(User.class);
+
+                user.setName(user1.name);
+                user.setAddressString(user1.addressString);
+                user.seteMail(user1.eMail);
+                user.setUID(dataSnapshot.getKey());
+                user.setCardNumber(user1.cardNumber);
+                user.setCardExpirationYear(user1.cardExpirationYear);
+                user.setCardExpirationMonth(user1.cardExpirationMonth);
+                user.setCardCVC(user1.cardCVC);
+                user.setPhoneNumber(user1.phoneNumber);
+                user.setUserItems(user1.userItems);
+                user.setLongitude(user1.longitude);
+                user.setLatitude(user1.latitude);
+                dbCallback.runOnSuccess();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                dbCallback.runOnFail();
                 user = null;
             }
         });

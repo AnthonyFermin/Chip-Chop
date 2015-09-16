@@ -66,6 +66,7 @@
             android:layout_alignParentBottom="true"
             android:src="@drawable/refresh"
             app:backgroundTint="#D42028"
+            android:padding="5dp"
             app:elevation="6dp"
             app:pressedTranslationZ="12dp"/>
 

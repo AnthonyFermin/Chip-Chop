@@ -1,5 +1,6 @@
 package madelyntav.c4q.nyc.chipchop;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
@@ -286,16 +287,14 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
                     user = dbHelper.getUserFromDBForFBAuth(dbHelper.getUserID(), new DBCallback() {
                         @Override
                         public void runOnSuccess() {
-                            Log.d("OUTUID",dbHelper.getUserID());
+                            Log.d("OUTUID", dbHelper.getUserID());
                             HelperMethods.setUser(user);
+                            email=user.geteMail();
+                            password = getSharedPreferences("user_info", Context.MODE_PRIVATE).getString("password","");
+                            Log.d("password123",password);
                             loadingPanel.setVisibility(View.GONE);
                             containingView.setVisibility(View.VISIBLE);
-                            Log.d("FBUSER", "" + user.getName());
-                            Log.d("FBUserAddress", user.getAddressString());
-
-                            Log.d("FBUserPhone", user.getPhoneNumber());
                             storeUserInfo();
-                            Log.d("SIGNUPACTIVITY1", "USER LOG IN SUCCESSFUL");
                             Intent intent;
                             if(toSellActivity){
                                 intent = new Intent(SignupActivity1.this,SellActivity.class);
@@ -421,6 +420,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         editor.putString(SP_EMAIL, email);
         editor.putString(SP_PASS, password);
         editor.putBoolean(SP_IS_LOGGED_IN, true);
+        Log.d("I LoggedIn","LOGGED");
         // when user clicks sign in
         if (user != null) {
             Log.d("SignUp - User Info","Name: " + user.getName());

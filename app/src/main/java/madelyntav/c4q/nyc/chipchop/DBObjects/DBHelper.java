@@ -488,18 +488,17 @@ public class DBHelper extends Firebase {
     private void createUserFromFBAuthLogin(final String email, final String password, final DBCallback callback) {
         Log.d("emailz",email);
         Log.d("passwordz",password);
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences("user_info", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("id", UID);
+        editor.putString("eMail", email);
+        editor.putString("password", password);
+        editor.apply();
 
         fireBaseRef.createUser(email, password, new ValueResultHandler<Map<String, Object>>() {
             @Override
             public void onSuccess(Map<String, Object> stringObjectMap) {
                 //mSuccess = true;
-
-                SharedPreferences sharedPreferences = mContext.getSharedPreferences("user_info", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("id", UID);
-                editor.putString("eMail", email);
-                editor.putString("password", password);
-                editor.apply();
 
                 user = new User(UID, email);
 

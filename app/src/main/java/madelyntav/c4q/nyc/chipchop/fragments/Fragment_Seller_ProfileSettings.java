@@ -315,7 +315,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         }
 
         Address address = user.getAddress();
-        sellerNameTV.setText(user.getName());
+        sellerNameTV.setText(seller.getStoreName());
         storeNameET.setText(seller.getStoreName());
         if(address != null) {
             addressET.setText(address.getStreetAddress());

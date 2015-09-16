@@ -103,6 +103,18 @@
 
     </LinearLayout>
 
+    <RelativeLayout
+        style="@style/GenericProgressBackground"
+        android:id="@+id/loadingPanel"
+        >
+        <ProgressBar
+            android:progressDrawable="@drawable/progressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"/>
+    </RelativeLayout>
+
 
 
 </android.support.v4.widget.DrawerLayout>

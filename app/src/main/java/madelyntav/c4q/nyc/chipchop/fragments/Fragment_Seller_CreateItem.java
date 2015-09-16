@@ -84,7 +84,7 @@ public class Fragment_Seller_CreateItem extends Fragment {
         dollarPriceET.setText(itemToEdit.getPrice() + "");
 
         if(itemToEdit.getImageLink() != null && !itemToEdit.getImageLink().isEmpty() && itemToEdit.getImageLink().length() > 200) {
-            final String imageLink = itemToEdit.getImageLink();
+            imageLink = itemToEdit.getImageLink();
             new AsyncTask<Void, Void, Bitmap>() {
                 @Override
                 protected Bitmap doInBackground(Void... voids) {

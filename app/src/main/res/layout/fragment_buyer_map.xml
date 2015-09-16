@@ -65,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
             android:src="@drawable/refresh"
             app:backgroundTint="#D42028"
             android:padding="5dp"

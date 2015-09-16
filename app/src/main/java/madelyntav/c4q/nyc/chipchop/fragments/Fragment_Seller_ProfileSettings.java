@@ -599,6 +599,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                                 .make(coordinatorLayoutView, "Please add an item with positive quantity", Snackbar.LENGTH_SHORT)
                                 .show();
                         activity.replaceSellerFragment(new Fragment_Seller_Items());
+
                     }
 
                 } else {

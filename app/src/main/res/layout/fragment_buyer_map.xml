@@ -69,7 +69,7 @@
             android:layout_alignParentTop="true"
             android:src="@drawable/refresh"
             app:backgroundTint="#D42028"
-            android:padding="5dp"
+            android:layout_margin="5dp"
             app:elevation="6dp"
             app:pressedTranslationZ="12dp"/>
 

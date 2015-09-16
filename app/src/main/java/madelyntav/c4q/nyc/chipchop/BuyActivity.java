@@ -93,18 +93,19 @@ public class BuyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_buy);
         FacebookSdk.sdkInitialize(this.getApplicationContext());
 
+
+
         bindViews();
-
-
-
-
         initializeData();
-        checkIsLogged();
         setUpDrawer();
+        checkIsLogged();
         selectFragmentToLoad(savedInstanceState);
     }
 
     private void checkIsLogged() {
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        mDrawerToggle.setDrawerIndicatorEnabled(false);
+
         userInfoSP = getSharedPreferences(SignupActivity1.SP_USER_INFO, MODE_PRIVATE);
         boolean isLoggedIn = userInfoSP.getBoolean(SignupActivity1.SP_IS_LOGGED_IN, false);
         if (isLoggedIn) {
@@ -116,7 +117,10 @@ public class BuyActivity extends AppCompatActivity {
                 dbHelper.logInUser(email, pass, new DBCallback() {
                     @Override
                     public void runOnSuccess() {
+
                         load();
+                        mDrawerToggle.setDrawerIndicatorEnabled(true);
+                        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                         ratingBar.setVisibility(View.VISIBLE);
                     }
 
@@ -124,11 +128,15 @@ public class BuyActivity extends AppCompatActivity {
                     public void runOnFail() {
                         // clears user login info if login authentication failed
                         clearLogin();
+                        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                        ratingBar.setVisibility(View.VISIBLE);
                     }
                 });
             }
         } else {
             clearLogin();
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            ratingBar.setVisibility(View.VISIBLE);
         }
     }
 
@@ -257,13 +265,11 @@ public class BuyActivity extends AppCompatActivity {
 
             }
         };
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
 //        getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(false);
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.navdrawer);
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
         getSupportActionBar().setBackgroundDrawable(colorDrawable);
@@ -474,6 +480,7 @@ public class BuyActivity extends AppCompatActivity {
         checkIfLastOrderHasBeenReviewedAndIfNotSetReview();
 
         drawerUserNameTV.setText(user.getName());
+
         mListTitles[3] = "Sign Out";
         mDrawerList.setAdapter(new ArrayAdapter<>(BuyActivity.this,
                 R.layout.navdrawer_list_item, mListTitles));

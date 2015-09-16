@@ -28,7 +28,7 @@
                 android:textSize="20sp" />
 
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/dish_image"
                 android:layout_width="210dp"
                 android:layout_height="210dp"

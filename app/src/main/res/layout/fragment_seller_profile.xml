@@ -75,7 +75,7 @@
                         android:adjustViewBounds="true"
                         android:background="@android:color/transparent"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/chipchop" />
+                        android:src="@drawable/food2" />
 
                     <ImageView
                         android:layout_width="match_parent"

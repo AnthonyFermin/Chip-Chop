@@ -85,6 +85,7 @@ public class SellActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sell);
 
+
         dbHelper = DBHelper.getDbHelper(this);
 
         signupActivity1= new SignupActivity1();
@@ -196,6 +197,8 @@ public class SellActivity extends AppCompatActivity {
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         coordinatorLayoutView = findViewById(R.id.snackbarPosition);
         contactButton = (Button) findViewById(R.id.contact_button);
+
+
 
     }
 

@@ -326,7 +326,6 @@ public class PaymentsActivity extends AppCompatActivity implements GoogleApiClie
                     Date date = new Date();
                     long millis = date.getTime();
                     order.setTimeStamp(millis);
-
                     dbHelper.addCurrentOrderToSellerDB(order, new DBCallback() {
                         @Override
                         public void runOnSuccess() {

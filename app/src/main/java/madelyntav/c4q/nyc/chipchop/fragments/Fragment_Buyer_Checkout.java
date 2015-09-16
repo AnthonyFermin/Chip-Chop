@@ -111,8 +111,6 @@ public class Fragment_Buyer_Checkout extends Fragment {
         totalPriceTV = (TextView) root.findViewById(R.id.total_price_tv);
         confirmOrder = (Button) root.findViewById(R.id.confirmOrderButton);
         confirmImage = (ImageView) root.findViewById(R.id.confirm_image);
-
-
     }
 
     private void initializeData() {
@@ -135,7 +133,7 @@ public class Fragment_Buyer_Checkout extends Fragment {
             Log.d("Checkout Item","          ------");
         }
 
-        total = 0;
+        total = 1;
         for(Item item: cartItems){
             item.setBuyerID(dbHelper.getUserID());
             total = total + (item.getPrice() * item.getQuantityWanted());

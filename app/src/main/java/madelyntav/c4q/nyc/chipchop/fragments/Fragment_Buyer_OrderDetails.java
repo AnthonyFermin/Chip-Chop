@@ -111,7 +111,7 @@ public class Fragment_Buyer_OrderDetails extends Fragment {
         }
 
         deliveryMethod.setText("DELIVERY METHOD: " + deliverMethod);
-        sellerAddress.setText("SELLER ADDRESS: \n\n" + orderToView.getSellerAddress());
+        sellerAddress.setText("SELLER ADDRESS: \n\n" + orderToView.getSellerAddress().replace("null","").replace(", ,",","));
 
 
         return root;
@@ -146,11 +146,7 @@ public class Fragment_Buyer_OrderDetails extends Fragment {
                     super.onPostExecute(aVoid);
                     setAdapter();
 
-                    int total = 0;
-                    for(Item item: foodItems){
-                        item.setBuyerID(dbHelper.getUserID());
-                        total = total + (item.getPrice() * item.getQuantityWanted());
-                    }
+                    int total = orderToView.getPrice();
 
                     totalPrice.setText("$ " + String.valueOf(total) + ".00");
                 }

@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.FacebookSdk;
@@ -54,6 +55,7 @@ import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 public class BuyActivity extends AppCompatActivity {
 
+    private RelativeLayout loadingPanel;
     private Button sellButton;
     private RatingBar ratingBar;
     private Button contactButton;
@@ -105,6 +107,7 @@ public class BuyActivity extends AppCompatActivity {
     private void checkIsLogged() {
         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         mDrawerToggle.setDrawerIndicatorEnabled(false);
+        loadingPanel.setVisibility(View.VISIBLE);
 
         userInfoSP = getSharedPreferences(SignupActivity1.SP_USER_INFO, MODE_PRIVATE);
         boolean isLoggedIn = userInfoSP.getBoolean(SignupActivity1.SP_IS_LOGGED_IN, false);
@@ -122,25 +125,29 @@ public class BuyActivity extends AppCompatActivity {
                         mDrawerToggle.setDrawerIndicatorEnabled(true);
                         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                         ratingBar.setVisibility(View.VISIBLE);
+                        loadingPanel.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void runOnFail() {
                         // clears user login info if login authentication failed
                         clearLogin();
-                        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                        ratingBar.setVisibility(View.VISIBLE);
+
+
                     }
                 });
             }
         } else {
             clearLogin();
-            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-            ratingBar.setVisibility(View.VISIBLE);
+
+
         }
     }
 
     private void clearLogin() {
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        loadingPanel.setVisibility(View.GONE);
 //        stopService(new Intent(this, ServiceBuyerNotify.class));
         stopService(new Intent(this, ServiceSellerNotify.class));
         userInfoSP.edit().clear().commit();
@@ -289,6 +296,7 @@ public class BuyActivity extends AppCompatActivity {
         coordinatorLayoutView = findViewById(R.id.snackbarPosition);
         contactButton = (Button) findViewById(R.id.contact_button);
         ratingBar = (RatingBar) findViewById(R.id.rating_bar);
+        loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
 
 
 
@@ -381,6 +389,8 @@ public class BuyActivity extends AppCompatActivity {
 
 
         }
+
+
 
         // Create fragment manager to begin interacting with the fragments and the container
         FragmentManager fragmentManager = getSupportFragmentManager();

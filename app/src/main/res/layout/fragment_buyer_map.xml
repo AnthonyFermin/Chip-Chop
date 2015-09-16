@@ -32,6 +32,8 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
+
+
     </LinearLayout>
 
     <RelativeLayout
@@ -71,7 +73,11 @@
             app:pressedTranslationZ="12dp"/>
 
 
+
+
     </RelativeLayout>
+
+
 
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 

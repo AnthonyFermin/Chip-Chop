@@ -1,10 +1,7 @@
 package madelyntav.c4q.nyc.chipchop.fragments;
 
-import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,13 +12,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import madelyntav.c4q.nyc.chipchop.BuyActivity;
-import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
@@ -30,7 +24,6 @@ import madelyntav.c4q.nyc.chipchop.DeliveryDialog;
 import madelyntav.c4q.nyc.chipchop.HelperMethods;
 import madelyntav.c4q.nyc.chipchop.PaymentDialog;
 import madelyntav.c4q.nyc.chipchop.R;
-import madelyntav.c4q.nyc.chipchop.ReviewDialogFragment;
 import madelyntav.c4q.nyc.chipchop.adapters.CheckoutListAdapter;
 
 
@@ -136,7 +129,7 @@ public class Fragment_Buyer_Checkout extends Fragment {
         total = 1;
         for(Item item: cartItems){
             item.setBuyerID(dbHelper.getUserID());
-            total = total + (item.getPrice() * item.getQuantityWanted());
+            total = total + (item.getPrice() * item.getQuantityWanted() + 1);
         }
     }
 

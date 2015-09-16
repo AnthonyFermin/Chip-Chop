@@ -66,7 +66,7 @@ public class Fragment_Buyer_ProfileSettings extends Fragment {
 
         bindViews(root);
 
-        user = activity.getUser();
+//        user = activity.getUser();
 
         activity.setCurrentFragment(TAG);
 

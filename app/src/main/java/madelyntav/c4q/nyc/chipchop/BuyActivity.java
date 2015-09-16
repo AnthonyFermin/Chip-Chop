@@ -114,6 +114,7 @@ public class BuyActivity extends AppCompatActivity {
         if (isLoggedIn) {
             String email = userInfoSP.getString(SignupActivity1.SP_EMAIL, null);
             String pass = userInfoSP.getString(SignupActivity1.SP_PASS, null);
+            Log.d("{ASSWRRR",pass);
 
             if (email != null && pass != null) {
                 Log.d("AUTO LOG-IN", "" + email);

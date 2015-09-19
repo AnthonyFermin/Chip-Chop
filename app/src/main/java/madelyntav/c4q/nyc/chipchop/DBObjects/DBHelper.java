@@ -505,7 +505,7 @@ public class DBHelper extends Firebase {
                 Firebase fRef = new Firebase(URL + "UserProfiles/");
                 fRef.child(UID);
                 fRef.child(UID).child(sEmailAddress).setValue(email);
-                Log.d("b4CB","B4CB");
+                Log.d("b4CB", "B4CB");
 
                 callback.runOnSuccess();
             }
@@ -519,7 +519,7 @@ public class DBHelper extends Firebase {
     }
 
     private void loginUserThroughFacebookAuth(String email, String password, final DBCallback dbCallback) {
-        Log.d("createUserLoginFailed","lk");
+        Log.d("createUserLoginFailed", "lk");
         fireBaseRef.authWithPassword(email, password,
                 new Firebase.AuthResultHandler() {
                     @Override
@@ -758,6 +758,12 @@ public class DBHelper extends Firebase {
         Firebase fRef = new Firebase(URL + "SellerProfiles/");
 
         fRef.child(UID).child("isCooking").setValue(isCooking);
+    }
+
+    public void setSellerCookingStatus(String userID, boolean isCooking) {
+        Firebase fRef = new Firebase(URL + "SellerProfiles/" + userID);
+
+        fRef.child("isCooking").setValue(isCooking);
     }
 
     public void addSellerProfileInfoToDB(Seller seller, final DBCallback callback) {

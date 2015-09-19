@@ -77,12 +77,12 @@ public class Fragment_Seller_Items extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_seller__items, container, false);
 
-        sellerItems = new ArrayList<>();
         // Instantiate a ViewPager and a PagerAdapter.
         initializeData();
         initializeViews(root);
         setListeners();
         loadActiveItems();
+
 
         return root;
     }
@@ -103,7 +103,15 @@ public class Fragment_Seller_Items extends Fragment {
             }
         };
 
-        //seller items
+        loadSellerItems();
+        inActiveItems = loadInactiveItems();
+        activity.setInactiveSellerItems(inActiveItems);
+
+        activity.setCurrentFragment(TAG);
+    }
+
+    private void loadSellerItems() {
+        sellerItems = new ArrayList<>();
         if (activity.isCurrentlyCooking()) {
             Log.d("SELLER ID","ID: " + dbHelper.getUserID());
             dbHelper.getSellersOnSaleItems(dbHelper.getUserID(), new DBCallback() {
@@ -137,10 +145,6 @@ public class Fragment_Seller_Items extends Fragment {
                 }
             });
         }
-        inActiveItems = loadInactiveItems();
-        activity.setInactiveSellerItems(inActiveItems);
-
-        activity.setCurrentFragment(TAG);
     }
 
     private ArrayList<Item> loadInactiveItems() {
@@ -194,8 +198,10 @@ public class Fragment_Seller_Items extends Fragment {
 
                 activity.setSellerItems(sellerItems);
 
-                activeList.getAdapter().notifyDataSetChanged();
-                inactiveList.getAdapter().notifyDataSetChanged();
+                if(activeList != null)
+                    activeList.getAdapter().notifyDataSetChanged();
+                if(inactiveList != null)
+                    inactiveList.getAdapter().notifyDataSetChanged();
 
                 Log.d("LOAD SELLER ITEMS LIST", sellerItems.size() + "");
 

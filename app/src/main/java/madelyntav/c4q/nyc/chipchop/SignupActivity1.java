@@ -139,10 +139,22 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
                     dbHelper.logInUser(email, password, new DBCallback() {
                         @Override
                         public void runOnSuccess() {
-                            user = dbHelper.getUserFromDB(dbHelper.getUserID());
-                            loadingPanel.setVisibility(View.VISIBLE);
-                            containingView.setVisibility(View.GONE);
-                            load();
+                            user = dbHelper.getUserFromDBForFBAuth(dbHelper.getUserID(), new DBCallback() {
+                                @Override
+                                public void runOnSuccess() {
+                                    loadingPanel.setVisibility(View.VISIBLE);
+                                    containingView.setVisibility(View.GONE);
+                                    load();
+                                }
+
+                                @Override
+                                public void runOnFail() {
+                                    Snackbar
+                                            .make(coordinatorLayoutView, "Unable to gather info, check connection and try again", Snackbar.LENGTH_SHORT)
+                                            .show();
+                                    dbHelper.signOutUser(emptyCallback);
+                                }
+                            });
                         }
 
                         @Override

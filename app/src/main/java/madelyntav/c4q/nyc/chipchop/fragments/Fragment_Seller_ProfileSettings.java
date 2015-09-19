@@ -221,7 +221,6 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 }
 
                 dbHelper.addSellerProfileInfoToDB(seller);
-                dbHelper.setSellerCookingStatus(seller.getIsCooking());
                 activity.setSeller(seller);
 
                 user.setAddress(userAddress);
@@ -255,7 +254,6 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             Log.d("SELLER INFO", "Store Name: " + seller.getStoreName());
             Log.d("SELLER INFO", "isCooking: " + seller.getIsCooking());
             setEditTexts();
-
 
             ShowcaseConfig config = new ShowcaseConfig();
             config.setMaskColor(R.drawable.chipchop);
@@ -294,23 +292,25 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                     .show();
             setEditTexts();
         }
+
         activity.setSeller(seller);
         loadingPanel.setVisibility(View.GONE);
         containingView.setVisibility(View.VISIBLE);
     }
 
     private void setEditTexts(){
-        Log.d("SELLER INFO", "Is Cooking: " + seller.getIsCooking());
-        activity.setCookingStatus(seller.getIsCooking());
+        Log.d("SELLER INFO", "Is Cooking: " + activity.isCurrentlyCooking());
         if(activity.isCurrentlyCooking()){
+            Log.d("SELLER INFO", "is Cooking!");
             cookingStatus.setChecked(true);
             cookingStatusTV.setVisibility(View.VISIBLE);
-            saveButton.setEnabled(false);
+            saveButton.setText("EDIT PROFILE");
+            setReadOnlyAll(true);
             activity.startService(activity.getServiceIntent());
         }else{
+            Log.d("SELLER INFO", "is NOT Cooking!");
             cookingStatus.setChecked(false);
             cookingStatusTV.setVisibility(View.INVISIBLE);
-            saveButton.setEnabled(true);
             activity.stopService(activity.getServiceIntent());
         }
 
@@ -418,7 +418,6 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 }else{
                     scaledBitmap = Bitmap.createScaledBitmap(bitmap, 500,333, false);
                 }
-
 
                 File file = new File(filePath);
                 FileOutputStream fOut = null;
@@ -533,11 +532,9 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         if(activity.isCurrentlyCooking()){
             cookingStatus.setChecked(true);
             cookingStatusTV.setVisibility(View.VISIBLE);
-            saveButton.setEnabled(false);
         }else{
             cookingStatus.setChecked(false);
             cookingStatusTV.setVisibility(View.INVISIBLE);
-            saveButton.setEnabled(true);
         }
 
         profilePhoto = (ImageButton) root.findViewById(R.id.profile_image);
@@ -578,16 +575,18 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                         Log.d("Seller Info", seller.getName() + "");
                         Log.d("Seller Info", seller.getStoreName() + "");
                         seller.setIsCooking(true);
-                        seller.setPhotoLink(imageLink);
                         dbHelper.setSellerCookingStatus(true);
+                        seller.setPhotoLink(imageLink);
                         seller.setPickUpAvailable(pickupSwitch.isChecked());
-                        seller.setDeliveryAvailable(pickupSwitch.isChecked());
+                        seller.setDeliveryAvailable(deliverSwitch.isChecked());
+
+                        activity.setSeller(seller);
+
 
                         activity.setSeller(seller);
                         dbHelper.sendSellerToActiveSellerTable(seller);
 
                         activity.setCookingStatus(true);
-                        saveButton.setEnabled(false);
                         cookingStatusTV.setVisibility(View.VISIBLE);
                         Snackbar
                                 .make(coordinatorLayoutView, "Cooking Status Active", Snackbar.LENGTH_SHORT)
@@ -599,21 +598,23 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                                 .make(coordinatorLayoutView, "Please add an item with positive quantity", Snackbar.LENGTH_SHORT)
                                 .show();
                         activity.replaceSellerFragment(new Fragment_Seller_Items());
+
                     }
 
                 } else {
-                    saveButton.setEnabled(true);
                     cookingStatusTV.setVisibility(View.INVISIBLE);
                     dbHelper.removeSellersFromActiveSellers(seller, emptyCallback);
                     activity.setCookingStatus(false);
                     seller.setIsCooking(false);
-                    activity.setSeller(seller);
                     dbHelper.setSellerCookingStatus(false);
+
+                    activity.setSeller(seller);
                     activity.stopService(activity.getServiceIntent());
                     Snackbar
                             .make(coordinatorLayoutView, "Cooking Status Deactivated", Snackbar.LENGTH_SHORT)
                             .show();
-
+                    saveButton.setText("Save Changes");
+                    setReadOnlyAll(false);
                 }
             }
         });
@@ -627,7 +628,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 }else{
                     if(activity.isCurrentlyCooking()){
                         Snackbar
-                                .make(coordinatorLayoutView, "Cannot edit seller profile while actively cooking", Snackbar.LENGTH_SHORT)
+                                .make(coordinatorLayoutView, "Cannot edit profile while actively cooking", Snackbar.LENGTH_SHORT)
                                 .show();
                     }else {
                         saveButton.setText("Save Changes");

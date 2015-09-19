@@ -24,7 +24,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RatingBar;
@@ -114,7 +113,7 @@ public class BuyActivity extends AppCompatActivity {
         if (isLoggedIn) {
             String email = userInfoSP.getString(SignupActivity1.SP_EMAIL, null);
             String pass = userInfoSP.getString(SignupActivity1.SP_PASS, null);
-            Log.d("{ASSWRRR",pass);
+            Log.d("{ASSWRRR",pass="");
 
             if (email != null && pass != null) {
                 Log.d("AUTO LOG-IN", "" + email);
@@ -133,8 +132,6 @@ public class BuyActivity extends AppCompatActivity {
                     public void runOnFail() {
                         // clears user login info if login authentication failed
                         clearLogin();
-
-
                     }
                 });
             }

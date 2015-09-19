@@ -8,14 +8,12 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -237,19 +235,27 @@ public class SignupActivity2 extends AppCompatActivity {
                 user.setUID(uid);
                 user.seteMail(email);
                 user.setPhoneNumber(phoneNumber);
-
+                Log.d("goingtoAddaddress", "");
                 dbHelper.addUserProfileInfoToDB(user);
+                Log.d("afterAddingAddress", "");
+
                 HelperMethods.setUser(user);
 
                 saveToSharedPrefs();
 
                 Intent activity;
+                Log.d("GoingIntoIntent", "");
+
                 if(toSellActivity){
+                    Log.d("GoingToSellAfter2","");
                     activity = new Intent(getApplicationContext(), SellActivity.class);
                 }else{
+                    Log.d("GoingToBuyAfter2","");
                     activity = new Intent(getApplicationContext(), BuyActivity.class);
                 }
                 startActivity(activity);
+                Log.d("startingAct", "");
+
                 finish();
             }
 

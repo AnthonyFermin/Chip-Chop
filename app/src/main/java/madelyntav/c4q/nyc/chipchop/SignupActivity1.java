@@ -300,7 +300,7 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
                                 intent = new Intent(SignupActivity1.this,SellActivity.class);
                             }
                             else{
-                                intent = new Intent(SignupActivity1.this,BuyActivity.class);
+                                intent = new Intent(SignupActivity1.this,SignupActivity2.class);
                             }
                             startActivity(intent);
                             finish();
@@ -425,20 +425,23 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
         if (user != null) {
             Log.d("SignUp - User Info","Name: " + user.getName());
             Log.d("SignUp - User Info","Address: " + user.getAddressString());
-            Log.d("SignUp - User Info","UID: " + user.getUID());
-            Log.d("SignUp - User Info","Email: " + user.geteMail());
-            String addressString = user.getAddressString();
-            Address address = HelperMethods.parseAddressString(addressString, dbHelper.getUserID());
-            user.setAddress(address);
-            editor.putString(SP_NAME, user.getName())
-                .putString(SP_ADDRESS, address.getStreetAddress())
-                .putString(SP_APT, address.getApartment())
-                .putString(SP_CITY, address.getCity())
-                .putString(SP_STATE, address.getState())
-                .putString(SP_ZIPCODE, address.getZipCode())
-                .putString(SP_PHONE_NUMBER, user.getPhoneNumber())
-                .putString(SP_PHOTO_LINK, user.getPhotoLink());
+            Log.d("SignUp - User Info", "UID: " + user.getUID());
+            Log.d("SignUp - User Info", "Email: " + user.geteMail());
+            if(user.getAddressString()!=null) {
+                String addressString = user.getAddressString();
+                Address address = HelperMethods.parseAddressString(addressString, dbHelper.getUserID());
+                user.setAddress(address);
+                editor.putString(SP_NAME, user.getName())
+                        .putString(SP_ADDRESS, address.getStreetAddress())
+                        .putString(SP_APT, address.getApartment())
+                        .putString(SP_CITY, address.getCity())
+                        .putString(SP_STATE, address.getState())
+                        .putString(SP_ZIPCODE, address.getZipCode())
+                        .putString(SP_PHONE_NUMBER, user.getPhoneNumber())
+                        .putString(SP_PHOTO_LINK, user.getPhotoLink());
+            }
             HelperMethods.setUser(user);
+            Log.d("UserSet","UserSet");
         }
         editor.commit();
 

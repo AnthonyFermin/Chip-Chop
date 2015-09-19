@@ -464,8 +464,8 @@ public class DBHelper extends Firebase {
                     Firebase fRef = new Firebase(URL + "UserProfiles/");
                     fRef.child(UID);
                     fRef.child(UID).child(sEmailAddress).setValue(authData.getProviderData().get("email"));
-                    fRef.child(UID).child(imageLink).setValue(authData.getProviderData().get("profileImageURL"));
-                    fRef.child(UID).child(sName).setValue(authData.getProviderData().get("displayName"));
+                   // fRef.child(UID).child(imageLink).setValue(authData.getProviderData().get("profileImageURL"));
+                   // fRef.child(UID).child(sName).setValue(authData.getProviderData().get("displayName"));
 
 //                    Intent intent = new Intent(mContext, SignupActivity2.class);
 //                    intent.putExtra("email", String.valueOf(authData.getProviderData().get("email")));

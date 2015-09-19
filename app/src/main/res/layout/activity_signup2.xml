@@ -12,6 +12,11 @@ android:layout_height="match_parent"
     tools:context="madelyntav.c4q.nyc.chipchop.SignupActivity2">
 
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/cc_logo_red"
+        android:layout_marginTop="15dp"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -154,6 +159,7 @@ android:layout_height="match_parent"
                         android:layout_width="70dp"
                         android:layout_height="wrap_content"
                         android:hint="State"
+                        android:inputType="textCapCharacters"
                         android:maxLength="2"
                         android:textSize="20sp" />
 

@@ -299,8 +299,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
     }
 
     private void setEditTexts(){
-        Log.d("SELLER INFO", "Is Cooking: " + seller.getIsCooking());
-        activity.setCookingStatus(seller.getIsCooking());
+        Log.d("SELLER INFO", "Is Cooking: " + activity.isCurrentlyCooking());
         if(activity.isCurrentlyCooking()){
             Log.d("SELLER INFO", "is Cooking!");
             cookingStatus.setChecked(true);
@@ -580,6 +579,9 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                         seller.setPhotoLink(imageLink);
                         seller.setPickUpAvailable(pickupSwitch.isChecked());
                         seller.setDeliveryAvailable(deliverSwitch.isChecked());
+
+                        activity.setSeller(seller);
+
 
                         activity.setSeller(seller);
                         dbHelper.sendSellerToActiveSellerTable(seller);

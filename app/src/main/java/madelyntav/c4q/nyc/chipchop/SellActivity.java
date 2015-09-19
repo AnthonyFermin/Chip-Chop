@@ -16,6 +16,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +27,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
@@ -46,17 +48,19 @@ import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 public class SellActivity extends AppCompatActivity {
 
+    public static final String TAG = "Sell Activity";
     Button contactButton;
     View coordinatorLayoutView;
     FrameLayout frameLayout;
     LinearLayout DrawerLinear;
+    RelativeLayout loadingPanel;
+
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private TextView drawerUserNameTV;
     private String[] mListTitles;
     private Fragment fragment;
     private ActionBarDrawerToggle mDrawerToggle;
-    SignupActivity1 signupActivity1;
 
     // for storing data between fragments in SellActivity
 
@@ -85,22 +89,15 @@ public class SellActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sell);
 
-
-        dbHelper = DBHelper.getDbHelper(this);
-
-        signupActivity1= new SignupActivity1();
         bindViews();
         initializeData();
         setUpNavActionBar();
         initializeUser();
 
-        if (savedInstanceState == null) {
-            selectItem(2);
-        }
-
     }
 
     private void setUpNavActionBar() {
+        Log.d(TAG,"Setting up Nav Drawer and Actionbar");
         contactButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -173,6 +170,9 @@ public class SellActivity extends AppCompatActivity {
     }
 
     private void initializeData() {
+        Log.d(TAG,"Initializing data");
+        dbHelper = DBHelper.getDbHelper(this);
+        sellerItems = new ArrayList<>();
         userInfoSP = getSharedPreferences(SignupActivity1.SP_USER_INFO, MODE_PRIVATE);
         emptyCallback = new DBCallback() {
             @Override
@@ -190,6 +190,7 @@ public class SellActivity extends AppCompatActivity {
     }
 
     private void bindViews(){
+        Log.d(TAG,"binding views");
         drawerUserNameTV = (TextView) findViewById(R.id.drawer_user_nameTV);
         frameLayout = (FrameLayout) findViewById(R.id.sellerFrameLayout);
         DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
@@ -197,9 +198,7 @@ public class SellActivity extends AppCompatActivity {
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         coordinatorLayoutView = findViewById(R.id.snackbarPosition);
         contactButton = (Button) findViewById(R.id.contact_button);
-
-
-
+        loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
     }
 
 
@@ -213,6 +212,8 @@ public class SellActivity extends AppCompatActivity {
 
 
     private void selectItem(int position) {
+        Log.d(TAG,"Selecting Fragment");
+        loadingPanel.setVisibility(View.GONE);
         // update the main content by replacing fragments
 
         if (position == 0) {
@@ -328,24 +329,68 @@ public class SellActivity extends AppCompatActivity {
     }
 
     private void initializeUser(){
-//        SharedPreferences sp = getSharedPreferences(SignupActivity1.SP_USER_INFO, MODE_PRIVATE);
-//        String email = sp.getString(SignupActivity1.SP_EMAIL, "");
-//        String name = sp.getString(SignupActivity1.SP_NAME, "");
-//        String address = sp.getString(SignupActivity1.SP_ADDRESS,"");
-//        String apt = sp.getString(SignupActivity1.SP_APT, "");
-//        String city = sp.getString(SignupActivity1.SP_CITY, "");
-//        String state = sp.getString(SignupActivity1.SP_STATE,"");
-//        String zip = sp.getString(SignupActivity1.SP_ZIPCODE, "");
-//        String phoneNumber = sp.getString(SignupActivity1.SP_PHONE_NUMBER, "");
-//        String photoLink = sp.getString(SignupActivity1.SP_PHOTO_LINK,"");
-
-
+        Log.d(TAG,"Initializing user");
         user=HelperMethods.getUser();
-//        Address userAddress = new Address(address, apt, city, state, zip, dbHelper.getUserID());
-//        user = new User(dbHelper.getUserID(), email, name, userAddress, phoneNumber);
-//        user.setPhotoLink(photoLink);
-
         drawerUserNameTV.setText(user.getName());
+
+        Log.d(TAG, "Loading Seller");
+        seller = dbHelper.getSellerFromDB(dbHelper.getUserID(), new DBCallback() {
+            @Override
+            public void runOnSuccess() {
+                Log.d("Load Seller Info", "Successful: " + dbHelper.getUserID());
+                setCookingStatus(seller.getIsCooking());
+                loadItems();
+            }
+
+            @Override
+            public void runOnFail() {
+                //new seller
+                Log.d("Load Seller Info", "Failed: " + dbHelper.getUserID());
+                seller = null;
+                selectItem(2);
+            }
+        });
+    }
+
+    private void loadItems() {
+        Log.d(TAG,"Loading Seller Items");
+        if (isCurrentlyCooking()) {
+            Log.d("SELLER ID","ID: " + dbHelper.getUserID());
+            dbHelper.getSellersOnSaleItems(dbHelper.getUserID(), new DBCallback() {
+                @Override
+                public void runOnSuccess() {
+                    Log.d(TAG,"On Sale Items Loaded Successfully");
+                    sellerItems.addAll(dbHelper.getSellersOnSaleItems(dbHelper.getUserID(),emptyCallback));
+                    selectItem(2);
+                }
+
+                @Override
+                public void runOnFail() {
+                    Log.d(TAG,"On Sale Items Failed to Load");
+                    sellerItems = null;
+                    selectItem(2);
+                }
+            });
+        } else {
+            dbHelper.getSellerItems(dbHelper.getUserID(), new DBCallback() {
+                @Override
+                public void runOnSuccess() {
+                    Log.d(TAG,"Seller Items Loaded Successfully");
+                    sellerItems.addAll(dbHelper.getSellerItems(dbHelper.getUserID(), emptyCallback));
+                    selectItem(2);
+                }
+
+                @Override
+                public void runOnFail() {
+                    Log.d(TAG,"Seller Items Failed to Load");
+                    sellerItems = null;
+                    Snackbar
+                            .make(coordinatorLayoutView, "Unable To Load Items, Please Try Again", Snackbar.LENGTH_SHORT)
+                            .show();
+                    selectItem(2);
+                }
+            });
+        }
     }
 
     // for storing data between fragments in SellActivity

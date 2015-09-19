@@ -256,7 +256,6 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
             Log.d("SELLER INFO", "isCooking: " + seller.getIsCooking());
             setEditTexts();
 
-
             ShowcaseConfig config = new ShowcaseConfig();
             config.setMaskColor(R.drawable.chipchop);
             config.setDelay(300); // half second between each showcase view
@@ -294,6 +293,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                     .show();
             setEditTexts();
         }
+
         activity.setSeller(seller);
         loadingPanel.setVisibility(View.GONE);
         containingView.setVisibility(View.VISIBLE);
@@ -418,7 +418,6 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                 }else{
                     scaledBitmap = Bitmap.createScaledBitmap(bitmap, 500,333, false);
                 }
-
 
                 File file = new File(filePath);
                 FileOutputStream fOut = null;

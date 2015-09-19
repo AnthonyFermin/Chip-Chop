@@ -146,6 +146,7 @@ public class BuyActivity extends AppCompatActivity {
     }
 
     private void clearLogin() {
+        dbHelper.removeSellersFromActiveSellers(new Seller(dbHelper.getUserID()), emptyCallback);
         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         loadingPanel.setVisibility(View.GONE);
@@ -584,6 +585,7 @@ public class BuyActivity extends AppCompatActivity {
                         HelperMethods.setOrderToReview(order);
                         FragmentManager fm = getSupportFragmentManager();
                         ReviewDialogFragment alertDialog = new ReviewDialogFragment();
+                        //try catch needed for when this is called right when switching to another activity
                         try {
                             alertDialog.show(fm, "fragment_alert");
                         }catch(IllegalStateException e){

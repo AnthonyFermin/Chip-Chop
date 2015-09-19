@@ -9,17 +9,29 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/sellerFrameLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        <FrameLayout
+            android:id="@+id/sellerFrameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-    <android.support.design.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:id="@+id/snackbarPosition">
-    </android.support.design.widget.CoordinatorLayout>
+        <android.support.design.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/snackbarPosition">
+        </android.support.design.widget.CoordinatorLayout>
+
+        <RelativeLayout
+            style="@style/GenericProgressBackground"
+            android:id="@+id/loadingPanel"
+            >
+            <ProgressBar
+                android:progressDrawable="@drawable/progressbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"/>
+        </RelativeLayout>
 
 </RelativeLayout>
 

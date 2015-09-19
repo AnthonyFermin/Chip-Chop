@@ -253,7 +253,7 @@ public class SellActivity extends AppCompatActivity {
     }
 
     private void clearLogin() {
-        dbHelper.setSellerCookingStatus(false);
+        dbHelper.setSellerCookingStatus(dbHelper.getUserID(),false);
         dbHelper.removeSellersFromActiveSellers(seller, emptyCallback);
         userInfoSP.edit().clear().commit();
         dbHelper.signOutUser(emptyCallback);

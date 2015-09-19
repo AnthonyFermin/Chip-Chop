@@ -146,6 +146,7 @@ public class BuyActivity extends AppCompatActivity {
     }
 
     private void clearLogin() {
+        dbHelper.setSellerCookingStatus(dbHelper.getUserID(),false);
         dbHelper.removeSellersFromActiveSellers(new Seller(dbHelper.getUserID()), emptyCallback);
         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         mDrawerToggle.setDrawerIndicatorEnabled(true);

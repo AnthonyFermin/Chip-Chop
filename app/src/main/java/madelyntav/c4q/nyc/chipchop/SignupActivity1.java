@@ -300,22 +300,29 @@ public class SignupActivity1 extends AppCompatActivity implements GoogleApiClien
                         @Override
                         public void runOnSuccess() {
                             Log.d("OUTUID", dbHelper.getUserID());
-                            HelperMethods.setUser(user);
-                            email=user.geteMail();
-                            password = getSharedPreferences("user_info", Context.MODE_PRIVATE).getString("password","");
-                            Log.d("password123",password);
-                            loadingPanel.setVisibility(View.GONE);
-                            containingView.setVisibility(View.VISIBLE);
-                            storeUserInfo();
+                            email = user.geteMail();
+                            password = getSharedPreferences("user_info", Context.MODE_PRIVATE).getString("password", "");
                             Intent intent;
-                            if(toSellActivity){
-                                intent = new Intent(SignupActivity1.this,SellActivity.class);
+                            if(user.getAddressString() == null){
+                                Log.d("FACEBOOK LOGIN","NEW USER");
+                                intent = new Intent(SignupActivity1.this, SignupActivity2.class);
+                                intent.putExtra(BuyActivity.TO_SELL_ACTIVITY, toSellActivity).putExtra("email", email)
+                                        .putExtra("pass",password).putExtra("name",user.getName());
+                                startActivity(intent);
+                            }else {
+                                HelperMethods.setUser(user);
+                                Log.d("password123", password);
+                                loadingPanel.setVisibility(View.GONE);
+                                containingView.setVisibility(View.VISIBLE);
+                                storeUserInfo();
+                                if (toSellActivity) {
+                                    intent = new Intent(SignupActivity1.this, SellActivity.class);
+                                } else {
+                                    intent = new Intent(SignupActivity1.this, BuyActivity.class);
+                                }
+                                startActivity(intent);
+                                finish();
                             }
-                            else{
-                                intent = new Intent(SignupActivity1.this,BuyActivity.class);
-                            }
-                            startActivity(intent);
-                            finish();
                         }
 
                         @Override

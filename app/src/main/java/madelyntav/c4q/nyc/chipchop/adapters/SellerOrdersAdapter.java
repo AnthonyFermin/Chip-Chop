@@ -86,7 +86,7 @@ public class SellerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         String deliveryMethod = "";
         Order order = orderItems.get(position);
         SellerOrdersViewHolder vh = (SellerOrdersViewHolder) viewHolder;
-        vh.nameOfBuyer.setText("Buyer Id: " + order.getBuyerID());
+        vh.nameOfBuyer.setText("Buyer Name: " + order.getBuyerName());
         vh.orderID.setText("Order Id: " + order.getOrderID());
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(order.getTimeStamp());

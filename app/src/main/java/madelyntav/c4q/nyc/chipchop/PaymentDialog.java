@@ -136,7 +136,7 @@ public class PaymentDialog extends android.support.v4.app.DialogFragment {
             Log.d("Checkout Item","          ------");
         }
 
-        total = 1;
+        total = 0;
         for(Item item: cartItems){
             item.setBuyerID(dbHelper.getUserID());
             total = total + (item.getPrice() * item.getQuantityWanted());

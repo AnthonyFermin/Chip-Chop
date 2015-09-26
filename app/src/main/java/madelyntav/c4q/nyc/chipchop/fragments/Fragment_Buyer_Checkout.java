@@ -126,10 +126,10 @@ public class Fragment_Buyer_Checkout extends Fragment {
             Log.d("Checkout Item","          ------");
         }
 
-        total = 1;
+        total = 0;
         for(Item item: cartItems){
             item.setBuyerID(dbHelper.getUserID());
-            total = total + (item.getPrice() * item.getQuantityWanted() + 1);
+            total = total + (item.getPrice() * item.getQuantityWanted());
         }
     }
 

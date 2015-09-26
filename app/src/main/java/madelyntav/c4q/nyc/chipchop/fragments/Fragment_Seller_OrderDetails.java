@@ -4,9 +4,12 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -18,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -26,6 +30,7 @@ import madelyntav.c4q.nyc.chipchop.DBCallback;
 import madelyntav.c4q.nyc.chipchop.DBObjects.DBHelper;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Item;
 import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
+import madelyntav.c4q.nyc.chipchop.HelperMethods;
 import madelyntav.c4q.nyc.chipchop.R;
 import madelyntav.c4q.nyc.chipchop.SellActivity;
 import madelyntav.c4q.nyc.chipchop.adapters.CheckoutListAdapter;
@@ -36,8 +41,11 @@ import madelyntav.c4q.nyc.chipchop.adapters.CheckoutListAdapter;
 public class Fragment_Seller_OrderDetails extends Fragment {
 
     FloatingActionButton completedButton;
+    TextView totalTV, buyerAddressTV, deliveryMethodTV, nameOfBuyerTV, orderIDTV;
+
     private ArrayList<Item> foodItems;
     private RecyclerView foodList;
+    private View coordinatorLayoutView;
 
     public static final String TAG = "fragment_seller_order_details";
 
@@ -66,13 +74,15 @@ public class Fragment_Seller_OrderDetails extends Fragment {
         completedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dbHelper.changeOrderActiveStatus(order);
-                Toast.makeText(activity,"Order Complete",Toast.LENGTH_SHORT).show();
 
                 dbHelper.moveOrderFromActiveToFulfilled(dbHelper.getUserID(), order.getOrderID(), order.getBuyerID(), new DBCallback() {
                     @Override
                     public void runOnSuccess() {
-
+                        completedButton.setEnabled(false);
+                        completedButton.setVisibility(View.GONE);
+                        Snackbar
+                                .make(coordinatorLayoutView, "Order Complete", Snackbar.LENGTH_SHORT)
+                                .show();
                     }
 
                     @Override
@@ -85,8 +95,36 @@ public class Fragment_Seller_OrderDetails extends Fragment {
     }
 
     private void bindViews(View root) {
+        coordinatorLayoutView = root.findViewById(R.id.snackbarPosition);
+
         foodList = (RecyclerView) root.findViewById(R.id.checkout_items_list);
         completedButton = (FloatingActionButton) root.findViewById(R.id.completedButton);
+        completedButton.setEnabled(order.isActive());
+        if(!order.isActive()){
+            completedButton.setVisibility(View.GONE);
+        }
+
+        totalTV = (TextView) root.findViewById(R.id.total_price_tv);
+        buyerAddressTV = (TextView) root.findViewById(R.id.buyer_address_tv);
+        deliveryMethodTV = (TextView) root.findViewById(R.id.delivery_method_tv);
+        nameOfBuyerTV = (TextView) root.findViewById(R.id.buyer_name_tv);
+        orderIDTV = (TextView) root.findViewById(R.id.orderdetail_id_tv);
+
+        totalTV.setText("$ " + order.getPrice());
+        if(order.getBuyerAddress() != null)
+            buyerAddressTV.setText(order.getBuyerAddress().replace("null","").replace(", ,",",").trim());
+        else
+            buyerAddressTV.setVisibility(View.GONE);
+
+        String deliveryMethod = "";
+        if(order.isPickup()) {
+            deliveryMethod = "Pickup";
+        } else {
+            deliveryMethod = "Delivery";
+        }
+        deliveryMethodTV.setText(deliveryMethod);
+        nameOfBuyerTV.setText(order.getBuyerName());
+        orderIDTV.setText(order.getOrderID());
     }
 
     private void initializeData() {
@@ -98,10 +136,11 @@ public class Fragment_Seller_OrderDetails extends Fragment {
             Log.d("ORDER DETAILS", "" + order.getOrderID());
         }
         Log.d("ORDER DETAILS","Order: " + order);
-
-        foodItems = dbHelper.getReceiptForSpecificOrderForSeller(order.getOrderID(), dbHelper.getUserID(), new DBCallback() {
+        foodItems= new ArrayList<>();
+        foodItems = dbHelper.getReceiptForSpecificPreviouslySoldOrderSeller(order.getOrderID(), dbHelper.getUserID(), new DBCallback() {
             @Override
             public void runOnSuccess() {
+                Log.d("FoodItems",foodItems.toString());
                 Log.d("ORDER DETAILS", "ORDER ITEMS LOADED");
                 for (Item item : foodItems) {
                     Log.d("ORDER DETAILS ITEM", "item name: " + item.getNameOfItem());

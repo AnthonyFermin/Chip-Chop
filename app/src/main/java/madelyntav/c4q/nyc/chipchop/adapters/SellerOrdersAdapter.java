@@ -1,6 +1,7 @@
 package madelyntav.c4q.nyc.chipchop.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -44,6 +45,7 @@ public class SellerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView deliveryMethod;
         TextView buyerAddress;
         TextView timeStamp;
+        TextView isActive;
 
 
         public SellerOrdersViewHolder(View itemView) {
@@ -56,6 +58,7 @@ public class SellerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             orderID = (TextView) itemView.findViewById(R.id.order_id_tv);
             deliveryMethod = (TextView) itemView.findViewById(R.id.delivery_method_tv);
             buyerAddress = (TextView) itemView.findViewById(R.id.buyer_address_tv);
+            isActive = (TextView) itemView.findViewById(R.id.is_active_tv);
 
             container.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -104,6 +107,13 @@ public class SellerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     "\n" + order.getBuyerAddress());
         } else {
             vh.buyerAddress.setVisibility(View.GONE);
+        }
+        if(order.isActive()){
+            vh.isActive.setText("Incomplete");
+            vh.isActive.setTextColor(Color.RED);
+        }else{
+            vh.isActive.setText("Complete");
+            vh.isActive.setTextColor(Color.GREEN);
         }
 
         setAnimation(vh.container, position);

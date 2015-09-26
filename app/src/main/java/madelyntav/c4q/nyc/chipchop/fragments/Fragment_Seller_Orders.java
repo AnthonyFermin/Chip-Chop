@@ -130,6 +130,18 @@ public class Fragment_Seller_Orders extends Fragment {
                         }
                     });
 
+                    Collections.sort(foodOrders, new Comparator<Order>() {
+                        @Override
+                        public int compare(Order order, Order t1) {
+                            if(order.isActive() && !t1.isActive()){
+                                return -1;
+                            }else if(!order.isActive() && t1.isActive()){
+                                return 1;
+                            }
+                            return 0;
+                        }
+                    });
+
                     setListAdapter();
                     Log.d("LOAD ORDERS", "Complete");
                 }

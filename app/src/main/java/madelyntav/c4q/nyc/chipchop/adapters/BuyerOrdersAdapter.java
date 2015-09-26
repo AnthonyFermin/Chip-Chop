@@ -100,7 +100,7 @@ public class BuyerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
 
         vh.deliveryMethod.setText("DELIVERY METHOD: " + deliveryMethod);
-        if (order.isPickup()) {
+        if (order.isPickup() && order.getSellerAddress() != null) {
             vh.sellerAddress.setText("SELLER ADDRESS: \n\n" + order.getSellerAddress().replace("null","").replace(", ,",","));
         } else {
             vh.sellerAddress.setVisibility(View.GONE);

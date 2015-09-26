@@ -437,7 +437,7 @@ public class DBHelper extends Firebase {
         Firebase ref = new Firebase(URL);
         Log.d("Tok In DB preAuth", "Token");
 
-        Log.d("Token Is:", token.toString());
+//        Log.d("Token Is:", token.toString());
 
         if (token != null) {
 
@@ -1831,8 +1831,8 @@ public class DBHelper extends Firebase {
     public ArrayList<Item> getReceiptForSpecificOrderForSeller(String orderID, String sellerId, final DBCallback dbCallback) {
         this.sellerId = sellerId;
         this.orderID = orderID;
-        Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId + "/Orders/" + orderID + "/items");
-
+        Firebase fRef = new Firebase(URL + "ActiveSellers/" + sellerId + "/Orders/" + orderID + "/items");
+        Log.d("OSLGOTO",fRef.toString());
         fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -1875,25 +1875,63 @@ public class DBHelper extends Firebase {
             }
         });
 
-        if (receiptForSpecificOrder.size() == sizeofAddDBList) {
-            updateReceipt(dbCallback);
-        }
         return receiptForSpecificOrder;
     }
 
+    //Method to get Item Details For Buyer Receipt. Only returning details needed for receipt
+    public ArrayList<Item> getReceiptForSpecificPreviouslySoldOrderSeller(String orderID, String sellerId, final DBCallback dbCallback) {
+        this.sellerId = sellerId;
+        this.orderID = orderID;
+        Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId + "/PreviouslySold/" + orderID + "/items");
+        Log.d("OSLGOTO",fRef.toString());
+        fRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                sizeofAddDBList = dataSnapshot.getChildrenCount();
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Item item = dataSnapshot1.getValue(Item.class);
 
-    public ArrayList<Item> updateReceiptForSeller(DBCallback dbCallback) {
-        if (receiptForSpecificOrder.size() < sizeofAddDBList) {
-            getReceiptForSpecificOrderForSeller(orderID, sellerId, callback);
-        }
-        dbCallback.runOnSuccess();
+                    item.setItemID(dataSnapshot1.getKey());
+                    item.setQuantity(item.quantityWanted);
+                    item.setSellerID(item.sellerID);
+                    item.setBuyerID(item.buyerID);
+                    item.setItemID(dataSnapshot1.getKey());
+                    item.setNameOfItem(item.nameOfItem);
+                    item.setPrice(item.price);
+                    item.setSellerPhoneNumber(item.sellerPhoneNumber);
+                    item.setBuyerPhoneNumber(item.buyerPhoneNumber);
+                    item.setQuantity(item.quantity);
+                    item.setIsVegetarian(item.isVegetarian);
+                    item.setImageLink(item.imageLink);
+                    item.setContainsDairy(item.containsDairy);
+                    item.setContainsEggs(item.containsEggs);
+                    item.setContainsPeanuts(item.containsPeanuts);
+                    item.setContainsShellfish(item.containsShellfish);
+                    item.setGlutenFree(item.glutenFree);
+
+                    if (receiptForSpecificOrder.size() < sizeofAddDBList) {
+                        receiptForSpecificOrder.add(item);
+                    }
+                }
+                dbCallback.runOnSuccess();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Snackbar
+                        .make(SignupActivity1.coordinatorLayoutView, "Unable To Retrieve Orders Please Try Again", Snackbar.LENGTH_SHORT)
+                        .show();
+                Toast.makeText(mContext, "Unable To Retrieve Orders Please Try Again", Toast.LENGTH_SHORT).show();
+                dbCallback.runOnFail();
+            }
+        });
+
         return receiptForSpecificOrder;
     }
 
     public ArrayList<Order> getAllPreviouslySoldOrders(String sellerId, final DBCallback dbCallback) {
-        this.sellerId = sellerId;
 
-        Firebase fRef = new Firebase(URL + "ActiveSellers/" + sellerId + "/Orders/");
+        Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId + "/PreviouslySold/");
         fRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -2937,12 +2975,13 @@ public class DBHelper extends Firebase {
 
     //May want to implement this later
     public void moveOrderFromActiveToFulfilled(String sellerId, String orderID, String buyerID, DBCallback dbCallback) {
-        this.sellerId = sellerId;
-        this.UID = buyerID;
 
-        Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId + "/Orders/" + "/" + UID);
+        Firebase fRef = new Firebase(URL + "SellerProfiles/" + sellerId + "/PreviouslySold/" + orderID);
+        Log.d("SetOrderComplete","URL: " + fRef.getPath().toString());
+        Log.d("SetOrderComplete","Seller ID: " + sellerId);
+        Log.d("SetOrderComplete","order ID: " + orderID);
 
-        fRef.child(buyerID).removeValue();
+        fRef.child("isActive").setValue(false);
         dbCallback.runOnSuccess();
     }
 

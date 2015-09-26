@@ -111,7 +111,9 @@ public class Fragment_Buyer_OrderDetails extends Fragment {
         }
 
         deliveryMethod.setText("DELIVERY METHOD: " + deliverMethod);
-        sellerAddress.setText("SELLER ADDRESS: \n\n" + orderToView.getSellerAddress().replace("null","").replace(", ,",","));
+        if(orderToView.getSellerAddress() != null) {
+            sellerAddress.setText("SELLER ADDRESS: \n\n" + orderToView.getSellerAddress().replace("null", "").replace(", ,", ","));
+        }
 
 
         return root;

@@ -2,6 +2,7 @@ package madelyntav.c4q.nyc.chipchop;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,12 +37,12 @@ public class DeliveryDialog extends android.support.v4.app.DialogFragment {
 
     private void initializeViews() {
         if(seller.isDeliveryAvailable()){
-            deliverButton.setVisibility(View.VISIBLE);
+            deliverButton.setEnabled(true);
         }
 
         if(!seller.isPickUpAvailable()){
-            deliverButton.setVisibility(View.VISIBLE);
-            pickupButton.setVisibility(View.GONE);
+            deliverButton.setEnabled(true);
+            pickupButton.setEnabled(false);
         }
     }
 
@@ -51,6 +52,8 @@ public class DeliveryDialog extends android.support.v4.app.DialogFragment {
             public void onClick(View view) {
                 HelperMethods.getCurrentOrder().setToDeliver(true);
                 HelperMethods.getCurrentOrder().setIsPickup(false);
+                HelperMethods.getCurrentOrder().setBuyerAddress(HelperMethods.getUser().getAddressString());
+                Log.d("DELIVERY SELECTED", "BUYER ADDRESS: " + HelperMethods.getCurrentOrder().getBuyerAddress());
                 getDialog().dismiss();
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 PaymentDialog alertDialog = new PaymentDialog();
@@ -64,6 +67,9 @@ public class DeliveryDialog extends android.support.v4.app.DialogFragment {
             public void onClick(View view) {
                 HelperMethods.getCurrentOrder().setIsPickup(true);
                 HelperMethods.getCurrentOrder().setToDeliver(false);
+                HelperMethods.getCurrentOrder().setSellerAddress(HelperMethods.getSellerToView().getAddressString());
+                Log.d("PICKUP SELECTED","SELLER ADDRESS: " + HelperMethods.getCurrentOrder().getSellerAddress());
+
                 getDialog().dismiss();
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 PaymentDialog alertDialog = new PaymentDialog();

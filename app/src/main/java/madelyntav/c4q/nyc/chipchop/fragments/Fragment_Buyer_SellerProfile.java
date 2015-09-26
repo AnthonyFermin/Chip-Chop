@@ -218,7 +218,19 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
         order.setStoreName(seller.getStoreName());
         order.setSellerName(seller.getName());
         order.setSellerAddress(seller.getAddressString());
+        order.setBuyerAddress(HelperMethods.getUser().getAddressString());
+
+        Log.d("Order Info BSP", "Seller ID: " + order.getSellerID());
+        Log.d("Order Info BSP", "Buyer ID: " + order.getBuyerID());
+        Log.d("Order Info BSP", "Total Price: $" + order.getPrice());
+        Log.d("Order Info BSP", "Store Name: " + order.getStoreName());
+        Log.d("Order Info BSP", "Time Bought: " + order.getTimeStamp());
+        Log.d("Order Info BSP", "Seller Address: " + order.getSellerAddress());
+        Log.d("Order Info BSP", "Buyer Address: " + order.getBuyerAddress());
         activity.setCurrentOrder(order);
+
+
+
     }
 
 }

@@ -574,6 +574,7 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
                         Log.d("Seller Info", seller.getUID() + "");
                         Log.d("Seller Info", seller.getName() + "");
                         Log.d("Seller Info", seller.getStoreName() + "");
+                        Log.d("Seller Info", seller.getAddressString() + "");
                         seller.setIsCooking(true);
                         dbHelper.setSellerCookingStatus(true);
                         seller.setPhotoLink(imageLink);

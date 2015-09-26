@@ -82,6 +82,8 @@ public class PaymentDialog extends android.support.v4.app.DialogFragment {
                 Log.d("Order Info","Total Price: $" + order.getPrice());
                 Log.d("Order Info", "Store Name: " + order.getStoreName());
                 Log.d("Order Info", "Time Bought: " + order.getTimeStamp());
+                Log.d("Order Info", "Seller Address: " + order.getSellerAddress());
+                Log.d("Order Info", "Buyer Address: " + order.getBuyerAddress());
                 dbHelper.addCurrentOrderToSellerDB(order, new DBCallback() {
                     @Override
                     public void runOnSuccess() {

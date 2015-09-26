@@ -64,23 +64,23 @@ public class Fragment_Buyer_Checkout extends Fragment {
             @Override
             public void onClick(View view) {
 
-                if(  !(seller.isDeliveryAvailable() && seller.isPickUpAvailable())  ){
-                    if(seller.isDeliveryAvailable()){
-                        HelperMethods.getCurrentOrder().setToDeliver(true);
-                        HelperMethods.getCurrentOrder().setIsPickup(false);
-                    }else{
-                        HelperMethods.getCurrentOrder().setIsPickup(true);
-                        HelperMethods.getCurrentOrder().setToDeliver(false);
-                    }
-                    FragmentManager fm = getActivity().getSupportFragmentManager();
-                    PaymentDialog alertDialog = new PaymentDialog();
-                    alertDialog.show(fm, "fragment_alert");
-                }else {
+//                if(!(seller.isDeliveryAvailable() && seller.isPickUpAvailable())  ){
+//                    if(seller.isDeliveryAvailable()){
+//                        HelperMethods.getCurrentOrder().setToDeliver(true);
+//                        HelperMethods.getCurrentOrder().setIsPickup(false);
+//                    }else{
+//                        HelperMethods.getCurrentOrder().setIsPickup(true);
+//                        HelperMethods.getCurrentOrder().setToDeliver(false);
+//                    }
+//                    FragmentManager fm = getActivity().getSupportFragmentManager();
+//                    PaymentDialog alertDialog = new PaymentDialog();
+//                    alertDialog.show(fm, "fragment_alert");
+//                }else {
 
                     FragmentManager fm = activity.getSupportFragmentManager();
                     DeliveryDialog alertDialog = new DeliveryDialog();
                     alertDialog.show(fm, "fragment_alert");
-                }
+//                }
 
             }
         });

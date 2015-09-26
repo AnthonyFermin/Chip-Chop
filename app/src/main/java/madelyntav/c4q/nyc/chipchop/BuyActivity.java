@@ -19,6 +19,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -226,11 +228,17 @@ public class BuyActivity extends AppCompatActivity {
                 new Toolbar(this), R.string.drawer_open,
                 R.string.drawer_close) {
 
+            final ImageView myImage = (ImageView)findViewById(R.id.profile_image);
             public void onDrawerClosed(View view) {
-//
+                myImage.setVisibility(View.INVISIBLE);
             }
 
             public void onDrawerOpened(View drawerView) {
+
+
+                myImage.setVisibility(View.VISIBLE);
+                final Animation myRotation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
+                myImage.startAnimation(myRotation);
 
                 sellButton = (Button) findViewById(R.id.sellButton);
 

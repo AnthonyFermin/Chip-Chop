@@ -13,7 +13,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +23,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -64,7 +66,7 @@ import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     View coordinatorLayoutView;
-    FloatingActionButton refreshButton;
+    ImageButton refreshButton;
     ImageView arrowImage;
     public SlidingUpPanelLayout slidingPanel;
     public final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
@@ -215,7 +217,10 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
     private void bindViews() {
         arrowImage = (ImageView) root.findViewById(R.id.arrow_image);
         itemsRView = (RecyclerView) root.findViewById(R.id.buyers_orders_list);
-        refreshButton = (FloatingActionButton) root.findViewById(R.id.refresh_button);
+        refreshButton = (ImageButton) root.findViewById(R.id.refresh_button);
+
+        final Animation myRotation = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate);
+        refreshButton.startAnimation(myRotation);
 
         coordinatorLayoutView = root.findViewById(R.id.snackbarPosition);
         slidingPanel = (SlidingUpPanelLayout) root.findViewById(R.id.slidinglayout);

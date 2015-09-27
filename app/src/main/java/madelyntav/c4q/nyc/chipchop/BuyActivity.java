@@ -242,6 +242,10 @@ public class BuyActivity extends AppCompatActivity {
 
                 sellButton = (Button) findViewById(R.id.sellButton);
 
+                Animation shake = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake);
+                drawerUserNameTV.startAnimation(shake);
+
+
                 new MaterialShowcaseView.Builder(BuyActivity.this)
                         .setTarget(sellButton)
                         .setMaskColour(R.drawable.showcase)
@@ -300,6 +304,9 @@ public class BuyActivity extends AppCompatActivity {
 
     private void bindViews() {
         drawerUserNameTV = (TextView) findViewById(R.id.drawer_user_nameTV);
+
+
+
         frameLayout = (FrameLayout) findViewById(R.id.sellerFrameLayout);
         DrawerLinear = (LinearLayout) findViewById(R.id.DrawerLinear);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);

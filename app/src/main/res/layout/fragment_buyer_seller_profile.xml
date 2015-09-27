@@ -141,6 +141,7 @@
         app:backgroundTint="#D42028"
         android:layout_above="@+id/seller_items_list"
         app:elevation="6dp"
-        app:pressedTranslationZ="12dp"/>
+        app:pressedTranslationZ="12dp"
+        app:layout_behavior="com.support.android.designlibdemo.ScrollAwareFABBehavior"/>
 
 </RelativeLayout>

@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
@@ -121,6 +120,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
             public void onClick(View view) {
                 // TODO: WRITE CODE TO REFRESH RECYCLERVIEW !!
                 activity.replaceFragment(new Fragment_Buyer_Map());
+
             }
         });
 
@@ -216,6 +216,7 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
         arrowImage = (ImageView) root.findViewById(R.id.arrow_image);
         itemsRView = (RecyclerView) root.findViewById(R.id.buyers_orders_list);
         refreshButton = (FloatingActionButton) root.findViewById(R.id.refresh_button);
+
         coordinatorLayoutView = root.findViewById(R.id.snackbarPosition);
         slidingPanel = (SlidingUpPanelLayout) root.findViewById(R.id.slidinglayout);
 

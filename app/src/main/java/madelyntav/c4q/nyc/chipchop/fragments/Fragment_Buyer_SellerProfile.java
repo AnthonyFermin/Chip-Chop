@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -161,8 +163,10 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
         cartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 BuyActivity activity = (BuyActivity) getActivity();
                 activity.replaceFragment(new Fragment_Buyer_ViewCart());
+
             }
         });
     }
@@ -179,9 +183,20 @@ public class Fragment_Buyer_SellerProfile extends Fragment {
         containingView.setVisibility(View.INVISIBLE);
 
         cartButton = (android.support.design.widget.FloatingActionButton) root.findViewById(R.id.viewCartButton);
+
+
         foodList = (RecyclerView) root.findViewById(R.id.seller_items_list);
         storeImage = (CircleImageView) root.findViewById(R.id.profile_image);
+
+        storeImage.setVisibility(View.VISIBLE);
+        final Animation myRotation = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate);
+        storeImage.startAnimation(myRotation);
+
+
         storeName = (TextView) root.findViewById(R.id.seller_name);
+        Animation shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
+        storeName.startAnimation(shake);
+
         storeDescription = (TextView) root.findViewById(R.id.store_description);
         coordinatorLayoutView = root.findViewById(R.id.snackbarPosition);
         ratingBar = (RatingBar) root.findViewById(R.id.rating_bar);

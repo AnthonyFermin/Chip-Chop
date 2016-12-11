@@ -24,7 +24,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RatingBar;
@@ -109,11 +108,11 @@ public class BuyActivity extends AppCompatActivity {
         mDrawerToggle.setDrawerIndicatorEnabled(false);
         loadingPanel.setVisibility(View.VISIBLE);
 
-        userInfoSP = getSharedPreferences(SignupActivity1.SP_USER_INFO, MODE_PRIVATE);
-        boolean isLoggedIn = userInfoSP.getBoolean(SignupActivity1.SP_IS_LOGGED_IN, false);
+        userInfoSP = getSharedPreferences(Constants.USER_INFO_KEY, MODE_PRIVATE);
+        boolean isLoggedIn = userInfoSP.getBoolean(Constants.IS_LOGGED_IN_KEY, false);
         if (isLoggedIn) {
-            String email = userInfoSP.getString(SignupActivity1.SP_EMAIL, null);
-            String pass = userInfoSP.getString(SignupActivity1.SP_PASS, null);
+            String email = userInfoSP.getString(Constants.EMAIL_KEY, null);
+            String pass = userInfoSP.getString(Constants.PASSWORD_KEY, null);
             Log.d("{ASSWRRR",pass);
 
             if (email != null && pass != null) {
@@ -168,7 +167,7 @@ public class BuyActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        boolean isLoggedIn = userInfoSP.getBoolean(SignupActivity1.SP_IS_LOGGED_IN, false);
+        boolean isLoggedIn = userInfoSP.getBoolean(Constants.IS_LOGGED_IN_KEY, false);
         if (isLoggedIn) {
 
         }
@@ -262,7 +261,7 @@ public class BuyActivity extends AppCompatActivity {
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Intent signUpIntent = new Intent(getApplicationContext(), SignupActivity1.class);
+                                    Intent signUpIntent = new Intent(getApplicationContext(), SignUpFirstActivity.class);
                                     signUpIntent.putExtra(TO_SELL_ACTIVITY, true);
                                     startActivity(signUpIntent);
                                     finish();
@@ -349,7 +348,7 @@ public class BuyActivity extends AppCompatActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        startActivity(new Intent(BuyActivity.this, SignupActivity1.class));
+                        startActivity(new Intent(BuyActivity.this, SignUpFirstActivity.class));
                     }
                 }, 1500);
             }
@@ -364,13 +363,13 @@ public class BuyActivity extends AppCompatActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        startActivity(new Intent(BuyActivity.this, SignupActivity1.class));
+                        startActivity(new Intent(BuyActivity.this, SignUpFirstActivity.class));
                     }
                 }, 1500);
             }
         } else if (position == 3) {
             //SIGN OUT/IN DRAWER ITEM
-            boolean isLoggedIn = userInfoSP.getBoolean(SignupActivity1.SP_IS_LOGGED_IN, false);
+            boolean isLoggedIn = userInfoSP.getBoolean(Constants.IS_LOGGED_IN_KEY, false);
             if (isLoggedIn) {
                 clearLogin();
                 user = null;
@@ -385,7 +384,7 @@ public class BuyActivity extends AppCompatActivity {
                 }
 
             } else {
-                Intent intent = new Intent(BuyActivity.this, SignupActivity1.class);
+                Intent intent = new Intent(BuyActivity.this, SignUpFirstActivity.class);
                 startActivity(intent);
                 finish();  // killing the activity for now when switching to another activity
             }
@@ -477,15 +476,15 @@ public class BuyActivity extends AppCompatActivity {
 
     private void load() {
 
-        String name = userInfoSP.getString(SignupActivity1.SP_NAME, "");
-        String email = userInfoSP.getString(SignupActivity1.SP_EMAIL, "");
-        String streetAddress = userInfoSP.getString(SignupActivity1.SP_ADDRESS, "");
-        String apt = userInfoSP.getString(SignupActivity1.SP_APT, "");
-        String city = userInfoSP.getString(SignupActivity1.SP_CITY, "");
-        String state = userInfoSP.getString(SignupActivity1.SP_STATE, "");
-        String zipcode = userInfoSP.getString(SignupActivity1.SP_ZIPCODE, "");
-        String phoneNumber = userInfoSP.getString(SignupActivity1.SP_PHONE_NUMBER, "");
-        String photoLink = userInfoSP.getString(SignupActivity1.SP_PHOTO_LINK, "");
+        String name = userInfoSP.getString(Constants.NAME_KEY, "");
+        String email = userInfoSP.getString(Constants.EMAIL_KEY, "");
+        String streetAddress = userInfoSP.getString(Constants.ADDRESS_KEY, "");
+        String apt = userInfoSP.getString(Constants.APT_KEY, "");
+        String city = userInfoSP.getString(Constants.CITY_KEY, "");
+        String state = userInfoSP.getString(Constants.STATE_KEY, "");
+        String zipcode = userInfoSP.getString(Constants.ZIPCODE_KEY, "");
+        String phoneNumber = userInfoSP.getString(Constants.PHONE_NUMBER_KEY, "");
+        String photoLink = userInfoSP.getString(Constants.PHOTO_LINK_KEY, "");
         Address address = new Address(streetAddress, apt, city, state, zipcode, dbHelper.getUserID());
 
         user = new User(dbHelper.getUserID(), email, name, address, photoLink, phoneNumber);

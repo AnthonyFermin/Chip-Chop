@@ -173,7 +173,7 @@ public class SellActivity extends AppCompatActivity {
         Log.d(TAG,"Initializing data");
         dbHelper = DBHelper.getDbHelper(this);
         sellerItems = new ArrayList<>();
-        userInfoSP = getSharedPreferences(SignupActivity1.SP_USER_INFO, MODE_PRIVATE);
+        userInfoSP = getSharedPreferences(Constants.USER_INFO_KEY, MODE_PRIVATE);
         emptyCallback = new DBCallback() {
             @Override
             public void runOnSuccess() {

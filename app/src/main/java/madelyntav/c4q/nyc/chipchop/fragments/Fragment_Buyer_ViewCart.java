@@ -22,7 +22,7 @@ import madelyntav.c4q.nyc.chipchop.DBObjects.Order;
 import madelyntav.c4q.nyc.chipchop.DBObjects.User;
 import madelyntav.c4q.nyc.chipchop.HelperMethods;
 import madelyntav.c4q.nyc.chipchop.R;
-import madelyntav.c4q.nyc.chipchop.SignupActivity1;
+import madelyntav.c4q.nyc.chipchop.SignUpFirstActivity;
 import madelyntav.c4q.nyc.chipchop.adapters.CartListAdapter;
 
 /**
@@ -67,11 +67,11 @@ public class Fragment_Buyer_ViewCart extends Fragment {
                                 .show();
                     }
                     {
-                        Intent signupIntent = new Intent(getActivity(), SignupActivity1.class);
+                        Intent signupIntent = new Intent(getActivity(), SignUpFirstActivity.class);
                         SharedPreferences sPref = activity.getSharedPreferences(FROM_CART, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sPref.edit();
                         editor.putBoolean(FROM_CART, true);
-                        editor.commit();
+                        editor.apply();
                         startActivity(signupIntent);
                     }
                 } else if(cartItems.size() == 0){

@@ -222,7 +222,8 @@ public class Fragment_Buyer_Map extends Fragment implements OnMapReadyCallback, 
 
         new MaterialShowcaseView.Builder(getActivity())
                 .setTarget(arrowImage)
-                .setMaskColour(R.drawable.showcase)
+                .setMaskColour(Color.parseColor("#D51F27"))
+                .setFadeDuration(5)
                 .setDismissOnTouch(true)
                 .setDismissText("GOT IT")
 

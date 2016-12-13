@@ -8,14 +8,13 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -35,13 +34,10 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class SignupActivity2 extends AppCompatActivity {
+public class SignUpSecondActivity extends AppCompatActivity {
 
-    private final String ENDPOINT = "https://maps.googleapis.com/maps/api/geocode";
-    private final String APIKEY2 = "AIzaSyAZ6ZNk_DPZN2A_0dpHb0MpWdGpEPLxom4";
-    private final String APIKEY = "AIzaSyDTaAeiCfVCXJhdweubPkgIvsni3s1-9ss";
+    private final static String ENDPOINT = "https://maps.googleapis.com/maps/api/geocode";
 
-    private Button startButton;
     private EditText nameET;
     private EditText addressET;
     private EditText aptET;
@@ -72,7 +68,7 @@ public class SignupActivity2 extends AppCompatActivity {
     public static final int RESULT_OK = -1;
     private Uri imageFileUri;
     Intent intent;
-    private String stringVariable = "file:///sdcard/_pictureholder_id.jpg";
+    private final static String stringVariable = Environment.getExternalStorageDirectory().getAbsolutePath() + "_pictureholder_id.jpg";
     private boolean toSellActivity;
 
     @Override
@@ -83,7 +79,9 @@ public class SignupActivity2 extends AppCompatActivity {
         //TODO: onclick circleImageview allows user to upload a profile image
 
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#D51F27"));
-        getSupportActionBar().setBackgroundDrawable(colorDrawable);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setBackgroundDrawable(colorDrawable);
+        }
 
 
         dbHelper = DBHelper.getDbHelper(this);
@@ -108,13 +106,7 @@ public class SignupActivity2 extends AppCompatActivity {
 
         coordinatorLayoutView = findViewById(R.id.snackbarPosition);
 
-
-//        getSupportActionBar().setDisplayShowTitleEnabled(false);
-//        BitmapDrawable background = new BitmapDrawable (BitmapFactory.decodeResource(getResources(), R.drawable.actionbar));
-//        background.setGravity(Gravity.CENTER);
-//        getSupportActionBar().setBackgroundDrawable(background);
-
-        startButton = (Button) findViewById(R.id.createUserButton);
+        Button startButton = (Button) findViewById(R.id.createUserButton);
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -125,7 +117,7 @@ public class SignupActivity2 extends AppCompatActivity {
                         || stateET.getText().toString().isEmpty()
                         || phoneNumberET.getText().toString().isEmpty()
                         || nameET.getText().toString().isEmpty()) {
-                    Toast.makeText(SignupActivity2.this, "Please fill in name, address and phone number fields", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignUpSecondActivity.this, "Please fill in name, address and phone number fields", Toast.LENGTH_SHORT).show();
                 } else {
                     getGeoLocation();
                 }
@@ -188,11 +180,6 @@ public class SignupActivity2 extends AppCompatActivity {
                 }
             }
         });
-//        AlertDialog alertDialog = dialogBuilder.create();
-//        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        alertDialog.show();
-
-
     }
 
     private void getGeoLocation(){
@@ -212,7 +199,7 @@ public class SignupActivity2 extends AppCompatActivity {
         zipcode = zipET.getText().toString().trim();
 
 
-        String queryString = address + ",+" + city + "," + state;// + "&key=" + APIKEY;
+        String queryString = address + ",+" + city + "," + state;
         Log.i("RETROFIT- Geocode Query",queryString);
 
         geolocationAPI.getGeolocation(queryString, new Callback<Geolocation>() {
@@ -266,20 +253,20 @@ public class SignupActivity2 extends AppCompatActivity {
     }
 
     private void saveToSharedPrefs(){
-        SharedPreferences sp = getSharedPreferences(SignupActivity1.SP_USER_INFO, MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences(Constants.USER_INFO_KEY, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putString(SignupActivity1.SP_ADDRESS, address)
-                .putString(SignupActivity1.SP_NAME, name)
-                .putString(SignupActivity1.SP_APT, apt)
-                .putString(SignupActivity1.SP_CITY,city)
-                .putString(SignupActivity1.SP_STATE, state)
-                .putString(SignupActivity1.SP_ZIPCODE, zipcode)
-                .putString(SignupActivity1.SP_PHONE_NUMBER, phoneNumber)
-                .putString(SignupActivity1.SP_PHOTO_LINK,photoLink)
-                .putString(SignupActivity1.SP_PASS, password)
-                .putString(SignupActivity1.SP_EMAIL, email)
-                .putBoolean(SignupActivity1.SP_IS_LOGGED_IN, true)
-                .commit();
+        editor.putString(Constants.ADDRESS_KEY, address)
+                .putString(Constants.NAME_KEY, name)
+                .putString(Constants.APT_KEY, apt)
+                .putString(Constants.CITY_KEY,city)
+                .putString(Constants.STATE_KEY, state)
+                .putString(Constants.ZIPCODE_KEY, zipcode)
+                .putString(Constants.PHONE_NUMBER_KEY, phoneNumber)
+                .putString(Constants.PHOTO_LINK_KEY,photoLink)
+                .putString(Constants.PASSWORD_KEY, password)
+                .putString(Constants.EMAIL_KEY, email)
+                .putBoolean(Constants.IS_LOGGED_IN_KEY, true)
+                .apply();
     }
 
     @Override
@@ -290,24 +277,15 @@ public class SignupActivity2 extends AppCompatActivity {
         dbHelper.removeUser(email, password, new Firebase.ResultHandler() {
             @Override
             public void onSuccess() {
-                getSharedPreferences(SignupActivity1.SP_USER_INFO, MODE_PRIVATE).edit().clear().commit();
+                getSharedPreferences(Constants.USER_INFO_KEY, MODE_PRIVATE).edit().clear().apply();
                 startActivity(new Intent(getApplicationContext(), BuyActivity.class));
                 finish();
             }
 
             @Override
             public void onError(FirebaseError firebaseError) {
-
+                Log.d("FIREBASE ERROR: ", "Error removing user's credentials from Firebase");
             }
         });
-
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                startActivity(new Intent(getApplicationContext(), BuyActivity.class));
-//                finish();
-//            }
-//        }, 2000);
-
     }
 }

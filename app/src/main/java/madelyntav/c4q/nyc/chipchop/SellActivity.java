@@ -131,11 +131,11 @@ public class SellActivity extends AppCompatActivity {
 
                 new MaterialShowcaseView.Builder(SellActivity.this)
                         .setTarget(buyButton)
-                        .setMaskColour(R.drawable.showcase)
+                        .setMaskColour(Color.parseColor("#D51F27"))
+                        .setFadeDuration(5)
                         .setDismissOnTouch(true)
                         .setDismissText("GOT IT")
                         .setContentText("Click here to go back to being a Buyer!")
-//                        .setDelay(1000) // optional but starting animations immediately in onCreate can make them choppy
                         .singleUse(SHOWCASE_ID) // provide a unique ID used to ensure it is only shown once
                         .show();
 
@@ -173,7 +173,7 @@ public class SellActivity extends AppCompatActivity {
         Log.d(TAG,"Initializing data");
         dbHelper = DBHelper.getDbHelper(this);
         sellerItems = new ArrayList<>();
-        userInfoSP = getSharedPreferences(SignupActivity1.SP_USER_INFO, MODE_PRIVATE);
+        userInfoSP = getSharedPreferences(Constants.USER_INFO_KEY, MODE_PRIVATE);
         emptyCallback = new DBCallback() {
             @Override
             public void runOnSuccess() {

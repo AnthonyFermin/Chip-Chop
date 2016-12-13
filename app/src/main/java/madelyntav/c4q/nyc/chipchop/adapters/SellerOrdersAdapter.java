@@ -45,7 +45,6 @@ public class SellerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView buyerAddress;
         TextView timeStamp;
 
-
         public SellerOrdersViewHolder(View itemView) {
             super(itemView);
 
@@ -107,7 +106,6 @@ public class SellerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
         setAnimation(vh.container, position);
-
     }
 
     private void setAnimation(View viewToAnimate, int position) {
@@ -124,7 +122,3 @@ public class SellerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return orderItems.size();
     }
 }
-
-
-
-

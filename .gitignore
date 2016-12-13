@@ -1,3 +1,4 @@
+
 .gradle
 /local.properties
 
@@ -10,3 +11,4 @@
 .DS_Store
 /build
 /captures
+/app/src/main/assets/credentials.properties

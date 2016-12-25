@@ -8,12 +8,12 @@
 
       <TextView
         android:id="@+id/orderdetail_id_tv"
-        style="@style/text_design"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
           android:layout_marginTop="15dp"
-        android:gravity="center_horizontal"
+          style="@style/text_design"
+          android:gravity="center_horizontal"
         android:text="order details"
         android:textSize="35sp" />
 
@@ -21,11 +21,12 @@
         android:id="@+id/seller_name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="bold"
         android:text="Name of Seller" />
 
     <TextView
         android:id="@+id/order_timestamp_tv"
-        style="@style/text_design"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Time Bought"
@@ -52,7 +53,6 @@
         android:id="@+id/seller_address_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/text_design"
         android:layout_below="@+id/delivery_method_tv"
         android:text="SELLER ADDRESS" />
 
@@ -123,7 +123,6 @@
         android:layout_weight="3"
         android:text="TOTAL: "
         android:gravity="end"
-        style="@style/text_design"
         android:textStyle="bold" />
 
     <TextView
@@ -133,6 +132,7 @@
         android:layout_weight="1"
         android:gravity="end"
         android:textSize="20sp"
+        style="@style/text_design"
         android:layout_marginEnd="5dp"
         android:textStyle="bold" />
 

@@ -1,10 +1,14 @@
 package madelyntav.c4q.nyc.chipchop.fragments;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,14 +99,25 @@ public class Fragment_Buyer_OrderDetails extends Fragment {
 //        mBuilder.setAutoCancel(true);
 //        notification = mBuilder.build();
 //        notification.flags |= Notification.FLAG_AUTO_CANCEL;
-        sellerName.setText("SELLER: " + orderToView.getSellerName());
+
+        String deliverMethod = "";
+        String nameOfSellerString = "SELLER NAME: " + orderToView.getSellerName();
+        Spannable spannable = new SpannableString(nameOfSellerString);
+        spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#D51F27")), nameOfSellerString.indexOf(orderToView.getSellerName()), nameOfSellerString.indexOf(orderToView.getSellerName()) + orderToView.getSellerName().length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        sellerName.setText(spannable);
 
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(orderToView.getTimeStamp());
-        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.US);
+        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy -- HH:mm a", Locale.US);
         String formattedDate = formatter.format(cal.getTime());
-        buyDateTime.setText("TIME: " + formattedDate);
-        String deliverMethod = "";
+        String timeStampString = "TIME: " + formattedDate;
+        Spannable spannableTime = new SpannableString(timeStampString);
+        spannableTime.setSpan(new ForegroundColorSpan(Color.parseColor("#D51F27")), timeStampString.indexOf(formattedDate), timeStampString.indexOf(formattedDate) + formattedDate.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        buyDateTime.setText(spannableTime);
+        String totalString = "TOTAL: $" + orderToView.getPrice();
+        Spannable spannableTotal = new SpannableString(totalString);
+        spannableTotal.setSpan(new ForegroundColorSpan(Color.parseColor("#D51F27")), totalString.indexOf("$"), totalString.indexOf("$") + String.valueOf(orderToView.getPrice()).length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        totalPrice.setText(spannableTotal);
 
         if (orderToView.isPickup()) {
             deliverMethod = "PICKUP";
@@ -110,8 +125,18 @@ public class Fragment_Buyer_OrderDetails extends Fragment {
             deliverMethod = "DELIVER";
         }
 
-        deliveryMethod.setText("DELIVERY METHOD: " + deliverMethod);
-        sellerAddress.setText("SELLER ADDRESS: \n\n" + orderToView.getSellerAddress().replace("null","").replace(", ,",","));
+        String deliveryString = "DELIVERY METHOD: " + deliverMethod;
+        Spannable spannableDelivery = new SpannableString(deliveryString);
+        spannableDelivery.setSpan(new ForegroundColorSpan(Color.parseColor("#D51F27")), deliveryString.indexOf(deliverMethod), deliveryString.indexOf(deliverMethod) + deliverMethod.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        deliveryMethod.setText(spannableDelivery);
+        if (orderToView.isPickup()) {
+            String addressString = "SELLER ADDRESS: " + orderToView.getSellerAddress().replace("null", "").replace(", ,", ",");
+            Spannable spannableAddress = new SpannableString(addressString);
+            spannableAddress.setSpan(new ForegroundColorSpan(Color.parseColor("#D51F27")), addressString.indexOf(orderToView.getSellerAddress().replace("null", "").replace(", ,", ",")), addressString.indexOf(orderToView.getSellerAddress().replace("null", "").replace(", ,", ",")) + orderToView.getSellerAddress().replace("null", "").replace(", ,", ",").length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            sellerAddress.setText(spannableAddress);
+        } else {
+            sellerAddress.setVisibility(View.GONE);
+        }
 
 
         return root;

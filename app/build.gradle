@@ -26,8 +26,8 @@ android {
         applicationId "madelyntav.c4q.nyc.chipchop"
         minSdkVersion 17
         targetSdkVersion 22
-        versionCode 6
-        versionName "1.0.7"
+        versionCode 9
+        versionName "1.0.9"
     }
     buildTypes {
         release {

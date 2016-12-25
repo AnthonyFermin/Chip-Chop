@@ -252,6 +252,9 @@ public class BuyActivity extends AppCompatActivity {
                     public void onClick(View view) {
 
                         if (dbHelper.userIsLoggedIn()) {
+                            if (!user.isHasSellerProfile()) {
+                                user.setHasSellerProfile(true);
+                            }
                             Intent sellIntent = new Intent(getApplicationContext(), SellActivity.class);
                             startActivity(sellIntent);
                         } else {
@@ -373,15 +376,18 @@ public class BuyActivity extends AppCompatActivity {
             boolean isLoggedIn = userInfoSP.getBoolean(Constants.IS_LOGGED_IN_KEY, false);
             if (isLoggedIn) {
                 clearLogin();
+                mDrawerLayout.closeDrawer(DrawerLinear);
                 user = null;
                 LoginManager.getInstance().logOut();
                 Snackbar
                         .make(coordinatorLayoutView, "Sign out successful", Snackbar.LENGTH_SHORT)
                         .show();
+                recreate();
 
                 //if not currently in fragment_buyer_map, replace current fragment with buyer_map fragment
                 if (!getCurrentFragment().equals(Fragment_Buyer_Map.TAG)) {
                     replaceFragment(new Fragment_Buyer_Map());
+                    clearBackstack();
                 }
 
             } else {
@@ -604,5 +610,15 @@ public class BuyActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void clearBackstack() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            FragmentManager.BackStackEntry entry = getSupportFragmentManager().getBackStackEntryAt(
+                    0);
+            getSupportFragmentManager().popBackStack(entry.getId(),
+                    FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            getSupportFragmentManager().executePendingTransactions();
+        }
     }
 }

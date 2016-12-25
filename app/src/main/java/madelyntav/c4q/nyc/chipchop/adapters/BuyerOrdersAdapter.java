@@ -1,8 +1,12 @@
 package madelyntav.c4q.nyc.chipchop.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,15 +87,24 @@ public class BuyerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         String deliveryMethod = "";
         Order order = orderItems.get(position);
         BuyerOrdersViewHolder vh = (BuyerOrdersViewHolder) viewHolder;
-        vh.nameOfSeller.setText("SELLER NAME: " + order.getStoreName());
+        String nameOfSellerString = "SELLER NAME: " + order.getStoreName();
+        Spannable spannable = new SpannableString(nameOfSellerString);
+        spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#D51F27")), nameOfSellerString.indexOf(order.getStoreName()), nameOfSellerString.indexOf(order.getStoreName()) + order.getStoreName().length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        vh.nameOfSeller.setText(spannable);
 
         Log.d("BuyerOrderAdapter", "Date: " + order.getTimeStamp());
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(order.getTimeStamp());
-        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.US);
+        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy -- HH:mm a", Locale.US);
         String formattedDate = formatter.format(cal.getTime());
-        vh.timeStamp.setText("TIME: " + formattedDate);
-        vh.total.setText("TOTAL: $" + order.getPrice());
+        String timeStampString = "TIME: " + formattedDate;
+        Spannable spannableTime = new SpannableString(timeStampString);
+        spannableTime.setSpan(new ForegroundColorSpan(Color.parseColor("#D51F27")), timeStampString.indexOf(formattedDate), timeStampString.indexOf(formattedDate) + formattedDate.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        vh.timeStamp.setText(spannableTime);
+        String totalString = "TOTAL: $" + order.getPrice();
+        Spannable spannableTotal = new SpannableString(totalString);
+        spannableTotal.setSpan(new ForegroundColorSpan(Color.parseColor("#D51F27")), totalString.indexOf("$"), totalString.indexOf("$") + String.valueOf(order.getPrice()).length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        vh.total.setText(spannableTotal);
 
         if (order.isPickup()) {
             deliveryMethod = "PICKUP";
@@ -99,9 +112,15 @@ public class BuyerOrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             deliveryMethod = "DELIVER";
         }
 
-        vh.deliveryMethod.setText("DELIVERY METHOD: " + deliveryMethod);
+        String deliveryString = "DELIVERY METHOD: " + deliveryMethod;
+        Spannable spannableDelivery = new SpannableString(deliveryString);
+        spannableDelivery.setSpan(new ForegroundColorSpan(Color.parseColor("#D51F27")), deliveryString.indexOf(deliveryMethod), deliveryString.indexOf(deliveryMethod) + deliveryMethod.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        vh.deliveryMethod.setText(spannableDelivery);
         if (order.isPickup()) {
-            vh.sellerAddress.setText("SELLER ADDRESS: \n\n" + order.getSellerAddress().replace("null","").replace(", ,",","));
+            String addressString = "SELLER ADDRESS: " + order.getSellerAddress().replace("null","").replace(", ,",",");
+            Spannable spannableAddress = new SpannableString(addressString);
+            spannableAddress.setSpan(new ForegroundColorSpan(Color.parseColor("#D51F27")), addressString.indexOf(order.getSellerAddress().replace("null","").replace(", ,",",")), addressString.indexOf(order.getSellerAddress().replace("null","").replace(", ,",",")) + order.getSellerAddress().replace("null","").replace(", ,",",").length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            vh.sellerAddress.setText(spannableAddress);
         } else {
             vh.sellerAddress.setVisibility(View.GONE);
         }

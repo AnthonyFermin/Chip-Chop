@@ -17,12 +17,12 @@
         android:id="@+id/seller_name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/text_design"
+        android:textSize="20sp"
+        android:textStyle="bold"
         android:text="Name of Seller" />
 
     <TextView
         android:id="@+id/order_timestamp_tv"
-        style="@style/text_design"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Time Bought"
@@ -34,6 +34,8 @@
         android:id="@+id/order_cost_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="20sp"
         android:layout_below="@+id/order_timestamp_tv"
         android:text="TOTAL COST" />
 

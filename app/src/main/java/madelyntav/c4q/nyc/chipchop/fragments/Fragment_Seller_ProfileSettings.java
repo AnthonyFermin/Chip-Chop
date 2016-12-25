@@ -515,7 +515,9 @@ public class Fragment_Seller_ProfileSettings extends Fragment {
         phoneNumberET = (EditText) root.findViewById(R.id.phone_number);
         stateET = (EditText) root.findViewById(R.id.state);
         accountNumET = (EditText) root.findViewById(R.id.account_number);
+        accountNumET.setEnabled(false);
         routingNumET = (EditText) root.findViewById(R.id.routing_number);
+        routingNumET.setEnabled(false);
         deliverSwitch = (SwitchCompat) root.findViewById(R.id.delivery_switch);
         pickupSwitch = (SwitchCompat) root.findViewById(R.id.pickup_switch);
         deliverSwitch.setChecked(false);

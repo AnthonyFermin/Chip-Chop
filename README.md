@@ -2,7 +2,7 @@
 
 Project Name: ChipChop
 
-Google Play Link: https://play.google.com/store/apps/details?id=madelyntav.c4q.nyc.chipchop
+The app is not hosted on the Google Play Store anymore, however, please check out the deck here: https://drive.google.com/file/d/1MlJGhoPxGib7DHV9WfkJaMnrZBtAUUBM/view
 
 Team Members: Madelyn Tavarez, Anthony Fermin and Alvin Kuang
 
